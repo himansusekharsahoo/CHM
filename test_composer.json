@@ -1,0 +1,32 @@
+{
+    "description": "College & Hospital Management",
+    "name": "CHM",
+    "type": "project",
+    "homepage": "https://codeigniter.com",
+    "license": "MIT",
+    "support": {
+        "forum": "http://forum.codeigniter.com/",
+        "wiki": "https://github.com/bcit-ci/CodeIgniter/wiki",
+        "slack": "https://codeigniterchat.slack.com",
+        "source": "https://github.com/bcit-ci/CodeIgniter"
+    },
+    "config": {
+        "vendor-dir": "./assets/vendor"
+    },
+    "require-dev": {
+        "almasaeed2010/adminlte": "~2.4",        
+        "DataTables/DataTables": "dev-master"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/DataTables/DataTables"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/DataTables/Plugins.git"
+        }
+        
+        
+    ]
+}

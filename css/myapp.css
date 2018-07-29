@@ -1,0 +1,70 @@
+
+label.error,div.error{
+    color:red;
+    font-weight: normal;
+}
+.padl25{
+    padding-left: 25px;
+}
+.ele_required:before{
+    content: '*';
+    color: red;
+
+}
+.red{
+    color:red !important;
+}
+.no_bg_color{
+    background-color: none !important;
+}
+#category_tree{
+    border:none !important;
+}
+.no_pad{padding: 0px !important;}
+.no_lpad{padding-left: 0px !important;}
+.no_rpad{padding-right: 0px !important;}
+.no_tpad{padding-top: 0px !important;}
+.no_bpad{padding-bottom: 0px !important;}
+.no_border{border: 0px !important;}
+.no_lborder{border-left: 0px !important;}
+.no_rborder{border-right: 0px !important;}
+.no_tborder{border-top: 0px !important;}
+.no_bborder{border-bottom: 0px !important;}
+.marginL5{
+    margin-left: 5px !important;
+}
+.marginL10{
+    margin-left: 10px !important;
+}
+.marginT5{
+    margin-top: 5px !important;
+}
+.padL5{
+    padding-left: 5px !important;
+}
+.padL10{
+    padding-left: 10px !important;
+}
+.padL20{
+    padding-left: 20px !important;
+}
+.add-single-action{
+    margin: 10px 15px 0px 0px !important;
+}
+.add-single-action-or{
+    margin: 10px 15px 0px 0px !important;
+}
+.remove_single_action{
+    margin-top: -15px;
+    margin-right: 2px;
+    position: relative;
+}
+.wraper_checkbox{
+    margin-left: 20px !important;
+}
+.wraper_alert_bmargin{
+    margin-bottom:2px !important;
+}
+.hand{
+    cursor: pointer !important;
+}
