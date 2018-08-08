@@ -57,7 +57,7 @@
                         <div class="col-sm-9 pull-right" style="text-align: right;">                    
                             <a class="btn btn-default" id="collapse-all" href="#">Collapse All</a>&nbsp;
                             <a class="btn btn-default" id="expand-all" href="#">Expand All</a>&nbsp;
-                            <input type="submit" class="btn btn-default" id="save_criteria" value="Save ">&nbsp;                            
+                            <input type="button" class="btn btn-default" id="save_criteria" value="Save ">&nbsp;                            
                         </div>
                     </div>
                 </div>
@@ -94,10 +94,11 @@
                                                         <div class="col-sm-6">
                                                             <input name="permission[<?= $counter ?>][module_id]" value="<?= (isset($rec['module_id']) ? $rec['module_id'] : '') ?>" type="hidden">
                                                             <input name="permission[<?= $counter ?>][permission_id]" value="<?= (isset($rec['permission_id']) ? $rec['permission_id'] : '') ?>" type="hidden">
-                                                            <input name="permission[<?= $counter ?>][module_name]" value="<?= (isset($rec['module_name']) ? $rec['module_name'] : '') ?>" class="form-control" title="" type="text" placeholder="Module Name">
+                                                            <input name="permission[<?= $counter ?>][module_name]" value="<?= (isset($rec['module_name']) ? $rec['module_name'] : '') ?>" class="form-control module_name_input" title="" type="text" placeholder="Module Name">
+
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input name="permission[<?= $counter ?>][module_code]" value="<?= (isset($rec['module_code'])) ? $rec['module_code'] : '' ?>" class="form-control perm_module_code" title="" type="text" placeholder="Module Code">
+                                                            <input name="permission[<?= $counter ?>][module_code]" value="<?= (isset($rec['module_code'])) ? $rec['module_code'] : '' ?>" class="form-control module_code_input perm_module_code" title="" type="text" placeholder="Module Code">
                                                         </div>
                                                     </div>
                                                     <div class="col-sm-6">
@@ -118,7 +119,7 @@
                                                                         if (array_key_exists($key, $exist_perms)) {
                                                                             $attribute['checked'] = 'checked';
                                                                             $attribute['name'] = "permission[$counter][permission_id][]";
-                                                                            $attribute['value']=$exist_perms[$key]; //permission id
+                                                                            $attribute['value'] = $exist_perms[$key]; //permission id
                                                                             //app_log('CUSTOM', 'APP', $exist_perms[$key]);
                                                                         }
                                                                         echo form_error("action_id");
@@ -133,10 +134,10 @@
                                                                 <div class="row-fluid no_pad">
                                                                     <div class="col-sm-12 no_pad">
                                                                         <div class="col-sm-6">
-                                                                            <input name="permission[<?= $counter ?>][action_name][]" value="" class="form-control" title="" type="text" placeholder="Action Name">    
+                                                                            <input name="permission[<?= $counter ?>][action_name][]" value="" class="form-control action_name_input" title="" type="text" placeholder="Action Name">    
                                                                         </div>
                                                                         <div class="col-sm-6">
-                                                                            <input name="permission[<?= $counter ?>][action_code][]" value="" class="form-control perm_action_code" title="" type="text" placeholder="Action Code">    
+                                                                            <input name="permission[<?= $counter ?>][action_code][]" value="" class="form-control action_code_input perm_action_code" title="" type="text" placeholder="Action Code">    
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -167,10 +168,11 @@
                                             <div class="col-sm-12 no_pad">                                                        
                                                 <div class="col-sm-6">                                                        
                                                     <div class="col-sm-6">
-                                                        <input name="permission[1][module_name]" value="" class="form-control" title="" type="text" placeholder="Module Name">    
+                                                        <input name="permission[1][module_name]" value="" class="form-control module_name_input " title="" type="text" placeholder="Module Name">
+
                                                     </div>
                                                     <div class="col-sm-6">
-                                                        <input name="permission[1][module_code]" value="" class="form-control perm_module_code" title="" type="text" placeholder="Module Code">    
+                                                        <input name="permission[1][module_code]" value="" class="form-control module_code_input perm_module_code" title="" type="text" placeholder="Module Code">    
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
@@ -196,10 +198,10 @@
                                                             <div class="row-fluid no_pad">
                                                                 <div class="col-sm-12 marginT5 no_pad">
                                                                     <div class="col-sm-6">
-                                                                        <input name="permission[1][action_name][]" value="" class="form-control" title="" type="text" placeholder="Action Name">    
+                                                                        <input name="permission[1][action_name][]" value="" class="form-control action_name_input" title="" type="text" placeholder="Action Name">    
                                                                     </div>
                                                                     <div class="col-sm-6">
-                                                                        <input name="permission[1][action_code][]" value="" class="form-control perm_action_code" title="" type="text" placeholder="Action Code">    
+                                                                        <input name="permission[1][action_code][]" value="" class="form-control action_code_input perm_action_code" title="" type="text" placeholder="Action Code">    
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -253,7 +255,7 @@
                     //console.log('focus',MP.current_module_code,MP.module_codes);
                 },
                 is_module_exist: function (module_code) {
-                    console.log(this.module_codes, this.module_codes.indexOf(module_code));
+                    console.log('is_module_exist= ', this.module_codes, this.module_codes.indexOf(module_code));
                     if (this.module_codes.indexOf(module_code) !== -1) {
                         return true;
                     }
@@ -261,9 +263,10 @@
                 },
                 push_module: function (module_code) {
                     if (!this.is_module_exist(module_code)) {
-                        //var module_code =
-                        this.module_codes.push(module_code);
-                        console.log('this.module_codes', this.module_codes);
+                        if (module_code) {
+                            this.module_codes.push(module_code);
+                            console.log('this.module_codes', this.module_codes);
+                        }
                     }
                 },
                 pop_module: function (module_code) {
@@ -311,10 +314,10 @@
                             + '                     <div class="col-sm-6">'
                             + '                     	<div class="col-sm-12">'
                             + '                             <div class="col-sm-6">'
-                            + '                             	<input name="permission[' + panel_no + '][module_name]" value="" class="form-control" title="" type="text" placeholder="Module Name">'
+                            + '                             	<input name="permission[' + panel_no + '][module_name]" value="" class="form-control module_name_input" title="" type="text" placeholder="Module Name">'
                             + '                             </div>'
                             + '                             <div class="col-sm-6">'
-                            + '                                 <input name="permission[' + panel_no + '][module_code]" value="" class="form-control perm_module_code" title="" type="text" placeholder="Module Code">'
+                            + '                                 <input name="permission[' + panel_no + '][module_code]" value="" class="form-control module_code_input perm_module_code" title="" type="text" placeholder="Module Code">'
                             + '                             </div>'
                             + '                     	</div>'
                             + '                     </div>'
@@ -327,10 +330,10 @@
                             + '                                 <div class="row-fluid no_pad">'
                             + '                                     <div class="col-sm-12 marginT5 no_pad">'
                             + '                                         <div class="col-sm-6">'
-                            + '                                             <input name="permission[' + panel_no + '][action_name][]" value="" class="form-control" title="" type="text" placeholder="Action Name">'
+                            + '                                             <input name="permission[' + panel_no + '][action_name][]" value="" class="form-control action_name_input" title="" type="text" placeholder="Action Name">'
                             + '                                         </div>'
                             + '                                         <div class="col-sm-6">'
-                            + '                                             <input name="permission[' + panel_no + '][action_code][]" value="" class="form-control perm_action_code" title="" type="text" placeholder="Action Code">'
+                            + '                                             <input name="permission[' + panel_no + '][action_code][]" value="" class="form-control action_code_input perm_action_code" title="" type="text" placeholder="Action Code">'
                             + '                                         </div>'
                             + '                                     </div>'
                             + '                     		</div>'
@@ -362,6 +365,7 @@
                     return htmls;
                 }
             };
+            //console.log('MP',MP);
             //exapand/collapse all panel
             $('#expand-all').on('click', function () {
                 $('.collapse').collapse('show');
@@ -393,12 +397,72 @@
                         MP.push_module(module_code);
                     } else {
                         $(this).val('');
-                        alert('module code already exists');
+                        var parent_div = $(this).closest('div');
+                        show_error_span(parent_div,'Module code is already assigned, please user another');
                     }
                 }
             });
             $(document).on('focus', '.perm_module_code', function () {
                 MP.remove_module_on_edit_field($(this).val());
             });
+            //remove error msg
+            $(document).on('focus', '.module_name_input', function () {
+                var module_name_parent = $(this).closest('div');
+                module_name_parent.removeClass('has-error');
+                module_name_parent.find('span.help-block').remove();
+            });
+            $(document).on('focus', '.module_code_input', function () {
+                var module_code_parent = $(this).closest('div');
+                module_code_parent.removeClass('has-error');
+                module_code_parent.find('span.help-block').remove();
+            });
+            $(document).on('focus', '.action_code_input', function () {
+                var action_code_parent = $(this).closest('div');
+                action_code_parent.removeClass('has-error');
+                action_code_parent.find('span.help-block').remove();
+            });
+
+            $(document).on('click', '#save_criteria', function (e) {
+                var prent_div = '';
+                var submit_flag = true;
+                //module name validation
+                $('.module_name_input').each(function () {
+                    parent_div = $(this).closest('div');
+                    if ($(this).val() == '') {
+                        show_error_span(parent_div,'Module name is required');
+                        submit_flag = false;                        
+                    }
+                });
+                //module code validation
+                $('.module_code_input').each(function () {
+                    if ($(this).val() == '') {
+                        parent_div = $(this).closest('div');
+                        show_error_span(parent_div,'Module code is required.');
+                        submit_flag = false;
+                    }
+                });
+                //action code validation
+                var action_name = '';
+                $('.action_code_input').each(function () {
+                    if ($(this).val() != '') {
+                        action_name = $(this).parent('div').prev('div').find('input.action_name_input').val();
+                        if (action_name == '') {
+                            parent_div = $(this).closest('div');
+                            show_error_span(parent_div,'Action name is required.'); 
+                            submit_flag = false;
+                        }
+                    }
+                });
+                if (submit_flag) {
+                    $('#module_permissions').submit();
+                }
+            });
+
+            function show_error_span(selector,message) {
+                if (!selector.hasClass('has-error')) {
+                    selector.addClass('has-error');
+                    selector.append('<span class="help-block pull-left">'+message+'</span>');                    
+                }
+            }
         });
     </script>

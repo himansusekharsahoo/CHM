@@ -9,7 +9,7 @@ if (!defined('BASEPATH'))
  * @author  : HimansuS
  * @created :05/17/2018
  */
-class Rbac_permissions extends CI_Controller {
+class Rbac_permissions extends CI_Controller { 
 
     public function __construct() {
         parent::__construct();
@@ -316,13 +316,16 @@ class Rbac_permissions extends CI_Controller {
      * @author: HimansuS
      */
     public function new_module_action() {
-        $module_codes=$this->rbac_permission->get_rbac_modules_options('code');
+        //app_log('CUSTOM','APP','TEST LOGGING');
+        $this->layout->navTitle='test page';
+        $module_codes=$this->rbac_permission->get_rbac_modules_options('code');        
         $action_codes=$this->rbac_permission->get_rbac_actions_options('code');            
         $module_codes=array_slice($module_codes,1);
         $action_codes=array_slice($action_codes,1);        
         $actions=$this->rbac_permission->get_rbac_actions_options('name');
         $actions=array_slice($actions,1,null,true);
-        $existing_perms=  $this->rbac_permission->get_rbac_permission();
+        $conditions=array('t1.status'=>'active');
+        $existing_perms=  $this->rbac_permission->get_rbac_permission(null,$conditions);
         //pma($existing_perms);
         $existing_perms=  tree_on_key_column($existing_perms,'module_id');
         
@@ -339,8 +342,9 @@ class Rbac_permissions extends CI_Controller {
         //pma($data['existing_perms'],1);
         if ($this->input->post()) {
             $permissions=$this->input->post('permission');            
+            //pma($permissions,1);
             if($this->rbac_permission->save_module_action($permissions)){
-                
+                redirect('/rbac_new/rbac_permissions/new_module_action');
             }else{
                 
             }            

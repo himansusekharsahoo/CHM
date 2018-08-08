@@ -280,6 +280,7 @@ class Rbac {
                 }
             }
         }
+        
         return $tree;
     }
 

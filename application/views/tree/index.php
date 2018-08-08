@@ -1,8 +1,8 @@
 <?php ?>
 <div class="col-sm-12">
     <button class="btn btn-primary" id="add_root" ><span class="fa fa-plus"> Add</span></button>
-    <button class="btn btn-warning" id="rename"><span class="fa fa-plus"> Rename</span></button>
-    <button class="btn btn-danger" id="delete"><span class="fa fa-plus"> Delete</span></button>
+    <button class="btn btn-warning" id="rename"><span class="fa fa-pencil"> Rename</span></button>
+    <button class="btn btn-danger" id="delete"><span class="fa fa-trash"> Delete</span></button>
 </div>
 <div class="col-sm-12 no_lpad">
     <div class="col-sm-3 no_lpad" id="jstree"></div>
@@ -21,7 +21,7 @@
         var clicked_ele = '';
         var ele_count = 1;
         $('#jstree').jstree({
-            "plugins": ["dnd","types"],
+            "plugins": ["dnd", "types"],
             'core': {
                 'data': {
                     "url": "tree/get_tree_data",
@@ -79,28 +79,36 @@
         // Helper method createNode(parent, id, text, position).
         // Dynamically adds nodes to the jsTree. Position can be 'first' or 'last'.
         function createNode(parent_node, new_node_id, new_node_text, position) {
-            $('#jstree').jstree('create_node', parent_node, {"text": new_node_text, "id": new_node_id}, position, false, false);
+            
+            if (parent_node.length) {
+                $('#jstree').jstree('create_node', parent_node, {"text": new_node_text, "id": new_node_id}, position, false, false);
+            } else {
+                $("#jstree").jstree("create_node", null, null, "last", function (node) {
+                    this.edit(node);
+                });
+            }
         }
 
         function render_menu_form(node_data) {
-            myApp.Ajax.controller='tree';
-            myApp.Ajax.method='get_menu_details_form';
-            myApp.Ajax.form_method='POST';
-            myApp.Ajax.post_data={id:node_data.id};
-            myApp.Ajax.genericAjax($("#form_load"),'html');
+            myApp.Ajax.controller = 'tree';
+            myApp.Ajax.method = 'get_menu_details_form';
+            myApp.Ajax.form_method = 'POST';
+            myApp.Ajax.post_data = {id: node_data.id};
+            myApp.Ajax.genericAjax($("#form_load"), 'html');
         }
-        function update_parent(node_data){
-            console.log('node=',node_data.node);
-            console.log('node parent=',node_data.parent);
+        function update_parent(node_data) {
+            console.log('node=', node_data.node);
+            console.log('node parent=', node_data.parent);
             console.log(node_data);
-            
+
             //alert('update_parent');
-            
-            myApp.Ajax.controller='tree';
-            myApp.Ajax.method='update_parent_and_order';
-            myApp.Ajax.form_method='POST';
-            myApp.Ajax.post_data={id:node_data.node.id,'parent':node_data.parent,'position':node_data.position};
+
+            myApp.Ajax.controller = 'tree';
+            myApp.Ajax.method = 'update_parent_and_order';
+            myApp.Ajax.form_method = 'POST';
+            myApp.Ajax.post_data = {id: node_data.node.id, 'parent': node_data.parent, 'position': node_data.position};
             myApp.Ajax.genericAjax();
         }
+
     });
 </script>

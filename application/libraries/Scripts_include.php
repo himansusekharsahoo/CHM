@@ -57,7 +57,7 @@ class Scripts_include {
         ),
         'chosen' => array('/assets/bootstrap-chosen/chosen.jquery.js'),
         'tree' => array('/js/tree.js'),
-        'jstree' => array(COMPONENT_PATH . 'jstree/jstree.min.js'),
+        'jstree' => array(COMPONENT_PATH . 'jstree/dist/jstree.min.js'),
         'promise' => array('/js/bluebird.min.js'),
         'bs_multiselect' => array('/assets/layout/default/bootstrap/js/bootstrap-multiselect.js')
     );

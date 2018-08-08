@@ -16,9 +16,10 @@ class Menu extends CI_Model {
         if (!$columns) {
             //$columns = ',rp.permission_id,rp.module_id,rp.action_id,rp.position,rp.parent,rp.menu_name,rp.menu_header';
             $columns = ',rp.permission_id,rp.module_id,rp.action_id';
-            $columns .= ',rm.name as "module_name",rm.code';
-            $columns .= ',ra.name as "action_name"';
-            $columns .= ',rp.order,rp.parent,rp.menu_name,rp.menu_header';
+            $columns .= ',rm.name as "module_name",rm.code "module_code"';
+            $columns .= ',ra.name as "action_name",ra.code "action_code"';
+            $columns .= ',m.menu_id,m.name "text",m.menu_order,m.parent prnt,m.icon_class,m.menu_class,m.attribute';
+            $columns .= ',m.permission_id,m.url,m.menu_type';
         }
 
         /*
@@ -30,12 +31,14 @@ class Menu extends CI_Model {
          */
 
         if ($admin_flag) {
-            $this->db->select($columns)->from('rbac_permissions_bak16may18 rp')
+            $this->db->select($columns)->from('rbac_menu m')
+                    ->join('rbac_permissions rp', 'rp.permission_id=m.permission_id')
                     ->join('rbac_modules rm', 'rm.module_id=rp.module_id')
-                    ->join('rbac_actions ra', 'ra.action_id=rp.action_id')
+                    ->join('rbac_actions ra', 'ra.action_id=rp.action_id');
                     //->where("rp.menu_name<>","")
-                    ->group_by('rp.permission_id')
-                    ->order_by('rp.module_id,rp.action_id');
+                    //->group_by('rp.permission_id')
+                    //->order_by('rp.module_id,rp.action_id');
+            
         } else {
             if (!$columns) {
                 $columns .= 'rrp.role_permission_id,rrp.role_id,rrp.permission_id';
@@ -57,33 +60,10 @@ class Menu extends CI_Model {
             $this->db->where($conditions);
         endif;
 
-        $result = $this->db->get()->result_array();
-        //pma($this->db->last_query());
+        $result = $this->db->get()->result_array();        
+        //pma($this->db->last_query(),1);        
         return $result;
 
-        //pma($result,1);
-        //echo $this->db->last_query();
-
-        /* $data = $action_list = $temp_data = array();
-          $action_list = array_column($result, 'action_name');
-          $action_list = array_values(array_unique($action_list));
-          $temp_data['action_list'] = $action_list;
-
-          foreach ($result as $permission) {
-          $data[$permission['module_name']][$permission['action_name']] = $permission;
-          }
-          foreach ($data as $module => $permission) {
-          $indx = 0;
-          foreach ($action_list as $key => $action) {
-          if (!isset($permission[$action])) {
-          $temp_data[$module][$action] = array();
-          } else {
-          $temp_data[$module][$action] = $data[$module][$action];
-          }
-          }
-          }
-
-          return $temp_data; */
     }
 
     /**
