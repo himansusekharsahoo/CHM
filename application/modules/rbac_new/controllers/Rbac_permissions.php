@@ -9,7 +9,7 @@ if (!defined('BASEPATH'))
  * @author  : HimansuS
  * @created :05/17/2018
  */
-class Rbac_permissions extends CI_Controller {
+class Rbac_permissions extends CI_Controller { 
 
     public function __construct() {
         parent::__construct();
