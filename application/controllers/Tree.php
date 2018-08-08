@@ -29,8 +29,11 @@ class Tree extends MX_Controller {
     public function get_tree_data() {
         $column = "rp.permission_id id,rp.order,rp.parent prnt,
                 case when length(rp.menu_name)>1 then rp.menu_name else concat(rm.name,'-',ra.name) end text,rp.menu_header,rm.code,rp.action_id";
+        $column = null;
         $permission_list = $this->menu->get_menu_data($column, null, true);
-        $permission_list = $this->rbac->tree_view2($permission_list, 0, 'id', 'prnt', true);        
+        if ($permission_list) {
+            $permission_list = $this->rbac->tree_view2($permission_list, 0, 'menu_id', 'prnt', true);
+        }        
         echo json_encode(array_values($permission_list));
         exit;
     }
@@ -44,9 +47,9 @@ class Tree extends MX_Controller {
 
     public function update_parent_and_order() {
         if ($this->input->is_ajax_request()) {
-            $data=  $this->input->post();
+            $data = $this->input->post();
             $this->menu->update_menu_parent($data);
-            exit;            
+            exit;
         }
     }
 

@@ -50,9 +50,9 @@ switch (APP_ENV) {
         defined('DEBUG') OR define('DEBUG', '1'); //array('ERROR' => 1, 'DEBUG' => 2, 'INFO' => 3, 'ALL' => 4);
         /******* CUSTOM DEBUG ******* */
         defined('C_DEBUG') OR define('C_DEBUG', '1');
-        defined('DEBUG_SCRIPT') OR define('DEBUG_SCRIPT', '1');
+        defined('DEBUG_SCRIPT') OR define('DEBUG_SCRIPT', '0');
         defined('CUSTOM_APP_LOG') OR define('CUSTOM_APP_LOG', 'APP');
-        defined('DB_QUERIES_LOG') OR define('DB_QUERIES_LOG', '0');        
+        defined('DB_QUERIES_LOG') OR define('DB_QUERIES_LOG', '1');        
         defined('APP_AUTH_FLAG') OR define('APP_AUTH_FLAG', '1');
 }
 ?>

@@ -233,11 +233,13 @@ class Rbac_permission extends CI_Model {
         foreach ($post_data as $perms) {
             //get new actions
             foreach ($perms['action_code'] as $key => $act_code) {
-                $new_actions[$act_code] = array(
-                    'code' => strtoupper($act_code),
-                    'name' => ucfirst($perms['action_name'][$key]),
-                    'status' => 'active'
-                );
+                if ($act_code) {
+                    $new_actions[$act_code] = array(
+                        'code' => strtoupper($act_code),
+                        'name' => ucfirst($perms['action_name'][$key]),
+                        'status' => 'active'
+                    );
+                }
             }
             //get new modules
             if (!isset($perms['module_id']) || $perms['module_id'] == '') {
@@ -263,19 +265,23 @@ class Rbac_permission extends CI_Model {
                     $flatten_ids = flattenArray($perms['permission_id']);
                     $flatten_exist_ids = flattenArray($exist_perm_ids);
                     $inactive_perms = array_diff($flatten_exist_ids, $flatten_ids);
-                    if($inactive_perms){
-                        $this->_update_perm_status($inactive_perms,'inactive');
+                    //pma($inactive_perms,1);
+                    if ($inactive_perms) {
+                        $this->_update_perm_status($inactive_perms, 'inactive');
                     }
                     //find existing permissions to active
-//                    $cond=" AND module_id='".$perms['module_id']."' AND lower(status)='inactive'";
-//                    $exist_perm_ids = $this->_get_existing_module_perms('permission_id',$cond );                    
-//                    $flatten_ids = flattenArray($perms['permission_id']);
-//                    $flatten_exist_ids = flattenArray($exist_perm_ids);
-//                    $inactive_perms=  array_diff($flatten_exist_ids,$flatten_ids);
+                    $cond=" AND module_id='".$perms['module_id']."' AND lower(status)='inactive'";
+                    $exist_perm_ids = $this->_get_existing_module_perms('permission_id',$cond );                    
+                    $flatten_ids = flattenArray($perms['permission_id']);
+                    $flatten_exist_ids = flattenArray($exist_perm_ids);
+                    $inactive_perms=  array_diff($flatten_exist_ids,$flatten_ids);
+                     if ($inactive_perms) {
+                        $this->_update_perm_status($inactive_perms, 'active');
+                    }
                 }
             }
         }
-        
+
         //find new action to save
         $db_action = $this->get_rbac_actions_options('code', 'code');
         array_shift($db_action);
@@ -288,10 +294,11 @@ class Rbac_permission extends CI_Model {
                 $save_act[] = $new_actions[$key];
             }
         }
-        
+        //pma($save_act,1);
         if ($this->_save_actions($save_act)) {
             $cond = "code in('" . implode('\',\'', $new_action_codes) . "')";
             $db_actions = $this->rbac_action->get_rbac_action('code,action_id', $cond);
+            
             //insert new modules
             if ($this->_save_modules($new_modules)) {
                 //get module ids
@@ -328,6 +335,7 @@ class Rbac_permission extends CI_Model {
                         }
                     }
                 }
+                //pma($module_actions,1);
                 if ($module_actions) {
                     //pma($module_actions, 1);
                     $this->_save_module_actions($module_actions);
@@ -351,7 +359,7 @@ class Rbac_permission extends CI_Model {
      * @author
      */
     private function _save_actions($new_actions) {
-        if($new_actions)
+        if ($new_actions)
             return $this->db->insert_batch('rbac_actions', $new_actions);
         return true;
     }
@@ -363,7 +371,7 @@ class Rbac_permission extends CI_Model {
      * @author
      */
     private function _save_modules($new_modules) {
-        if($new_modules)
+        if ($new_modules)
             return $this->db->insert_batch('rbac_modules', $new_modules);
         return true;
     }
@@ -401,9 +409,9 @@ class Rbac_permission extends CI_Model {
             'status' => $status,
             'modified' => date('Y-m-d H:i:s')
         );
-        
+
         $this->db->where_in('permission_id', $perm_ids);
-        $this->db->update('rbac_permissions', $data);        
+        $this->db->update('rbac_permissions', $data);
     }
 
 }
