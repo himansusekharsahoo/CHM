@@ -83,5 +83,21 @@ class Menu extends CI_Model {
         }
         return FALSE;
     }
+    
+    public function save_menu_details($post_data){
+        pma($post_data);
+        $data=array(
+            'name'=>(isset($post_data['menu_name']) && $post_data['menu_name']!='')?$post_data['menu_name']:$post_data['menu_text'],
+            'menu_order'=>$post_data['menu_name'],
+            'parent'=>$post_data['parent'],
+            'icon_class'=>$post_data['icon_class'],
+            'menu_class'=>$post_data['menu_class'],
+            'attribute'=>$post_data['menu_attr'],
+            'permission_id'=>$post_data['permission'],
+            'url'=>$post_data['url'],
+            'menu_type'=>$post_data['menu_type']
+        );
+        pma($data,1);
+    }
 
 }

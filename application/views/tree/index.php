@@ -24,7 +24,7 @@
             "plugins": ["dnd", "types"],
             'core': {
                 'data': {
-                    "url": "tree/get_tree_data",
+                    "url": "<?=base_url('tree/get_tree_data')?>",
                     "dataType": "json" // needed only if you do not supply JSON headers
                 },
                 'check_callback': true
@@ -110,5 +110,23 @@
             myApp.Ajax.genericAjax();
         }
 
+        $(document).on('click','#save_menu_detail',function(){
+            var form_data={
+                menu_name:$('#menu_name').val(),
+                menu_type:$('#menu_type').val(),
+                permission:$('#permission').val(),
+                url:$('#url').val(),
+                icon_class:$('#icon_class').val(),
+                menu_class:$('#menu_class').val(),
+                menu_attr:$('#attribute').val(),
+                parent:clicked_ele.parent,
+                menu_text:clicked_ele.text
+            };            
+            myApp.Ajax.controller = 'tree';
+            myApp.Ajax.method = 'save_menu_details';
+            myApp.Ajax.form_method = 'POST';
+            myApp.Ajax.post_data = {"menu_data":form_data};
+            myApp.Ajax.genericAjax($("#form_load"), 'html');
+        });
     });
 </script>

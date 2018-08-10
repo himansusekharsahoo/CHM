@@ -39,10 +39,10 @@ switch (APP_ENV) {
         defined('APP_BASE') OR define('APP_BASE', APP_REQEST_TYPE . '://' . APP_HOST . '/' . APP_DOC_ROOT . '/');
 
         defined('DB_HOST') OR define('DB_HOST', 'localhost');
-        defined('DB_NAME') OR define('DB_NAME', 'rbac_new_17May18');
+        defined('DB_NAME') OR define('DB_NAME', 'chm');
         //defined('DB_NAME') OR define('DB_NAME', 'netizensoft');
-        defined('DB_USER') OR define('DB_USER', 'soa');
-        defined('DB_PASS') OR define('DB_PASS', 'password');
+        defined('DB_USER') OR define('DB_USER', 'root');
+        defined('DB_PASS') OR define('DB_PASS', '');
 
         defined('ENC_KEY') OR define('ENC_KEY', 'cinaacabcdef123ef4578z1k2l3i4p5o67q890n98b');
 

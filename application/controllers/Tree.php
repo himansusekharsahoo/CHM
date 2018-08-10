@@ -33,7 +33,7 @@ class Tree extends MX_Controller {
         $permission_list = $this->menu->get_menu_data($column, null, true);
         if ($permission_list) {
             $permission_list = $this->rbac->tree_view2($permission_list, 0, 'menu_id', 'prnt', true);
-        }        
+        }
         echo json_encode(array_values($permission_list));
         exit;
     }
@@ -50,6 +50,26 @@ class Tree extends MX_Controller {
             $data = $this->input->post();
             $this->menu->update_menu_parent($data);
             exit;
+        }
+    }
+
+    /**
+     * @method 
+     * @param
+     * @desc
+     * @author
+     * @date
+     */
+    public function save_menu_details() {
+        if ($this->input->is_ajax_request()) {
+            $post_data = $this->input->post('menu_data');
+            if($this->menu->save_menu_details($post_data)){
+                echo "success";
+            }else{
+                echo "error";
+            }
+        } else {
+            echo "invalid request type";
         }
     }
 
