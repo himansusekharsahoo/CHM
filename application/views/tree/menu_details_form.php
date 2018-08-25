@@ -8,6 +8,19 @@
             <div class="row-fluid">
                 <div class="col-sm-6 no_lpad">
                     <div class="form-group">
+                        <label class="col-sm-4 control-label">Order</label>
+                        <div class="col-sm-8">
+                            <input name="node_position" id="node_position" value="" class="form-control" type="text">                            
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 no_lpad">
+                    
+                </div> 
+            </div> 
+            <div class="row-fluid">
+                <div class="col-sm-6 no_lpad">
+                    <div class="form-group">
                         <label class="col-sm-4 control-label">Menu Name</label>
                         <div class="col-sm-8">
                             <input name="menu_name" id="menu_name" value="" class="form-control" type="text">                            
@@ -33,13 +46,18 @@
                     <div class="form-group">
                         <label class="col-sm-4 control-label">Permission</label>
                         <div class="col-sm-8">
-                            <select class="form-control" name="permission" id="permission">
-                                <option value="">Select parent</option>
-                                <option value="94">user - view</option>
-                                <option value="95">user - edit</option>
-                                <option value="96">user - delete</option>
-                                <option value="97">user - list</option>
-                            </select>
+                            <?php
+                            $attribute = array(
+                                "name" => "permission",
+                                "id" => "permission",
+                                "class" => "form-control",
+                                "title" => "",
+                                "required" => "",
+                            );
+                            $permission_id = (isset($data['permission_id'])) ? $data['permission_id'] : '';
+                            echo form_error("permission");
+                            echo form_dropdown($attribute, $permission_id_list, $permission_id);
+                            ?>           
                         </div>
                     </div>
                 </div>

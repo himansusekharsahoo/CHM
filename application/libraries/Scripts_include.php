@@ -21,6 +21,7 @@ class Scripts_include {
             'common' => array(
                 COMPONENT_PATH . 'bootstrap/dist/js/bootstrap.min.js',
                 COMPONENT_PATH . 'admin-lte/dist/js/adminlte.min.js',
+                COMPONENT_PATH . 'bootstrap3-dialog/src/js/bootstrap-dialog.js',
                 '/js/messages.js',
                 '/js/myapp.js'
             ),
@@ -58,7 +59,7 @@ class Scripts_include {
         'chosen' => array('/assets/bootstrap-chosen/chosen.jquery.js'),
         'tree' => array('/js/tree.js'),
         'jstree' => array(COMPONENT_PATH . 'jstree/dist/jstree.min.js'),
-        'promise' => array('/js/bluebird.min.js'),
+        'promise' => array(COMPONENT_PATH.'bluebird/js/browser/bluebird.min.js'),
         'bs_multiselect' => array('/assets/layout/default/bootstrap/js/bootstrap-multiselect.js')
     );
     private $__cssFiles = array(

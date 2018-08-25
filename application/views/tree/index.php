@@ -1,7 +1,6 @@
 <?php ?>
 <div class="col-sm-12">
     <button class="btn btn-primary" id="add_root" ><span class="fa fa-plus"> Add</span></button>
-    <button class="btn btn-warning" id="rename"><span class="fa fa-pencil"> Rename</span></button>
     <button class="btn btn-danger" id="delete"><span class="fa fa-trash"> Delete</span></button>
 </div>
 <div class="col-sm-12 no_lpad">
@@ -18,57 +17,193 @@
 <script type="text/javascript">
     // Setup the jsTree.
     $(function () {
+        myApp.CommonMethod.log_flag = false;
+
         var clicked_ele = '';
         var ele_count = 1;
-        $('#jstree').jstree({
+        var js_tree = $('#jstree').jstree({
             "plugins": ["dnd", "types"],
+            "themes": {"stripes": true},
             'core': {
                 'data': {
-                    "url": "<?=base_url('tree/get_tree_data')?>",
-                    "dataType": "json" // needed only if you do not supply JSON headers
-                },
-                'check_callback': true
+                    "url": "<?= base_url('tree/get_tree_data') ?>",
+                    "dataType": "json", // needed only if you do not supply JSON headers
 
+                },
+                "multiple": false,
+                'check_callback': true
             }
         }).on("changed.jstree", function (e, data) {
             if (data.selected.length) {
-                clicked_ele = data.instance.get_node(data.selected[0]);
-                console.log('clicked_ele', clicked_ele);
+                clicked_ele = data.instance.get_node(data.selected[0]);                
+                myApp.CommonMethod.app_log('clicked_ele', clicked_ele);
+                var indx = $('#' + clicked_ele.id).index();                
                 render_menu_form(clicked_ele);
+                $('#node_position').val(indx);
                 //make ajax call to fetch perm details
                 //alert('The selected node is: ' + data.instance.get_node(data.selected[0]).text);
             }
-        }).on("create_node.jstree", function (e, data) {
-            console.log('New node created', data);
+        }).on("create_node.jstree", function (e, data) {            
+            myApp.CommonMethod.app_log('New node created', data);
         }).on('delete_node.jstree', function (e, data) {
-            console.log('Delete node', data);
+            myApp.CommonMethod.app_log('Delete node', data);
         }).on('rename_node.jstree', function (e, data) {
-            console.log('Rename node', data);
+            myApp.CommonMethod.app_log('Rename node', data);
         }).on('move_node.jstree', function (e, data) {
             update_parent(data);
         });
+
         //add new node
         $('#add_root').on('click', function () {
-            var instance = $('#jstree').jstree(true);
-            createNode(instance.get_selected(), "new_node_" + ele_count, "New node", "last");
-            ele_count++;
+            var selected_node = $('#jstree').jstree(true).get_selected(true);
+            createNewNode(selected_node);
         });
-
         //delete node        
         $('#delete').on('click', function () {
-            var instance = $('#jstree').jstree(true);
-            instance.delete_node(instance.get_selected());
+            var selected_node = $('#jstree').jstree(true).get_selected();
+            deleteNode(selected_node[0]);
         });
 
-        $('#rename').on('click', function () {
-            var instance = $('#jstree').jstree(true);
-            var sel = instance.get_selected();
-            if (!sel.length) {
-                return false;
-            }
-            sel = sel[0];
-            instance.edit(sel);
+        $(document).on('click', '#save_menu_detail', function () {
+            var form_data = {
+                menu_name: $('#menu_name').val(),
+                menu_type: $('#menu_type').val(),
+                permission: $('#permission').val(),
+                url: $('#url').val(),
+                icon_class: $('#icon_class').val(),
+                menu_class: $('#menu_class').val(),
+                menu_attr: $('#attribute').val(),
+                parent: clicked_ele.parent,
+                menu_text: clicked_ele.text
+            };
+            myApp.Ajax.controller = 'tree';
+            myApp.Ajax.method = 'save_menu_details';
+            myApp.Ajax.form_method = 'POST';
+            myApp.Ajax.post_data = {"menu_data": form_data};
+            myApp.Ajax.genericAjax($("#form_load"), 'html');
         });
+
+        function createNewNode(parent_node) {
+            myApp.CommonMethod.app_log('parent_node', parent_node);
+            var promise = new Promise(function (resolve, reject) {
+                var order = 1;
+                var parent_id = 0;
+                if (typeof parent_node[0] != 'undefined') {
+                    if (parent_node[0].children.length) {
+                        order = parseInt(parent_node[0].children.length) + 1;
+                    }
+                    parent_id = parent_node[0].id;
+                }
+                var node_data = {
+                    menu_order: order,
+                    parent: parent_id,
+                    menu_name: 'new_node_' + order
+                };
+                
+                myApp.CommonMethod.app_log('parent_node', node_data);
+                //console.log('node_data', node_data);
+                $.ajax({
+                    url: base_url + "tree/create_dummy_menu",
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: node_data,
+                    success: function (result) {
+                        resolve(result);
+                    },
+                    error: function (result) {
+                        reject(result);
+                    }
+                });
+
+            });
+            promise.then(function (resolve) {
+                myApp.CommonMethod.app_log('resolve', resolve);
+                var tree = $("#jstree").jstree(true);
+                tree.deselect_all(true);
+                $("#jstree").one("refresh.jstree", function () {                    
+                    tree.select_node(resolve.new_node);
+                })
+                tree.refresh();
+
+            }, function (reject) {
+                show_message(reject);
+            });
+        }
+
+        function deleteNode(selected_node) {
+            BootstrapDialog.show({
+                title: 'Manage Menu',
+                message: 'Do you want to delete the menu?',
+                buttons: [{
+                        label: 'Yes',
+                        action: function (dialog) {
+                            processNodeDeleting(selected_node);
+                            $('#form_load').html('');
+                            dialog.close();
+                        }
+                    }, {
+                        label: 'Cancel',
+                        action: function (dialog) {
+                            dialog.close();
+                        }
+                    }]
+            });
+            //instance.delete_node();
+        }
+
+        function processNodeDeleting(node_id) {
+            var promise = new Promise(function (resolve, reject) {
+                var node_data = {
+                    node_id: node_id
+                };
+
+                $.ajax({
+                    url: base_url + "tree/delete_menu",
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: node_data,
+                    success: function (result) {
+                        resolve(result);
+                    },
+                    error: function (result) {
+                        reject(result);
+                    }
+                });
+
+            });
+            promise.then(function (resolve) {
+                js_tree.jstree("refresh");
+            }, function (reject) {
+                show_message(reject);
+            });
+        }
+
+        function show_message(reject) {
+            var errMsg = {
+                title: (reject.title != '') ? errMsg.title : 'Manage Menu',
+                message: (reject.message != '') ? errMsg.message : 'There are some error, please try again!'
+            }
+            myApp.modal.alert(errMsg);
+        }
+
+
+
+
+
+        //add new node
+//        $('#add_root').on('click', function () {
+//            var instance = $('#jstree').jstree(true);
+//            createNode(instance.get_selected(), "new_node_" + ele_count, "New node", "last");
+//            ele_count++;
+//        });
+
+        //delete node        
+//        $('#delete').on('click', function () {
+//            var instance = $('#jstree').jstree(true);
+//            instance.delete_node(instance.get_selected());
+//        });
+
+
 
         // When the jsTree is ready, add two more records.
         $('#jstree').on('ready.jstree', function (e, data) {
@@ -79,8 +214,11 @@
         // Helper method createNode(parent, id, text, position).
         // Dynamically adds nodes to the jsTree. Position can be 'first' or 'last'.
         function createNode(parent_node, new_node_id, new_node_text, position) {
-            
+
             if (parent_node.length) {
+                if (typeof position == 'undefined') {
+                    position = parent_node.length;
+                }
                 $('#jstree').jstree('create_node', parent_node, {"text": new_node_text, "id": new_node_id}, position, false, false);
             } else {
                 $("#jstree").jstree("create_node", null, null, "last", function (node) {
@@ -96,6 +234,7 @@
             myApp.Ajax.post_data = {id: node_data.id};
             myApp.Ajax.genericAjax($("#form_load"), 'html');
         }
+
         function update_parent(node_data) {
             console.log('node=', node_data.node);
             console.log('node parent=', node_data.parent);
@@ -110,23 +249,6 @@
             myApp.Ajax.genericAjax();
         }
 
-        $(document).on('click','#save_menu_detail',function(){
-            var form_data={
-                menu_name:$('#menu_name').val(),
-                menu_type:$('#menu_type').val(),
-                permission:$('#permission').val(),
-                url:$('#url').val(),
-                icon_class:$('#icon_class').val(),
-                menu_class:$('#menu_class').val(),
-                menu_attr:$('#attribute').val(),
-                parent:clicked_ele.parent,
-                menu_text:clicked_ele.text
-            };            
-            myApp.Ajax.controller = 'tree';
-            myApp.Ajax.method = 'save_menu_details';
-            myApp.Ajax.form_method = 'POST';
-            myApp.Ajax.post_data = {"menu_data":form_data};
-            myApp.Ajax.genericAjax($("#form_load"), 'html');
-        });
+
     });
 </script>

@@ -14,8 +14,8 @@ class Rbac_permission extends CI_Model {
     public function __construct() {
         parent::__construct();
 
-        $this->load->model('rbac_action');
-        $this->load->model('rbac_module');
+        $this->load->model('rbac_new/rbac_action');
+        $this->load->model('rbac_new/rbac_module');
         $this->layout->layout = 'admin_layout';
         $this->layout->layoutsFolder = 'layouts/admin';
         $this->layout->lMmenuFlag = 1;
@@ -414,6 +414,39 @@ class Rbac_permission extends CI_Model {
         $this->db->update('rbac_permissions', $data);
     }
 
+    /**
+     * @param  : $columns,$index=null, $conditions = null
+     * @desc   :
+     * @return :
+     * @author :
+     * @created:05/17/2018
+     */
+    public function get_perm_options($columns=null, $index = null, $conditions = null) {
+        if (!$columns) {
+            $columns = 'rm.name module_name,ra.name action_name,';
+        }
+        if (!$index) {
+            $index = 'permission_id';
+        }
+        $this->db->select("$columns,$index")
+                ->from('rbac_permissions rp')
+                ->join('rbac_modules rm','rp.module_id=rp.module_id')
+                ->join('rbac_actions ra','ra.action_id=rp.action_id');
+
+        if ($conditions && is_array($conditions)):
+            foreach ($conditions as $col => $val):
+                $this->db->where("$col", $val);
+            endforeach;
+        endif;
+        $result = $this->db->get()->result_array();
+        //pma($result,1);
+        $list = array();
+        $list[''] = 'Select permissions';
+        foreach ($result as $key => $val):
+            $list[$val[$index]] = $val['module_name'].'-'.$val['action_name'];
+        endforeach;
+        return $list;
+    }
 }
 
 ?>

@@ -18,7 +18,7 @@ class Menu extends CI_Model {
             $columns = ',rp.permission_id,rp.module_id,rp.action_id';
             $columns .= ',rm.name as "module_name",rm.code "module_code"';
             $columns .= ',ra.name as "action_name",ra.code "action_code"';
-            $columns .= ',m.menu_id,m.name "text",m.menu_order,m.parent prnt,m.icon_class,m.menu_class,m.attribute';
+            $columns .= ',m.menu_id id,m.name "text",m.menu_order,m.parent prnt,m.icon_class,m.menu_class,m.attribute';
             $columns .= ',m.permission_id,m.url,m.menu_type';
         }
 
@@ -32,16 +32,15 @@ class Menu extends CI_Model {
 
         if ($admin_flag) {
             $this->db->select($columns)->from('rbac_menu m')
-                    ->join('rbac_permissions rp', 'rp.permission_id=m.permission_id')
-                    ->join('rbac_modules rm', 'rm.module_id=rp.module_id')
-                    ->join('rbac_actions ra', 'ra.action_id=rp.action_id');
-                    //->where("rp.menu_name<>","")
-                    //->group_by('rp.permission_id')
-                    //->order_by('rp.module_id,rp.action_id');
-            
+                    ->join('rbac_permissions rp', 'rp.permission_id=m.permission_id', 'LEFT')
+                    ->join('rbac_modules rm', 'rm.module_id=rp.module_id', 'LEFT')
+                    ->join('rbac_actions ra', 'ra.action_id=rp.action_id', 'LEFT');
+            //->where("rp.menu_name<>","")
+            //->group_by('rp.permission_id')
+            //->order_by('rp.module_id,rp.action_id');
         } else {
             if (!$columns) {
-                $columns .= 'rrp.role_permission_id,rrp.role_id,rrp.permission_id';
+                $columns .= 'rrp.role_permission_id id,rrp.role_id,rrp.permission_id';
             }
             $this->db->select($columns)->from('rbac_role_permissions rrp')
                     ->join('rbac_permissions rp', 'rp.permission_id=rrp.permission_id')
@@ -60,10 +59,9 @@ class Menu extends CI_Model {
             $this->db->where($conditions);
         endif;
 
-        $result = $this->db->get()->result_array();        
+        $result = $this->db->get()->result_array();
         //pma($this->db->last_query(),1);        
         return $result;
-
     }
 
     /**
@@ -74,30 +72,75 @@ class Menu extends CI_Model {
      */
     public function update_menu_parent($data) {
         $id = $data['id'];
-        $parent = ($data['parent'])?$data['parent']:0;
-        $order = ($data['position'])?$data['position']+1:0;
+        $parent = ($data['parent']) ? $data['parent'] : 0;
+        $order = ($data['position']) ? $data['position'] + 1 : 0;
         if ($id) {
-            $query = "UPDATE rbac_permissions SET `parent`=$parent, `order`=$order WHERE PERMISSION_ID='$id'";            
+            $query = "UPDATE rbac_permissions SET `parent`=$parent, `order`=$order WHERE PERMISSION_ID='$id'";
             $this->db->query($query);
             return TRUE;
         }
         return FALSE;
     }
-    
-    public function save_menu_details($post_data){
-        pma($post_data);
-        $data=array(
-            'name'=>(isset($post_data['menu_name']) && $post_data['menu_name']!='')?$post_data['menu_name']:$post_data['menu_text'],
-            'menu_order'=>$post_data['menu_name'],
-            'parent'=>$post_data['parent'],
-            'icon_class'=>$post_data['icon_class'],
-            'menu_class'=>$post_data['menu_class'],
-            'attribute'=>$post_data['menu_attr'],
-            'permission_id'=>$post_data['permission'],
-            'url'=>$post_data['url'],
-            'menu_type'=>$post_data['menu_type']
-        );
-        pma($data,1);
+
+    public function save_menu_details($post_data, $default_flag = false) {
+        if ($default_flag) {
+            $data = array(
+                'name' => (isset($post_data['menu_name']) && $post_data['menu_name'] != '') ? $post_data['menu_name'] : 'new_node',
+                'menu_order' => $post_data['menu_order'],
+                'parent' => $post_data['parent'],
+                'menu_type' => 'l',
+                'status' => 'inactive'
+            );
+        } else {
+            $data = array(
+                'name' => (isset($post_data['menu_name']) && $post_data['menu_name'] != '') ? $post_data['menu_name'] : $post_data['menu_text'],
+                'menu_order' => $post_data['menu_name'],
+                'parent' => $post_data['parent'],
+                'icon_class' => $post_data['icon_class'],
+                'menu_class' => $post_data['menu_class'],
+                'attribute' => $post_data['menu_attr'],
+                'permission_id' => $post_data['permission'],
+                'url' => $post_data['url'],
+                'menu_type' => $post_data['menu_type']
+            );
+        }
+        $this->db->trans_begin();
+        $this->db->insert('rbac_menu', $data);
+        if ($this->db->trans_status() === TRUE) {
+            $last_id=  $this->db->insert_id();
+            $this->db->trans_commit();           
+            return $last_id;
+        } else {
+            $this->db->trans_rollback();
+            return false;
+        }
+    }
+
+    /**
+     * @method 
+     * @param
+     * @desc
+     * @author
+     * @date
+     */
+    public function delete_menu($post_data) {
+        if (isset($post_data['node_id']) && $post_data['node_id']) {
+            $this->db->trans_begin();
+            //delete childrens
+            $this->db->where('parent', $post_data['node_id']);
+            $this->db->delete('rbac_menu');
+            //delete parents
+            $this->db->where('menu_id', $post_data['node_id']);
+            $this->db->delete('rbac_menu');
+            if ($this->db->trans_status() === TRUE) {
+                $this->db->trans_commit();
+                return true;
+            } else {
+                $this->db->trans_rollback();
+                return false;
+            }
+        }
+        return false;
     }
 
 }
