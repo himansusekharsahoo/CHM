@@ -2,6 +2,7 @@
 var myApp = myApp || {};
 
 myApp.CommonMethod = {
+    log_flag:false,
     name: '',
     pageUrl: window.location,
     tempBaseUrl: base_url ,
@@ -23,6 +24,10 @@ myApp.CommonMethod = {
         eleObj.on('click', function () {
             $(':checkbox.'+itemClass).prop('checked', this.checked);
         });
+    },app_log:function(key,value){
+        if(this.log_flag){
+            console.log(key,value);
+        }
     }
 }//end sub namespace 
 myApp.CommonVar={
