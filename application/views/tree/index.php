@@ -17,7 +17,7 @@
 <script type="text/javascript">
     // Setup the jsTree.
     $(function () {
-        myApp.CommonMethod.log_flag = false;
+        myApp.CommonMethod.log_flag = true;
 
         var clicked_ele = '';
         var ele_count = 1;
@@ -35,15 +35,15 @@
             }
         }).on("changed.jstree", function (e, data) {
             if (data.selected.length) {
-                clicked_ele = data.instance.get_node(data.selected[0]);                
+                clicked_ele = data.instance.get_node(data.selected[0]);
                 myApp.CommonMethod.app_log('clicked_ele', clicked_ele);
-                var indx = $('#' + clicked_ele.id).index();                
+                var indx = $('#' + clicked_ele.id).index();
                 render_menu_form(clicked_ele);
                 $('#node_position').val(indx);
                 //make ajax call to fetch perm details
                 //alert('The selected node is: ' + data.instance.get_node(data.selected[0]).text);
             }
-        }).on("create_node.jstree", function (e, data) {            
+        }).on("create_node.jstree", function (e, data) {
             myApp.CommonMethod.app_log('New node created', data);
         }).on('delete_node.jstree', function (e, data) {
             myApp.CommonMethod.app_log('Delete node', data);
@@ -65,22 +65,42 @@
         });
 
         $(document).on('click', '#save_menu_detail', function () {
-            var form_data = {
-                menu_name: $('#menu_name').val(),
-                menu_type: $('#menu_type').val(),
-                permission: $('#permission').val(),
-                url: $('#url').val(),
-                icon_class: $('#icon_class').val(),
-                menu_class: $('#menu_class').val(),
-                menu_attr: $('#attribute').val(),
-                parent: clicked_ele.parent,
-                menu_text: clicked_ele.text
-            };
-            myApp.Ajax.controller = 'tree';
-            myApp.Ajax.method = 'save_menu_details';
-            myApp.Ajax.form_method = 'POST';
-            myApp.Ajax.post_data = {"menu_data": form_data};
-            myApp.Ajax.genericAjax($("#form_load"), 'html');
+            var promise = new Promise(function (resolve, reject) {
+                var form_data = {
+                    menu_name: $('#menu_name').val(),
+                    menu_type: $('#menu_type').val(),
+                    permission: $('#permission').val(),
+                    url: $('#url').val(),
+                    icon_class: $('#icon_class').val(),
+                    menu_class: $('#menu_class').val(),
+                    menu_attr: $('#attribute').val(),
+                    parent: clicked_ele.parent,
+                    menu_text: clicked_ele.text,
+                    menu_id: $('#menu_id').val(),
+                };
+                $.ajax({
+                    url: base_url + "tree/save_menu_details",
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: {"menu_data": form_data},
+                    success: function (result) {
+                        resolve(result);
+                    },
+                    error: function (result) {
+                        reject(result);
+                    }
+                });                
+            });
+            
+            promise.then(function (resolve) {
+                //show_message(resolve);
+                //myApp.CommonMethod.app_log('resolve', resolve);
+                show_message(resolve);
+            }, function (reject) {
+                //myApp.CommonMethod.app_log('reject', reject);
+                show_message(reject);
+            });
+
         });
 
         function createNewNode(parent_node) {
@@ -99,7 +119,7 @@
                     parent: parent_id,
                     menu_name: 'new_node_' + order
                 };
-                
+
                 myApp.CommonMethod.app_log('parent_node', node_data);
                 //console.log('node_data', node_data);
                 $.ajax({
@@ -120,7 +140,7 @@
                 myApp.CommonMethod.app_log('resolve', resolve);
                 var tree = $("#jstree").jstree(true);
                 tree.deselect_all(true);
-                $("#jstree").one("refresh.jstree", function () {                    
+                $("#jstree").one("refresh.jstree", function () {
                     tree.select_node(resolve.new_node);
                 })
                 tree.refresh();
@@ -179,10 +199,12 @@
         }
 
         function show_message(reject) {
+            myApp.CommonMethod.app_log('resolve', reject);
             var errMsg = {
-                title: (reject.title != '') ? errMsg.title : 'Manage Menu',
+                title: (typeof reject.title !='undefined' && reject.title != '') ? errMsg.title : 'Manage Menu',
                 message: (reject.message != '') ? errMsg.message : 'There are some error, please try again!'
             }
+            myApp.CommonMethod.app_log('errMsg', errMsg);
             myApp.modal.alert(errMsg);
         }
 

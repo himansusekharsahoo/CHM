@@ -73,7 +73,7 @@ class Rbac_roles extends CI_Controller {
 
         if ($this->input->is_ajax_request()) {
             $returned_list = '';
-            $returned_list = $this->rbac_role->get_rbac_role_datatable($data);
+            $returned_list = $this->rbac_role->get_rbac_role_datatable($data);            
             echo $returned_list;
             exit();
         }
@@ -104,7 +104,46 @@ class Rbac_roles extends CI_Controller {
                 )
             )
         );
-        $data['data'] = $config;
+        $header = array(
+            array(
+                'db_column' => 'name',
+                'title' => 'NAME',
+                'class_name' => 'dt_name',
+                'orderable' => 'true',
+                'visible' => 'true',
+                'searchable' => 'true'
+            ),
+            array(
+                'db_column' => 'code',
+                'title' => 'CODE',
+                'class_name' => 'dt_cuid',
+                'orderable' => 'true',
+                'visible' => 'true'
+            ),
+            array(
+                'db_column' => 'action',
+                'title' => 'Action',
+                'class_name' => 'dt_cuid',
+                'orderable' => 'true',
+                'visible' => 'true'
+            )
+        );
+        $config = array(
+            'dt_markup' => TRUE,
+            'dt_id' => 'raw_cert_data_dt_table',
+            'dt_header' => $header,
+            //'dt_extra_header' => $dt_extra_head,
+            //'dt_post_data' => 'filters',
+            'dt_ajax' => array(
+                'dt_url' => base_url('/rbac_new/rbac_roles/index')
+            ),
+            'custom_lengh_change' => true,
+            'dt_dom' => '<<"row " <"col-md-3 no_rpad" <"col-sm-10 custom_length_box no_pad "><"col-sm-2 custom_length_box_all no_pad ">><"col-md-9 no-pad " <"col-md-12 no-pad" <" marginR20" f>>>><t><"row marginT10" <"col-md-12 no-pad" <"col-md-12 no-pad" <"page-jump pull-right col-sm-6" <"pull-right marginL20" p>>>>>',
+            'options' => array(
+                'iDisplayLength' => '5'
+            )
+        );
+        $data['data'] = array('config'=>$config);
         $this->layout->render($data);
     }
 
@@ -168,7 +207,7 @@ class Rbac_roles extends CI_Controller {
         );
         if ($this->input->post()):
             $data['data'] = $this->input->post();
-            $data['data']['modified']=date('Y-m-d H:m:t');
+            $data['data']['modified'] = date('Y-m-d H:m:t');
             $config = array(
                 array(
                     'field' => 'name',
@@ -265,6 +304,189 @@ class Rbac_roles extends CI_Controller {
             exit();
         endif;
         return 'Invalid request type.';
+    }
+
+    /**
+     * @param
+     * @return
+     * @desc get datatable dynamic code
+     * @author
+     */
+    public function get_cert_dynamic_dt_code() {
+
+        if ($this->input->is_ajax_request()) {
+            $input_values = $this->session->userdata('TOP_CERTS_ANA_REPO_CHART_FILTER');
+            $chart_data = $this->Certificate_analytical_report->get_top_cert($input_values['FILTER_DATA']);
+
+            $certs = $header2 = array();
+            if (isset($chart_data) && is_array($chart_data)) {
+                foreach ($chart_data as $rec) {
+                    $certs[$rec['SDP_CERTTITLE_ID']] = $rec['SDP_CERT_TITLE'];
+                }
+            }
+            $certs_colspan = count($certs) * 2;
+            $emp_det_header = array(
+                array(
+                    'db_column' => 'NAME',
+                    'title' => $this->lang->line("SDP_CERT_ANA_REPO_RAWTB_NAME"),
+                    'class_name' => 'dt_name',
+                    'orderable' => 'true',
+                    'visible' => 'true',
+                    'searchable' => 'true'
+                ),
+                array(
+                    'db_column' => 'CUID',
+                    'title' => $this->lang->line("SDP_CERT_ANA_REPO_RAWTB_CUID"),
+                    'class_name' => 'dt_cuid',
+                    'orderable' => 'true',
+                    'visible' => 'true'
+                )
+            );
+            $cert_header = $cert_prof_header = array();
+            $cert_header_flag = false;
+            foreach ($certs as $cert_id => $cert_name) {
+                $cert_prof_header[] = array(
+                    'db_column' => 'SDP_CERTS_PROFICIENCY',
+                    'title' => $this->lang->line("SDP_CERT_ANA_PROFICIENCY"),
+                    'class_name' => 'dt_cert',
+                    'orderable' => 'false',
+                    'visible' => 'true',
+                    'data' => 'function(item) {
+                                if(item.' . $cert_id . '){
+                                    return item.' . $cert_id . ';
+                                }
+                                return \'\';
+                           }',
+                    'cert_id' => $cert_id
+                );
+                $cert_prof_header[] = array(
+                    'db_column' => 'SDP_CERT_VENDOR_NAME',
+                    'title' => $this->lang->line("SDP_CERT_ANA_VENDOR"),
+                    'class_name' => 'dt_cert',
+                    'orderable' => 'false',
+                    'visible' => 'true',
+                    'data' => 'function(item) {
+                            if(item.' . $cert_id . '_V){
+                                return item.' . $cert_id . '_V;
+                            }
+                            return \'\';                                
+                           }',
+                    'cert_id' => $cert_id
+                );
+                $cert_header[] = array(
+                    'class' => 'dt_top_head dt_cert',
+                    'title' => $cert_name,
+                    'colspan' => '2',
+                    'style' => 'width:240px'
+                );
+                $cert_header_flag = true;
+            }
+
+            $mngr_det_header = array(
+                array(
+                    'db_column' => 'MANAGER_NAME',
+                    'title' => $this->lang->line("SDP_CERT_ANA_REPO_RAWTB_MNGR_NAME"),
+                    'class_name' => 'dt_name',
+                    'orderable' => 'false',
+                    'visible' => 'true'
+                ), array(
+                    'db_column' => 'MANAGER_CUID',
+                    'title' => $this->lang->line("SDP_CERT_ANA_REPO_RAWTB_MNGR_CUID"),
+                    'class_name' => 'dt_cuid',
+                    'orderable' => 'false',
+                    'visible' => 'true'
+                ),
+                array(
+                    'db_column' => 'EQ_DEPT_DESCR80',
+                    'title' => $this->lang->line("SDP_CERT_ANA_REPO_RAWTB_DEPT"),
+                    'class_name' => 'dt_dept',
+                    'orderable' => 'false',
+                    'visible' => 'true'
+                ),
+                array(
+                    'db_column' => 'EQ_P3_DESCR',
+                    'title' => $this->lang->line("SDP_CERT_ANA_REPO_RAWTB_ENTITY"),
+                    'class_name' => 'dt_entity',
+                    'orderable' => 'false',
+                    'visible' => 'true'
+                ),
+                array(
+                    'db_column' => 'COUNTRY',
+                    'title' => $this->lang->line("SDP_CERT_ANA_REPO_RAWTB_COUNTRY"),
+                    'class_name' => 'dt_country',
+                    'orderable' => 'false',
+                    'visible' => 'true'
+                )
+            );
+            $header = array_merge($emp_det_header, $cert_prof_header, $mngr_det_header);
+            $this->session->set_userdata('TOP_CERTS_ANA_REPO_RAW_TB_DYNA_HEADER', $header);
+            //pma($header,1);
+            $extra_head_temp = array(
+                array(
+                    'class' => 'dt_top_head dt_emp middle_align',
+                    'title' => $this->lang->line("SDP_CERT_ANA_REPO_RAWTB_EMP_DET"),
+                    'colspan' => '2',
+                    'rowspan' => ($cert_header_flag) ? '2' : "",
+                ),
+                array(
+                    'class' => 'dt_top_head dt_emp',
+                    'title' => $this->lang->line("SDP_CERT_ANA_REPO_RAWTB_TOP_CERT_HEAD"),
+                    'colspan' => $certs_colspan
+                ),
+                array(
+                    'class' => 'dt_top_head dt_mngr middle_align',
+                    'title' => $this->lang->line("SDP_CERT_ANA_REPO_RAWTB_MNGR_DET"),
+                    'colspan' => '2',
+                    'rowspan' => ($cert_header_flag) ? '2' : ""
+                ),
+                array(
+                    'class' => 'dt_top_head dt_hier middle_align',
+                    'title' => $this->lang->line("SDP_CERT_ANA_REPO_RAWTB_HIERARCHY"),
+                    'colspan' => '2',
+                    'rowspan' => ($cert_header_flag) ? '2' : ""
+                ),
+                array(
+                    'class' => 'dt_top_head dt_other middle_align',
+                    'title' => $this->lang->line("SDP_CERT_ANA_REPO_RAWTB_LOCATION"),
+                    'rowspan' => ($cert_header_flag) ? '2' : ""
+                )
+            );
+            $dt_extra_head = array('markup' => array());
+            //remove certification column
+            if ($cert_header_flag === false) {
+                unset($extra_head_temp[1]);
+            }
+            $dt_extra_head['markup'][] = $extra_head_temp;
+
+            if ($cert_header_flag) {
+                $dt_extra_head['markup'][] = $cert_header;
+            }
+
+            $this->session->set_userdata('TOP_CERT_ANA_REPO_RAW_TB_DYNA_EXTRA_HEADER', $dt_extra_head['markup']);
+
+            $config = array(
+                'dt_markup' => TRUE,
+                'dt_id' => 'raw_cert_data_dt_table',
+                'dt_header' => $header,
+                'dt_extra_header' => $dt_extra_head,
+                //'dt_post_data' => 'filters',
+                'dt_ajax' => array(
+                    'dt_url' => '/certificate_analytical_reports/get_cert_chart_raw_data_dt'
+                ),
+                'custom_lengh_change' => true,
+                'dt_dom' => '<<"row " <"col-md-3 no_rpad" <"col-sm-10 custom_length_box no_pad "><"col-sm-2 custom_length_box_all no_pad ">><"col-md-9 no-pad " <"col-md-12 no-pad" <" marginR20" f>>>><t><"row marginT10" <"col-md-12 no-pad" <"col-md-12 no-pad" <"page-jump pull-right col-sm-6" <"pull-right marginL20" p>>>>>',
+                'options' => array(
+                    'iDisplayLength' => '5'
+                )
+            );
+
+            $this->load->library('c_datatable');
+            $dt_data = $this->c_datatable->generate_grid($config);
+            echo json_encode(array("status" => 'success', 'data' => $dt_data));
+            exit;
+        } else {
+            $this->layout->render(array('error' => '401'));
+        }
     }
 
 }

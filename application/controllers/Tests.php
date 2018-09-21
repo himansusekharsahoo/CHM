@@ -47,5 +47,16 @@ class Tests extends CI_Controller{
         $this->layout->navTitle='Navigator title';
         $this->layout->render();        
     }
+    
+    public function datatable_test(){
+        $this->scripts_include->includePlugins(array('datatable'), 'js');
+        $this->scripts_include->includePlugins(array('datatable'), 'css');
+        
+        $this->layout->layout='admin_layout';
+        $this->layout->layoutsFolder='layouts/admin';
+        $this->breadcrumbs->push('admin_layout','/');
+        $this->layout->navTitle='Datatable test';
+        $this->layout->render();
+    }
 }
 

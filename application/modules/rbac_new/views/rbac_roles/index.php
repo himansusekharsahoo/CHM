@@ -1,7 +1,12 @@
 <div style="float:right;"><a class="btn btn-primary btn-sm" href="<?= APP_BASE ?>rbac_new/rbac_roles/create">Create</a></div>
 <div class="row-fluid">
     <?php
-    generate_gird($grid_config, "rbac_roles_list");
+    //generate_gird($grid_config, "rbac_roles_list");
+    
+    $this->load->library('c_datatable');
+    $dt_data = $this->c_datatable->generate_grid($config);
+    echo $dt_data;
+    //pma($dt_data,1);
     ?>
 </div><script type="text/javascript">
     $(function ($) {

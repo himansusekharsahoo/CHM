@@ -31,7 +31,7 @@ if (!function_exists('app_log')) {
             //pop off the 2 knowns
             array_shift($args);
             array_shift($args);
-            
+
             if (CUSTOM_APP_LOG === 1 || strpos($category, CUSTOM_APP_LOG) === 0) {
                 if ($_log === NULL) {
                     // references cannot be directly assigned to static variables, so we use an array
@@ -1054,30 +1054,62 @@ if (!function_exists('validate_auth')) {
 }
 
 if (!function_exists('tree_on_key_column')) {
-    function tree_on_key_column($data,$key_col){
-        $key_col_val=$prev_key_col_val='';
-        $result=array();
-        foreach($data as $rec){
-            if(is_array($rec)){                
-                $key_col_val=$rec[$key_col];                
-                if($key_col_val!=$prev_key_col_val){
-                    $prev_key_col_val=$key_col_val;
-                    $result[$key_col_val]=array(
-                        'module_id'=>$rec['module_id'],
-                        'module_name'=>$rec['module_name'],
-                        'module_code'=>$rec['module_code'],
-                        'actions'=>array()
+
+    function tree_on_key_column($data, $key_col) {
+        $key_col_val = $prev_key_col_val = '';
+        $result = array();
+        foreach ($data as $rec) {
+            if (is_array($rec)) {
+                $key_col_val = $rec[$key_col];
+                if ($key_col_val != $prev_key_col_val) {
+                    $prev_key_col_val = $key_col_val;
+                    $result[$key_col_val] = array(
+                        'module_id' => $rec['module_id'],
+                        'module_name' => $rec['module_name'],
+                        'module_code' => $rec['module_code'],
+                        'actions' => array()
                     );
                 }
-                $result[$key_col_val]['actions'][$rec['permission_id']]=array(
-                    'permission_id'=>$rec['permission_id'],
-                    'action_id'=>$rec['action_id'],
-                    'action_name'=>$rec['action_name'],
-                    'action_code'=>$rec['action_code'],
-                ); 
-                
-            } 
+                $result[$key_col_val]['actions'][$rec['permission_id']] = array(
+                    'permission_id' => $rec['permission_id'],
+                    'action_id' => $rec['action_id'],
+                    'action_name' => $rec['action_name'],
+                    'action_code' => $rec['action_code'],
+                );
+            }
         }
         return $result;
-    }    
+    }
+
+}
+
+if (!function_exists('assoc_array_merge')) {
+
+    /**
+     * @param
+     * @return
+     * @desc used to merge two associative array
+     * @author
+     */
+    function assoc_array_merge($array1, $array2) {
+        $merged = array();
+        foreach ($array1 as $key => $val) {
+            if (array_key_exists($key, $array2)) {
+                if (is_array($val)) {
+                    $merged[$key] = array_merge($val, $array2[$key]);
+                } else {
+                    $merged[$key] = $array2[$key];
+                }
+            } else {
+                $merged[$key] = $val;
+            }
+        }
+        //add the new array2 keys to array1
+        $diff_keys = array_diff_key($array2, $array1);
+        foreach ($diff_keys as $key => $val) {
+            $merged[$key] = $array2[$key];
+        }
+        return $merged;
+    }
+
 }

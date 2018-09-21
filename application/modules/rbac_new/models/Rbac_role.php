@@ -32,10 +32,12 @@ class Rbac_role extends CI_Model {
     public function get_rbac_role_datatable($data = null, $export = null, $tableHeading = null, $columns = null) {
         if (!$columns) {
             $columns = 'role_id,name,code,status,created,modified,created_by,modified_by';
+            $columns = 'role_id,name,code';
         }
 
         /*
          */
+        $this->load->library('datatables');
         $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, FALSE, FALSE)->from('rbac_roles t1');
 
         $this->datatables->unset_column("role_id")

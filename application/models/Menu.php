@@ -81,8 +81,14 @@ class Menu extends CI_Model {
         }
         return FALSE;
     }
-
+    /**
+     * @param
+     * @return
+     * @desc
+     * @author
+     */
     public function save_menu_details($post_data, $default_flag = false) {
+        $this->db->trans_begin();
         if ($default_flag) {
             $data = array(
                 'name' => (isset($post_data['menu_name']) && $post_data['menu_name'] != '') ? $post_data['menu_name'] : 'new_node',
@@ -91,6 +97,8 @@ class Menu extends CI_Model {
                 'menu_type' => 'l',
                 'status' => 'inactive'
             );
+            $this->db->insert('rbac_menu', $data);
+            $last_id=  $this->db->insert_id();
         } else {
             $data = array(
                 'name' => (isset($post_data['menu_name']) && $post_data['menu_name'] != '') ? $post_data['menu_name'] : $post_data['menu_text'],
@@ -101,13 +109,24 @@ class Menu extends CI_Model {
                 'attribute' => $post_data['menu_attr'],
                 'permission_id' => $post_data['permission'],
                 'url' => $post_data['url'],
-                'menu_type' => $post_data['menu_type']
+                'menu_type' => $post_data['menu_type'],
+                'status' => 'Active'
             );
+            
+            if($post_data['menu_id']){
+                $this->db->where('menu_id',$post_data['menu_id']);
+                $this->db->update('rbac_menu', $data);
+                $last_id=true;
+            }else{
+                $this->db->insert('rbac_menu', $data);
+                $last_id=  $this->db->insert_id();
+            }
+            
         }
-        $this->db->trans_begin();
-        $this->db->insert('rbac_menu', $data);
-        if ($this->db->trans_status() === TRUE) {
-            $last_id=  $this->db->insert_id();
+        
+        
+        
+        if ($this->db->trans_status() === TRUE) {            
             $this->db->trans_commit();           
             return $last_id;
         } else {

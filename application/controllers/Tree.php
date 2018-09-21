@@ -44,11 +44,20 @@ class Tree extends MX_Controller {
     public function get_menu_details_form() {
         if ($this->input->is_ajax_request()) {
             $this->load->model('rbac_new/rbac_permission');
-            $menu=$this->menu->get_menu_data(null,array());
+            $menu_id=  $this->input->post('id');
+            $menu=$this->menu->get_menu_data(null,array('menu_id'=>$menu_id),true);
             $permission_id_list = $this->rbac_permission->get_perm_options(null, null, null);
             $this->layout->data = array(
-                'permission_id_list' => $permission_id_list
+                'permission_id_list' => $permission_id_list,
+                'menu_details'=>$menu[0],
+                'menu_types'=>array(
+                    'l'=>'Left',
+                    'r'=>'Right',
+                    't'=>'Top',
+                    'o'=>'Other',
+                )
             );
+            //pma($menu,1);
             $view = $this->layout->render(array('view' => 'tree/menu_details_form'), true);
             echo $view;
         }
@@ -72,10 +81,10 @@ class Tree extends MX_Controller {
     public function save_menu_details() {
         if ($this->input->is_ajax_request()) {
             $post_data = $this->input->post('menu_data');
-            if ($this->menu->save_menu_details($post_data)) {
-                echo "success";
+            if ($this->menu->save_menu_details($post_data)) {                
+                echo json_encode(array('status' => 'success', 'message' => 'Menu saved successfully.'));
             } else {
-                echo "error";
+                echo json_encode(array('status' => 'error', 'message' => 'Thre is some critical error, please try again.'));
             }
         } else {
             echo "invalid request type";
