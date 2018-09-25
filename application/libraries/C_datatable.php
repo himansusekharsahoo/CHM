@@ -302,22 +302,22 @@ class C_datatable {
             if (isset($dt_dom['top_dom']) && $dt_dom['top_dom']) {
                 $dom .= '<"row-fluid no-pad"';
                 //set length change
-                if (isset($dt_dom['top_length_change'])) {
+                if (isset($dt_dom['top_length_change']) && $dt_dom['top_length_change']) {
                     $dom .= ' <"col-md-2 no-pad" l>';
                 }
                 $dom .= ' <"col-md-10 no-pad" <"col-md-12 no-pad"';
 
                 //set top filter
-                if (isset($dt_dom['top_pagination'])) {
+                if (isset($dt_dom['top_pagination']) && $dt_dom['top_pagination']) {
                     $dom .= ' <"pull-right" p>';
                 }
                 //set top filter
-                if (isset($dt_dom['top_filter'])) {
+                if (isset($dt_dom['top_filter']) && $dt_dom['top_filter']) {
                     $dom .= ' <"pull-right" f>';
                 }
 
                 //set top buttons
-                if (isset($dt_dom['top_buttons'])) {
+                if (isset($dt_dom['top_buttons']) && $dt_dom['top_buttons']) {
                     $dom .= ' <"dt_button pull-right marginR5 marginT5">';
                     $this->_dom_buttons = $dt_dom['top_buttons'];
                 }
