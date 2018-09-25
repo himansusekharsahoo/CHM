@@ -22,6 +22,7 @@ class Scripts_include {
                 COMPONENT_PATH . 'bootstrap/dist/js/bootstrap.min.js',
                 COMPONENT_PATH . 'admin-lte/dist/js/adminlte.min.js',
                 COMPONENT_PATH . 'bootstrap3-dialog/src/js/bootstrap-dialog.js',
+                COMPONENT_PATH . 'downloadjs/download.min.js',
                 '/js/messages.js',
                 '/js/myapp.js'
             ),

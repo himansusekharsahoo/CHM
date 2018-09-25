@@ -44,7 +44,7 @@ class Rbac_role extends CI_Model {
                 ->add_column("Action", $data['button_set'], 'c_encode(role_id)', 1, 1);
         if ($export):
             $data = $this->datatables->generate_export($export);
-            export_data($data['aaData'], $export, rbac_roles, $tableHeading);
+            return $data;
         endif;
         return $this->datatables->generate();
     }

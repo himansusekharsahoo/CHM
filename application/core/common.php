@@ -538,10 +538,19 @@ if (!function_exists('get_link_buttons')) {
                 if (isset($attribute['attr'])) {
                     $attr = $attribute['attr'];
                 }
-                $btn.="<a class='btn " . $attribute['btn_class'] . " btn-xs' " . $attr . " href='" . $href . "'"
-                        . " title='" . $attribute['btn_title'] . "' data-toggle='tooltip' data-placement='top'"
-                        . " $style><i class='fa " . $attribute['btn_icon'] . "'></i>"
-                        . "</a>" . $attribute['btn_separator'];
+                
+                $btn.='<a class="btn ' . $attribute["btn_class"] . ' btn-xs" ' . $attr . ' href="' . $href . '"'
+                        . ' title="' . $attribute["btn_title"] . '" data-toggle="tooltip" data-placement="top"'
+                        .  $style.'>';
+                
+                if(isset($attribute["btn_icon"])){
+                    $btn.='<i class="fa ' . $attribute["btn_icon"] . '"></i>';
+                }
+                if(isset($attribute["btn_text"])){
+                    $btn.=$attribute["btn_text"];
+                }
+                
+                $btn.='</a>' . $attribute["btn_separator"];
             }
         }
 

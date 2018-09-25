@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-event library="KeyTable">
+	<name>key-refocus</name>
+	<summary>KeyTable has refocused a cell</summary>
+	<since>2.3.0</since>
+
+	<type type="function">
+		<signature>function( e, datatable, cell, originalEvent )</signature>
+		<parameter type="object" name="e">
+			jQuery event object
+		</parameter>
+		<parameter type="DataTables.Api" name="datatable">
+			DataTable API instance for the table in question
+		</parameter>
+		<parameter type="DataTables.Api" name="cell">
+			A DataTables API instance that contains the cell that was focused (`dt-api cell()`)
+		</parameter>
+		<parameter type="object|null" name="originalEvent">
+			The original event that triggered this focus. It may be:
+
+			* A DOM `click` event - e.g. click to focus on a cell
+			* A DOM `focus` event - e.g. using tab to navigate around the page and tabbing into the table.
+			* `null`: no original event - e.g. when using `-api cell().focus()`. 
+		</parameter>
+		<scope>HTML table element</scope>
+	</type>
+
+	<description>
+        The `-event key-focus` event can be used to determine when a cell has been focused on, but will not be triggered again if a cell is clicked upon when it already has focus. While this is done to present unnecessary processing, there may be occasions where this information is useful.
+
+        To that end, this event behaves exactly like `-event key-focus`, but will only be triggered when a cell which already has focus is focused on again (either by a click event, or API action).
+	</description>
+
+	<example title="Show information about a cell when focus is activated, including reclicking on an already focused cell"><![CDATA[
+
+var table = $('#example').DataTable( {
+	keys: true
+} );
+
+table
+	.on( 'key-focus key-refocus', function ( e, datatable, cell, originalEvent ) {
+		var rowData = datatable.row( cell.index().row ).data();
+
+		$('#details').html( 'Cell in '+rowData[0]+' focused' );
+	} )
+	.on( 'key-blur', function ( e, datatable, cell ) {
+		$('#details').html( 'No cell selected' );
+	} );
+
+]]></example>
+
+	<related>kt-init keys.focus</related>
+	<related>kt-api cell().focus()</related>
+	<related>kt-event key-focus</related>
+	<related>kt-event key-blur</related>
+</dt-event>

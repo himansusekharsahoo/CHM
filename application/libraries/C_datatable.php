@@ -83,30 +83,29 @@ class C_datatable {
 		alert(\'Button activated\');
 	}'
     );
+    private $_dom_buttons = '';
 
     /**
      * End Buttons
      */
     //default dom declaration. <"col-md-3" B>
+    //top row- length change button hold filter
+    //buttom row- length change blank div pagination
     private $_dom = '<<"row-fluid no-pad" 
-                <"col-md-2 no-pad" l>
-                
+                <"col-md-2 no-pad" l>                
                 <"col-md-10 no-pad" 
-                    <"col-md-12 no-pad" 
-                        <"page-jump pull-right col-sm-6" 
-                            <"pull-right marginL20" p>
-                        >
+                    <"col-md-12 no-pad"                            
+                        <"pull-right" f>
+                        <"dt_button pull-right">
                     >
                 >
             ><t>
             <"row-fluid no-pad marginT10"
-                <"col-md-2 no-pad"l>
-                
+                <"col-md-2 no-pad" l>                
                 <"col-md-10 no-pad" 
-                    <"col-md-12 no-pad" 
-                        <"page-jump pull-right col-sm-6" 
-                            <"pull-right marginL20" p>
-                        >
+                    <"col-md-12 no-pad"                            
+                        <"pull-right" p>
+                        <"dt_buttom_info pull-right">
                     >
                 >
             >';
@@ -140,13 +139,13 @@ class C_datatable {
             'bSortClasses' => 'false',
             'bProcessing' => 'true',
             'bServerSide' => 'true',
-            'scrollY' => 350,
-            'sScrollX' => 'true',
-            'bScrollCollapse' => 'true',
+            'scrollY' => false,
+            'sScrollX' => false,
+            'bScrollCollapse' => false,
             'bSortCellsTop' => 'true',
             'iDisplayLength' => 15,
             'iDisplayStart' => 0,
-            'sScrollXInner' => '100%',
+            'sScrollXInner' => false,
             'searching' => 'true',
             'lengthMenu' => array(15, 30, 50, 100),
             'order' => array(
@@ -178,7 +177,7 @@ class C_datatable {
         $this->_dt_configs = array(
             'dt_id' => 'custom_table',
             'dt_class' => 'table table-sm table-striped',
-            'dt_attr' => 'cellpadding="0" cellpadding="0" width="100%"',
+            'dt_attr' => 'cellpadding="0" cellpadding="0"',
             /*
              * dt_header=>
              * array(
@@ -292,14 +291,94 @@ class C_datatable {
         }
     }
 
+    //prepare dt_dom
+    private function _prepare_dt_dom($dt_dom) {
+        if (is_array($dt_dom)) {
+            if ((!isset($dt_dom['top_dom']) || !$dt_dom['top_dom']) && (!isset($dt_dom['buttom_dom']) || !$dt_dom['buttom_dom'])) {
+                return '';
+            }
+
+            $dom = '<';
+            if (isset($dt_dom['top_dom']) && $dt_dom['top_dom']) {
+                $dom .= '<"row-fluid no-pad"';
+                //set length change
+                if (isset($dt_dom['top_length_change'])) {
+                    $dom .= ' <"col-md-2 no-pad" l>';
+                }
+                $dom .= ' <"col-md-10 no-pad" <"col-md-12 no-pad"';
+
+                //set top filter
+                if (isset($dt_dom['top_pagination'])) {
+                    $dom .= ' <"pull-right" p>';
+                }
+                //set top filter
+                if (isset($dt_dom['top_filter'])) {
+                    $dom .= ' <"pull-right" f>';
+                }
+
+                //set top buttons
+                if (isset($dt_dom['top_buttons'])) {
+                    $dom .= ' <"dt_button pull-right marginR5 marginT5">';
+                    $this->_dom_buttons = $dt_dom['top_buttons'];
+                }
+
+                $dom .= '>><t>';
+            }
+
+            if (isset($dt_dom['buttom_dom']) && $dt_dom['buttom_dom']) {
+                //set buttom options
+                $dom .= ' <"row-fluid no-pad marginT10"';
+                //set length change
+                if (isset($dt_dom['buttom_length_change'])) {
+                    $dom .= ' <"col-md-2 no-pad" l>';
+                }
+                $dom .= ' <"col-md-10 no-pad" <"col-md-12 no-pad"';
+
+                //set top filter
+                if (isset($dt_dom['buttom_pagination'])) {
+                    $dom .= ' <"pull-right" p>';
+                }
+                //set top filter
+                if (isset($dt_dom['buttom_filter'])) {
+                    $dom .= ' <"pull-right" f>';
+                }
+                //set top buttons
+                if (isset($dt_dom['buttom_info'])) {
+                    $dom .= ' <"dt_buttom_info pull-right">';
+                }
+
+                $dom .= '>>';
+            }
+
+            $dom .= '>'; //end dom            
+
+            $dt_dom = $dom;
+        }
+        return $dt_dom;
+    }
+
     //set datatable dom
     private function _set_dt_dom() {
         $dt_dom = $this->_get_dt_config_value('dt_dom');
         if ($dt_dom) {
-            $this->_dt_configs['options']['dom'] = $dt_dom;
+            $this->_dt_configs['options']['dom'] = $this->_prepare_dt_dom($dt_dom);
         } else {
-            $this->_dt_configs['options']['dom'] = str_replace(array("\n", "\r"), '', $this->_dt_configs['options']['dom']);
+            if (isset($this->_dt_configs['options']['dom'])) {
+                $this->_dt_configs['options']['dom'] = str_replace(array("\n", "\r"), '', $this->_dt_configs['options']['dom']);
+            }
         }
+    }
+
+    private function _set_dt_buttons() {
+        $append_buttons = '';
+        if ($this->_dom_buttons) {
+            $append_buttons = 'if ($.fn.DataTable.isDataTable($(\'#' . $this->_dt_id . '\'))) {
+                        if (typeof ' . $this->_dt_obj . ' != \'undefined\') {
+                            $(".dt_button").append(\'' . $this->_dom_buttons . '\');
+                        }
+                    }' . PHP_EOL;
+        }
+        return $append_buttons;
     }
 
     //prepare dt ajax
@@ -378,9 +457,9 @@ class C_datatable {
                         case 'fnRowCallback':
 
                         case 'fnServerData':
-                            
+
                         case 'drawCallback':
-                            
+
                         case 'fnServerParams':
                             $this->_dt_code.=preg_replace('/\"__replace_callback_code__\"/', $code, $template);
                             break;
@@ -492,11 +571,11 @@ class C_datatable {
                         $markup .= '<tr>';
                         foreach ($rows as $ths) {
                             $markup .= '<th ';
-                            $text = '';                            
-                            foreach ($ths as $att => $val) {                                
+                            $text = '';
+                            foreach ($ths as $att => $val) {
                                 if ($att == 'title') {
                                     $text = $val;
-                                } else {                                    
+                                } else {
                                     $markup .= $att . "='" . $val . "' ";
                                 }
                             }
@@ -505,7 +584,7 @@ class C_datatable {
                             $markup .= '</th>';
                         }
                         $markup .= '</tr>';
-                    }                    
+                    }
                 }
             }
             //pma($markup,1);
@@ -534,6 +613,7 @@ class C_datatable {
             $this->_dt_code.=$this->_dt_configs['extra_js_code'];
         }
         $this->_dt_code.=$this->_set_custom_datalength_change();
+        $this->_dt_code.=$this->_set_dt_buttons();
         return $this;
     }
 
@@ -557,7 +637,7 @@ class C_datatable {
                 ->_set_table_markup()
                 ->_set_loading_markup();
         //return $this->_dt_code;
-        return '<div class="' . $this->_dt_id . '_table_cont">' . $this->_loading_markup . $this->_dt_configs['dt_markup'] . $this->_dt_code. '</div>' ;
+        return '<div class="' . $this->_dt_id . '_table_cont">' . $this->_loading_markup . $this->_dt_configs['dt_markup'] . $this->_dt_code . '</div>';
     }
 
 }

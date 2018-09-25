@@ -31,13 +31,12 @@ class Rbac_roles extends CI_Controller {
      * @author :
      * @created:05/17/2018
      */
-    public function index($export = 0) {
+    public function index() {
 
         $this->breadcrumbs->push('index', '/rbac_new/rbac_roles/index');
         $this->scripts_include->includePlugins(array('datatable'), 'css');
         $this->scripts_include->includePlugins(array('datatable'), 'js');
         $this->layout->navTitle = 'Rbac role list';
-        $data = array();
         $data = array();
         $buttons[] = array(
             'btn_class' => 'btn-info',
@@ -69,41 +68,56 @@ class Rbac_roles extends CI_Controller {
             'attr' => 'data-role_id="$1"'
         );
         $button_set = get_link_buttons($buttons);
+
         $data['button_set'] = $button_set;
 
         if ($this->input->is_ajax_request()) {
-            $returned_list = '';
-            $returned_list = $this->rbac_role->get_rbac_role_datatable($data);            
-            echo $returned_list;
-            exit();
-        }
-        if ($export) {
-            $tableHeading = array('name' => 'name', 'code' => 'code', 'status' => 'status', 'created' => 'created', 'modified' => 'modified', 'created_by' => 'created_by', 'modified_by' => 'modified_by',);
-            ;
-            $this->rbac_role->get_rbac_role_datatable($data, $export, $tableHeading);
-        }
+            $export = $this->input->post('export');
+            if ($export) {
+                $tableHeading = array('name' => 'name', 'code' => 'code', 'status' => 'status', 'created' => 'created', 'modified' => 'modified', 'created_by' => 'created_by', 'modified_by' => 'modified_by');
+                $data = $this->rbac_role->get_rbac_role_datatable($data, $export, $tableHeading);
+                //pma($data,1);
+                $header_names = array_keys($data['aaData'][0]);
+                //prepare headers
+                $body_col_map = array();
+                $date = array(
+                    array(
+                        'title' => 'Date of Export Report',
+                        'value' => date('d-m-Y')
+                    )
+                );
+                $head_cols = array();
 
-        $config['grid_config'] = array(
-            'table' => array(
-                'columns' => array('name', 'code', 'status', 'created', 'modified', 'created_by', 'modified_by'),
-                'columns_alias' => array('name', 'code', 'status', 'created', 'modified', 'created_by', 'modified_by', 'Action')
-            ),
-            'grid' => array(
-                'ajax_source' => 'rbac_new/rbac_roles/index',
-                'table_tools' => array('pdf', 'xls', 'csv'),
-                'cfilter_columns' => array('name', 'code', 'status', 'created', 'modified', 'created_by', 'modified_by'),
-                'sort_columns' => array('name', 'code', 'status', 'created', 'modified', 'created_by', 'modified_by'),
-                'column_order' => array('0' => 'ASC'),
-            //'cfilter_pos'=>'buttom'
-            ),
-            'table_tools' => array(
-                'xls' => array(
-                    'url' => 'rbac_new/rbac_roles/index/xls'
-                ), 'csv' => array(
-                    'url' => 'rbac_new/rbac_roles/index/csv'
-                )
-            )
-        );
+                foreach ($header_names as $col) {
+                    $head_cols[] = array(
+                        'title' => ucfirst($col),
+                        'track_auto_filter' => 1
+                    );
+                    $body_col_map[] = array('db_column' => $col);
+                }
+                $header = array($date, $head_cols);
+                $worksheet_name = "rbac_roles";
+                $file_name = "rbac_role_list" . '.xlsx';
+                $config = array(
+                    'db_data' => $data['aaData'],
+                    'header_rows' => $header,
+                    'body_column' => $body_col_map,
+                    'worksheet_name' => $worksheet_name,
+                    'file_name' => $file_name,
+                    'download' => true
+                );
+
+                $this->load->library('excel_utility');
+                $this->excel_utility->download_excel($config);
+                ob_end_flush();
+                exit;
+            } else {
+                $returned_list = '';
+                $returned_list = $this->rbac_role->get_rbac_role_datatable($data);
+                echo $returned_list;
+                exit();
+            }
+        }
         $header = array(
             array(
                 'db_column' => 'name',
@@ -128,6 +142,26 @@ class Rbac_roles extends CI_Controller {
                 'visible' => 'true'
             )
         );
+        $create_btn = array(
+            array(
+                'btn_class' => 'btn-primary',
+                'btn_href' => base_url('rbac_new/rbac_roles/create'),
+                'btn_icon' => '',
+                'btn_title' => 'Create',
+                'btn_text' => 'Create',
+                'btn_separator' => ' '
+            ),
+            array(
+                'btn_class' => '',
+                'btn_href' => '#',
+                'btn_icon' => '',
+                'btn_title' => 'PDF',
+                'btn_text' => ' <img src="' . base_url("images/excel_icon.png") . '" alt="PDF">',
+                'btn_separator' => ' ',
+                'attr' => 'id="export_table"'
+            )
+        );
+        $create_btn = get_link_buttons($create_btn);
         $config = array(
             'dt_markup' => TRUE,
             'dt_id' => 'raw_cert_data_dt_table',
@@ -137,13 +171,23 @@ class Rbac_roles extends CI_Controller {
             'dt_ajax' => array(
                 'dt_url' => base_url('/rbac_new/rbac_roles/index')
             ),
-            'custom_lengh_change' => true,
-            'dt_dom' => '<<"row " <"col-md-3 no_rpad" <"col-sm-10 custom_length_box no_pad "><"col-sm-2 custom_length_box_all no_pad ">><"col-md-9 no-pad " <"col-md-12 no-pad" <" marginR20" f>>>><t><"row marginT10" <"col-md-12 no-pad" <"col-md-12 no-pad" <"page-jump pull-right col-sm-6" <"pull-right marginL20" p>>>>>',
+            'custom_lengh_change' => false,
+            //'dt_dom' =>'<<"row-fluid no-pad" <"col-md-2 no-pad red" l><"col-md-10 no-pad blue" <"col-md-12 no-pad blue" <"pull-right" f> <"dt_button pull-right">>>><t>>',
+            'dt_dom' => array(
+                'top_dom' => true,
+                'top_length_change' => true,
+                'top_filter' => true,
+                'top_buttons' => $create_btn,
+                'top_pagination' => true,
+                'buttom_dom' => true,
+                'buttom_length_change' => true,
+                'buttom_pagination' => true
+            ),
             'options' => array(
-                'iDisplayLength' => '5'
+                'iDisplayLength' => '15'
             )
         );
-        $data['data'] = array('config'=>$config);
+        $data['data'] = array('config' => $config);
         $this->layout->render($data);
     }
 

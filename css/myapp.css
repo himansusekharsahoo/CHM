@@ -68,3 +68,41 @@ label.error,div.error{
 .hand{
     cursor: pointer !important;
 }
+.loading-box{        
+    padding-top: 5% !important;
+    text-align: center !important;
+    position: absolute;
+    display: none;
+    height: 100%;
+    width: 100%;                
+    z-index: 1050;
+    background: rgba(0, 0, 0, 0.3) none repeat scroll 0 0;   
+}
+.red{
+    border:1px solid red;    
+}
+.blue{
+    border:1px solid blue;    
+}
+.green{
+    border:1px solid green;    
+}
+
+.pagination{
+    margin: 5px;
+}
+.width99{
+    width: 99% !important;
+}
+.dataTables_scrollBody{
+    margin-left: -3px !important;
+}
+.table.dataTable.no-footer{
+    border-bottom: 1px solid #00c0ef;
+}
+.marginT10{
+    margin-top: 10px !important;
+}
+.marginR5{
+    margin-right: 5px !important;
+}

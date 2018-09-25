@@ -31,7 +31,7 @@ table.dataTable tbody tr td{
 }
 
 div.dataTables_filter {
-   width: 50%;
+   width: 100%;
    float: right;
    text-align: right;
 }
@@ -102,3 +102,12 @@ div.dataTables_paginate {
     border-color: #FF6600;
 }
 /******************************** End Datatable Pagination CSS***********************/ 
+.dataTables_length .form-control{
+    display: inline-block !important;
+    width: auto;
+    margin:0 2px 0 2px;    
+}
+.dataTables_filter .form-control{
+    display: inline-block !important;
+    width: auto;      
+}
