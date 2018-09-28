@@ -1,35 +1,45 @@
 <?php
 
-                if (!defined('BASEPATH')) exit('No direct script access allowed');
-               /**
-                * @class   : Rbac_user_roles
-                * @desc    :
-                * @author  : HimansuS
-                * @created :05/17/2018
-                */
-class Rbac_user_roles extends CI_Controller {
-public function __construct(){
-                    parent::__construct();                    
-                
-$this->load->model('rbac_user_role');$this->load->library('pagination');$this->load->library('form_validation');
-        $this->layout->layout='admin_layout';
-        $this->layout->layoutsFolder = 'layouts/admin';
-        $this->layout->lMmenuFlag=1;
-        $this->layout->rightControlFlag = 1; 
-        $this->layout->navTitleFlag = 1;}/**
-                * @param  : $export=0
-                * @desc   :
-                * @return :
-                * @author :
-                * @created:05/17/2018
-                */
-public function index($export=0){
+if (!defined('BASEPATH'))
+    exit('No direct script access allowed');
 
-        $this->breadcrumbs->push('index','/rbac_new/rbac_user_roles/index');
+/**
+ * @class   : Rbac_user_roles
+ * @desc    :
+ * @author  : HimansuS
+ * @created :05/17/2018
+ */
+class Rbac_user_roles extends CI_Controller {
+
+    public function __construct() {
+        parent::__construct();
+
+        $this->load->model('rbac_user_role');
+        $this->load->library('pagination');
+        $this->load->library('form_validation');
+        $this->layout->layout = 'admin_layout';
+        $this->layout->layoutsFolder = 'layouts/admin';
+        $this->layout->lMmenuFlag = 1;
+        $this->layout->rightControlFlag = 1;
+        $this->layout->navTitleFlag = 1;
+    }
+
+/**
+     * @param  : $export=0
+     * @desc   :
+     * @return :
+     * @author :
+     * @created:05/17/2018
+     */
+
+    public function index($export = 0) {
+
+        $this->breadcrumbs->push('index', '/rbac_new/rbac_user_roles/index');
         $this->scripts_include->includePlugins(array('datatable'), 'css');
         $this->scripts_include->includePlugins(array('datatable'), 'js');
-        $this->layout->navTitle='Rbac user role list';
-        $data=array();$data = array();
+        $this->layout->navTitle = 'Rbac user role list';
+        $data = array();
+        $data = array();
         $buttons[] = array(
             'btn_class' => 'btn-info',
             'btn_href' => base_url('rbac_new/rbac_user_roles/view'),
@@ -50,14 +60,14 @@ public function index($export=0){
         );
 
         $buttons[] = array(
-            'btn_class'     => 'btn-danger delete-record',
-            'btn_href'      => '#',
-            'btn_icon'      => 'fa-remove',
-            'btn_title'     => 'delete record',
+            'btn_class' => 'btn-danger delete-record',
+            'btn_href' => '#',
+            'btn_icon' => 'fa-remove',
+            'btn_title' => 'delete record',
             'btn_separator' => '',
-            'param'         => array('$1'),
-            'style'         => '',
-            'attr'           => 'data-user_role_id="$1"'
+            'param' => array('$1'),
+            'style' => '',
+            'attr' => 'data-user_role_id="$1"'
         );
         $button_set = get_link_buttons($buttons);
         $data['button_set'] = $button_set;
@@ -69,20 +79,21 @@ public function index($export=0){
             exit();
         }
         if ($export) {
-            $tableHeading = array('user_id'=>'user_id','role_id'=>'role_id',);;
+            $tableHeading = array('user_id' => 'user_id', 'role_id' => 'role_id',);
+            ;
             $this->rbac_user_role->get_rbac_user_role_datatable($data, $export, $tableHeading);
         }
-        
+
         $config['grid_config'] = array(
             'table' => array(
-                'columns' => array('user_id','role_id'),
-                'columns_alias' => array('user_id','role_id' ,'Action')
+                'columns' => array('user_id', 'role_id'),
+                'columns_alias' => array('user_id', 'role_id', 'Action')
             ),
             'grid' => array(
                 'ajax_source' => 'rbac_new/rbac_user_roles/index',
                 'table_tools' => array('pdf', 'xls', 'csv'),
-                'cfilter_columns' => array('user_id','role_id'),
-                'sort_columns' => array('user_id','role_id'),
+                'cfilter_columns' => array('user_id', 'role_id'),
+                'sort_columns' => array('user_id', 'role_id'),
                 'column_order' => array('0' => 'ASC'),
             //'cfilter_pos'=>'buttom'
             ),
@@ -96,155 +107,167 @@ public function index($export=0){
         );
         $data['data'] = $config;
         $this->layout->render($data);
+    }
 
-}/**
-                * @param  : 
-                * @desc   :
-                * @return :
-                * @author :
-                * @created:05/17/2018
-                */
-public function create(){
-$this->breadcrumbs->push('create','/rbac_new/rbac_user_roles/create');
+/**
+     * @param  : 
+     * @desc   :
+     * @return :
+     * @author :
+     * @created:05/17/2018
+     */
 
-$this->layout->navTitle='Rbac user role create';
-$data=array();
-	 if($this->input->post()):
-	 $config = array(
-array(
-                        'field' => 'user_id',
-                        'label' => 'user_id',
-                        'rules' => 'required'
-                    ),
-array(
-                        'field' => 'role_id',
-                        'label' => 'role_id',
-                        'rules' => 'required'
-                    ),
-);
-        $this->form_validation->set_rules($config);
-        
-	 if($this->form_validation->run()):
-	 
-                                $data['data']=$this->input->post();                        
-                                $result=$this->rbac_user_role->save($data['data']);
-                                
-	 if($result>=1):
-	 $this->session->set_flashdata('success', 'Record successfully saved!');
-	 redirect('/rbac_new/rbac_user_roles');
-	 else:
-	 $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
-	 endif;
-	 endif;
-	 endif;
-$data['role_id_list'] = $this->rbac_user_role->get_rbac_roles_options('role_id','role_id');
-$data['user_id_list'] = $this->rbac_user_role->get_rbac_users_options('user_id','user_id');
-$this->layout->data = $data;
-               $this->layout->render();
+    public function create() {
+        $this->breadcrumbs->push('create', '/rbac_new/rbac_user_roles/create');
 
-}/**
-                * @param  : $user_role_id=null
-                * @desc   :
-                * @return :
-                * @author :
-                * @created:05/17/2018
-                */
-public function edit($user_role_id=null){
-$this->breadcrumbs->push('edit','/rbac_new/rbac_user_roles/edit');
+        $this->layout->navTitle = 'Rbac user role create';
+        $data = array();
+        if ($this->input->post()):
+            $config = array(
+                array(
+                    'field' => 'user_id',
+                    'label' => 'user_id',
+                    'rules' => 'required'
+                ),
+                array(
+                    'field' => 'role_id',
+                    'label' => 'role_id',
+                    'rules' => 'required'
+                ),
+            );
+            $this->form_validation->set_rules($config);
 
-$this->layout->navTitle='Rbac user role edit';$data=array();
-	 if($this->input->post()):
-	 $data['data']=$this->input->post();
-	 $config = array(
-array(
-                        'field' => 'user_id',
-                        'label' => 'user_id',
-                        'rules' => 'required'
-                    ),
-array(
-                        'field' => 'role_id',
-                        'label' => 'role_id',
-                        'rules' => 'required'
-                    ),
-);
-        $this->form_validation->set_rules($config);
-        
-	 if($this->form_validation->run()):
-	                                                       
-                                $result=$this->rbac_user_role->update($data['data']);
-                                
-	 if($result>=1):
-	 $this->session->set_flashdata('success', 'Record successfully updated!');
-	 redirect('/rbac_new/rbac_user_roles');
-	 else:
-	 $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
-	 endif;
-	 endif;
-	 else:
-	 $user_role_id=c_decode($user_role_id);
- $result = $this->rbac_user_role->get_rbac_user_role(null, array('user_role_id' => $user_role_id));
-	 if($result):
-	 $result = current($result);
-	 endif;
-$data['data'] = $result;
-	 endif;
-$data['role_id_list'] = $this->rbac_user_role->get_rbac_roles_options('role_id','role_id');
-$data['user_id_list'] = $this->rbac_user_role->get_rbac_users_options('user_id','user_id');
-$this->layout->data = $data;
-               $this->layout->render();
+            if ($this->form_validation->run()):
 
-}/**
-                * @param  : $user_role_id
-                * @desc   :
-                * @return :
-                * @author :
-                * @created:05/17/2018
-                */
-public function view($user_role_id){
-$this->breadcrumbs->push('view','/rbac_new/rbac_user_roles/view');
+                $data['data'] = $this->input->post();
+                $result = $this->rbac_user_role->save($data['data']);
 
-$data=array();
-	 if($user_role_id):
-	 $user_role_id=c_decode($user_role_id);
+                if ($result >= 1):
+                    $this->session->set_flashdata('success', 'Record successfully saved!');
+                    redirect('/rbac_new/rbac_user_roles');
+                else:
+                    $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
+                endif;
+            endif;
+        endif;
+        $data['role_id_list'] = $this->rbac_user_role->get_rbac_roles_options('role_id', 'role_id');
+        $data['user_id_list'] = $this->rbac_user_role->get_rbac_users_options('user_id', 'user_id');
+        $this->layout->data = $data;
+        $this->layout->render();
+    }
 
-	 $this->layout->navTitle='Rbac user role view';$result = $this->rbac_user_role->get_rbac_user_role(null, array('user_role_id' => $user_role_id),1);
-	 if($result):
-	 $result = current($result);
-	 endif;
+/**
+     * @param  : $user_role_id=null
+     * @desc   :
+     * @return :
+     * @author :
+     * @created:05/17/2018
+     */
 
-                     $data['data'] = $result;
-                     $this->layout->data = $data;
-                     $this->layout->render();
-                     
-	 endif;
-return 0 ;
+    public function edit($user_role_id = null) {
+        $this->breadcrumbs->push('edit', '/rbac_new/rbac_user_roles/edit');
 
-}/**
-                * @param  : 
-                * @desc   :
-                * @return :
-                * @author :
-                * @created:05/17/2018
-                */
-public function delete(){
-	 if($this->input->is_ajax_request()):
-	 $user_role_id=  $this->input->post('user_role_id');
-	 if($user_role_id):
-	 $user_role_id=c_decode($user_role_id);
+        $this->layout->navTitle = 'Rbac user role edit';
+        $data = array();
+        if ($this->input->post()):
+            $data['data'] = $this->input->post();
+            $config = array(
+                array(
+                    'field' => 'user_id',
+                    'label' => 'user_id',
+                    'rules' => 'required'
+                ),
+                array(
+                    'field' => 'role_id',
+                    'label' => 'role_id',
+                    'rules' => 'required'
+                ),
+            );
+            $this->form_validation->set_rules($config);
 
-	 $result = $this->rbac_user_role->delete($user_role_id);
-	 if($result ==1):
-	 echo 'success';
- exit();
-	 else:
-	 echo 'Data deletion error !';
- exit();
-	 endif;
-	 endif;
-echo 'No data found to delete';
- exit();
-	 endif;
-return 'Invalid request type.' ;
+            if ($this->form_validation->run()):
+
+                $result = $this->rbac_user_role->update($data['data']);
+
+                if ($result >= 1):
+                    $this->session->set_flashdata('success', 'Record successfully updated!');
+                    redirect('/rbac_new/rbac_user_roles');
+                else:
+                    $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
+                endif;
+            endif;
+        else:
+            $user_role_id = c_decode($user_role_id);
+            $result = $this->rbac_user_role->get_rbac_user_role(null, array('user_role_id' => $user_role_id));
+            if ($result):
+                $result = current($result);
+            endif;
+            $data['data'] = $result;
+        endif;
+        $data['role_id_list'] = $this->rbac_user_role->get_rbac_roles_options('role_id', 'role_id');
+        $data['user_id_list'] = $this->rbac_user_role->get_rbac_users_options('user_id', 'user_id');
+        $this->layout->data = $data;
+        $this->layout->render();
+    }
+
+/**
+     * @param  : $user_role_id
+     * @desc   :
+     * @return :
+     * @author :
+     * @created:05/17/2018
+     */
+
+    public function view($user_role_id) {
+        $this->breadcrumbs->push('view', '/rbac_new/rbac_user_roles/view');
+
+        $data = array();
+        if ($user_role_id):
+            $user_role_id = c_decode($user_role_id);
+
+            $this->layout->navTitle = 'Rbac user role view';
+            $result = $this->rbac_user_role->get_rbac_user_role(null, array('user_role_id' => $user_role_id), 1);
+            if ($result):
+                $result = current($result);
+            endif;
+
+            $data['data'] = $result;
+            $this->layout->data = $data;
+            $this->layout->render();
+
+        endif;
+        return 0;
+    }
+
+/**
+     * @param  : 
+     * @desc   :
+     * @return :
+     * @author :
+     * @created:05/17/2018
+     */
+
+    public function delete() {
+        if ($this->input->is_ajax_request()):
+            $user_role_id = $this->input->post('user_role_id');
+            if ($user_role_id):
+                $user_role_id = c_decode($user_role_id);
+
+                $result = $this->rbac_user_role->delete($user_role_id);
+                if ($result == 1):
+                    echo 'success';
+                    exit();
+                else:
+                    echo 'Data deletion error !';
+                    exit();
+                endif;
+            endif;
+            echo 'No data found to delete';
+            exit();
+        endif;
+        return 'Invalid request type.';
+    }
 
 }
-} ?>
+
+?>

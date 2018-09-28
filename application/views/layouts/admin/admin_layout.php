@@ -45,28 +45,29 @@
                     }
                     ?>
                 </section>
-                <section class="content-message">                    
-                    <?php if ($this->session->flashdata('success')): ?>                        
-
-                        <div class="col-sm-12">
-                            <span class="label label-success"><?= $this->session->flashdata('success'); ?></span>
-                        </div>
-                    <?php endif; ?>
-                    <?php if ($this->session->flashdata('error')): ?> 
-                        <div class="col-sm-12">
-                            <span class="label label-danger"><?= $this->session->flashdata('error'); ?></span>                    
-                        </div>
-                    <?php endif; ?>
-                    <?php if ($this->session->flashdata('warning')): ?> 
-                        <div class="col-sm-12">
-                            <span class="label label-danger"><?= $this->session->flashdata('warning'); ?></span>                    
-                        </div>
-                    <?php endif; ?>
-                    <?php if ($this->session->flashdata('info')): ?> 
-                        <div class="col-sm-12">
-                            <span class="label label-danger"><?= $this->session->flashdata('info'); ?></span>                    
-                        </div>
-                    <?php endif; ?>
+                <section class="content-message">                   
+                    <div class="row-fluid">
+                        <?php if ($this->session->flashdata('success')): ?>
+                            <div class="col-sm-12 marginB5">
+                                <span class="label label-success"><?= $this->session->flashdata('success'); ?></span>
+                            </div>
+                        <?php endif; ?>
+                        <?php if ($this->session->flashdata('error')): ?> 
+                            <div class="col-sm-12 marginB5">
+                                <span class="label label-danger"><?= $this->session->flashdata('error'); ?></span>                    
+                            </div>
+                        <?php endif; ?>
+                        <?php if ($this->session->flashdata('warning')): ?> 
+                            <div class="col-sm-12 marginB5">
+                                <span class="label label-danger"><?= $this->session->flashdata('warning'); ?></span>                    
+                            </div>
+                        <?php endif; ?>
+                        <?php if ($this->session->flashdata('info')): ?> 
+                            <div class="col-sm-12 marginB5">
+                                <span class="label label-danger"><?= $this->session->flashdata('info'); ?></span>                    
+                            </div>
+                        <?php endif; ?>
+                    </div>
                 </section>
                 <!--Main content -->
                 <section class = "content">
@@ -102,7 +103,7 @@
         <!-- ./wrapper -->
         <?= $this->scripts_include->includeJs($this->layout->layout) ?>
         <script>
-            $.widget.bridge('uibutton', $.ui.button);            
+            $.widget.bridge('uibutton', $.ui.button);
         </script>
     </body>
 </html>

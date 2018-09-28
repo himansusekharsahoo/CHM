@@ -107,12 +107,15 @@ class Crud_views extends Crud_codes {
 
     private function _generate_list($action, $table_name, $model_name, $controller_name, $primary_key, $module_name, $data_table_flag) {
 
-        if ($data_table_flag) {
-            $code = "<div style=\"float:right;\"><a class=\"btn btn-primary btn-sm\" href=\"<?=APP_BASE?>" . $module_name . $controller_name . "/create\">Create</a></div>\n";
-            $code.='<div class="row-fluid">
-                <?php
-                generate_gird($grid_config, "'.$table_name.'_list");
-                ?>
+        if ($data_table_flag) {            
+            $code = '<?php ?> <div class="row-fluid">
+                <div class="col-sm-12 no_pad">
+                    <?php
+                    $this->load->library(\'c_datatable\');
+                    $dt_data = $this->c_datatable->generate_grid($config);
+                    echo $dt_data;
+                    ?>
+                </div>
             </div>';
         } else {
             $table_headers = $this->_setting->_table_detail[$table_name]['column_names'];
@@ -180,6 +183,7 @@ class Crud_views extends Crud_codes {
         }
         $js_code = $this->_reset_code()
                 ->_jq_delete("<?=APP_BASE?>" . $module_name . $controller_name . "/delete", "{'$primary_key':$(this).data('$primary_key')}", 'succes', 'error')
+                ->_jq_export($module_name,$controller_name)
                 ->_apend_ready()
                 ->_apend_script()
                 ->_get_code();
@@ -245,7 +249,9 @@ class Crud_views extends Crud_codes {
                     $form['elements']['hidden'] = $this->_generate_form_element($field, $table_name, true, $form_flag,$ref_columns);
                 }
             } else {
-                $form['elements'][$field['Field']] = $this->_generate_form_element($field, $table_name, false, $form_flag,$ref_columns);
+                if(!in_array(strtolower($field['Field']),array('status','created','modified','created_by','modified_by'))){
+                    $form['elements'][$field['Field']] = $this->_generate_form_element($field, $table_name, false, $form_flag,$ref_columns);
+                }
             }
         }
         $form['elements']['cancel'] = "<a class=\"text-right btn btn-default\" href=\"<?=APP_BASE?>".$module_name . $controller_name . "/index\">\n<span class=\"glyphicon glyphicon-th-list\"></span> Cancel\n</a>" . PHP_EOL;

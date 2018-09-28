@@ -58,5 +58,9 @@ class Tests extends CI_Controller{
         $this->layout->navTitle='Datatable test';
         $this->layout->render();
     }
+    
+    public function c_decode($str){
+        echo c_decode($str);
+    }
 }
 

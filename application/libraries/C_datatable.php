@@ -263,6 +263,7 @@ class C_datatable {
             foreach ($this->_dt_configs['dt_header'] as $indx => $cols) {
 
                 $title = (isset($cols['title'])) ? $cols['title'] : '';
+                $name = (isset($cols['name'])) ? $cols['name'] : $cols['db_column'];
                 $class_name = (isset($cols['class_name'])) ? $cols['class_name'] : '';
                 $orderable = (isset($cols['orderable'])) ? $cols['orderable'] : '';
                 $targets = (isset($cols['targets'])) ? $cols['targets'] : $indx;
@@ -271,6 +272,7 @@ class C_datatable {
 
                 $columns.='{';
                 $columns.='title:"' . $title . '",';
+                $columns.='name:"' . $name . '",';
                 $columns.='className:"' . $class_name . '",';
                 $columns.='orderable:' . $orderable . ',';
                 $columns.='targets:"' . $targets . '",';
@@ -288,6 +290,7 @@ class C_datatable {
             $columns = substr($columns, 0, -1);
             $columns.=']';
             $this->_dt_configs['options']['columns'] = $columns;
+            
         }
     }
 
@@ -304,6 +307,8 @@ class C_datatable {
                 //set length change
                 if (isset($dt_dom['top_length_change']) && $dt_dom['top_length_change']) {
                     $dom .= ' <"col-md-2 no-pad" l>';
+                }else{
+                    $dom .= ' <"col-md-2 no-pad">';
                 }
                 $dom .= ' <"col-md-10 no-pad" <"col-md-12 no-pad"';
 
@@ -331,6 +336,8 @@ class C_datatable {
                 //set length change
                 if (isset($dt_dom['buttom_length_change'])) {
                     $dom .= ' <"col-md-2 no-pad" l>';
+                }else{
+                    $dom .= ' <"col-md-2 no-pad">';
                 }
                 $dom .= ' <"col-md-10 no-pad" <"col-md-12 no-pad"';
 
@@ -402,6 +409,9 @@ class C_datatable {
             $ajax.='"data":' . $this->_dt_configs['dt_ajax']['dt_param'];
             $ajax.='}';
             $this->_dt_configs['options']['ajax'] = $ajax;
+            //$this->_dt_configs['options']['sAjaxSource'] = $this->_dt_configs['dt_ajax']['dt_url'];
+            //$this->_dt_configs['options']['sServerMethod'] ='POST';
+            
         }
     }
 

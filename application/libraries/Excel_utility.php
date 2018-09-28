@@ -104,13 +104,13 @@ class Excel_utility {
                                 //set autofilter
 
                                 if (isset($cols['track_auto_filter']) && $cols['track_auto_filter']) {
-                                    $this->_auto_filter_flag = true;                                    
+                                    $this->_auto_filter_flag = true;
                                 }
                                 $this->_header_indx = $this->_row_indx;
                                 //set freeze column
                                 if (isset($cols['freeze_column']) && $cols['freeze_column'] && !$this->_freeze_column) {
                                     $this->_freeze_column_flag = true;
-                                    $this->_freeze_column = $xcol . ($this->_row_indx+1);
+                                    $this->_freeze_column = $xcol . ($this->_row_indx + 1);
                                 }
 
                                 $this->_active_sheet->SetCellValue($xcol . $this->_row_indx, strip_tags($cols['title']));
@@ -147,7 +147,7 @@ class Excel_utility {
 
         $style_overlay = array(
             'font' => array(
-                'color' => array('rgb' => '000000')                
+                'color' => array('rgb' => '000000')
             ),
             'fill' => array(
                 'type' => PHPExcel_Style_Fill::FILL_SOLID,
@@ -243,31 +243,38 @@ class Excel_utility {
      * @desc
      * @author
      */
-    private function _set_worksheet_name(){
-        if(isset($this->_configs['worksheet_name'])){
+    private function _set_worksheet_name() {
+        if (isset($this->_configs['worksheet_name'])) {
             $this->_active_sheet->setTitle($this->_configs['worksheet_name']);
         }
         return $this;
     }
+
     /**
      * @param
      * @return
      * @desc
      * @author
      */
-    public function download_excel($config) {
+    public function download_excel($config, $type = 'xls') {
         if ($this->_validate_options($config)) {
-            $this->_create_header()                    
+            $this->_create_header()
                     ->_create_body()
                     ->_set_auto_filter()
                     ->_set_freeze_column()
                     ->_set_worksheet_name()
-                    ->_download();
+                    ->_download($type);
         } else {
             return FALSE;
         }
     }
 
+    /**
+     * @param
+     * @return
+     * @desc used to save the excel file
+     * @author
+     */
     public function save_excel() {
         if ($this->_validate_options($config)) {
             return $this->_create_header()
@@ -287,15 +294,34 @@ class Excel_utility {
      * @desc
      * @author
      */
-    private function _download() {
-        $objWriter = PHPExcel_IOFactory::createWriter($this->_excel, 'Excel2007');
-        ob_end_clean();
-        ob_start();
-        $objWriter->save("php://output");
-        $xlsData = ob_get_contents();
-        $file_name='test_xls.xlsx';
-        if(isset($this->_configs['file_name'])){
-            $file_name=$this->_configs['file_name'];
+    private function _download($type) {
+
+        $file_name = 'test_xls.xlsx';
+        if (isset($this->_configs['file_name'])) {
+            $file_name = $this->_configs['file_name'];
+        }
+        
+        switch ($type) {
+            case 'csv':
+                $objWriter = PHPExcel_IOFactory::createWriter($this->_excel, 'CSV');
+                ob_end_clean();
+                ob_start();
+                $objWriter->save("php://output");
+                $xlsData = ob_get_contents();
+                break;
+            case 'xls':
+                $objWriter = PHPExcel_IOFactory::createWriter($this->_excel, 'Excel2007');
+                ob_end_clean();
+                ob_start();
+                $objWriter->save("php://output");
+                $xlsData = ob_get_contents();
+                break;
+            default:
+                $objWriter = PHPExcel_IOFactory::createWriter($this->_excel, 'Excel2007');
+                ob_end_clean();
+                ob_start();
+                $objWriter->save("php://output");
+                $xlsData = ob_get_contents();
         }
         ob_end_clean();
         $response = array(

@@ -1,44 +1,103 @@
 <?php
 
-if (!defined('BASEPATH'))
-    exit('No direct script access allowed');
-
-/**
- * @class   : Rbac_roles
- * @desc    :
- * @author  : HimansuS
- * @created :05/17/2018
- */
+                if (!defined('BASEPATH')) exit('No direct script access allowed');
+               /**
+                * @class   : Rbac_roles
+                * @desc    :
+                * @author  : HimansuS
+                * @created :09/28/2018
+                */
 class Rbac_roles extends CI_Controller {
-
-    public function __construct() {
-        parent::__construct();
-
-        $this->load->model('rbac_role');
-        $this->load->library('pagination');
-        $this->load->library('form_validation');
-        $this->layout->layout = 'admin_layout';
+public function __construct(){
+                    parent::__construct();                    
+                
+$this->load->model('rbac_role');$this->load->library('pagination');$this->load->library('form_validation');
+        $this->layout->layout='admin_layout';
         $this->layout->layoutsFolder = 'layouts/admin';
-        $this->layout->lMmenuFlag = 1;
-        $this->layout->rightControlFlag = 1;
-        $this->layout->navTitleFlag = 1;
-    }
+        $this->layout->lMmenuFlag=1;
+        $this->layout->rightControlFlag = 1; 
+        $this->layout->navTitleFlag = 1;}/**
+                * @param  : $export=0
+                * @desc   :
+                * @return :
+                * @author :
+                * @created:09/28/2018
+                */
+public function index($export=0){
 
-    /**
-     * @param  : $export=0
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:05/17/2018
-     */
-    public function index() {
-
-        $this->breadcrumbs->push('index', '/rbac_new/rbac_roles/index');
+        $this->breadcrumbs->push('index','/rbac_new/rbac_roles/index');
         $this->scripts_include->includePlugins(array('datatable'), 'css');
         $this->scripts_include->includePlugins(array('datatable'), 'js');
-        $this->layout->navTitle = 'Rbac role list';
-        $data = array();
-        $buttons[] = array(
+        $this->layout->navTitle='Rbac role list';
+        $header=array(
+                array(
+                    'db_column' => 'name',
+                    'name' => 'Name',
+                    'title' => 'Name',
+                    'class_name' => 'dt_name',
+                    'orderable' => 'true',
+                    'visible' => 'true',
+                    'searchable' => 'true'
+                ),array(
+                    'db_column' => 'code',
+                    'name' => 'Code',
+                    'title' => 'Code',
+                    'class_name' => 'dt_name',
+                    'orderable' => 'true',
+                    'visible' => 'true',
+                    'searchable' => 'true'
+                ),array(
+                    'db_column' => 'status',
+                    'name' => 'Status',
+                    'title' => 'Status',
+                    'class_name' => 'dt_name',
+                    'orderable' => 'true',
+                    'visible' => 'true',
+                    'searchable' => 'true'
+                ),array(
+                    'db_column' => 'created',
+                    'name' => 'Created',
+                    'title' => 'Created',
+                    'class_name' => 'dt_name',
+                    'orderable' => 'true',
+                    'visible' => 'true',
+                    'searchable' => 'true'
+                ),array(
+                    'db_column' => 'modified',
+                    'name' => 'Modified',
+                    'title' => 'Modified',
+                    'class_name' => 'dt_name',
+                    'orderable' => 'true',
+                    'visible' => 'true',
+                    'searchable' => 'true'
+                ),array(
+                    'db_column' => 'created_by',
+                    'name' => 'Created_by',
+                    'title' => 'Created_by',
+                    'class_name' => 'dt_name',
+                    'orderable' => 'true',
+                    'visible' => 'true',
+                    'searchable' => 'true'
+                ),array(
+                    'db_column' => 'modified_by',
+                    'name' => 'Modified_by',
+                    'title' => 'Modified_by',
+                    'class_name' => 'dt_name',
+                    'orderable' => 'true',
+                    'visible' => 'true',
+                    'searchable' => 'true'
+                ),array(
+                'db_column' => 'Action',
+                'name' => 'Action',
+                'title' => 'Action',
+                'class_name' => 'dt_name',
+                'orderable' => 'true',
+                'visible' => 'true',
+                'searchable' => 'false'
+            )
+        );$data = $grid_buttons=array();
+        
+        $grid_buttons[] = array(
             'btn_class' => 'btn-info',
             'btn_href' => base_url('rbac_new/rbac_roles/view'),
             'btn_icon' => 'fa-eye',
@@ -47,7 +106,7 @@ class Rbac_roles extends CI_Controller {
             'param' => array('$1'),
             'style' => ''
         );
-        $buttons[] = array(
+        $grid_buttons[] = array(
             'btn_class' => 'btn-primary',
             'btn_href' => base_url('rbac_new/rbac_roles/edit'),
             'btn_icon' => 'fa-pencil',
@@ -57,92 +116,26 @@ class Rbac_roles extends CI_Controller {
             'style' => ''
         );
 
-        $buttons[] = array(
-            'btn_class' => 'btn-danger delete-record',
-            'btn_href' => '#',
-            'btn_icon' => 'fa-remove',
-            'btn_title' => 'delete record',
+        $grid_buttons[] = array(
+            'btn_class'     => 'btn-danger delete-record',
+            'btn_href'      => '#',
+            'btn_icon'      => 'fa-remove',
+            'btn_title'     => 'delete record',
             'btn_separator' => '',
-            'param' => array('$1'),
-            'style' => '',
-            'attr' => 'data-role_id="$1"'
+            'param'         => array('$1'),
+            'style'         => '',
+            'attr'           => 'data-role_id="$1"'
         );
-        $button_set = get_link_buttons($buttons);
-
+        $button_set = get_link_buttons($grid_buttons);
         $data['button_set'] = $button_set;
 
-        if ($this->input->is_ajax_request()) {
-            $export = $this->input->post('export');
-            if ($export) {
-                $tableHeading = array('name' => 'name', 'code' => 'code', 'status' => 'status', 'created' => 'created', 'modified' => 'modified', 'created_by' => 'created_by', 'modified_by' => 'modified_by');
-                $data = $this->rbac_role->get_rbac_role_datatable($data, $export, $tableHeading);
-                //pma($data,1);
-                $header_names = array_keys($data['aaData'][0]);
-                //prepare headers
-                $body_col_map = array();
-                $date = array(
-                    array(
-                        'title' => 'Date of Export Report',
-                        'value' => date('d-m-Y')
-                    )
-                );
-                $head_cols = array();
-
-                foreach ($header_names as $col) {
-                    $head_cols[] = array(
-                        'title' => ucfirst($col),
-                        'track_auto_filter' => 1
-                    );
-                    $body_col_map[] = array('db_column' => $col);
-                }
-                $header = array($date, $head_cols);
-                $worksheet_name = "rbac_roles";
-                $file_name = "rbac_role_list" . '.xlsx';
-                $config = array(
-                    'db_data' => $data['aaData'],
-                    'header_rows' => $header,
-                    'body_column' => $body_col_map,
-                    'worksheet_name' => $worksheet_name,
-                    'file_name' => $file_name,
-                    'download' => true
-                );
-
-                $this->load->library('excel_utility');
-                $this->excel_utility->download_excel($config);
-                ob_end_flush();
-                exit;
-            } else {
-                $returned_list = '';
-                $returned_list = $this->rbac_role->get_rbac_role_datatable($data);
-                echo $returned_list;
-                exit();
-            }
+        if ($this->input->is_ajax_request()) {            
+            $returned_list = $this->rbac_role->get_rbac_role_datatable($data);
+            echo $returned_list;
+            exit();
         }
-        $header = array(
-            array(
-                'db_column' => 'name',
-                'title' => 'NAME',
-                'class_name' => 'dt_name',
-                'orderable' => 'true',
-                'visible' => 'true',
-                'searchable' => 'true'
-            ),
-            array(
-                'db_column' => 'code',
-                'title' => 'CODE',
-                'class_name' => 'dt_cuid',
-                'orderable' => 'true',
-                'visible' => 'true'
-            ),
-            array(
-                'db_column' => 'action',
-                'title' => 'Action',
-                'class_name' => 'dt_cuid',
-                'orderable' => 'true',
-                'visible' => 'true'
-            )
-        );
-        $create_btn = array(
+        
+        $dt_tool_btn = array(
             array(
                 'btn_class' => 'btn-primary',
                 'btn_href' => base_url('rbac_new/rbac_roles/create'),
@@ -152,32 +145,39 @@ class Rbac_roles extends CI_Controller {
                 'btn_separator' => ' '
             ),
             array(
-                'btn_class' => '',
+                'btn_class' => 'no_pad',
                 'btn_href' => '#',
                 'btn_icon' => '',
-                'btn_title' => 'PDF',
-                'btn_text' => ' <img src="' . base_url("images/excel_icon.png") . '" alt="PDF">',
+                'btn_title' => 'XLS',
+                'btn_text' => ' <img src="' . base_url("images/excel_icon.png") . '" alt="XLS">',
                 'btn_separator' => ' ',
-                'attr' => 'id="export_table"'
+                'attr' => 'id="export_table_xls"'
+            ),
+            array(
+                'btn_class' => 'no_pad',
+                'btn_href' => '#',
+                'btn_icon' => '',
+                'btn_title' => 'CSV',
+                'btn_text' => ' <img src="' . base_url("images/csv_icon_sm.gif") . '" alt="CSV">',                
+                'btn_separator' => ' ',
+                'attr' => 'id="export_table_csv"'
             )
         );
-        $create_btn = get_link_buttons($create_btn);
+        $dt_tool_btn = get_link_buttons($dt_tool_btn);
+        
         $config = array(
             'dt_markup' => TRUE,
             'dt_id' => 'raw_cert_data_dt_table',
-            'dt_header' => $header,
-            //'dt_extra_header' => $dt_extra_head,
-            //'dt_post_data' => 'filters',
+            'dt_header' => $header,            
             'dt_ajax' => array(
-                'dt_url' => base_url('/rbac_new/rbac_roles/index')
+                'dt_url' => base_url('rbac_new/rbac_roles/index'),                
             ),
-            'custom_lengh_change' => false,
-            //'dt_dom' =>'<<"row-fluid no-pad" <"col-md-2 no-pad red" l><"col-md-10 no-pad blue" <"col-md-12 no-pad blue" <"pull-right" f> <"dt_button pull-right">>>><t>>',
+            'custom_lengh_change' => false,           
             'dt_dom' => array(
                 'top_dom' => true,
                 'top_length_change' => true,
                 'top_filter' => true,
-                'top_buttons' => $create_btn,
+                'top_buttons' => $dt_tool_btn,
                 'top_pagination' => true,
                 'buttom_dom' => true,
                 'buttom_length_change' => true,
@@ -189,350 +189,194 @@ class Rbac_roles extends CI_Controller {
         );
         $data['data'] = array('config' => $config);
         $this->layout->render($data);
-    }
-
-    /**
-     * @param  : 
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:05/17/2018
-     */
-    public function create() {
-        $this->breadcrumbs->push('create', '/rbac_new/rbac_roles/create');
-
-        $this->layout->navTitle = 'Rbac role create';
-        $data = array();
-        if ($this->input->post()):
-            $config = array(
-                array(
-                    'field' => 'name',
-                    'label' => 'name',
-                    'rules' => 'required'
-                ),
-                array(
-                    'field' => 'code',
-                    'label' => 'code',
-                    'rules' => 'required'
-                )
-            );
-            $this->form_validation->set_rules($config);
-
-            if ($this->form_validation->run()):
-
-                $data['data'] = $this->input->post();
-                $result = $this->rbac_role->save($data['data']);
-
-                if ($result >= 1):
-                    $this->session->set_flashdata('success', 'Record successfully saved!');
-                    redirect('/rbac_new/rbac_roles');
-                else:
-                    $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
-                endif;
-            endif;
-        endif;
-        $this->layout->data = $data;
-        $this->layout->render();
-    }
-
-    /**
-     * @param  : $role_id=null
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:05/17/2018
-     */
-    public function edit($role_id = null) {
-        $this->breadcrumbs->push('edit', '/rbac_new/rbac_roles/edit');
-
-        $this->layout->navTitle = 'Rbac role edit';
-        $data = array(
-            'status_list' => array('active' => 'active', 'inactive' => 'inactive')
-        );
-        if ($this->input->post()):
-            $data['data'] = $this->input->post();
-            $data['data']['modified'] = date('Y-m-d H:m:t');
-            $config = array(
-                array(
-                    'field' => 'name',
-                    'label' => 'name',
-                    'rules' => 'required'
-                ),
-                array(
-                    'field' => 'code',
-                    'label' => 'code',
-                    'rules' => 'required'
-                ),
-                array(
-                    'field' => 'status',
-                    'label' => 'status',
-                    'rules' => 'required'
-                )
-            );
-            $this->form_validation->set_rules($config);
-
-            if ($this->form_validation->run()):
-
-                $result = $this->rbac_role->update($data['data']);
-
-                if ($result >= 1):
-                    $this->session->set_flashdata('success', 'Record successfully updated!');
-                    redirect('/rbac_new/rbac_roles');
-                else:
-                    $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
-                endif;
-            endif;
-        else:
-            $role_id = c_decode($role_id);
-            $result = $this->rbac_role->get_rbac_role(null, array('role_id' => $role_id));
-            if ($result):
-                $result = current($result);
-            endif;
-            $data['data'] = $result;
-        endif;
-        $this->layout->data = $data;
-        $this->layout->render();
-    }
-
-    /**
-     * @param  : $role_id
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:05/17/2018
-     */
-    public function view($role_id) {
-        $this->breadcrumbs->push('view', '/rbac_new/rbac_roles/view');
-
-        $data = array();
-        if ($role_id):
-            $role_id = c_decode($role_id);
-
-            $this->layout->navTitle = 'Rbac role view';
-            $result = $this->rbac_role->get_rbac_role(null, array('role_id' => $role_id), 1);
-            if ($result):
-                $result = current($result);
-            endif;
-
-            $data['data'] = $result;
-            $this->layout->data = $data;
-            $this->layout->render();
-
-        endif;
-        return 0;
-    }
-
-    /**
-     * @param  : 
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:05/17/2018
-     */
-    public function delete() {
-        if ($this->input->is_ajax_request()):
-            $role_id = $this->input->post('role_id');
-            if ($role_id):
-                $role_id = c_decode($role_id);
-
-                $result = $this->rbac_role->delete($role_id);
-                if ($result == 1):
-                    echo '1';
-                    exit();
-                else:
-                    echo '0';
-                    exit();
-                endif;
-            endif;
-            echo 'No data found to delete';
-            exit();
-        endif;
-        return 'Invalid request type.';
-    }
-
-    /**
-     * @param
-     * @return
-     * @desc get datatable dynamic code
-     * @author
-     */
-    public function get_cert_dynamic_dt_code() {
-
-        if ($this->input->is_ajax_request()) {
-            $input_values = $this->session->userdata('TOP_CERTS_ANA_REPO_CHART_FILTER');
-            $chart_data = $this->Certificate_analytical_report->get_top_cert($input_values['FILTER_DATA']);
-
-            $certs = $header2 = array();
-            if (isset($chart_data) && is_array($chart_data)) {
-                foreach ($chart_data as $rec) {
-                    $certs[$rec['SDP_CERTTITLE_ID']] = $rec['SDP_CERT_TITLE'];
-                }
-            }
-            $certs_colspan = count($certs) * 2;
-            $emp_det_header = array(
-                array(
-                    'db_column' => 'NAME',
-                    'title' => $this->lang->line("SDP_CERT_ANA_REPO_RAWTB_NAME"),
-                    'class_name' => 'dt_name',
-                    'orderable' => 'true',
-                    'visible' => 'true',
-                    'searchable' => 'true'
-                ),
-                array(
-                    'db_column' => 'CUID',
-                    'title' => $this->lang->line("SDP_CERT_ANA_REPO_RAWTB_CUID"),
-                    'class_name' => 'dt_cuid',
-                    'orderable' => 'true',
-                    'visible' => 'true'
-                )
-            );
-            $cert_header = $cert_prof_header = array();
-            $cert_header_flag = false;
-            foreach ($certs as $cert_id => $cert_name) {
-                $cert_prof_header[] = array(
-                    'db_column' => 'SDP_CERTS_PROFICIENCY',
-                    'title' => $this->lang->line("SDP_CERT_ANA_PROFICIENCY"),
-                    'class_name' => 'dt_cert',
-                    'orderable' => 'false',
-                    'visible' => 'true',
-                    'data' => 'function(item) {
-                                if(item.' . $cert_id . '){
-                                    return item.' . $cert_id . ';
-                                }
-                                return \'\';
-                           }',
-                    'cert_id' => $cert_id
-                );
-                $cert_prof_header[] = array(
-                    'db_column' => 'SDP_CERT_VENDOR_NAME',
-                    'title' => $this->lang->line("SDP_CERT_ANA_VENDOR"),
-                    'class_name' => 'dt_cert',
-                    'orderable' => 'false',
-                    'visible' => 'true',
-                    'data' => 'function(item) {
-                            if(item.' . $cert_id . '_V){
-                                return item.' . $cert_id . '_V;
-                            }
-                            return \'\';                                
-                           }',
-                    'cert_id' => $cert_id
-                );
-                $cert_header[] = array(
-                    'class' => 'dt_top_head dt_cert',
-                    'title' => $cert_name,
-                    'colspan' => '2',
-                    'style' => 'width:240px'
-                );
-                $cert_header_flag = true;
-            }
-
-            $mngr_det_header = array(
-                array(
-                    'db_column' => 'MANAGER_NAME',
-                    'title' => $this->lang->line("SDP_CERT_ANA_REPO_RAWTB_MNGR_NAME"),
-                    'class_name' => 'dt_name',
-                    'orderable' => 'false',
-                    'visible' => 'true'
-                ), array(
-                    'db_column' => 'MANAGER_CUID',
-                    'title' => $this->lang->line("SDP_CERT_ANA_REPO_RAWTB_MNGR_CUID"),
-                    'class_name' => 'dt_cuid',
-                    'orderable' => 'false',
-                    'visible' => 'true'
-                ),
-                array(
-                    'db_column' => 'EQ_DEPT_DESCR80',
-                    'title' => $this->lang->line("SDP_CERT_ANA_REPO_RAWTB_DEPT"),
-                    'class_name' => 'dt_dept',
-                    'orderable' => 'false',
-                    'visible' => 'true'
-                ),
-                array(
-                    'db_column' => 'EQ_P3_DESCR',
-                    'title' => $this->lang->line("SDP_CERT_ANA_REPO_RAWTB_ENTITY"),
-                    'class_name' => 'dt_entity',
-                    'orderable' => 'false',
-                    'visible' => 'true'
-                ),
-                array(
-                    'db_column' => 'COUNTRY',
-                    'title' => $this->lang->line("SDP_CERT_ANA_REPO_RAWTB_COUNTRY"),
-                    'class_name' => 'dt_country',
-                    'orderable' => 'false',
-                    'visible' => 'true'
-                )
-            );
-            $header = array_merge($emp_det_header, $cert_prof_header, $mngr_det_header);
-            $this->session->set_userdata('TOP_CERTS_ANA_REPO_RAW_TB_DYNA_HEADER', $header);
-            //pma($header,1);
-            $extra_head_temp = array(
-                array(
-                    'class' => 'dt_top_head dt_emp middle_align',
-                    'title' => $this->lang->line("SDP_CERT_ANA_REPO_RAWTB_EMP_DET"),
-                    'colspan' => '2',
-                    'rowspan' => ($cert_header_flag) ? '2' : "",
-                ),
-                array(
-                    'class' => 'dt_top_head dt_emp',
-                    'title' => $this->lang->line("SDP_CERT_ANA_REPO_RAWTB_TOP_CERT_HEAD"),
-                    'colspan' => $certs_colspan
-                ),
-                array(
-                    'class' => 'dt_top_head dt_mngr middle_align',
-                    'title' => $this->lang->line("SDP_CERT_ANA_REPO_RAWTB_MNGR_DET"),
-                    'colspan' => '2',
-                    'rowspan' => ($cert_header_flag) ? '2' : ""
-                ),
-                array(
-                    'class' => 'dt_top_head dt_hier middle_align',
-                    'title' => $this->lang->line("SDP_CERT_ANA_REPO_RAWTB_HIERARCHY"),
-                    'colspan' => '2',
-                    'rowspan' => ($cert_header_flag) ? '2' : ""
-                ),
-                array(
-                    'class' => 'dt_top_head dt_other middle_align',
-                    'title' => $this->lang->line("SDP_CERT_ANA_REPO_RAWTB_LOCATION"),
-                    'rowspan' => ($cert_header_flag) ? '2' : ""
-                )
-            );
-            $dt_extra_head = array('markup' => array());
-            //remove certification column
-            if ($cert_header_flag === false) {
-                unset($extra_head_temp[1]);
-            }
-            $dt_extra_head['markup'][] = $extra_head_temp;
-
-            if ($cert_header_flag) {
-                $dt_extra_head['markup'][] = $cert_header;
-            }
-
-            $this->session->set_userdata('TOP_CERT_ANA_REPO_RAW_TB_DYNA_EXTRA_HEADER', $dt_extra_head['markup']);
-
-            $config = array(
-                'dt_markup' => TRUE,
-                'dt_id' => 'raw_cert_data_dt_table',
-                'dt_header' => $header,
-                'dt_extra_header' => $dt_extra_head,
-                //'dt_post_data' => 'filters',
-                'dt_ajax' => array(
-                    'dt_url' => '/certificate_analytical_reports/get_cert_chart_raw_data_dt'
-                ),
-                'custom_lengh_change' => true,
-                'dt_dom' => '<<"row " <"col-md-3 no_rpad" <"col-sm-10 custom_length_box no_pad "><"col-sm-2 custom_length_box_all no_pad ">><"col-md-9 no-pad " <"col-md-12 no-pad" <" marginR20" f>>>><t><"row marginT10" <"col-md-12 no-pad" <"col-md-12 no-pad" <"page-jump pull-right col-sm-6" <"pull-right marginL20" p>>>>>',
-                'options' => array(
-                    'iDisplayLength' => '5'
-                )
-            );
-
-            $this->load->library('c_datatable');
-            $dt_data = $this->c_datatable->generate_grid($config);
-            echo json_encode(array("status" => 'success', 'data' => $dt_data));
-            exit;
-        } else {
-            $this->layout->render(array('error' => '401'));
-        }
-    }
 
 }
+/**
+                * @param  : 
+                * @desc   :
+                * @return :
+                * @author :
+                * @created:09/28/2018
+                */
+public function export_grid_data(){
+$export_type = $this->input->post('export_type');
+        $tableHeading=array('name'=>'name','code'=>'code','status'=>'status','created'=>'created','modified'=>'modified','created_by'=>'created_by','modified_by'=>'modified_by',);
+        $cols ='name,code,status,created,modified,created_by,modified_by';        
+        $data= $this->rbac_role->get_rbac_role_datatable(null,true,$tableHeading);
+        $head_cols = $body_col_map = array();
+        $date = array(
+            array(
+                'title' => 'Date of Export Report',
+                'value' => date('d-m-Y')
+            )
+        );
+        foreach ($tableHeading as $db_col => $col) {
+            $head_cols[] = array(
+                'title' => ucfirst($col),
+                'track_auto_filter' => 1
+            );
+            $body_col_map[] = array('db_column' => $db_col);
+        }
+        $header = array($date, $head_cols);
+        $worksheet_name = 'rbac_roles';
+        $file_name = 'rbac_roles' .date('d_m_Y_H_i_s'). '.' . $export_type;
+        $config = array(
+            'db_data' => $data['aaData'],
+            'header_rows' => $header,
+            'body_column' => $body_col_map,
+            'worksheet_name' => $worksheet_name,
+            'file_name' => $file_name,
+            'download' => true
+        );
 
-?>
+        $this->load->library('excel_utility');
+        $this->excel_utility->download_excel($config, $export_type);
+        ob_end_flush();
+        exit;
+        
+
+}/**
+                * @param  : 
+                * @desc   :
+                * @return :
+                * @author :
+                * @created:09/28/2018
+                */
+public function create(){
+$this->breadcrumbs->push('create','/rbac_new/rbac_roles/create');
+
+$this->layout->navTitle='Rbac role create';
+$data=array();
+	 if($this->input->post()):
+	 $config = array(
+array(
+                        'field' => 'name',
+                        'label' => 'name',
+                        'rules' => 'required'
+                    ),
+array(
+                        'field' => 'code',
+                        'label' => 'code',
+                        'rules' => 'required'
+                    ),
+);
+        $this->form_validation->set_rules($config);
+        
+	 if($this->form_validation->run()):
+	 
+                                $data['data']=$this->input->post();                        
+                                $result=$this->rbac_role->save($data['data']);
+                                
+	 if($result>=1):
+	 $this->session->set_flashdata('success', 'Record successfully saved!');
+	 redirect('/rbac_new/rbac_roles');
+	 else:
+	 $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
+	 endif;
+	 endif;
+	 endif;
+$this->layout->data = $data;
+               $this->layout->render();
+
+}/**
+                * @param  : $role_id=null
+                * @desc   :
+                * @return :
+                * @author :
+                * @created:09/28/2018
+                */
+public function edit($role_id=null){
+$this->breadcrumbs->push('edit','/rbac_new/rbac_roles/edit');
+
+$this->layout->navTitle='Rbac role edit';$data=array();
+	 if($this->input->post()):
+	 $data['data']=$this->input->post();
+	 $config = array(
+array(
+                        'field' => 'name',
+                        'label' => 'name',
+                        'rules' => 'required'
+                    ),
+array(
+                        'field' => 'code',
+                        'label' => 'code',
+                        'rules' => 'required'
+                    ),
+);
+        $this->form_validation->set_rules($config);
+        
+	 if($this->form_validation->run()):
+	 $result=$this->rbac_role->update($data['data']);
+	 if($result>=1):
+	 $this->session->set_flashdata('success', 'Record successfully updated!');
+	 redirect('/rbac_new/rbac_roles');
+	 else:
+	 $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
+	 endif;
+	 endif;
+	 else:
+	 $role_id=c_decode($role_id);
+ $result = $this->rbac_role->get_rbac_role(null, array('role_id' => $role_id));
+	 if($result):
+	 $result = current($result);
+	 endif;
+$data['data'] = $result;
+	 endif;
+$this->layout->data = $data;
+               $this->layout->render();
+
+}/**
+                * @param  : $role_id
+                * @desc   :
+                * @return :
+                * @author :
+                * @created:09/28/2018
+                */
+public function view($role_id){
+$this->breadcrumbs->push('view','/rbac_new/rbac_roles/view');
+
+$data=array();
+	 if($role_id):
+	 $role_id=c_decode($role_id);
+
+	 $this->layout->navTitle='Rbac role view';$result = $this->rbac_role->get_rbac_role(null, array('role_id' => $role_id),1);
+	 if($result):
+	 $result = current($result);
+	 endif;
+
+                     $data['data'] = $result;
+                     $this->layout->data = $data;
+                     $this->layout->render();
+                     
+	 endif;
+return 0 ;
+
+}/**
+                * @param  : 
+                * @desc   :
+                * @return :
+                * @author :
+                * @created:09/28/2018
+                */
+public function delete(){
+	 if($this->input->is_ajax_request()):
+	 $role_id=  $this->input->post('role_id');
+	 if($role_id):
+	 $role_id=c_decode($role_id);
+
+	 $result = $this->rbac_role->delete($role_id);
+	 if($result ==1):
+	 echo 'success';
+ exit();
+	 else:
+	 echo 'Data deletion error !';
+ exit();
+	 endif;
+	 endif;
+echo 'No data found to delete';
+ exit();
+	 endif;
+return 'Invalid request type.' ;
+
+}
+} ?>

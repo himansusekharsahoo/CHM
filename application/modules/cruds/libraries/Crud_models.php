@@ -145,15 +145,17 @@ class Crud_models extends Crud_codes{
         $columns = "*";
         if ($data_table_flag) {
             $this->_db = 'datatables';
-            
-            $code = $this->_select($table_name, $columns, NULL, $data_table_flag);
+            $code="\$this->load->library('datatables');";
+            $code .= $this->_select($table_name, $columns, NULL, $data_table_flag);
             $code = $this->_reset_code()                    
                     ->_set_code($code)
-                    ->_set_code('$this->datatables->unset_column("'.$primary_key.'")')
-                    ->_set_code("->add_column(\"Action\", \$data['button_set'], 'c_encode(".$primary_key.")', 1, 1);")
+                    ->_set_code('$this->datatables->unset_column("'.$primary_key.'");')
+                    ->_if("isset(\$data['button_set'])")
+                    ->_then("\$this->datatables->add_column(\"Action\", \$data['button_set'], 'c_encode($primary_key)', 1, 1);")
+                    ->_endif()                    
                     ->_if("\$export")
                     ->_then('$data = $this->datatables->generate_export($export);')
-                    ->_then('export_data($data[\'aaData\'], $export, '.$table_name.', $tableHeading);')
+                    ->_then('return $data;')
                     ->_endif()
                     ->_return('$this->datatables->generate()')
                     ->_apend_method($action.'_datatable', "\$data=null,\$export=null,\$tableHeading=null,\$columns=null")
@@ -256,12 +258,18 @@ class Crud_models extends Crud_codes{
         return $code;
     }
 
-    private function _delete($table_name,$primary_key) {
-        
-        $code = "\$result=0;
-            \$result=\$this->".$this->_db."->delete('$table_name', array('$primary_key'=>\$$primary_key));"
-        . PHP_EOL;
-        $code.="return \$result;" . PHP_EOL;
+    private function _delete($table_name, $primary_key) {
+
+        $code = "\$this->db->trans_begin();\n \$result=0;
+            \$this->" . $this->_db . "->delete('$table_name', array('$primary_key'=>\$$primary_key));"
+                . PHP_EOL;
+        $code.="if (\$this->db->trans_status() === FALSE) {
+                \$this->db->trans_rollback();
+                return false;
+            } else {
+                \$this->db->trans_commit();
+                return true;
+            }" . PHP_EOL;
 
         return $code;
     }

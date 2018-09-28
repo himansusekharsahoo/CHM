@@ -45,7 +45,7 @@ class Js_codes{
     }  
     
     public function _jq_delete($url,$data,$success,$error){
-        $this->_string_code.="
+        $this->_string_code.="//delete record
                 \n$(document).on('click','.delete-record',function(e){
                     e.preventDefault();
                     var data=$data
@@ -66,7 +66,7 @@ class Js_codes{
                                         method: 'POST',
                                         data: data,
                                         success: function (result) {
-                                            if(result=='success'){
+                                            if(result==1){
                                                 dialog.close();
                                                 row.hide();
                                                 BootstrapDialog.alert('Record successfully deleted!');
@@ -89,5 +89,43 @@ class Js_codes{
         return $this;
     }
    
+    public function _jq_export($module_name,$controller_name){
+        
+        $this->_string_code.="//export raw data as excel \n 
+            $(document).on('click','#export_table_xls',function (e) {
+            e.preventDefault();
+            $('#loading').css('display', 'block');
+            var param = {
+                \"export_type\": 'xlsx'
+            };
+            $.ajax({
+                type: 'POST',
+                url: \"<?= base_url('".$module_name.$controller_name."/export_grid_data') ?>\",
+                data: param,
+                dataType: 'json'
+            }).done(function (data) {
+                download(data.file, data.file_name, 'application/octet-stream');
+                $('#loading').css('display', 'none');
+            });
+        });
+        //export raw data as csv \n 
+        $(document).on('click','#export_table_csv', function (e) {
+            e.preventDefault();
+            $('#loading').css('display', 'block');
+            var param = {
+                \"export_type\": 'csv'
+            };
+            $.ajax({
+                type: 'POST',
+                url: \"<?= base_url('".$module_name.$controller_name."/export_grid_data') ?>\",
+                data: param,
+                dataType: 'json'
+            }).done(function (data) {
+                download(data.file, data.file_name, 'application/octet-stream');
+                $('#loading').css('display', 'none');
+            });
+        });\n";
+        return $this;
+    }
 }
 
