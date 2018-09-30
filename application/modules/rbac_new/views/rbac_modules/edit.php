@@ -56,23 +56,7 @@
             ?>
         </div>
     </div>
-    <div class = 'form-group row'>
-        <label for = 'status' class = 'col-sm-2 col-form-label'>Status</label>
-        <div class = 'col-sm-3'>
-            <?php
-            $attribute = array(
-                "name" => "status",
-                "id" => "status",
-                "class" => "form-control",
-                "title" => "",
-                "required" => "",
-            );
-            $status = (isset($data['status'])) ? $data['status'] : '';
-            echo form_error("status");
-            echo form_dropdown($attribute, $status_list, $status);
-            ?>
-        </div>
-    </div>
+
     <div class = 'form-group row'>
         <div class = 'col-sm-1'>
             <a class="text-right btn btn-default" href="<?= APP_BASE ?>rbac_new/rbac_modules/index">

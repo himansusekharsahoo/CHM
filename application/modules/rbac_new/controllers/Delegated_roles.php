@@ -7,7 +7,7 @@ if (!defined('BASEPATH'))
  * @class   : Delegated_roles
  * @desc    :
  * @author  : HimansuS
- * @created :05/17/2018
+ * @created :09/29/2018
  */
 class Delegated_roles extends CI_Controller {
 
@@ -24,23 +24,89 @@ class Delegated_roles extends CI_Controller {
         $this->layout->navTitleFlag = 1;
     }
 
-/**
-     * @param  : $export=0
+    /**
+     * @param  : 
      * @desc   :
      * @return :
      * @author :
-     * @created:05/17/2018
+     * @created:09/29/2018
      */
-
-    public function index($export = 0) {
+    public function index() {
 
         $this->breadcrumbs->push('index', '/rbac_new/delegated_roles/index');
         $this->scripts_include->includePlugins(array('datatable'), 'css');
         $this->scripts_include->includePlugins(array('datatable'), 'js');
         $this->layout->navTitle = 'Delegated role list';
-        $data = array();
-        $data = array();
-        $buttons[] = array(
+        $header = array(
+            array(
+                'db_column' => 'role_id',
+                'name' => 'Role_id',
+                'title' => 'Role_id',
+                'class_name' => 'dt_name',
+                'orderable' => 'true',
+                'visible' => 'true',
+                'searchable' => 'true'
+            ), array(
+                'db_column' => 'role_code',
+                'name' => 'Role_code',
+                'title' => 'Role_code',
+                'class_name' => 'dt_name',
+                'orderable' => 'true',
+                'visible' => 'true',
+                'searchable' => 'true'
+            ), array(
+                'db_column' => 'user_id',
+                'name' => 'User_id',
+                'title' => 'User_id',
+                'class_name' => 'dt_name',
+                'orderable' => 'true',
+                'visible' => 'true',
+                'searchable' => 'true'
+            ), array(
+                'db_column' => 'delegated_by',
+                'name' => 'Delegated_by',
+                'title' => 'Delegated_by',
+                'class_name' => 'dt_name',
+                'orderable' => 'true',
+                'visible' => 'true',
+                'searchable' => 'true'
+            ), array(
+                'db_column' => 'created',
+                'name' => 'Created',
+                'title' => 'Created',
+                'class_name' => 'dt_name',
+                'orderable' => 'true',
+                'visible' => 'true',
+                'searchable' => 'true'
+            ), array(
+                'db_column' => 'modified',
+                'name' => 'Modified',
+                'title' => 'Modified',
+                'class_name' => 'dt_name',
+                'orderable' => 'true',
+                'visible' => 'true',
+                'searchable' => 'true'
+            ), array(
+                'db_column' => 'status',
+                'name' => 'Status',
+                'title' => 'Status',
+                'class_name' => 'dt_name',
+                'orderable' => 'true',
+                'visible' => 'true',
+                'searchable' => 'true'
+            ), array(
+                'db_column' => 'Action',
+                'name' => 'Action',
+                'title' => 'Action',
+                'class_name' => 'dt_name',
+                'orderable' => 'true',
+                'visible' => 'true',
+                'searchable' => 'false'
+            )
+        );
+        $data = $grid_buttons = array();
+
+        $grid_buttons[] = array(
             'btn_class' => 'btn-info',
             'btn_href' => base_url('rbac_new/delegated_roles/view'),
             'btn_icon' => 'fa-eye',
@@ -49,7 +115,7 @@ class Delegated_roles extends CI_Controller {
             'param' => array('$1'),
             'style' => ''
         );
-        $buttons[] = array(
+        $grid_buttons[] = array(
             'btn_class' => 'btn-primary',
             'btn_href' => base_url('rbac_new/delegated_roles/edit'),
             'btn_icon' => 'fa-pencil',
@@ -59,7 +125,7 @@ class Delegated_roles extends CI_Controller {
             'style' => ''
         );
 
-        $buttons[] = array(
+        $grid_buttons[] = array(
             'btn_class' => 'btn-danger delete-record',
             'btn_href' => '#',
             'btn_icon' => 'fa-remove',
@@ -69,54 +135,128 @@ class Delegated_roles extends CI_Controller {
             'style' => '',
             'attr' => 'data-delegated_role_id="$1"'
         );
-        $button_set = get_link_buttons($buttons);
+        $button_set = get_link_buttons($grid_buttons);
         $data['button_set'] = $button_set;
 
         if ($this->input->is_ajax_request()) {
-            $returned_list = '';
             $returned_list = $this->delegated_role->get_delegated_role_datatable($data);
             echo $returned_list;
             exit();
         }
-        if ($export) {
-            $tableHeading = array('role_id' => 'role_id', 'role_code' => 'role_code', 'user_id' => 'user_id', 'delegated_by' => 'delegated_by', 'created' => 'created', 'modified' => 'modified', 'status' => 'status',);
-            ;
-            $this->delegated_role->get_delegated_role_datatable($data, $export, $tableHeading);
-        }
 
-        $config['grid_config'] = array(
-            'table' => array(
-                'columns' => array('role_id', 'role_code', 'user_id', 'delegated_by', 'created', 'modified', 'status'),
-                'columns_alias' => array('role_id', 'role_code', 'user_id', 'delegated_by', 'created', 'modified', 'status', 'Action')
+        $dt_tool_btn = array(
+            array(
+                'btn_class' => 'btn-primary',
+                'btn_href' => base_url('rbac_new/delegated_roles/create'),
+                'btn_icon' => '',
+                'btn_title' => 'Create',
+                'btn_text' => 'Create',
+                'btn_separator' => ' '
             ),
-            'grid' => array(
-                'ajax_source' => 'rbac_new/delegated_roles/index',
-                'table_tools' => array('pdf', 'xls', 'csv'),
-                'cfilter_columns' => array('role_id', 'role_code', 'user_id', 'delegated_by', 'created', 'modified', 'status'),
-                'sort_columns' => array('role_id', 'role_code', 'user_id', 'delegated_by', 'created', 'modified', 'status'),
-                'column_order' => array('0' => 'ASC'),
-            //'cfilter_pos'=>'buttom'
+            array(
+                'btn_class' => 'no_pad',
+                'btn_href' => '#',
+                'btn_icon' => '',
+                'btn_title' => 'XLS',
+                'btn_text' => ' <img src="' . base_url("images/excel_icon.png") . '" alt="XLS">',
+                'btn_separator' => ' ',
+                'attr' => 'id="export_table_xls"'
             ),
-            'table_tools' => array(
-                'xls' => array(
-                    'url' => 'rbac_new/delegated_roles/index/xls'
-                ), 'csv' => array(
-                    'url' => 'rbac_new/delegated_roles/index/csv'
-                )
+            array(
+                'btn_class' => 'no_pad',
+                'btn_href' => '#',
+                'btn_icon' => '',
+                'btn_title' => 'CSV',
+                'btn_text' => ' <img src="' . base_url("images/csv_icon_sm.gif") . '" alt="CSV">',
+                'btn_separator' => ' ',
+                'attr' => 'id="export_table_csv"'
             )
         );
-        $data['data'] = $config;
+        $dt_tool_btn = get_link_buttons($dt_tool_btn);
+
+        $config = array(
+            'dt_markup' => TRUE,
+            'dt_id' => 'raw_cert_data_dt_table',
+            'dt_header' => $header,
+            'dt_ajax' => array(
+                'dt_url' => base_url('rbac_new/delegated_roles/index'),
+            ),
+            'custom_lengh_change' => false,
+            'dt_dom' => array(
+                'top_dom' => true,
+                'top_length_change' => true,
+                'top_filter' => true,
+                'top_buttons' => $dt_tool_btn,
+                'top_pagination' => true,
+                'buttom_dom' => true,
+                'buttom_length_change' => true,
+                'buttom_pagination' => true
+            ),
+            'options' => array(
+                'iDisplayLength' => '15'
+            )
+        );
+        $data['data'] = array('config' => $config);
         $this->layout->render($data);
     }
 
-/**
+    /**
      * @param  : 
      * @desc   :
      * @return :
      * @author :
-     * @created:05/17/2018
+     * @created:09/29/2018
      */
+    public function export_grid_data() {
+        if ($this->input->is_ajax_request()):
+            $export_type = $this->input->post('export_type');
+            $tableHeading = array('role_id' => 'role_id', 'role_code' => 'role_code', 'user_id' => 'user_id', 'delegated_by' => 'delegated_by', 'created' => 'created', 'modified' => 'modified', 'status' => 'status',);
+            $cols = 'role_id,role_code,user_id,delegated_by,created,modified,status';
+            $data = $this->delegated_role->get_delegated_role_datatable(null, true, $tableHeading);
+            $head_cols = $body_col_map = array();
+            $date = array(
+                array(
+                    'title' => 'Date of Export Report',
+                    'value' => date('d-m-Y')
+                )
+            );
+            foreach ($tableHeading as $db_col => $col) {
+                $head_cols[] = array(
+                    'title' => ucfirst($col),
+                    'track_auto_filter' => 1
+                );
+                $body_col_map[] = array('db_column' => $db_col);
+            }
+            $header = array($date, $head_cols);
+            $worksheet_name = 'delegated_roles';
+            $file_name = 'delegated_roles' . date('d_m_Y_H_i_s') . '.' . $export_type;
+            $config = array(
+                'db_data' => $data['aaData'],
+                'header_rows' => $header,
+                'body_column' => $body_col_map,
+                'worksheet_name' => $worksheet_name,
+                'file_name' => $file_name,
+                'download' => true
+            );
 
+            $this->load->library('excel_utility');
+            $this->excel_utility->download_excel($config, $export_type);
+            ob_end_flush();
+            exit;
+
+        else:
+            $this->layout->data = array('status_code' => '403', 'message' => 'Request Forbidden.');
+            $this->layout->render(array('error' => 'general'));
+        endif;
+    }
+
+    /**
+     * @param  : 
+     * @desc   :
+     * @return :
+     * @author :
+     * @created:09/29/2018
+     */
     public function create() {
         $this->breadcrumbs->push('create', '/rbac_new/delegated_roles/create');
 
@@ -144,21 +284,6 @@ class Delegated_roles extends CI_Controller {
                     'label' => 'delegated_by',
                     'rules' => 'required'
                 ),
-                array(
-                    'field' => 'created',
-                    'label' => 'created',
-                    'rules' => 'required'
-                ),
-                array(
-                    'field' => 'modified',
-                    'label' => 'modified',
-                    'rules' => 'required'
-                ),
-                array(
-                    'field' => 'status',
-                    'label' => 'status',
-                    'rules' => 'required'
-                ),
             );
             $this->form_validation->set_rules($config);
 
@@ -181,14 +306,13 @@ class Delegated_roles extends CI_Controller {
         $this->layout->render();
     }
 
-/**
+    /**
      * @param  : $delegated_role_id=null
      * @desc   :
      * @return :
      * @author :
-     * @created:05/17/2018
+     * @created:09/29/2018
      */
-
     public function edit($delegated_role_id = null) {
         $this->breadcrumbs->push('edit', '/rbac_new/delegated_roles/edit');
 
@@ -217,28 +341,11 @@ class Delegated_roles extends CI_Controller {
                     'label' => 'delegated_by',
                     'rules' => 'required'
                 ),
-                array(
-                    'field' => 'created',
-                    'label' => 'created',
-                    'rules' => 'required'
-                ),
-                array(
-                    'field' => 'modified',
-                    'label' => 'modified',
-                    'rules' => 'required'
-                ),
-                array(
-                    'field' => 'status',
-                    'label' => 'status',
-                    'rules' => 'required'
-                ),
             );
             $this->form_validation->set_rules($config);
 
             if ($this->form_validation->run()):
-
                 $result = $this->delegated_role->update($data['data']);
-
                 if ($result >= 1):
                     $this->session->set_flashdata('success', 'Record successfully updated!');
                     redirect('/rbac_new/delegated_roles');
@@ -260,14 +367,13 @@ class Delegated_roles extends CI_Controller {
         $this->layout->render();
     }
 
-/**
+    /**
      * @param  : $delegated_role_id
      * @desc   :
      * @return :
      * @author :
-     * @created:05/17/2018
+     * @created:09/29/2018
      */
-
     public function view($delegated_role_id) {
         $this->breadcrumbs->push('view', '/rbac_new/delegated_roles/view');
 
@@ -289,14 +395,13 @@ class Delegated_roles extends CI_Controller {
         return 0;
     }
 
-/**
+    /**
      * @param  : 
      * @desc   :
      * @return :
      * @author :
-     * @created:05/17/2018
+     * @created:09/29/2018
      */
-
     public function delete() {
         if ($this->input->is_ajax_request()):
             $delegated_role_id = $this->input->post('delegated_role_id');
@@ -304,8 +409,8 @@ class Delegated_roles extends CI_Controller {
                 $delegated_role_id = c_decode($delegated_role_id);
 
                 $result = $this->delegated_role->delete($delegated_role_id);
-                if ($result == 1):
-                    echo 'success';
+                if ($result):
+                    echo 1;
                     exit();
                 else:
                     echo 'Data deletion error !';
@@ -314,6 +419,9 @@ class Delegated_roles extends CI_Controller {
             endif;
             echo 'No data found to delete';
             exit();
+        else:
+            $this->layout->data = array('status_code' => '403', 'message' => 'Request Forbidden.');
+            $this->layout->render(array('error' => 'general'));
         endif;
         return 'Invalid request type.';
     }

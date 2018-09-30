@@ -1,10 +1,15 @@
-<div style="float:right;"><a class="btn btn-primary btn-sm" href="<?= APP_BASE ?>rbac_new/rbac_users/create">Create</a></div>
-<div class="row-fluid">
-    <?php
-    generate_gird($grid_config, "rbac_users_list");
-    ?>
+<?php ?> <div class="row-fluid">
+    <div class="col-sm-12 no_pad">
+        <?php
+        $this->load->library('c_datatable');
+        $dt_data = $this->c_datatable->generate_grid($config);
+        echo $dt_data;
+        ?>
+    </div>
 </div><script type="text/javascript">
     $(function ($) {
+//delete record
+
         $(document).on('click', '.delete-record', function (e) {
             e.preventDefault();
             var data = {'user_id': $(this).data('user_id')}
@@ -25,7 +30,7 @@
                                 method: 'POST',
                                 data: data,
                                 success: function (result) {
-                                    if (result == 'success') {
+                                    if (result == 1) {
                                         dialog.close();
                                         row.hide();
                                         BootstrapDialog.alert('Record successfully deleted!');
@@ -43,6 +48,42 @@
                     }]
             });
 
+        });
+//export raw data as excel 
+
+        $(document).on('click', '#export_table_xls', function (e) {
+            e.preventDefault();
+            $('#loading').css('display', 'block');
+            var param = {
+                "export_type": 'xlsx'
+            };
+            $.ajax({
+                type: 'POST',
+                url: "<?= base_url('rbac_new/rbac_users/export_grid_data') ?>",
+                data: param,
+                dataType: 'json'
+            }).done(function (data) {
+                download(data.file, data.file_name, 'application/octet-stream');
+                $('#loading').css('display', 'none');
+            });
+        });
+        //export raw data as csv 
+
+        $(document).on('click', '#export_table_csv', function (e) {
+            e.preventDefault();
+            $('#loading').css('display', 'block');
+            var param = {
+                "export_type": 'csv'
+            };
+            $.ajax({
+                type: 'POST',
+                url: "<?= base_url('rbac_new/rbac_users/export_grid_data') ?>",
+                data: param,
+                dataType: 'json'
+            }).done(function (data) {
+                download(data.file, data.file_name, 'application/octet-stream');
+                $('#loading').css('display', 'none');
+            });
         });
 
     });

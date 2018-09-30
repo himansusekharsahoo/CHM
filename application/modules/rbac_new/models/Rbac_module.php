@@ -7,7 +7,7 @@ if (!defined('BASEPATH'))
  * @class   : Rbac_module
  * @desc    :
  * @author  : HimansuS
- * @created :05/17/2018
+ * @created :09/29/2018
  */
 class Rbac_module extends CI_Model {
 
@@ -27,22 +27,25 @@ class Rbac_module extends CI_Model {
      * @desc   :
      * @return :
      * @author :
-     * @created:05/17/2018
+     * @created:09/29/2018
      */
     public function get_rbac_module_datatable($data = null, $export = null, $tableHeading = null, $columns = null) {
+        $this->load->library('datatables');
         if (!$columns) {
-            $columns = 'module_id,name,code,status,created,modified';
+            $columns = 'module_id,name,code,status';
         }
 
         /*
          */
         $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, FALSE, FALSE)->from('rbac_modules t1');
 
-        $this->datatables->unset_column("module_id")
-                ->add_column("Action", $data['button_set'], 'c_encode(module_id)', 1, 1);
+        $this->datatables->unset_column("module_id");
+        if (isset($data['button_set'])):
+            $this->datatables->add_column("Action", $data['button_set'], 'c_encode(module_id)', 1, 1);
+        endif;
         if ($export):
             $data = $this->datatables->generate_export($export);
-            export_data($data['aaData'], $export, rbac_modules, $tableHeading);
+            return $data;
         endif;
         return $this->datatables->generate();
     }
@@ -52,7 +55,7 @@ class Rbac_module extends CI_Model {
      * @desc   :
      * @return :
      * @author :
-     * @created:05/17/2018
+     * @created:09/29/2018
      */
     public function get_rbac_module($columns = null, $conditions = null, $limit = null, $offset = null) {
         if (!$columns) {
@@ -82,7 +85,7 @@ class Rbac_module extends CI_Model {
      * @desc   :
      * @return :
      * @author :
-     * @created:05/17/2018
+     * @created:09/29/2018
      */
     public function save($data) {
         if ($data):
@@ -102,7 +105,7 @@ class Rbac_module extends CI_Model {
      * @desc   :
      * @return :
      * @author :
-     * @created:05/17/2018
+     * @created:09/29/2018
      */
     public function update($data) {
         if ($data):
@@ -117,13 +120,20 @@ class Rbac_module extends CI_Model {
      * @desc   :
      * @return :
      * @author :
-     * @created:05/17/2018
+     * @created:09/29/2018
      */
     public function delete($module_id) {
         if ($module_id):
+            $this->db->trans_begin();
             $result = 0;
-            $result = $this->db->delete('rbac_modules', array('module_id' => $module_id));
-            return $result;
+            $this->db->delete('rbac_modules', array('module_id' => $module_id));
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+                return false;
+            } else {
+                $this->db->trans_commit();
+                return true;
+            }
 
         endif;
         return 'No data found to delete!';
@@ -134,7 +144,7 @@ class Rbac_module extends CI_Model {
      * @desc   :
      * @return :
      * @author :
-     * @created:05/17/2018
+     * @created:09/29/2018
      */
     public function get_options($columns, $index = null, $conditions = null) {
         if (!$columns) {

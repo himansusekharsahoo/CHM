@@ -7,15 +7,14 @@ if (!defined('BASEPATH'))
  * @class   : Rbac_actions
  * @desc    :
  * @author  : HimansuS
- * @created :09/28/2018
+ * @created :09/29/2018
  */
 class Rbac_actions extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
 
-        $this->load->model('rbac_action');
-        $this->load->library('pagination');
+        $this->load->model('rbac_action');        
         $this->load->library('form_validation');
         $this->layout->layout = 'admin_layout';
         $this->layout->layoutsFolder = 'layouts/admin';
@@ -24,14 +23,13 @@ class Rbac_actions extends CI_Controller {
         $this->layout->navTitleFlag = 1;
     }
 
-/**
+    /**
      * @param  : 
      * @desc   :
      * @return :
      * @author :
-     * @created:09/28/2018
+     * @created:09/29/2018
      */
-
     public function index() {
 
         $this->breadcrumbs->push('index', '/rbac_new/rbac_actions/index');
@@ -48,33 +46,17 @@ class Rbac_actions extends CI_Controller {
                 'visible' => 'true',
                 'searchable' => 'true'
             ), array(
-                'db_column' => 'status',
-                'name' => 'Status',
-                'title' => 'Status',
-                'class_name' => 'dt_name',
-                'orderable' => 'true',
-                'visible' => 'true',
-                'searchable' => 'true'
-            ), array(
-                'db_column' => 'created',
-                'name' => 'Created',
-                'title' => 'Created',
-                'class_name' => 'dt_name',
-                'orderable' => 'true',
-                'visible' => 'true',
-                'searchable' => 'true'
-            ), array(
-                'db_column' => 'modified',
-                'name' => 'Modified',
-                'title' => 'Modified',
-                'class_name' => 'dt_name',
-                'orderable' => 'true',
-                'visible' => 'true',
-                'searchable' => 'true'
-            ), array(
                 'db_column' => 'code',
                 'name' => 'Code',
                 'title' => 'Code',
+                'class_name' => 'dt_name',
+                'orderable' => 'true',
+                'visible' => 'true',
+                'searchable' => 'true'
+            ), array(
+                'db_column' => 'status',
+                'name' => 'Status',
+                'title' => 'Status',
                 'class_name' => 'dt_name',
                 'orderable' => 'true',
                 'visible' => 'true',
@@ -190,13 +172,13 @@ class Rbac_actions extends CI_Controller {
      * @desc   :
      * @return :
      * @author :
-     * @created:09/28/2018
+     * @created:09/29/2018
      */
     public function export_grid_data() {
         if ($this->input->is_ajax_request()):
             $export_type = $this->input->post('export_type');
-            $tableHeading = array('name' => 'name', 'status' => 'status', 'created' => 'created', 'modified' => 'modified', 'code' => 'code',);
-            $cols = 'name,status,created,modified,code';
+            $tableHeading = array('name' => 'name', 'code' => 'code','status' => 'status', 'created' => 'created', 'modified' => 'modified');
+            $cols = 'name,code,status,created,modified';
             $data = $this->rbac_action->get_rbac_action_datatable(null, true, $tableHeading);
             $head_cols = $body_col_map = array();
             $date = array(
@@ -235,14 +217,13 @@ class Rbac_actions extends CI_Controller {
         endif;
     }
 
-/**
+    /**
      * @param  : 
      * @desc   :
      * @return :
      * @author :
-     * @created:09/28/2018
+     * @created:09/29/2018
      */
-
     public function create() {
         $this->breadcrumbs->push('create', '/rbac_new/rbac_actions/create');
 
@@ -280,14 +261,13 @@ class Rbac_actions extends CI_Controller {
         $this->layout->render();
     }
 
-/**
+    /**
      * @param  : $action_id=null
      * @desc   :
      * @return :
      * @author :
-     * @created:09/28/2018
+     * @created:09/29/2018
      */
-
     public function edit($action_id = null) {
         $this->breadcrumbs->push('edit', '/rbac_new/rbac_actions/edit');
 
@@ -330,14 +310,13 @@ class Rbac_actions extends CI_Controller {
         $this->layout->render();
     }
 
-/**
+    /**
      * @param  : $action_id
      * @desc   :
      * @return :
      * @author :
-     * @created:09/28/2018
+     * @created:09/29/2018
      */
-
     public function view($action_id) {
         $this->breadcrumbs->push('view', '/rbac_new/rbac_actions/view');
 
@@ -359,14 +338,13 @@ class Rbac_actions extends CI_Controller {
         return 0;
     }
 
-/**
+    /**
      * @param  : 
      * @desc   :
      * @return :
      * @author :
-     * @created:09/28/2018
+     * @created:09/29/2018
      */
-
     public function delete() {
         if ($this->input->is_ajax_request()):
             $action_id = $this->input->post('action_id');

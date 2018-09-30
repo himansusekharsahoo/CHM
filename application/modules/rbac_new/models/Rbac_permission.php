@@ -23,38 +23,7 @@ class Rbac_permission extends CI_Model {
         $this->layout->navTitleFlag = 1;
     }
 
-    /**
-     * @param  : $data=null,$export=null,$tableHeading=null,$columns=null
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:05/17/2018
-     */
-    public function get_rbac_permission_datatable($data = null, $export = null, $tableHeading = null, $columns = null) {
-        if (!$columns) {
-            $columns = 'permission_id,module_id,action_id,status,created,modified';
-        }
-
-        /*
-          Table:-	rbac_actions
-          Columns:-	action_id,name,status,created,modified,code
-
-          Table:-	rbac_modules
-          Columns:-	module_id,name,code,status,created,modified
-
-         */
-        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, FALSE, FALSE)->from('rbac_permissions t1');
-
-        $this->datatables->unset_column("permission_id")
-                ->add_column("Action", $data['button_set'], 'c_encode(permission_id)', 1, 1);
-        if ($export):
-            $data = $this->datatables->generate_export($export);
-            export_data($data['aaData'], $export, rbac_permissions, $tableHeading);
-        endif;
-        return $this->datatables->generate();
-    }
-
-    /**
+     /**
      * @param  : $columns=null,$conditions=null,$limit=null,$offset=null
      * @desc   :
      * @return :
@@ -100,27 +69,7 @@ class Rbac_permission extends CI_Model {
         $result = $this->db->get()->result_array();
         //echo $this->db->last_query();
         return $result;
-    }
-
-    /**
-     * @param  : $data
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:05/17/2018
-     */
-    public function save($data) {
-        if ($data):
-            $this->db->insert("rbac_permissions", $data);
-            $permission_id_inserted_id = $this->db->insert_id();
-
-            if ($permission_id_inserted_id):
-                return $permission_id_inserted_id;
-            endif;
-            return 'No data found to store!';
-        endif;
-        return 'Unable to store the data, please try again later!';
-    }
+    }    
 
     /**
      * @param  : $data
@@ -135,23 +84,6 @@ class Rbac_permission extends CI_Model {
             return $this->db->update('rbac_permissions', $data);
         endif;
         return 'Unable to update the data, please try again later!';
-    }
-
-    /**
-     * @param  : $permission_id
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:05/17/2018
-     */
-    public function delete($permission_id) {
-        if ($permission_id):
-            $result = 0;
-            $result = $this->db->delete('rbac_permissions', array('permission_id' => $permission_id));
-            return $result;
-
-        endif;
-        return 'No data found to delete!';
     }
 
     /**
@@ -208,173 +140,7 @@ class Rbac_permission extends CI_Model {
         return $this->rbac_module->get_options($columns, $index, $conditions);
     }
 
-    /**
-     * @param
-     * @return
-     * @desc
-     * @author
-     */
-    public function record_count() {
-        return $this->db->count_all('rbac_permissions');
-    }
-
-    /**
-     * @param
-     * @return
-     * @desc TODO:: should be incorporated the old modules
-     * @author
-     */
-    public function save_module_action($post_data) {
-        $this->db->trans_begin();
-        $new_actions = $new_action_codes = $new_modules = $new_module_codes = array();
-        $upd_modules = array();
-
-
-        foreach ($post_data as $perms) {
-            //get new actions
-            foreach ($perms['action_code'] as $key => $act_code) {
-                if ($act_code) {
-                    $new_actions[$act_code] = array(
-                        'code' => strtoupper($act_code),
-                        'name' => ucfirst($perms['action_name'][$key]),
-                        'status' => 'active'
-                    );
-                }
-            }
-            //get new modules
-            if (!isset($perms['module_id']) || $perms['module_id'] == '') {
-                $new_module_codes[] = $perms['module_code'];
-                $new_modules[] = array(
-                    'name' => ucfirst($perms['module_name']),
-                    'code' => strtoupper($perms['module_code']),
-                    'status' => 'active'
-                );
-            }
-            //find existing modules to update
-            if (isset($perms['module_id']) && $perms['module_id'] != '') {
-                $upd_modules[] = array(
-                    'module_id' => $perms['module_id'],
-                    'name' => $perms['module_name'],
-                    'code' => $perms['module_code'],
-                );
-
-                if (isset($perms['permission_id']) && is_array($perms['permission_id'])) {
-                    //find existing permissions to inactive
-                    $cond = " AND module_id='" . $perms['module_id'] . "' AND lower(status)='active'";
-                    $exist_perm_ids = $this->_get_existing_module_perms('permission_id', $cond);
-                    $flatten_ids = flattenArray($perms['permission_id']);
-                    $flatten_exist_ids = flattenArray($exist_perm_ids);
-                    $inactive_perms = array_diff($flatten_exist_ids, $flatten_ids);
-                    //pma($inactive_perms,1);
-                    if ($inactive_perms) {
-                        $this->_update_perm_status($inactive_perms, 'inactive');
-                    }
-                    //find existing permissions to active
-                    $cond=" AND module_id='".$perms['module_id']."' AND lower(status)='inactive'";
-                    $exist_perm_ids = $this->_get_existing_module_perms('permission_id',$cond );                    
-                    $flatten_ids = flattenArray($perms['permission_id']);
-                    $flatten_exist_ids = flattenArray($exist_perm_ids);
-                    $inactive_perms=  array_diff($flatten_exist_ids,$flatten_ids);
-                     if ($inactive_perms) {
-                        $this->_update_perm_status($inactive_perms, 'active');
-                    }
-                }
-            }
-        }
-
-        //find new action to save
-        $db_action = $this->get_rbac_actions_options('code', 'code');
-        array_shift($db_action);
-        $diff = array_diff_key($new_actions, $db_action);
-        $save_act = array();
-
-        foreach ($diff as $key => $code) {
-            if ($key && is_string($key)) {
-                $new_action_codes[] = $key;
-                $save_act[] = $new_actions[$key];
-            }
-        }
-        //pma($save_act,1);
-        if ($this->_save_actions($save_act)) {
-            $cond = "code in('" . implode('\',\'', $new_action_codes) . "')";
-            $db_actions = $this->rbac_action->get_rbac_action('code,action_id', $cond);
-            
-            //insert new modules
-            if ($this->_save_modules($new_modules)) {
-                //get module ids
-                $cond = "code in('" . implode('\',\'', $new_module_codes) . "')";
-                $db_modules = $this->rbac_module->get_rbac_module('code,module_id', $cond);
-                //insert module actions
-                $module_actions = array();
-                foreach ($db_modules as $key => $mod) {
-                    foreach ($post_data as $perms) {
-                        if ($mod['code'] == $perms['module_code']) {
-                            $module_id = $mod['module_id'];
-                            foreach ($db_actions as $aky => $action) {
-                                foreach ($perms['action_code'] as $key => $act_code) {
-                                    if ($action['code'] == $act_code && $module_id != '' && $action['action_id'] != '') {
-                                        $module_actions[] = array(
-                                            'module_id' => $module_id,
-                                            'action_id' => $action['action_id']
-                                        );
-                                    }
-                                }
-                            }
-                            //pre stored action
-                            if (isset($perms['action_id'])) {
-                                //pma($perms['action_id'],1);
-                                foreach ($perms['action_id'] as $key => $act_id) {
-                                    if (isset($module_id) && isset($act_id)) {
-                                        $module_actions[] = array(
-                                            'module_id' => $module_id,
-                                            'action_id' => $act_id
-                                        );
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                //pma($module_actions,1);
-                if ($module_actions) {
-                    //pma($module_actions, 1);
-                    $this->_save_module_actions($module_actions);
-                }
-            }
-        }
-        //pma($module_actions,1);
-        if ($this->db->trans_status() === FALSE) {
-            $this->db->trans_rollback();
-            return FALSE;
-        } else {
-            $this->db->trans_commit();
-            return TRUE;
-        }
-    }
-
-    /**
-     * @param
-     * @return
-     * @desc
-     * @author
-     */
-    private function _save_actions($new_actions) {
-        if ($new_actions)
-            return $this->db->insert_batch('rbac_actions', $new_actions);
-        return true;
-    }
-
-    /**
-     * @param
-     * @return
-     * @desc
-     * @author
-     */
-    private function _save_modules($new_modules) {
-        if ($new_modules)
-            return $this->db->insert_batch('rbac_modules', $new_modules);
-        return true;
-    }
+    
 
     /**
      * @param
@@ -383,7 +149,9 @@ class Rbac_permission extends CI_Model {
      * @author
      */
     private function _save_module_actions($new_module_actions) {
-        return $this->db->insert_batch('rbac_permissions', $new_module_actions);
+        if ($new_module_actions) {
+            return $this->db->insert_batch('rbac_permissions', $new_module_actions);
+        }
     }
 
     /**
@@ -421,7 +189,7 @@ class Rbac_permission extends CI_Model {
      * @author :
      * @created:05/17/2018
      */
-    public function get_perm_options($columns=null, $index = null, $conditions = null) {
+    public function get_perm_options($columns = null, $index = null, $conditions = null) {
         if (!$columns) {
             $columns = 'rm.name module_name,ra.name action_name,';
         }
@@ -430,8 +198,8 @@ class Rbac_permission extends CI_Model {
         }
         $this->db->select("$columns,$index")
                 ->from('rbac_permissions rp')
-                ->join('rbac_modules rm','rp.module_id=rp.module_id')
-                ->join('rbac_actions ra','ra.action_id=rp.action_id');
+                ->join('rbac_modules rm', 'rp.module_id=rp.module_id')
+                ->join('rbac_actions ra', 'ra.action_id=rp.action_id');
 
         if ($conditions && is_array($conditions)):
             foreach ($conditions as $col => $val):
@@ -443,10 +211,81 @@ class Rbac_permission extends CI_Model {
         $list = array();
         $list[''] = 'Select permissions';
         foreach ($result as $key => $val):
-            $list[$val[$index]] = $val['module_name'].'-'.$val['action_name'];
+            $list[$val[$index]] = $val['module_name'] . '-' . $val['action_name'];
         endforeach;
         return $list;
     }
+
+    /**
+     * @param
+     * @return
+     * @desc save module permissions
+     * @author
+     */
+    public function save_module_permissions($form_data) {
+        //get all existing module permissions
+        $existing_perms = $this->_get_existing_module_perms("module_id,action_id");
+        $new_perms = array();
+        //find out new permissions
+        $new_perms = array_filter($form_data, function ($array2Element) use ($existing_perms) {
+            foreach ($existing_perms as $array1Element) {
+                if ($array1Element['module_id'] == $array2Element['module_id'] && $array1Element['action_id'] == $array2Element['action_id']) {
+                    return false;
+                }
+            }
+            return true;
+        });
+
+        //find common permissions to update
+        $common_perms = array_filter($form_data, function ($array2Element) use ($existing_perms) {
+            foreach ($existing_perms as $array1Element) {
+                if ($array1Element['module_id'] == $array2Element['module_id'] && $array1Element['action_id'] == $array2Element['action_id']) {
+                    return true;
+                }
+            }
+            return false;
+        });
+
+        //find perm to delete
+        $merge_perm = array_merge($new_perms, $common_perms);
+        $del_perms = array_filter($existing_perms, function ($array2Element) use ($merge_perm) {
+            foreach ($merge_perm as $array1Element) {
+                if ($array1Element['module_id'] == $array2Element['module_id'] && $array1Element['action_id'] == $array2Element['action_id']) {
+                    return false;
+                }
+            }
+            return true;
+        });
+
+        $this->db->trans_begin();
+        //save new permissions
+        $this->_save_module_actions($new_perms);
+        //update permissions
+        foreach ($common_perms as $perm) {
+            $data = array(
+                'status' => 'active',
+                'modified' => date('Y-m-d H:i:s')
+            );
+            $this->db->update('rbac_permissions', $data, array('module_id' => $perm['module_id'], 'action_id' => $perm['action_id']));
+        }
+        //inactive permissions
+        foreach ($del_perms as $perm) {
+            $data = array(
+                'status' => 'inactive',
+                'modified' => date('Y-m-d H:i:s')
+            );
+            $this->db->update('rbac_permissions', $data, array('module_id' => $perm['module_id'], 'action_id' => $perm['action_id']));
+        }
+
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            return FALSE;
+        } else {
+            $this->db->trans_commit();
+            return TRUE;
+        }
+    }
+
 }
 
 ?>

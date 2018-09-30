@@ -1,57 +1,57 @@
 <?php ?> <div class="row-fluid">
-                <div class="col-sm-12 no_pad">
-                    <?php
-                    $this->load->library('c_datatable');
-                    $dt_data = $this->c_datatable->generate_grid($config);
-                    echo $dt_data;
-                    ?>
-                </div>
-            </div><script type="text/javascript">
-$(function ($) {
+    <div class="col-sm-12 no_pad">
+        <?php
+        $this->load->library('c_datatable');
+        $dt_data = $this->c_datatable->generate_grid($config);
+        echo $dt_data;
+        ?>
+    </div>
+</div><script type="text/javascript">
+    $(function ($) {
 //delete record
-                
-$(document).on('click','.delete-record',function(e){
-                    e.preventDefault();
-                    var data={'action_id':$(this).data('action_id')}
-                    var row =$(this).closest('tr');
-                    BootstrapDialog.show({
-                        title: 'Alert',
-                        message: 'Do you want to delete the record?',
-                        buttons: [{
-                                label: 'Cancel',
-                                action: function (dialog) {
+
+        $(document).on('click', '.delete-record', function (e) {
+            e.preventDefault();
+            var data = {'action_id': $(this).data('action_id')}
+            var row = $(this).closest('tr');
+            BootstrapDialog.show({
+                title: 'Alert',
+                message: 'Do you want to delete the record?',
+                buttons: [{
+                        label: 'Cancel',
+                        action: function (dialog) {
+                            dialog.close();
+                        }
+                    }, {
+                        label: 'Delete',
+                        action: function (dialog) {
+                            $.ajax({
+                                url: '<?= APP_BASE ?>rbac_new/rbac_actions/delete',
+                                method: 'POST',
+                                data: data,
+                                success: function (result) {
+                                    if (result == 1) {
+                                        dialog.close();
+                                        row.hide();
+                                        BootstrapDialog.alert('Record successfully deleted!');
+                                    } else {
+                                        dialog.close();
+                                        BootstrapDialog.alert('Data deletion error,please contact site admin!');
+                                    }
+                                },
+                                error: function (error) {
                                     dialog.close();
+                                    BootstrapDialog.alert('Error:' + error);
                                 }
-                            }, {
-                                label: 'Delete',
-                                action: function (dialog) {
-                                    $.ajax({
-                                        url: '<?=APP_BASE?>rbac_new/rbac_actions/delete',
-                                        method: 'POST',
-                                        data: data,
-                                        success: function (result) {
-                                            if(result==1){
-                                                dialog.close();
-                                                row.hide();
-                                                BootstrapDialog.alert('Record successfully deleted!');
-                                            }else{
-                                                dialog.close();
-                                                BootstrapDialog.alert('Data deletion error,please contact site admin!');
-                                            }                                    
-                                        },
-                                        error: function (error) {
-                                            dialog.close();
-                                            BootstrapDialog.alert('Error:' + error);
-                                        }
-                                    });
-                                }
-                            }]
-                    });
-                    
-                });
+                            });
+                        }
+                    }]
+            });
+
+        });
 //export raw data as excel 
- 
-            $(document).on('click','#export_table_xls',function (e) {
+
+        $(document).on('click', '#export_table_xls', function (e) {
             e.preventDefault();
             $('#loading').css('display', 'block');
             var param = {
@@ -68,8 +68,8 @@ $(document).on('click','.delete-record',function(e){
             });
         });
         //export raw data as csv 
- 
-        $(document).on('click','#export_table_csv', function (e) {
+
+        $(document).on('click', '#export_table_csv', function (e) {
             e.preventDefault();
             $('#loading').css('display', 'block');
             var param = {
@@ -86,5 +86,5 @@ $(document).on('click','.delete-record',function(e){
             });
         });
 
-});
+    });
 </script>
