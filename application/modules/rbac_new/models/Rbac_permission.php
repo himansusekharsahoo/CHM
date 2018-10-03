@@ -56,7 +56,7 @@ class Rbac_permission extends CI_Model {
                 ->where('trim(rm.code)!=', '')
                 ->order_by('rm.name', 'asc')
                 ->order_by('ra.name', 'dsc');
-
+            
         if ($conditions && is_array($conditions)):
             foreach ($conditions as $col => $val):
                 $this->db->where($col, $val);
@@ -72,28 +72,13 @@ class Rbac_permission extends CI_Model {
     }    
 
     /**
-     * @param  : $data
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:05/17/2018
-     */
-    public function update($data) {
-        if ($data):
-            $this->db->where("permission_id", $data['permission_id']);
-            return $this->db->update('rbac_permissions', $data);
-        endif;
-        return 'Unable to update the data, please try again later!';
-    }
-
-    /**
      * @param  : $columns,$index=null, $conditions = null
      * @desc   :
      * @return :
      * @author :
      * @created:05/17/2018
      */
-    public function get_options($columns, $index = null, $conditions = null) {
+    public function get_options($columns, $index = null, $conditions = null,$blank_list=true) {
         if (!$columns) {
             $columns = 'permission_id';
         }
@@ -111,7 +96,9 @@ class Rbac_permission extends CI_Model {
         $result = $this->db->get()->result_array();
 
         $list = array();
-        $list[''] = 'Select rbac permissions';
+        if($blank_list){
+            $list[''] = 'Select rbac permissions';
+        }
         foreach ($result as $key => $val):
             $list[$val[$index]] = $val[$columns];
         endforeach;
@@ -164,22 +151,6 @@ class Rbac_permission extends CI_Model {
         $query = "SELECT $columns FROM rbac_permissions WHERE 1=1 $cond";
         $result = $this->db->query($query)->result_array();
         return $result;
-    }
-
-    /**
-     * @param
-     * @return
-     * @desc update permission status
-     * @author
-     */
-    private function _update_perm_status($perm_ids, $status = 'active') {
-        $data = array(
-            'status' => $status,
-            'modified' => date('Y-m-d H:i:s')
-        );
-
-        $this->db->where_in('permission_id', $perm_ids);
-        $this->db->update('rbac_permissions', $data);
     }
 
     /**

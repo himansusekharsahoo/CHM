@@ -22,6 +22,16 @@ class Rbac_permissions extends CI_Controller {
         $this->layout->rightControlFlag = 1;
         $this->layout->navTitleFlag = 1;
     }
+    
+    /**
+     * @param
+     * @return
+     * @desc
+     * @author
+     */
+    public function index(){
+        redirect('/rbac_new/rbac_permissions/module_permissions');
+    }
     /**
      * @param
      * @return
