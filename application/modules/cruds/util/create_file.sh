@@ -1,5 +1,0 @@
-#!/bin/bash
-
-CONTENT=$1
-FILE_NAME=$2
-echo $CONTENT > $FILE_NAME
