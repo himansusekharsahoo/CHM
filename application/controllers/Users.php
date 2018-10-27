@@ -44,7 +44,7 @@ class Users extends CI_Controller {
      * @return :
      * @author :
      */
-    public function sign_in() {        
+    public function sign_in() {
         if ($this->input->post()) {
             //server side validation
             $rules = array(
@@ -66,8 +66,8 @@ class Users extends CI_Controller {
                 $email = $this->input->post('user_email');
                 $pass = $this->input->post('user_pass');
                 $condition = array('email' => $email, 'password' => $pass);
-                $user_detail = $this->user->get_user_detail(null, $condition);                
-                if ($user_detail) {                    
+                $user_detail = $this->user->get_user_detail(null, $condition);
+                if ($user_detail) {
                     $this->session->set_userdata('user_data', $user_detail);
                     redirect('users/dashboard');
                 } else {
@@ -105,6 +105,31 @@ class Users extends CI_Controller {
     public function log_out() {
         $this->session->unset_userdata('user_data');
         redirect('users/log_in');
+    }
+
+    /**
+     * @param  : 
+     * @desc   :
+     * @return :
+     * @author : HimansuS
+     * @created:
+     */
+    public function set_selected_lmenu() {
+        if ($this->input->is_ajax_request()) {
+            $menu_ids = $this->input->post('menu_ids');
+            if ($menu_ids) {
+                $menu_ids = explode("_", $menu_ids);
+                $menu_ids = array_unique($menu_ids);
+                $this->session->set_userdata('selected_left_menu', $menu_ids);
+                
+                echo json_encode(array('status'=>'success'));
+            } else {
+                echo json_encode(array('status'=>'menu set error'));
+            }
+            exit;
+        } else {
+            $this->layout->render(array('error' => '401'));
+        }
     }
 
 }

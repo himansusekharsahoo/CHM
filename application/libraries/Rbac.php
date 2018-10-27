@@ -11,6 +11,13 @@ class Rbac {
         //pma($this->_ci->session->all_userdata());
     }
 
+    /**
+     * @param  : 
+     * @desc   : used to check user is log-in status
+     * @return :
+     * @author : HimansuS
+     * @created:
+     */
     public function is_login() {
         if (isset($this->_session['user_data']['user_id'])) {
             return $this->_session['user_data']['user_id'];
@@ -18,6 +25,13 @@ class Rbac {
         return 0;
     }
 
+    /**
+     * @param  : 
+     * @desc   : use to check logged in user is admin or not
+     * @return :
+     * @author : HimansuS
+     * @created:
+     */
     public function is_admin() {
         if ($this->is_login()) {
             if (in_array('ADMIN', $this->_session['user_data']['role_codes'])) {
@@ -27,6 +41,13 @@ class Rbac {
         return 0;
     }
 
+    /**
+     * @param  : 
+     * @desc   : used to fetch all assigned role id
+     * @return :
+     * @author : HimansuS
+     * @created:
+     */
     public function get_role_ids() {
         if ($this->is_login()) {
             $role_ids = array_column($this->_session['user_data']['roles'], 'role_id');
@@ -35,6 +56,13 @@ class Rbac {
         return 0;
     }
 
+    /**
+     * @param  : 
+     * @desc   : used to fetch user_id
+     * @return :
+     * @author : HimansuS
+     * @created:
+     */
     public function get_user_id() {
         if (isset($this->_session['user_data']['user_id'])) {
             return $this->_session['user_data']['user_id'];
@@ -42,6 +70,13 @@ class Rbac {
         return 0;
     }
 
+    /**
+     * @param  : String $module_code, String $action_code
+     * @desc   : used to check user has permition or not
+     * @return :
+     * @author : HimansuS
+     * @created:
+     */
     public function has_permission($module, $action = null) {
         if ($this->is_login()) {
 
@@ -72,6 +107,13 @@ class Rbac {
         return FALSE;
     }
 
+    /**
+     * @param  : 
+     * @desc   :fetch user full name
+     * @return :
+     * @author : HimansuS
+     * @created:
+     */
     public function get_user_name() {
         if (isset($this->_session['user_data']['email'])) {
             return $this->_session['user_data']['email'];
@@ -95,19 +137,6 @@ class Rbac {
         return 0;
     }
 
-    public function set_permission() {
-        if ($this->is_login() && !$this->is_permission_set()) {
-            $this->_session['user_data']['permissions'] = $this->get_user_permission($this->is_login());
-        }
-    }
-
-    public function is_permission_set() {
-        if (isset($this->_session['user_data']['permissions']) && is_array($this->_session['user_data']['permissions'])) {
-            return 1;
-        }
-        return 0;
-    }
-
     /**
      * @param  : NA
      * @desc   : generate top menu based on users permission
@@ -115,7 +144,11 @@ class Rbac {
      * @author : himansu
      */
     public function show_user_menu_top() {
-        
+        $params = array('rbac_session' => $this->_session);
+        $this->_ci->load->library('rbac_menu', $params);
+        $menu=$this->_ci->rbac_menu->get_user_menus(" AND lower(menu_type)='l'");
+        return $menu;
+        //return $this->_ci->rbac_menu->show_menu();
     }
 
     /**
@@ -280,7 +313,7 @@ class Rbac {
                 }
             }
         }
-        
+
         return $tree;
     }
 
@@ -294,4 +327,4 @@ class Rbac {
         return false;
     }
 
-  }
+}

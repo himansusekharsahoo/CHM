@@ -34,10 +34,12 @@ class Menu extends CI_Model {
             $this->db->select($columns)->from('rbac_menu m')
                     ->join('rbac_permissions rp', 'rp.permission_id=m.permission_id', 'LEFT')
                     ->join('rbac_modules rm', 'rm.module_id=rp.module_id', 'LEFT')
-                    ->join('rbac_actions ra', 'ra.action_id=rp.action_id', 'LEFT');
+                    ->join('rbac_actions ra', 'ra.action_id=rp.action_id', 'LEFT')
+                    ->order_by('m.menu_order');
             //->where("rp.menu_name<>","")
             //->group_by('rp.permission_id')
-            //->order_by('rp.module_id,rp.action_id');
+            
+            
         } else {
             if (!$columns) {
                 $columns .= 'rrp.role_permission_id id,rrp.role_id,rrp.permission_id';
@@ -97,12 +99,16 @@ class Menu extends CI_Model {
                 'menu_type' => 'l',
                 'status' => 'inactive'
             );
+            if($post_data['parent']==0){
+                $data['menu_order']=$this->_get_root_menu_order();
+                $data['name']='new_node_'.$data['menu_order'];
+            }
             $this->db->insert('rbac_menu', $data);
             $last_id=  $this->db->insert_id();
         } else {
             $data = array(
                 'name' => (isset($post_data['menu_name']) && $post_data['menu_name'] != '') ? $post_data['menu_name'] : $post_data['menu_text'],
-                'menu_order' => $post_data['menu_name'],
+                'menu_order' => $post_data['menu_order'],
                 'parent' => $post_data['parent'],
                 'icon_class' => $post_data['icon_class'],
                 'menu_class' => $post_data['menu_class'],
@@ -122,9 +128,7 @@ class Menu extends CI_Model {
                 $last_id=  $this->db->insert_id();
             }
             
-        }
-        
-        
+        } 
         
         if ($this->db->trans_status() === TRUE) {            
             $this->db->trans_commit();           
@@ -162,4 +166,20 @@ class Menu extends CI_Model {
         return false;
     }
 
+    /**
+     * @param  : 
+     * @desc   :
+     * @return :
+     * @author : HimansuS
+     * @created:
+     */
+    private function _get_root_menu_order(){
+        $query="SELECT MAX(menu_order) MAX_ORDER FROM rbac_menu WHERE parent=0";
+        $res=$this->db->query($query)->row();
+        $order=1;
+        if($res->MAX_ORDER){
+            $order+=$res->MAX_ORDER;
+        }
+        return $order;
+    }
 }

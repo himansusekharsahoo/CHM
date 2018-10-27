@@ -1,7 +1,8 @@
 <?php
 
-if (!defined('BASEPATH'))
+if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
+}
 
 /**
  * @class   : Rbac_roles
@@ -9,9 +10,11 @@ if (!defined('BASEPATH'))
  * @author  : HimansuS
  * @created :09/29/2018
  */
-class Rbac_roles extends CI_Controller {
+class Rbac_roles extends CI_Controller
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
 
         $this->load->model('rbac_role');
@@ -25,13 +28,14 @@ class Rbac_roles extends CI_Controller {
     }
 
     /**
-     * @param  : 
-     * @desc   :
-     * @return :
-     * @author :
+     * @param              : 
+     * @desc               :
+     * @return             :
+     * @author             :
      * @created:09/29/2018
      */
-    public function index() {
+    public function index()
+    {
 
         $this->breadcrumbs->push('index', '/rbac_new/rbac_roles/index');
         $this->scripts_include->includePlugins(array('datatable'), 'css');
@@ -175,7 +179,7 @@ class Rbac_roles extends CI_Controller {
         $dt_tool_btn = get_link_buttons($dt_tool_btn);
 
         $config = array(
-            'dt_markup' => TRUE,
+            'dt_markup' => true,
             'dt_id' => 'raw_cert_data_dt_table',
             'dt_header' => $header,
             'dt_ajax' => array(
@@ -201,14 +205,15 @@ class Rbac_roles extends CI_Controller {
     }
 
     /**
-     * @param  : 
-     * @desc   :
-     * @return :
-     * @author :
+     * @param              : 
+     * @desc               :
+     * @return             :
+     * @author             :
      * @created:09/29/2018
      */
-    public function export_grid_data() {
-        if ($this->input->is_ajax_request()):
+    public function export_grid_data()
+    {
+        if ($this->input->is_ajax_request()) :
             $export_type = $this->input->post('export_type');
             $tableHeading = array('name' => 'name', 'code' => 'code', 'created_by' => 'created_by', 'modified_by' => 'modified_by','status' => 'status','created' => 'created', 'modified' => 'modified');
             $cols = 'name,code,created_by,modified_by,status,created,modified';
@@ -251,18 +256,19 @@ class Rbac_roles extends CI_Controller {
     }
 
     /**
-     * @param  : 
-     * @desc   :
-     * @return :
-     * @author :
+     * @param              : 
+     * @desc               :
+     * @return             :
+     * @author             :
      * @created:09/29/2018
      */
-    public function create() {
+    public function create()
+    {
         $this->breadcrumbs->push('create', '/rbac_new/rbac_roles/create');
 
         $this->layout->navTitle = 'Rbac role create';
         $data = array();
-        if ($this->input->post()):
+        if ($this->input->post()) :
             $config = array(
                 array(
                     'field' => 'name',
@@ -277,12 +283,12 @@ class Rbac_roles extends CI_Controller {
             );
             $this->form_validation->set_rules($config);
 
-            if ($this->form_validation->run()):
+            if ($this->form_validation->run()) :
 
                 $data['data'] = $this->input->post();
                 $result = $this->rbac_role->save($data['data']);
 
-                if ($result >= 1):
+                if ($result >= 1) :
                     $this->session->set_flashdata('success', 'Record successfully saved!');
                     redirect('/rbac_new/rbac_roles');
                 else:
@@ -295,18 +301,19 @@ class Rbac_roles extends CI_Controller {
     }
 
     /**
-     * @param  : $role_id=null
-     * @desc   :
-     * @return :
-     * @author :
+     * @param              : $role_id=null
+     * @desc               :
+     * @return             :
+     * @author             :
      * @created:09/29/2018
      */
-    public function edit($role_id = null) {
+    public function edit($role_id = null)
+    {
         $this->breadcrumbs->push('edit', '/rbac_new/rbac_roles/edit');
 
         $this->layout->navTitle = 'Rbac role edit';
         $data = array();
-        if ($this->input->post()):
+        if ($this->input->post()) :
             $data['data'] = $this->input->post();
             $config = array(
                 array(
@@ -322,9 +329,9 @@ class Rbac_roles extends CI_Controller {
             );
             $this->form_validation->set_rules($config);
 
-            if ($this->form_validation->run()):
+            if ($this->form_validation->run()) :
                 $result = $this->rbac_role->update($data['data']);
-                if ($result >= 1):
+                if ($result >= 1) :
                     $this->session->set_flashdata('success', 'Record successfully updated!');
                     redirect('/rbac_new/rbac_roles');
                 else:
@@ -334,7 +341,7 @@ class Rbac_roles extends CI_Controller {
         else:
             $role_id = c_decode($role_id);
             $result = $this->rbac_role->get_rbac_role(null, array('role_id' => $role_id));
-            if ($result):
+            if ($result) :
                 $result = current($result);
             endif;
             $data['data'] = $result;
@@ -344,22 +351,23 @@ class Rbac_roles extends CI_Controller {
     }
 
     /**
-     * @param  : $role_id
-     * @desc   :
-     * @return :
-     * @author :
+     * @param              : $role_id
+     * @desc               :
+     * @return             :
+     * @author             :
      * @created:09/29/2018
      */
-    public function view($role_id) {
+    public function view($role_id)
+    {
         $this->breadcrumbs->push('view', '/rbac_new/rbac_roles/view');
 
         $data = array();
-        if ($role_id):
+        if ($role_id) :
             $role_id = c_decode($role_id);
 
             $this->layout->navTitle = 'Rbac role view';
             $result = $this->rbac_role->get_rbac_role(null, array('role_id' => $role_id), 1);
-            if ($result):
+            if ($result) :
                 $result = current($result);
             endif;
 
@@ -372,20 +380,21 @@ class Rbac_roles extends CI_Controller {
     }
 
     /**
-     * @param  : 
-     * @desc   :
-     * @return :
-     * @author :
+     * @param              : 
+     * @desc               :
+     * @return             :
+     * @author             :
      * @created:09/29/2018
      */
-    public function delete() {
-        if ($this->input->is_ajax_request()):
+    public function delete()
+    {
+        if ($this->input->is_ajax_request()) :
             $role_id = $this->input->post('role_id');
-            if ($role_id):
+            if ($role_id) :
                 $role_id = c_decode($role_id);
 
                 $result = $this->rbac_role->delete($role_id);
-                if ($result):
+                if ($result) :
                     echo 1;
                     exit();
                 else:

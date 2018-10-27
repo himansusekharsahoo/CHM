@@ -84,6 +84,7 @@ class Crud_controllers extends Crud_codes {
         \$this->scripts_include->includePlugins(array('datatable'), 'css');
         \$this->scripts_include->includePlugins(array('datatable'), 'js');
         \$this->layout->navTitle='" . str_replace('_', ' ', ucfirst($model_name)) . " list';
+        \$this->layout->title='" . str_replace('_', ' ', ucfirst($model_name)) . " list';
         ";
 
         if ($data_table_flag) {

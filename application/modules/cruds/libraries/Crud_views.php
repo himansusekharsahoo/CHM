@@ -109,7 +109,7 @@ class Crud_views extends Crud_codes {
 
         if ($data_table_flag) {            
             $code = '<?php ?> <div class="row-fluid">
-                <div class="col-sm-12 no_pad">
+                <div class="col-sm-12 no_pad table-responsive">
                     <?php
                     $this->load->library(\'c_datatable\');
                     $dt_data = $this->c_datatable->generate_grid($config);

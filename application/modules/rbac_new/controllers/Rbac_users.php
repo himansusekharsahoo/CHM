@@ -1,17 +1,20 @@
 <?php
 
-if (!defined('BASEPATH'))
+if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
+}
 
 /**
  * @class   : Rbac_users
  * @desc    :
  * @author  : HimansuS
- * @created :09/29/2018
+ * @created :10/08/2018
  */
-class Rbac_users extends CI_Controller {
+class Rbac_users extends CI_Controller
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
 
         $this->load->model('rbac_user');
@@ -25,18 +28,20 @@ class Rbac_users extends CI_Controller {
     }
 
     /**
-     * @param  : 
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:09/29/2018
+     * @param              : 
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:10/08/2018
      */
-    public function index() {
+    public function index()
+    {
 
         $this->breadcrumbs->push('index', '/rbac_new/rbac_users/index');
         $this->scripts_include->includePlugins(array('datatable'), 'css');
         $this->scripts_include->includePlugins(array('datatable'), 'js');
         $this->layout->navTitle = 'Rbac user list';
+        $this->layout->title= 'Rbac user list';
         $header = array(
             array(
                 'db_column' => 'first_name',
@@ -231,7 +236,7 @@ class Rbac_users extends CI_Controller {
         $dt_tool_btn = get_link_buttons($dt_tool_btn);
 
         $config = array(
-            'dt_markup' => TRUE,
+            'dt_markup' => true,
             'dt_id' => 'raw_cert_data_dt_table',
             'dt_header' => $header,
             'dt_ajax' => array(
@@ -257,14 +262,15 @@ class Rbac_users extends CI_Controller {
     }
 
     /**
-     * @param  : 
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:09/29/2018
+     * @param              : 
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:10/08/2018
      */
-    public function export_grid_data() {
-        if ($this->input->is_ajax_request()):
+    public function export_grid_data()
+    {
+        if ($this->input->is_ajax_request()) :
             $export_type = $this->input->post('export_type');
             $tableHeading = array('first_name' => 'first_name', 'last_name' => 'last_name', 'login_id' => 'login_id', 'email' => 'email', 'password' => 'password', 'login_status' => 'login_status', 'mobile' => 'mobile', 'mobile_verified' => 'mobile_verified', 'emial_verified' => 'emial_verified', 'created' => 'created', 'modified' => 'modified', 'created_by' => 'created_by', 'modified_by' => 'modified_by', 'status' => 'status',);
             $cols = 'first_name,last_name,login_id,email,password,login_status,mobile,mobile_verified,emial_verified,created,modified,created_by,modified_by,status';
@@ -307,18 +313,19 @@ class Rbac_users extends CI_Controller {
     }
 
     /**
-     * @param  : 
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:09/29/2018
+     * @param              : 
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:10/08/2018
      */
-    public function create() {
+    public function create()
+    {
         $this->breadcrumbs->push('create', '/rbac_new/rbac_users/create');
 
         $this->layout->navTitle = 'Rbac user create';
         $data = array();
-        if ($this->input->post()):
+        if ($this->input->post()) :
             $config = array(
                 array(
                     'field' => 'first_name',
@@ -346,34 +353,20 @@ class Rbac_users extends CI_Controller {
                     'rules' => 'required'
                 ),
                 array(
-                    'field' => 'login_status',
-                    'label' => 'login_status',
-                    'rules' => 'required'
-                ),
-                array(
                     'field' => 'mobile',
                     'label' => 'mobile',
                     'rules' => 'required'
-                ),
-                array(
-                    'field' => 'mobile_verified',
-                    'label' => 'mobile_verified',
-                    'rules' => 'required'
-                ),
-                array(
-                    'field' => 'emial_verified',
-                    'label' => 'emial_verified',
-                    'rules' => 'required'
-                ),
+                )
             );
             $this->form_validation->set_rules($config);
 
-            if ($this->form_validation->run()):
-
+            if ($this->form_validation->run()) :
+                
                 $data['data'] = $this->input->post();
+                unset($data['data']['re-password']);
                 $result = $this->rbac_user->save($data['data']);
 
-                if ($result >= 1):
+                if ($result >= 1) :
                     $this->session->set_flashdata('success', 'Record successfully saved!');
                     redirect('/rbac_new/rbac_users');
                 else:
@@ -386,18 +379,19 @@ class Rbac_users extends CI_Controller {
     }
 
     /**
-     * @param  : $user_id=null
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:09/29/2018
+     * @param              : $user_id=null
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:10/08/2018
      */
-    public function edit($user_id = null) {
+    public function edit($user_id = null)
+    {
         $this->breadcrumbs->push('edit', '/rbac_new/rbac_users/edit');
 
         $this->layout->navTitle = 'Rbac user edit';
         $data = array();
-        if ($this->input->post()):
+        if ($this->input->post()) :
             $data['data'] = $this->input->post();
             $config = array(
                 array(
@@ -448,9 +442,9 @@ class Rbac_users extends CI_Controller {
             );
             $this->form_validation->set_rules($config);
 
-            if ($this->form_validation->run()):
+            if ($this->form_validation->run()) :
                 $result = $this->rbac_user->update($data['data']);
-                if ($result >= 1):
+                if ($result >= 1) :
                     $this->session->set_flashdata('success', 'Record successfully updated!');
                     redirect('/rbac_new/rbac_users');
                 else:
@@ -460,7 +454,7 @@ class Rbac_users extends CI_Controller {
         else:
             $user_id = c_decode($user_id);
             $result = $this->rbac_user->get_rbac_user(null, array('user_id' => $user_id));
-            if ($result):
+            if ($result) :
                 $result = current($result);
             endif;
             $data['data'] = $result;
@@ -470,22 +464,23 @@ class Rbac_users extends CI_Controller {
     }
 
     /**
-     * @param  : $user_id
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:09/29/2018
+     * @param              : $user_id
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:10/08/2018
      */
-    public function view($user_id) {
+    public function view($user_id)
+    {
         $this->breadcrumbs->push('view', '/rbac_new/rbac_users/view');
 
         $data = array();
-        if ($user_id):
+        if ($user_id) :
             $user_id = c_decode($user_id);
 
             $this->layout->navTitle = 'Rbac user view';
             $result = $this->rbac_user->get_rbac_user(null, array('user_id' => $user_id), 1);
-            if ($result):
+            if ($result) :
                 $result = current($result);
             endif;
 
@@ -498,20 +493,21 @@ class Rbac_users extends CI_Controller {
     }
 
     /**
-     * @param  : 
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:09/29/2018
+     * @param              : 
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:10/08/2018
      */
-    public function delete() {
-        if ($this->input->is_ajax_request()):
+    public function delete()
+    {
+        if ($this->input->is_ajax_request()) :
             $user_id = $this->input->post('user_id');
-            if ($user_id):
+            if ($user_id) :
                 $user_id = c_decode($user_id);
 
                 $result = $this->rbac_user->delete($user_id);
-                if ($result):
+                if ($result) :
                     echo 1;
                     exit();
                 else:

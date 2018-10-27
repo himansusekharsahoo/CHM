@@ -1,7 +1,8 @@
 <?php
 
-if (!defined('BASEPATH'))
+if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
+}
 
 /**
  * @class   : Rbac_modules
@@ -9,9 +10,11 @@ if (!defined('BASEPATH'))
  * @author  : HimansuS
  * @created :09/29/2018
  */
-class Rbac_modules extends CI_Controller {
+class Rbac_modules extends CI_Controller
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
 
         $this->load->model('rbac_module');
@@ -25,13 +28,14 @@ class Rbac_modules extends CI_Controller {
     }
 
     /**
-     * @param  : 
-     * @desc   :
-     * @return :
-     * @author :
+     * @param              : 
+     * @desc               :
+     * @return             :
+     * @author             :
      * @created:09/29/2018
      */
-    public function index() {
+    public function index()
+    {
 
         $this->breadcrumbs->push('index', '/rbac_new/rbac_modules/index');
         $this->scripts_include->includePlugins(array('datatable'), 'css');
@@ -143,7 +147,7 @@ class Rbac_modules extends CI_Controller {
         $dt_tool_btn = get_link_buttons($dt_tool_btn);
 
         $config = array(
-            'dt_markup' => TRUE,
+            'dt_markup' => true,
             'dt_id' => 'raw_cert_data_dt_table',
             'dt_header' => $header,
             'dt_ajax' => array(
@@ -169,14 +173,15 @@ class Rbac_modules extends CI_Controller {
     }
 
     /**
-     * @param  : 
-     * @desc   :
-     * @return :
-     * @author :
+     * @param              : 
+     * @desc               :
+     * @return             :
+     * @author             :
      * @created:09/29/2018
      */
-    public function export_grid_data() {
-        if ($this->input->is_ajax_request()):
+    public function export_grid_data()
+    {
+        if ($this->input->is_ajax_request()) :
             $export_type = $this->input->post('export_type');
             $tableHeading = array('name' => 'name', 'code' => 'code', 'status' => 'status');
             $cols = 'name,code,status,created,modified';
@@ -219,18 +224,19 @@ class Rbac_modules extends CI_Controller {
     }
 
     /**
-     * @param  : 
-     * @desc   :
-     * @return :
-     * @author :
+     * @param              : 
+     * @desc               :
+     * @return             :
+     * @author             :
      * @created:09/29/2018
      */
-    public function create() {
+    public function create()
+    {
         $this->breadcrumbs->push('create', '/rbac_new/rbac_modules/create');
 
         $this->layout->navTitle = 'Rbac module create';
         $data = array();
-        if ($this->input->post()):
+        if ($this->input->post()) :
             $config = array(
                 array(
                     'field' => 'name',
@@ -245,12 +251,12 @@ class Rbac_modules extends CI_Controller {
             );
             $this->form_validation->set_rules($config);
 
-            if ($this->form_validation->run()):
+            if ($this->form_validation->run()) :
 
                 $data['data'] = $this->input->post();
                 $result = $this->rbac_module->save($data['data']);
 
-                if ($result >= 1):
+                if ($result >= 1) :
                     $this->session->set_flashdata('success', 'Record successfully saved!');
                     redirect('/rbac_new/rbac_modules');
                 else:
@@ -263,18 +269,19 @@ class Rbac_modules extends CI_Controller {
     }
 
     /**
-     * @param  : $module_id=null
-     * @desc   :
-     * @return :
-     * @author :
+     * @param              : $module_id=null
+     * @desc               :
+     * @return             :
+     * @author             :
      * @created:09/29/2018
      */
-    public function edit($module_id = null) {
+    public function edit($module_id = null)
+    {
         $this->breadcrumbs->push('edit', '/rbac_new/rbac_modules/edit');
 
         $this->layout->navTitle = 'Rbac module edit';
         $data = array();
-        if ($this->input->post()):
+        if ($this->input->post()) :
             $data['data'] = $this->input->post();
             $config = array(
                 array(
@@ -290,9 +297,9 @@ class Rbac_modules extends CI_Controller {
             );
             $this->form_validation->set_rules($config);
 
-            if ($this->form_validation->run()):
+            if ($this->form_validation->run()) :
                 $result = $this->rbac_module->update($data['data']);
-                if ($result >= 1):
+                if ($result >= 1) :
                     $this->session->set_flashdata('success', 'Record successfully updated!');
                     redirect('/rbac_new/rbac_modules');
                 else:
@@ -302,7 +309,7 @@ class Rbac_modules extends CI_Controller {
         else:
             $module_id = c_decode($module_id);
             $result = $this->rbac_module->get_rbac_module(null, array('module_id' => $module_id));
-            if ($result):
+            if ($result) :
                 $result = current($result);
             endif;
             $data['data'] = $result;
@@ -312,22 +319,23 @@ class Rbac_modules extends CI_Controller {
     }
 
     /**
-     * @param  : $module_id
-     * @desc   :
-     * @return :
-     * @author :
+     * @param              : $module_id
+     * @desc               :
+     * @return             :
+     * @author             :
      * @created:09/29/2018
      */
-    public function view($module_id) {
+    public function view($module_id)
+    {
         $this->breadcrumbs->push('view', '/rbac_new/rbac_modules/view');
 
         $data = array();
-        if ($module_id):
+        if ($module_id) :
             $module_id = c_decode($module_id);
 
             $this->layout->navTitle = 'Rbac module view';
             $result = $this->rbac_module->get_rbac_module(null, array('module_id' => $module_id), 1);
-            if ($result):
+            if ($result) :
                 $result = current($result);
             endif;
 
@@ -340,20 +348,21 @@ class Rbac_modules extends CI_Controller {
     }
 
     /**
-     * @param  : 
-     * @desc   :
-     * @return :
-     * @author :
+     * @param              : 
+     * @desc               :
+     * @return             :
+     * @author             :
      * @created:09/29/2018
      */
-    public function delete() {
-        if ($this->input->is_ajax_request()):
+    public function delete()
+    {
+        if ($this->input->is_ajax_request()) :
             $module_id = $this->input->post('module_id');
-            if ($module_id):
+            if ($module_id) :
                 $module_id = c_decode($module_id);
 
                 $result = $this->rbac_module->delete($module_id);
-                if ($result):
+                if ($result) :
                     echo 1;
                     exit();
                 else:

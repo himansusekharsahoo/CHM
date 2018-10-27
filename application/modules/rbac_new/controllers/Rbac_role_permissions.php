@@ -1,7 +1,8 @@
 <?php
 
-if (!defined('BASEPATH'))
+if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
+}
 
 /**
  * @class   : Rbac_role_permissions
@@ -9,9 +10,11 @@ if (!defined('BASEPATH'))
  * @author  : HimansuS
  * @created :09/29/2018
  */
-class Rbac_role_permissions extends CI_Controller {
+class Rbac_role_permissions extends CI_Controller
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
 
         $this->load->model('rbac_role_permission');
@@ -25,23 +28,25 @@ class Rbac_role_permissions extends CI_Controller {
     }
 
     /**
-     * @param  : 
-     * @desc   :
-     * @return :
-     * @author :
+     * @param              : 
+     * @desc               :
+     * @return             :
+     * @author             :
      * @created:09/29/2018
      */
-    public function index() {
+    public function index()
+    {
         redirect('/rbac_new/rbac_role_permissions/role_permissions');
     }
 
     /**
      * @param
      * @return
-     * @desc used to assign action to module
+     * @desc   used to assign action to module
      * @author
      */
-    public function role_permissions() {
+    public function role_permissions()
+    {
         $this->layout->navTitle = 'Role Permissions';
         $data = array();
         $role_options = $this->rbac_role_permission->get_rbac_roles_options('name');
@@ -50,9 +55,9 @@ class Rbac_role_permissions extends CI_Controller {
         $role_codes = array_slice($role_codes, 1, null, true);
         
         $condition=array('t1.status'=>'active');
-        $permission_masters=  $this->rbac_role_permission->get_rbac_permissions_options('permission_id','permission_id',$condition);
+        $permission_masters=  $this->rbac_role_permission->get_rbac_permissions_options('permission_id', 'permission_id', $condition);
         //$permission_masters=  flattenArray($permission_masters);
-        $permission_masters_all=  $this->rbac_role_permission->get_rbac_permissions(null,$condition);
+        $permission_masters_all=  $this->rbac_role_permission->get_rbac_permissions(null, $condition);
         $existing_role_permissions=$this->rbac_role_permission->get_rbac_role_permission();
         
         

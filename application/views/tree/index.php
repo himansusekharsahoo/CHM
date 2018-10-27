@@ -1,6 +1,7 @@
 <?php ?>
 <div class="col-sm-12">
-    <button class="btn btn-primary" id="add_root" ><span class="fa fa-plus"> Add</span></button>
+    <button class="btn btn-primary" id="add_root" ><span class="fa fa-plus">Add Root</span></button>
+    <button class="btn btn-primary" id="add_chield" ><span class="fa fa-plus">Add Chield</span></button>
     <button class="btn btn-danger" id="delete"><span class="fa fa-trash"> Delete</span></button>
 </div>
 <div class="col-sm-12 no_lpad">
@@ -55,8 +56,24 @@
 
         //add new node
         $('#add_root').on('click', function () {
-            var selected_node = $('#jstree').jstree(true).get_selected(true);
+            var selected_node = [];// $('#jstree').jstree(true).get_selected(true);
             createNewNode(selected_node);
+        });
+        //add new node
+        $('#add_chield').on('click', function () {
+            var selected_node = $('#jstree').jstree(true).get_selected(true);
+            if (selected_node.length > 0) {
+                createNewNode(selected_node);
+            } else {
+                //throw an error to set the job role of the current row.
+                var errorMsg = {
+                    'type': 'default',
+                    'title': "Error",
+                    'message': "Please select node to create chiled node.",
+                };
+                myApp.modal.alert(errorMsg);
+            }
+
         });
         //delete node        
         $('#delete').on('click', function () {
@@ -77,6 +94,7 @@
                     parent: clicked_ele.parent,
                     menu_text: clicked_ele.text,
                     menu_id: $('#menu_id').val(),
+                    menu_order: $('#node_position').val(),
                 };
                 $.ajax({
                     url: base_url + "tree/save_menu_details",
@@ -89,15 +107,14 @@
                     error: function (result) {
                         reject(result);
                     }
-                });                
+                });
             });
-            
+
             promise.then(function (resolve) {
-                //show_message(resolve);
-                //myApp.CommonMethod.app_log('resolve', resolve);
+                var tree = $("#jstree").jstree(true);
+                tree.refresh();
                 show_message(resolve);
             }, function (reject) {
-                //myApp.CommonMethod.app_log('reject', reject);
                 show_message(reject);
             });
 
@@ -146,6 +163,7 @@
                 tree.refresh();
 
             }, function (reject) {
+                console.log('reject', reject);
                 show_message(reject);
             });
         }
@@ -199,12 +217,11 @@
         }
 
         function show_message(reject) {
-            myApp.CommonMethod.app_log('resolve', reject);
             var errMsg = {
-                title: (typeof reject.title !='undefined' && reject.title != '') ? errMsg.title : 'Manage Menu',
-                message: (reject.message != '') ? errMsg.message : 'There are some error, please try again!'
+                'type': 'default',
+                title: (typeof reject.title != 'undefined' && reject.title != '') ? reject.title : 'Manage Menu',
+                message: (reject.message != '') ? reject.message : 'There are some error, please try again!'
             }
-            myApp.CommonMethod.app_log('errMsg', errMsg);
             myApp.modal.alert(errMsg);
         }
 

@@ -111,3 +111,6 @@ div.dataTables_paginate {
     display: inline-block !important;
     width: auto;      
 }
+table.dataTable.no-footer{
+    border-bottom: 1px solid #00c0ef !important;
+}

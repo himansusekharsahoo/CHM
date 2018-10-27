@@ -243,7 +243,7 @@
                 </div>
             </div>
         </div>
-        </form><?= form_close() ?>
+        </form><?php echo form_close() ?>
     </div>
     <script type="text/javascript">
         $(document).ready(function () {

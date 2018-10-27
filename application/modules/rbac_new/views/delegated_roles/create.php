@@ -81,7 +81,7 @@
 
     <div class = 'form-group row'>
         <div class = 'col-sm-1'>
-            <a class="text-right btn btn-default" href="<?= APP_BASE ?>rbac_new/delegated_roles/index">
+            <a class="text-right btn btn-default" href="<?php echo APP_BASE ?>rbac_new/delegated_roles/index">
                 <span class="glyphicon glyphicon-th-list"></span> Cancel
             </a>
         </div>
@@ -89,5 +89,5 @@
             <input type="submit" id="submit" value="Save" class="btn btn-primary">
         </div>
     </div>
-    <?= form_close() ?>
+    <?php echo form_close() ?>
 </div>

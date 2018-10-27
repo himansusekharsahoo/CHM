@@ -1,7 +1,8 @@
 <?php
 
-if (!defined('BASEPATH'))
+if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
+}
 
 /**
  * @class   : Rbac_permissions
@@ -9,9 +10,11 @@ if (!defined('BASEPATH'))
  * @author  : HimansuS
  * @created :05/17/2018
  */
-class Rbac_permissions extends CI_Controller {
+class Rbac_permissions extends CI_Controller
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
 
         $this->load->model('rbac_permission');
@@ -29,16 +32,18 @@ class Rbac_permissions extends CI_Controller {
      * @desc
      * @author
      */
-    public function index(){
+    public function index()
+    {
         redirect('/rbac_new/rbac_permissions/module_permissions');
     }
     /**
      * @param
      * @return
-     * @desc used to assign action to module
+     * @desc   used to assign action to module
      * @author
      */
-    public function module_permissions() {
+    public function module_permissions()
+    {
         $this->layout->navTitle = 'Module Permissions';
         $data = array();
         $module_options = $this->rbac_permission->get_rbac_modules_options('name');

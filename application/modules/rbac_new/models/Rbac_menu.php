@@ -1,7 +1,8 @@
 <?php
 
-if (!defined('BASEPATH'))
+if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
+}
 
 /**
  * @class   : Rbac_menu
@@ -9,9 +10,11 @@ if (!defined('BASEPATH'))
  * @author  : HimansuS
  * @created :09/29/2018
  */
-class Rbac_menu extends CI_Model {
+class Rbac_menu extends CI_Model
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
 
 
@@ -23,13 +26,14 @@ class Rbac_menu extends CI_Model {
     }
 
     /**
-     * @param  : $data=null,$export=null,$tableHeading=null,$columns=null
-     * @desc   :
-     * @return :
-     * @author :
+     * @param              : $data=null,$export=null,$tableHeading=null,$columns=null
+     * @desc               :
+     * @return             :
+     * @author             :
      * @created:09/29/2018
      */
-    public function get_rbac_menu_datatable($data = null, $export = null, $tableHeading = null, $columns = null) {
+    public function get_rbac_menu_datatable($data = null, $export = null, $tableHeading = null, $columns = null)
+    {
         $this->load->library('datatables');
         if (!$columns) {
             $columns = 'menu_id,name,menu_order,parent,icon_class,menu_class,attribute,permission_id,url,menu_type,status,created,modified';
@@ -37,13 +41,13 @@ class Rbac_menu extends CI_Model {
 
         /*
          */
-        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, FALSE, FALSE)->from('rbac_menu t1');
+        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, false, false)->from('rbac_menu t1');
 
         $this->datatables->unset_column("menu_id");
-        if (isset($data['button_set'])):
+        if (isset($data['button_set'])) :
             $this->datatables->add_column("Action", $data['button_set'], 'c_encode(menu_id)', 1, 1);
         endif;
-        if ($export):
+        if ($export) :
             $data = $this->datatables->generate_export($export);
             return $data;
         endif;
@@ -51,13 +55,14 @@ class Rbac_menu extends CI_Model {
     }
 
     /**
-     * @param  : $columns=null,$conditions=null,$limit=null,$offset=null
-     * @desc   :
-     * @return :
-     * @author :
+     * @param              : $columns=null,$conditions=null,$limit=null,$offset=null
+     * @desc               :
+     * @return             :
+     * @author             :
      * @created:09/29/2018
      */
-    public function get_rbac_menu($columns = null, $conditions = null, $limit = null, $offset = null) {
+    public function get_rbac_menu($columns = null, $conditions = null, $limit = null, $offset = null)
+    {
         if (!$columns) {
             $columns = 'menu_id,name,menu_order,parent,icon_class,menu_class,attribute,permission_id,url,menu_type,status,created,modified';
         }
@@ -66,12 +71,12 @@ class Rbac_menu extends CI_Model {
          */
         $this->db->select($columns)->from('rbac_menu t1');
 
-        if ($conditions && is_array($conditions)):
+        if ($conditions && is_array($conditions)) :
             foreach ($conditions as $col => $val):
                 $this->db->where($col, $val);
             endforeach;
         endif;
-        if ($limit > 0):
+        if ($limit > 0) :
             $this->db->limit($limit, $offset);
 
         endif;
@@ -81,18 +86,19 @@ class Rbac_menu extends CI_Model {
     }
 
     /**
-     * @param  : $data
-     * @desc   :
-     * @return :
-     * @author :
+     * @param              : $data
+     * @desc               :
+     * @return             :
+     * @author             :
      * @created:09/29/2018
      */
-    public function save($data) {
-        if ($data):
+    public function save($data)
+    {
+        if ($data) :
             $this->db->insert("rbac_menu", $data);
             $menu_id_inserted_id = $this->db->insert_id();
 
-            if ($menu_id_inserted_id):
+            if ($menu_id_inserted_id) :
                 return $menu_id_inserted_id;
             endif;
             return 'No data found to store!';
@@ -101,14 +107,15 @@ class Rbac_menu extends CI_Model {
     }
 
     /**
-     * @param  : $data
-     * @desc   :
-     * @return :
-     * @author :
+     * @param              : $data
+     * @desc               :
+     * @return             :
+     * @author             :
      * @created:09/29/2018
      */
-    public function update($data) {
-        if ($data):
+    public function update($data)
+    {
+        if ($data) :
             $this->db->where("menu_id", $data['menu_id']);
             return $this->db->update('rbac_menu', $data);
         endif;
@@ -116,18 +123,19 @@ class Rbac_menu extends CI_Model {
     }
 
     /**
-     * @param  : $menu_id
-     * @desc   :
-     * @return :
-     * @author :
+     * @param              : $menu_id
+     * @desc               :
+     * @return             :
+     * @author             :
      * @created:09/29/2018
      */
-    public function delete($menu_id) {
-        if ($menu_id):
+    public function delete($menu_id)
+    {
+        if ($menu_id) :
             $this->db->trans_begin();
             $result = 0;
             $this->db->delete('rbac_menu', array('menu_id' => $menu_id));
-            if ($this->db->trans_status() === FALSE) {
+            if ($this->db->trans_status() === false) {
                 $this->db->trans_rollback();
                 return false;
             } else {
@@ -140,13 +148,14 @@ class Rbac_menu extends CI_Model {
     }
 
     /**
-     * @param  : $columns,$index=null, $conditions = null
-     * @desc   :
-     * @return :
-     * @author :
+     * @param              : $columns,$index=null, $conditions = null
+     * @desc               :
+     * @return             :
+     * @author             :
      * @created:09/29/2018
      */
-    public function get_options($columns, $index = null, $conditions = null) {
+    public function get_options($columns, $index = null, $conditions = null)
+    {
         if (!$columns) {
             $columns = 'menu_id';
         }
@@ -155,7 +164,7 @@ class Rbac_menu extends CI_Model {
         }
         $this->db->select("$columns,$index")->from('rbac_menu t1');
 
-        if ($conditions && is_array($conditions)):
+        if ($conditions && is_array($conditions)) :
             foreach ($conditions as $col => $val):
                 $this->db->where("$col", $val);
 
@@ -171,7 +180,8 @@ class Rbac_menu extends CI_Model {
         return $list;
     }
 
-    public function record_count() {
+    public function record_count()
+    {
         return $this->db->count_all('rbac_menu');
     }
 

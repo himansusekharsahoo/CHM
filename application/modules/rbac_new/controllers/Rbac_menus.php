@@ -1,7 +1,8 @@
 <?php
 
-if (!defined('BASEPATH'))
+if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
+}
 
 /**
  * @class   : Rbac_menus
@@ -9,9 +10,11 @@ if (!defined('BASEPATH'))
  * @author  : HimansuS
  * @created :09/29/2018
  */
-class Rbac_menus extends CI_Controller {
+class Rbac_menus extends CI_Controller
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
 
         $this->load->model('rbac_menu');
@@ -25,13 +28,14 @@ class Rbac_menus extends CI_Controller {
     }
 
     /**
-     * @param  : 
-     * @desc   :
-     * @return :
-     * @author :
+     * @param              : 
+     * @desc               :
+     * @return             :
+     * @author             :
      * @created:09/29/2018
      */
-    public function index() {
+    public function index()
+    {
 
         $this->breadcrumbs->push('index', '/rbac_new/rbac_menus/index');
         $this->scripts_include->includePlugins(array('datatable'), 'css');
@@ -215,7 +219,7 @@ class Rbac_menus extends CI_Controller {
         $dt_tool_btn = get_link_buttons($dt_tool_btn);
 
         $config = array(
-            'dt_markup' => TRUE,
+            'dt_markup' => true,
             'dt_id' => 'raw_cert_data_dt_table',
             'dt_header' => $header,
             'dt_ajax' => array(
@@ -241,14 +245,15 @@ class Rbac_menus extends CI_Controller {
     }
 
     /**
-     * @param  : 
-     * @desc   :
-     * @return :
-     * @author :
+     * @param              : 
+     * @desc               :
+     * @return             :
+     * @author             :
      * @created:09/29/2018
      */
-    public function export_grid_data() {
-        if ($this->input->is_ajax_request()):
+    public function export_grid_data()
+    {
+        if ($this->input->is_ajax_request()) :
             $export_type = $this->input->post('export_type');
             $tableHeading = array('name' => 'name', 'menu_order' => 'menu_order', 'parent' => 'parent', 'icon_class' => 'icon_class', 'menu_class' => 'menu_class', 'attribute' => 'attribute', 'permission_id' => 'permission_id', 'url' => 'url', 'menu_type' => 'menu_type', 'status' => 'status', 'created' => 'created', 'modified' => 'modified',);
             $cols = 'name,menu_order,parent,icon_class,menu_class,attribute,permission_id,url,menu_type,status,created,modified';
@@ -291,18 +296,19 @@ class Rbac_menus extends CI_Controller {
     }
 
     /**
-     * @param  : 
-     * @desc   :
-     * @return :
-     * @author :
+     * @param              : 
+     * @desc               :
+     * @return             :
+     * @author             :
      * @created:09/29/2018
      */
-    public function create() {
+    public function create()
+    {
         $this->breadcrumbs->push('create', '/rbac_new/rbac_menus/create');
 
         $this->layout->navTitle = 'Rbac menu create';
         $data = array();
-        if ($this->input->post()):
+        if ($this->input->post()) :
             $config = array(
                 array(
                     'field' => 'name',
@@ -352,12 +358,12 @@ class Rbac_menus extends CI_Controller {
             );
             $this->form_validation->set_rules($config);
 
-            if ($this->form_validation->run()):
+            if ($this->form_validation->run()) :
 
                 $data['data'] = $this->input->post();
                 $result = $this->rbac_menu->save($data['data']);
 
-                if ($result >= 1):
+                if ($result >= 1) :
                     $this->session->set_flashdata('success', 'Record successfully saved!');
                     redirect('/rbac_new/rbac_menus');
                 else:
@@ -370,18 +376,19 @@ class Rbac_menus extends CI_Controller {
     }
 
     /**
-     * @param  : $menu_id=null
-     * @desc   :
-     * @return :
-     * @author :
+     * @param              : $menu_id=null
+     * @desc               :
+     * @return             :
+     * @author             :
      * @created:09/29/2018
      */
-    public function edit($menu_id = null) {
+    public function edit($menu_id = null)
+    {
         $this->breadcrumbs->push('edit', '/rbac_new/rbac_menus/edit');
 
         $this->layout->navTitle = 'Rbac menu edit';
         $data = array();
-        if ($this->input->post()):
+        if ($this->input->post()) :
             $data['data'] = $this->input->post();
             $config = array(
                 array(
@@ -432,9 +439,9 @@ class Rbac_menus extends CI_Controller {
             );
             $this->form_validation->set_rules($config);
 
-            if ($this->form_validation->run()):
+            if ($this->form_validation->run()) :
                 $result = $this->rbac_menu->update($data['data']);
-                if ($result >= 1):
+                if ($result >= 1) :
                     $this->session->set_flashdata('success', 'Record successfully updated!');
                     redirect('/rbac_new/rbac_menus');
                 else:
@@ -444,7 +451,7 @@ class Rbac_menus extends CI_Controller {
         else:
             $menu_id = c_decode($menu_id);
             $result = $this->rbac_menu->get_rbac_menu(null, array('menu_id' => $menu_id));
-            if ($result):
+            if ($result) :
                 $result = current($result);
             endif;
             $data['data'] = $result;
@@ -454,22 +461,23 @@ class Rbac_menus extends CI_Controller {
     }
 
     /**
-     * @param  : $menu_id
-     * @desc   :
-     * @return :
-     * @author :
+     * @param              : $menu_id
+     * @desc               :
+     * @return             :
+     * @author             :
      * @created:09/29/2018
      */
-    public function view($menu_id) {
+    public function view($menu_id)
+    {
         $this->breadcrumbs->push('view', '/rbac_new/rbac_menus/view');
 
         $data = array();
-        if ($menu_id):
+        if ($menu_id) :
             $menu_id = c_decode($menu_id);
 
             $this->layout->navTitle = 'Rbac menu view';
             $result = $this->rbac_menu->get_rbac_menu(null, array('menu_id' => $menu_id), 1);
-            if ($result):
+            if ($result) :
                 $result = current($result);
             endif;
 
@@ -482,20 +490,21 @@ class Rbac_menus extends CI_Controller {
     }
 
     /**
-     * @param  : 
-     * @desc   :
-     * @return :
-     * @author :
+     * @param              : 
+     * @desc               :
+     * @return             :
+     * @author             :
      * @created:09/29/2018
      */
-    public function delete() {
-        if ($this->input->is_ajax_request()):
+    public function delete()
+    {
+        if ($this->input->is_ajax_request()) :
             $menu_id = $this->input->post('menu_id');
-            if ($menu_id):
+            if ($menu_id) :
                 $menu_id = c_decode($menu_id);
 
                 $result = $this->rbac_menu->delete($menu_id);
-                if ($result):
+                if ($result) :
                     echo 1;
                     exit();
                 else:

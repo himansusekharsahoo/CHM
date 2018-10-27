@@ -319,9 +319,18 @@ class Datatables {
                 $i++;
             }
         }
-        for ($i = 0; $i < intval($this->ci->input->post('iSortingCols')); $i++)
-            if (isset($mColArray[intval($this->ci->input->post('iSortCol_' . $i))]) && in_array($mColArray[intval($this->ci->input->post('iSortCol_' . $i))], $columns) && $this->ci->input->post('bSortable_' . intval($this->ci->input->post('iSortCol_' . $i))) == 'true')
-                $this->ci->db->order_by($mColArray[intval($this->ci->input->post('iSortCol_' . $i))], $this->ci->input->post('sSortDir_' . $i));
+        if ($this->ci->input->post('iSortingCols')) {
+            for ($i = 0; $i < intval($this->ci->input->post('iSortingCols')); $i++) {
+                if (isset($mColArray[intval($this->ci->input->post('iSortCol_' . $i))]) && in_array($mColArray[intval($this->ci->input->post('iSortCol_' . $i))], $columns) && $this->ci->input->post('bSortable_' . intval($this->ci->input->post('iSortCol_' . $i))) == 'true') {
+                    $this->ci->db->order_by($mColArray[intval($this->ci->input->post('iSortCol_' . $i))], $this->ci->input->post('sSortDir_' . $i));
+                }
+            }
+        } else if ($this->ci->input->post('order')) {
+            $order = $this->ci->input->post('order');
+            foreach ($order as $ord) {
+                $this->ci->db->order_by($ord['column'], $ord['dir']);
+            }
+        }
     }
 
     /**
@@ -364,17 +373,16 @@ class Datatables {
         $sSearch = $this->ci->db->escape_str($this->ci->input->post('sSearch'));
         if (!$sSearch) {
             $sSearch = $this->ci->db->escape_str($this->ci->input->post('search'));
-            $sSearch = $sSearch['value'];
+            $sSearch = (isset($sSearch['value'])) ? $sSearch['value'] : '';
         }
 
         $mColArray = array_values(array_diff($mColArray, $this->unset_columns));
         $columns = array_values(array_diff($this->columns, $this->unset_columns));
 
         if ($sSearch != '') {
-            $post_cols=$this->ci->input->post('columns');
+            $post_cols = $this->ci->input->post('columns');
             for ($i = 0; $i < count($mColArray); $i++) {
-                if ($this->ci->input->post('bSearchable_' . $i) == 'true'
-                        || (isset($post_cols[$i]['orderable']) && $post_cols[$i]['searchable']==true)) {
+                if ($this->ci->input->post('bSearchable_' . $i) == 'true' || (isset($post_cols[$i]['orderable']) && $post_cols[$i]['searchable'] == true)) {
                     if ((in_array(trim($mColArray[$i]), $columns))) {
                         if (in_array($mColArray[$i], $this->select)) {
                             $sWhere .= $this->select[$mColArray[$i]] . " LIKE '%" . $sSearch . "%' OR ";
@@ -387,7 +395,7 @@ class Datatables {
         }
 
         $sWhere = substr_replace($sWhere, '', -3);
-        
+
         if ($sWhere != '') {
             $this->ci->db->where('(' . $sWhere . ')');
         }

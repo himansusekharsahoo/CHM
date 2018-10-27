@@ -1,5 +1,5 @@
 <?php ?> <div class="row-fluid">
-    <div class="col-sm-12 no_pad">
+    <div class="col-sm-12 no_pad table-responsive">
         <?php
         $this->load->library('c_datatable');
         $dt_data = $this->c_datatable->generate_grid($config);
@@ -26,7 +26,7 @@
                         label: 'Delete',
                         action: function (dialog) {
                             $.ajax({
-                                url: '<?= APP_BASE ?>rbac_new/rbac_users/delete',
+                                url: '<?php echo APP_BASE ?>rbac_new/rbac_users/delete',
                                 method: 'POST',
                                 data: data,
                                 success: function (result) {
@@ -59,7 +59,7 @@
             };
             $.ajax({
                 type: 'POST',
-                url: "<?= base_url('rbac_new/rbac_users/export_grid_data') ?>",
+                url: "<?php echo base_url('rbac_new/rbac_users/export_grid_data') ?>",
                 data: param,
                 dataType: 'json'
             }).done(function (data) {
@@ -67,7 +67,7 @@
                 $('#loading').css('display', 'none');
             });
         });
-        //export raw data as csv 
+//export raw data as csv 
 
         $(document).on('click', '#export_table_csv', function (e) {
             e.preventDefault();
@@ -77,7 +77,7 @@
             };
             $.ajax({
                 type: 'POST',
-                url: "<?= base_url('rbac_new/rbac_users/export_grid_data') ?>",
+                url: "<?php echo base_url('rbac_new/rbac_users/export_grid_data') ?>",
                 data: param,
                 dataType: 'json'
             }).done(function (data) {

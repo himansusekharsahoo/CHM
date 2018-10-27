@@ -1,16 +1,43 @@
 <?php
 
+/**
+ * Rbac_custom_permission Class File
+ * PHP Version 7.1.1
+ * 
+ * @category   Rbac_new
+ * @package    Rbac_new
+ * @subpackage Rbac_custom_permission
+ * @class      Rbac_custom_permission
+ * @desc    
+ * @author     HimansuS <himansu.php@gmail.com>                
+ * @license    
+ * @link       
+ * @since   10/13/2018
+ */
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 /**
- * @class   : Rbac_custom_permission
- * @desc    :
- * @author  : HimansuS
- * @created :09/29/2018
+ * Rbac_custom_permission Class
+ * 
+ * @category   Rbac_new
+ * @package    Rbac_new
+ * @class      Rbac_custom_permission
+ * @desc    
+ * @author     HimansuS                  
+ * @since   10/13/2018
  */
 class Rbac_custom_permission extends CI_Model {
 
+    /**
+     * __construct Method
+     * 
+     * @param   
+     * @desc    
+     * @return 
+     * @author  HimansuS                  
+     * @since   10/13/2018
+     */
     public function __construct() {
         parent::__construct();
 
@@ -24,11 +51,13 @@ class Rbac_custom_permission extends CI_Model {
     }
 
     /**
-     * @param  : $data=null,$export=null,$tableHeading=null,$columns=null
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:09/29/2018
+     * Get_rbac_custom_permission_datatable Method
+     * 
+     * @param   $data=null,$export=null,$tableHeading=null,$columns=null
+     * @desc    
+     * @return 
+     * @author  HimansuS                  
+     * @since   10/13/2018
      */
     public function get_rbac_custom_permission_datatable($data = null, $export = null, $tableHeading = null, $columns = null) {
         $this->load->library('datatables');
@@ -58,11 +87,13 @@ class Rbac_custom_permission extends CI_Model {
     }
 
     /**
-     * @param  : $columns=null,$conditions=null,$limit=null,$offset=null
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:09/29/2018
+     * Get_rbac_custom_permission Method
+     * 
+     * @param   $columns=null,$conditions=null,$limit=null,$offset=null
+     * @desc    
+     * @return 
+     * @author  HimansuS                  
+     * @since   10/13/2018
      */
     public function get_rbac_custom_permission($columns = null, $conditions = null, $limit = null, $offset = null) {
         if (!$columns) {
@@ -94,11 +125,13 @@ class Rbac_custom_permission extends CI_Model {
     }
 
     /**
-     * @param  : $data
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:09/29/2018
+     * Save Method
+     * 
+     * @param   $data
+     * @desc    
+     * @return 
+     * @author  HimansuS                  
+     * @since   10/13/2018
      */
     public function save($data) {
         if ($data):
@@ -114,11 +147,13 @@ class Rbac_custom_permission extends CI_Model {
     }
 
     /**
-     * @param  : $data
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:09/29/2018
+     * Update Method
+     * 
+     * @param   $data
+     * @desc    
+     * @return 
+     * @author  HimansuS                  
+     * @since   10/13/2018
      */
     public function update($data) {
         if ($data):
@@ -129,11 +164,13 @@ class Rbac_custom_permission extends CI_Model {
     }
 
     /**
-     * @param  : $custom_permission_id
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:09/29/2018
+     * Delete Method
+     * 
+     * @param   $custom_permission_id
+     * @desc    
+     * @return 
+     * @author  HimansuS                  
+     * @since   10/13/2018
      */
     public function delete($custom_permission_id) {
         if ($custom_permission_id):
@@ -153,11 +190,13 @@ class Rbac_custom_permission extends CI_Model {
     }
 
     /**
-     * @param  : $columns,$index=null, $conditions = null
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:09/29/2018
+     * Get_options Method
+     * 
+     * @param   $columns,$index=null, $conditions = null
+     * @desc    
+     * @return 
+     * @author  HimansuS                  
+     * @since   10/13/2018
      */
     public function get_options($columns, $index = null, $conditions = null) {
         if (!$columns) {
@@ -185,22 +224,26 @@ class Rbac_custom_permission extends CI_Model {
     }
 
     /**
-     * @param  : $columns,$index=null, $conditions = null
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:09/29/2018
+     * Get_rbac_users_options Method
+     * 
+     * @param   $columns,$index=null, $conditions = null
+     * @desc    
+     * @return 
+     * @author  HimansuS                  
+     * @since   10/13/2018
      */
     public function get_rbac_users_options($columns, $index = null, $conditions = null) {
         return $this->rbac_user->get_options($columns, $index, $conditions);
     }
 
     /**
-     * @param  : $columns,$index=null, $conditions = null
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:09/29/2018
+     * Get_rbac_permissions_options Method
+     * 
+     * @param   $columns,$index=null, $conditions = null
+     * @desc    
+     * @return 
+     * @author  HimansuS                  
+     * @since   10/13/2018
      */
     public function get_rbac_permissions_options($columns, $index = null, $conditions = null) {
         return $this->rbac_permission->get_options($columns, $index, $conditions);

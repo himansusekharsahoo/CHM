@@ -26,7 +26,7 @@
                         label: 'Delete',
                         action: function (dialog) {
                             $.ajax({
-                                url: '<?= APP_BASE ?>rbac_new/rbac_menus/delete',
+                                url: '<?php echo APP_BASE ?>rbac_new/rbac_menus/delete',
                                 method: 'POST',
                                 data: data,
                                 success: function (result) {
@@ -59,7 +59,7 @@
             };
             $.ajax({
                 type: 'POST',
-                url: "<?= base_url('rbac_new/rbac_menus/export_grid_data') ?>",
+                url: "<?php echo base_url('rbac_new/rbac_menus/export_grid_data') ?>",
                 data: param,
                 dataType: 'json'
             }).done(function (data) {
@@ -77,7 +77,7 @@
             };
             $.ajax({
                 type: 'POST',
-                url: "<?= base_url('rbac_new/rbac_menus/export_grid_data') ?>",
+                url: "<?php echo base_url('rbac_new/rbac_menus/export_grid_data') ?>",
                 data: param,
                 dataType: 'json'
             }).done(function (data) {

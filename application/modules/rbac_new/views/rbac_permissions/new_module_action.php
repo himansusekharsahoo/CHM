@@ -65,12 +65,12 @@
                     <div class="row-fluid panel_container">
                         <?php
                         $counter = 1;
-                        if ($existing_perms):
+                        if ($existing_perms) :
                             //pma($existing_perms);
                             foreach ($existing_perms as $key => $rec):
                                 //pma($rec);
                                 ?>
-                                <div class="panel-body no_pad perm_panel" panel_no="<?= $counter ?>" id="panel_<?= $counter ?>">
+                                <div class="panel-body no_pad perm_panel" panel_no="<?php echo $counter ?>" id="panel_<?php echo $counter ?>">
                                     <div class="panel panel-default ">
                                         <div class="panel-heading">
                                             <?php
@@ -82,23 +82,23 @@
                                                 }
                                             }
                                             ?>
-                                            <h3 class="panel-title col-sm-10 text-left" data-toggle="collapse" data-target="#new_perm_panel_<?= $counter ?>" aria-expanded="true" style="cursor: pointer">Permission-<?= $counter ?> - <?= $module_name ?></h3>
-                                            <h3 class="panel-title" data-toggle="collapse" data-target="#new_perm_panel_<?= $counter ?>" aria-expanded="true" style="cursor: pointer">
+                                            <h3 class="panel-title col-sm-10 text-left" data-toggle="collapse" data-target="#new_perm_panel_<?php echo $counter ?>" aria-expanded="true" style="cursor: pointer">Permission-<?php echo $counter ?> - <?php echo $module_name ?></h3>
+                                            <h3 class="panel-title" data-toggle="collapse" data-target="#new_perm_panel_<?php echo $counter ?>" aria-expanded="true" style="cursor: pointer">
                                                 &nbsp;<i class="fa fa-chevron-down pull-right"></i>
                                             </h3>
                                         </div>
-                                        <div class="panel-body no_pad collapse" id="new_perm_panel_<?= $counter ?>" aria-expanded="true">
+                                        <div class="panel-body no_pad collapse" id="new_perm_panel_<?php echo $counter ?>" aria-expanded="true">
                                             <div class="box-body">
                                                 <div class="col-sm-12 no_pad">                                                        
                                                     <div class="col-sm-6">                                                        
                                                         <div class="col-sm-6">
-                                                            <input name="permission[<?= $counter ?>][module_id]" value="<?= (isset($rec['module_id']) ? $rec['module_id'] : '') ?>" type="hidden">
-                                                            <input name="permission[<?= $counter ?>][permission_id]" value="<?= (isset($rec['permission_id']) ? $rec['permission_id'] : '') ?>" type="hidden">
-                                                            <input name="permission[<?= $counter ?>][module_name]" value="<?= (isset($rec['module_name']) ? $rec['module_name'] : '') ?>" class="form-control module_name_input" title="" type="text" placeholder="Module Name">
+                                                            <input name="permission[<?php echo $counter ?>][module_id]" value="<?php echo (isset($rec['module_id']) ? $rec['module_id'] : '') ?>" type="hidden">
+                                                            <input name="permission[<?php echo $counter ?>][permission_id]" value="<?php echo (isset($rec['permission_id']) ? $rec['permission_id'] : '') ?>" type="hidden">
+                                                            <input name="permission[<?php echo $counter ?>][module_name]" value="<?php echo (isset($rec['module_name']) ? $rec['module_name'] : '') ?>" class="form-control module_name_input" title="" type="text" placeholder="Module Name">
 
                                                         </div>
                                                         <div class="col-sm-6">
-                                                            <input name="permission[<?= $counter ?>][module_code]" value="<?= (isset($rec['module_code'])) ? $rec['module_code'] : '' ?>" class="form-control module_code_input perm_module_code" title="" type="text" placeholder="Module Code">
+                                                            <input name="permission[<?php echo $counter ?>][module_code]" value="<?php echo (isset($rec['module_code'])) ? $rec['module_code'] : '' ?>" class="form-control module_code_input perm_module_code" title="" type="text" placeholder="Module Code">
                                                         </div>
                                                     </div>
                                                     <div class="col-sm-6">
@@ -130,14 +130,14 @@
                                                             </div>
                                                         </div>
                                                         <div class="row">
-                                                            <div class="col-sm-12 no_pad action_holder" data-panel-no="<?= $counter ?>">
+                                                            <div class="col-sm-12 no_pad action_holder" data-panel-no="<?php echo $counter ?>">
                                                                 <div class="row-fluid no_pad">
                                                                     <div class="col-sm-12 no_pad">
                                                                         <div class="col-sm-6">
-                                                                            <input name="permission[<?= $counter ?>][action_name][]" value="" class="form-control action_name_input" title="" type="text" placeholder="Action Name">    
+                                                                            <input name="permission[<?php echo $counter ?>][action_name][]" value="" class="form-control action_name_input" title="" type="text" placeholder="Action Name">    
                                                                         </div>
                                                                         <div class="col-sm-6">
-                                                                            <input name="permission[<?= $counter ?>][action_code][]" value="" class="form-control action_code_input perm_action_code" title="" type="text" placeholder="Action Code">    
+                                                                            <input name="permission[<?php echo $counter ?>][action_code][]" value="" class="form-control action_code_input perm_action_code" title="" type="text" placeholder="Action Code">    
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -221,7 +221,7 @@
                 </div>
             </div>
         </div>
-        </form><?= form_close() ?>
+        </form><?php echo form_close() ?>
     </div>
 
     <script type="text/javascript">
@@ -274,16 +274,16 @@
                     this.module_codes.splice(indx, 1);
                     console.log('pop module', indx, this.module_codes);
                 },
-                src_module_codes:<?= $module_codes_json ?>,
-                src_action_codes: <?= $action_codes_json ?>,
-                module_codes: <?= $module_codes_json ?>,
-                action_codes: <?= $action_codes_json ?>,
+                src_module_codes:<?php echo $module_codes_json ?>,
+                src_action_codes: <?php echo $action_codes_json ?>,
+                module_codes: <?php echo $module_codes_json ?>,
+                action_codes: <?php echo $action_codes_json ?>,
                 current_module_code: '',
                 chosen_callback: function () {
 
                 },
                 getDBActionCheckBox: function (panel_no) {
-                    var actions =<?= $action_json ?>;
+                    var actions =<?php echo $action_json ?>;
                     var chkBoxHtml = '<div class="col-sm-12 text-left">';
                     for (var key in actions) {
                         if (actions.hasOwnProperty(key)) {
@@ -312,14 +312,14 @@
                             + '            <div class="box-body">'
                             + '                 <div class="col-sm-12 no_pad">'
                             + '                     <div class="col-sm-6">'
-                            + '                     	<div class="col-sm-12">'
+                            + '                         <div class="col-sm-12">'
                             + '                             <div class="col-sm-6">'
-                            + '                             	<input name="permission[' + panel_no + '][module_name]" value="" class="form-control module_name_input" title="" type="text" placeholder="Module Name">'
+                            + '                                 <input name="permission[' + panel_no + '][module_name]" value="" class="form-control module_name_input" title="" type="text" placeholder="Module Name">'
                             + '                             </div>'
                             + '                             <div class="col-sm-6">'
                             + '                                 <input name="permission[' + panel_no + '][module_code]" value="" class="form-control module_code_input perm_module_code" title="" type="text" placeholder="Module Code">'
                             + '                             </div>'
-                            + '                     	</div>'
+                            + '                         </div>'
                             + '                     </div>'
                             + '                     <div class="col-sm-6">'
                             + '                         <div class="row">'
@@ -336,10 +336,10 @@
                             + '                                             <input name="permission[' + panel_no + '][action_code][]" value="" class="form-control action_code_input perm_action_code" title="" type="text" placeholder="Action Code">'
                             + '                                         </div>'
                             + '                                     </div>'
-                            + '                     		</div>'
+                            + '                             </div>'
                             + '                             </div>'
                             + '                             <span data-toggle="tooltip" class="fa fa-plus-square fa-lg pull-right add-single-action hand" title="add"> </span>'
-                            + '                     	</div>'
+                            + '                         </div>'
                             + '                     </div>'
                             + '                 </div>'
                             + '            </div>'

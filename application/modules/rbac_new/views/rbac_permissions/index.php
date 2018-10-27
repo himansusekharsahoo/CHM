@@ -1,4 +1,4 @@
-<div style="float:right;"><a class="btn btn-primary btn-sm" href="<?= APP_BASE ?>rbac_new/rbac_permissions/create">Create</a></div>
+<div style="float:right;"><a class="btn btn-primary btn-sm" href="<?php echo APP_BASE ?>rbac_new/rbac_permissions/create">Create</a></div>
 <div class="row-fluid">
     <?php
     generate_gird($grid_config, "rbac_permissions_list");
@@ -23,7 +23,7 @@
                         label: 'Delete',
                         action: function (dialog) {
                             $.ajax({
-                                url: '<?= APP_BASE ?>rbac_new/rbac_permissions/delete',
+                                url: '<?php echo APP_BASE ?>rbac_new/rbac_permissions/delete',
                                 method: 'POST',
                                 data: data,
                                 success: function (result) {

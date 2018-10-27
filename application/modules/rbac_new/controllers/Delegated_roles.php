@@ -1,16 +1,44 @@
 <?php
 
-if (!defined('BASEPATH'))
+/**
+ * Delegated Class File
+ * PHP Version 7.1
+ * 
+ * @category   Rbac
+ * @package    Rbac
+ * @subpackage Delegated_Roles
+ * @class      Delegated_Roles
+ * @desc    
+ * @author     HimansuS <himansu.php@gmail.com>
+ * @created    09/29/2018
+ * @license    
+ * @link       
+ * @since   09/29/2018
+ */
+if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
+}
 
 /**
- * @class   : Delegated_roles
- * @desc    :
- * @author  : HimansuS
- * @created :09/29/2018
+ * Delegated_Roles class
+ *
+ * The class holding delegated roles functionality
+ *
+ * @category Rbac
+ * @package  Rbac
+ * @author   HimansuS <himansu.php@gmail.com>
+ * @license  http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @link     
  */
 class Delegated_roles extends CI_Controller {
 
+    /**
+     * @param    : NA
+     * @desc     : initiate object
+     * @return   : NA
+     * @author   : HimansuS
+     * @created:
+     */
     public function __construct() {
         parent::__construct();
 
@@ -25,10 +53,10 @@ class Delegated_roles extends CI_Controller {
     }
 
     /**
-     * @param  : 
-     * @desc   :
-     * @return :
-     * @author :
+     * @param              : 
+     * @desc               :
+     * @return             :
+     * @author             :
      * @created:09/29/2018
      */
     public function index() {
@@ -175,7 +203,7 @@ class Delegated_roles extends CI_Controller {
         $dt_tool_btn = get_link_buttons($dt_tool_btn);
 
         $config = array(
-            'dt_markup' => TRUE,
+            'dt_markup' => true,
             'dt_id' => 'raw_cert_data_dt_table',
             'dt_header' => $header,
             'dt_ajax' => array(
@@ -201,14 +229,14 @@ class Delegated_roles extends CI_Controller {
     }
 
     /**
-     * @param  : 
-     * @desc   :
-     * @return :
-     * @author :
+     * @param              : 
+     * @desc               :
+     * @return             :
+     * @author             :
      * @created:09/29/2018
      */
     public function export_grid_data() {
-        if ($this->input->is_ajax_request()):
+        if ($this->input->is_ajax_request()) :
             $export_type = $this->input->post('export_type');
             $tableHeading = array('role_id' => 'role_id', 'role_code' => 'role_code', 'user_id' => 'user_id', 'delegated_by' => 'delegated_by', 'created' => 'created', 'modified' => 'modified', 'status' => 'status',);
             $cols = 'role_id,role_code,user_id,delegated_by,created,modified,status';
@@ -251,10 +279,10 @@ class Delegated_roles extends CI_Controller {
     }
 
     /**
-     * @param  : 
-     * @desc   :
-     * @return :
-     * @author :
+     * @param              : 
+     * @desc               :
+     * @return             :
+     * @author             :
      * @created:09/29/2018
      */
     public function create() {
@@ -262,7 +290,7 @@ class Delegated_roles extends CI_Controller {
 
         $this->layout->navTitle = 'Delegated role create';
         $data = array();
-        if ($this->input->post()):
+        if ($this->input->post()) :
             $config = array(
                 array(
                     'field' => 'role_id',
@@ -287,12 +315,12 @@ class Delegated_roles extends CI_Controller {
             );
             $this->form_validation->set_rules($config);
 
-            if ($this->form_validation->run()):
+            if ($this->form_validation->run()) :
 
                 $data['data'] = $this->input->post();
                 $result = $this->delegated_role->save($data['data']);
 
-                if ($result >= 1):
+                if ($result >= 1) :
                     $this->session->set_flashdata('success', 'Record successfully saved!');
                     redirect('/rbac_new/delegated_roles');
                 else:
@@ -307,10 +335,10 @@ class Delegated_roles extends CI_Controller {
     }
 
     /**
-     * @param  : $delegated_role_id=null
-     * @desc   :
-     * @return :
-     * @author :
+     * @param              : $delegated_role_id=null
+     * @desc               :
+     * @return             :
+     * @author             :
      * @created:09/29/2018
      */
     public function edit($delegated_role_id = null) {
@@ -318,7 +346,7 @@ class Delegated_roles extends CI_Controller {
 
         $this->layout->navTitle = 'Delegated role edit';
         $data = array();
-        if ($this->input->post()):
+        if ($this->input->post()) :
             $data['data'] = $this->input->post();
             $config = array(
                 array(
@@ -344,9 +372,9 @@ class Delegated_roles extends CI_Controller {
             );
             $this->form_validation->set_rules($config);
 
-            if ($this->form_validation->run()):
+            if ($this->form_validation->run()) :
                 $result = $this->delegated_role->update($data['data']);
-                if ($result >= 1):
+                if ($result >= 1) :
                     $this->session->set_flashdata('success', 'Record successfully updated!');
                     redirect('/rbac_new/delegated_roles');
                 else:
@@ -356,7 +384,7 @@ class Delegated_roles extends CI_Controller {
         else:
             $delegated_role_id = c_decode($delegated_role_id);
             $result = $this->delegated_role->get_delegated_role(null, array('delegated_role_id' => $delegated_role_id));
-            if ($result):
+            if ($result) :
                 $result = current($result);
             endif;
             $data['data'] = $result;
@@ -368,22 +396,22 @@ class Delegated_roles extends CI_Controller {
     }
 
     /**
-     * @param  : $delegated_role_id
-     * @desc   :
-     * @return :
-     * @author :
+     * @param              : $delegated_role_id
+     * @desc               :
+     * @return             :
+     * @author             :
      * @created:09/29/2018
      */
     public function view($delegated_role_id) {
         $this->breadcrumbs->push('view', '/rbac_new/delegated_roles/view');
 
         $data = array();
-        if ($delegated_role_id):
+        if ($delegated_role_id) :
             $delegated_role_id = c_decode($delegated_role_id);
 
             $this->layout->navTitle = 'Delegated role view';
             $result = $this->delegated_role->get_delegated_role(null, array('delegated_role_id' => $delegated_role_id), 1);
-            if ($result):
+            if ($result) :
                 $result = current($result);
             endif;
 
@@ -396,20 +424,20 @@ class Delegated_roles extends CI_Controller {
     }
 
     /**
-     * @param  : 
-     * @desc   :
-     * @return :
-     * @author :
+     * @param              : 
+     * @desc               :
+     * @return             :
+     * @author             :
      * @created:09/29/2018
      */
     public function delete() {
-        if ($this->input->is_ajax_request()):
+        if ($this->input->is_ajax_request()) :
             $delegated_role_id = $this->input->post('delegated_role_id');
-            if ($delegated_role_id):
+            if ($delegated_role_id) :
                 $delegated_role_id = c_decode($delegated_role_id);
 
                 $result = $this->delegated_role->delete($delegated_role_id);
-                if ($result):
+                if ($result) :
                     echo 1;
                     exit();
                 else:

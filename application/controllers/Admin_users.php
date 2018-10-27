@@ -68,7 +68,7 @@ class Admin_users extends CI_Controller {
                         //fetch all the permissions
                         //$condition = 'rp.menu_type="l"';
                         $permissions = $this->rbac_role_permission->get_rbac_role_permission_lib(null, null, TRUE);
-                        //$menus = $this->rbac_role_permission->get_rbac_role_permission_lib(null, $condition, TRUE);
+                        $menus = $this->rbac_role_permission->get_rbac_role_permission_lib(null, $condition, TRUE);
                         //pma($menus,1);
                     } else {
                         //fetch only assigned permissions
@@ -76,7 +76,7 @@ class Admin_users extends CI_Controller {
                         if ($role_ids) {
                             $condition = 'rrp.role_id IN(' . implode(',', $role_ids) . ')';
                             $permissions = $this->rbac_role_permission->get_rbac_role_permission_lib(null, $condition);
-                            $condition = 'rrp.role_id IN(' . implode(',', $role_ids) . ') AND rrp.menu_type="l"';
+                            $condition = 'rrp.role_id IN(' . implode(',', $role_ids) . ')';
                             $menus = $this->rbac_role_permission->get_rbac_role_permission_lib(null, $condition);
                         }
                     }
@@ -126,6 +126,7 @@ class Admin_users extends CI_Controller {
      */
     public function log_out() {
         $this->session->unset_userdata('user_data');
+        $this->session->unset_userdata('selected_left_menu');
         redirect('admin-login');
     }
 
