@@ -66,9 +66,9 @@ class Admin_users extends CI_Controller {
                     $menus = $permissions = array();
                     if (in_array('ADMIN', $user_detail['role_codes'])) {
                         //fetch all the permissions
-                        //$condition = 'rp.menu_type="l"';
+                        $condition = '';
                         $permissions = $this->rbac_role_permission->get_rbac_role_permission_lib(null, null, TRUE);
-                        $menus = $this->rbac_role_permission->get_rbac_role_permission_lib(null, $condition, TRUE);
+                        //$menus = $this->rbac_role_permission->get_rbac_role_permission_lib(null, $condition, TRUE);pma('hello',1);
                         //pma($menus,1);
                     } else {
                         //fetch only assigned permissions
@@ -77,13 +77,13 @@ class Admin_users extends CI_Controller {
                             $condition = 'rrp.role_id IN(' . implode(',', $role_ids) . ')';
                             $permissions = $this->rbac_role_permission->get_rbac_role_permission_lib(null, $condition);
                             $condition = 'rrp.role_id IN(' . implode(',', $role_ids) . ')';
-                            $menus = $this->rbac_role_permission->get_rbac_role_permission_lib(null, $condition);
+                            //$menus = $this->rbac_role_permission->get_rbac_role_permission_lib(null, $condition);
                         }
                     }
                     //remove action list, does not required her..
                     unset($permissions['action_list']);
                     $user_detail['permissions'] = $permissions;
-                    $user_detail['menus'] = $menus;
+                    //$user_detail['menus'] = $menus;
                     $user_detail['permission_modules'] = array_keys($permissions);
                     $this->session->set_userdata('user_data', $user_detail);
                     redirect('admin-dashboard');

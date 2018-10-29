@@ -61,7 +61,7 @@ class Tree extends MX_Controller {
      */
     public function get_menu_details_form() {
         if ($this->input->is_ajax_request()) {
-            $this->load->model('rbac_new/rbac_permission');
+            $this->load->model('rbac/rbac_permission');
             $menu_id=  $this->input->post('id');
             $menu=$this->menu->get_menu_data(null,array('menu_id'=>$menu_id),true);
             $permission_id_list = $this->rbac_permission->get_perm_options(null, null, null);
