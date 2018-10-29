@@ -1,14 +1,68 @@
-<div class="container">    
+<div class="col-sm-12">
     <?php
     $form_attribute = array(
-        "name" => "rbac_create_users",
-        "id" => "rbac_create_users",
+        "name" => "rbac_users",
+        "id" => "rbac_users",
         "method" => "POST"
     );
     $form_action = "/rbac/rbac_users/create";
     echo form_open($form_action, $form_attribute);
-    ?>    
-     <div class = 'form-group row'>
+    ?>
+    <div class = 'form-group row'>
+        <label for = 'first_name' class = 'col-sm-2 col-form-label'>First name</label>
+        <div class = 'col-sm-3'>
+            <?php
+            $attribute = array(
+                "name" => "first_name",
+                "id" => "first_name",
+                "class" => "form-control",
+                "title" => "",
+                "required" => "",
+                "type" => "text",
+                "value" => (isset($data["first_name"])) ? $data["first_name"] : ""
+            );
+            echo form_error("first_name");
+            echo form_input($attribute);
+            ?>
+        </div>
+    </div>
+    <div class = 'form-group row'>
+        <label for = 'last_name' class = 'col-sm-2 col-form-label'>Last name</label>
+        <div class = 'col-sm-3'>
+            <?php
+            $attribute = array(
+                "name" => "last_name",
+                "id" => "last_name",
+                "class" => "form-control",
+                "title" => "",
+                "required" => "",
+                "type" => "text",
+                "value" => (isset($data["last_name"])) ? $data["last_name"] : ""
+            );
+            echo form_error("last_name");
+            echo form_input($attribute);
+            ?>
+        </div>
+    </div>
+    <div class = 'form-group row'>
+        <label for = 'login_id' class = 'col-sm-2 col-form-label'>Login id</label>
+        <div class = 'col-sm-3'>
+            <?php
+            $attribute = array(
+                "name" => "login_id",
+                "id" => "login_id",
+                "class" => "form-control",
+                "title" => "",
+                "required" => "",
+                "type" => "text",
+                "value" => (isset($data["login_id"])) ? $data["login_id"] : ""
+            );
+            echo form_error("login_id");
+            echo form_input($attribute);
+            ?>
+        </div>
+    </div>
+    <div class = 'form-group row'>
         <label for = 'email' class = 'col-sm-2 col-form-label'>Email</label>
         <div class = 'col-sm-3'>
             <?php
@@ -19,10 +73,10 @@
                 "title" => "",
                 "required" => "",
                 "type" => "text",
-                "value" => set_value('email')
-            );            
-            echo form_input($attribute);
+                "value" => (isset($data["email"])) ? $data["email"] : ""
+            );
             echo form_error("email");
+            echo form_input($attribute);
             ?>
         </div>
     </div>
@@ -38,30 +92,31 @@
                 "required" => "",
                 "type" => "password",
                 "value" => ""
-            );            
-            echo form_input($attribute);
+            );
             echo form_error("password");
+            echo form_input($attribute);
             ?>
         </div>
-    </div>  
+    </div>
     <div class = 'form-group row'>
-        <label for = 'password' class = 'col-sm-2 col-form-label'>Re-type Password</label>
+        <label for = 're-password' class = 'col-sm-2 col-form-label'>Confirm Password</label>
         <div class = 'col-sm-3'>
             <?php
             $attribute = array(
-                "name" => "re_password",
-                "id" => "re_password",
+                "name" => "re-password",
+                "id" => "re-password",
                 "class" => "form-control",
                 "title" => "",
                 "required" => "",
                 "type" => "password",
-                "value" =>""
-            );            
+                "value" => ""
+            );
+            echo form_error("password");
             echo form_input($attribute);
-            echo form_error("re_password");
             ?>
         </div>
-    </div>  
+    </div>
+    
     <div class = 'form-group row'>
         <label for = 'mobile' class = 'col-sm-2 col-form-label'>Mobile</label>
         <div class = 'col-sm-3'>
@@ -73,55 +128,23 @@
                 "title" => "",
                 "required" => "",
                 "type" => "text",
-                "value" => set_value('mobile')
-            );            
-            echo form_input($attribute);
+                "value" => (isset($data["mobile"])) ? $data["mobile"] : ""
+            );
             echo form_error("mobile");
+            echo form_input($attribute);
             ?>
         </div>
-    </div>
-    <div class = 'form-group row'>
-        <label for = 'roles' class = 'col-sm-2 col-form-label'>Role</label>
-        <div class = 'col-sm-3'>
-            <?php
-            $attribute = array(
-                "name" => "roles",
-                "id" => "roles",
-                "class" => "form-control",
-                "title" => "",
-                "required" => "",                
-            );            
-            echo form_dropdown('roles',$roles,set_value('roles'),$attribute);
-            echo form_error("roles");
-            ?>
-        </div>
-    </div>
-    <div class = 'form-group row'>
-        <label for = 'status' class = 'col-sm-2 col-form-label'>Status</label>
-        <div class = 'col-sm-3'>
-            <?php
-            $status_list=  get_user_status_list();
-            $attribute = array(
-                "name" => "status",
-                "id" => "status",
-                "class" => "form-control",
-                "title" => "",
-                "required" => "",                
-            );            
-            echo form_dropdown('status',$status_list,set_value('status'),$attribute);
-            echo form_error("status");
-            ?>
-        </div>
-    </div>
+    </div>   
+
     <div class = 'form-group row'>
         <div class = 'col-sm-1'>
-            <a class="text-right btn btn-default" href="<?= APP_BASE ?>rbac/rbac_users/index">
-                <span class="glyphicon glyphicon-th-list"></span> Go to list
+            <a class="text-right btn btn-default" href="<?php echo APP_BASE ?>rbac/rbac_users/index">
+                <span class="glyphicon glyphicon-th-list"></span> Cancel
             </a>
         </div>
-        <div class = 'col-sm-2 padl25'>
-            <input type="submit" id="rbac_create_users_submit" value="Save" class="btn btn-primary">
+        <div class = 'col-sm-1'>
+            <input type="submit" id="submit" value="Save" class="btn btn-primary">
         </div>
     </div>
-    <?= form_close() ?>
+    <?php echo form_close() ?>
 </div>

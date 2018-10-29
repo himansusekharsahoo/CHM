@@ -1,50 +1,56 @@
-<div class="row-fluid">
-    <div class="row-fluid">
-        <div class="checkbox">
-            <label for="check_all">
-                <input type="checkbox" name="check_all" id="check_all">Select all
-            </label>
+<div class="col-sm-12">
+    <?php
+    $form_attribute = array(
+        "name" => "rbac_permissions",
+        "id" => "rbac_permissions",
+        "method" => "POST"
+    );
+    $form_action = "/rbac/rbac_permissions/create";
+    echo form_open($form_action, $form_attribute);
+    ?>
+    <div class = 'form-group row'>
+        <label for = 'module_id' class = 'col-sm-2 col-form-label'>Module id</label>
+        <div class = 'col-sm-3'>
+            <?php
+            $attribute = array(
+                "name" => "module_id",
+                "id" => "module_id",
+                "class" => "form-control",
+                "title" => "",
+                "required" => "",
+            );
+            $module_id = (isset($data['module_id'])) ? $data['module_id'] : '';
+            echo form_error("module_id");
+            echo form_dropdown($attribute, $module_id_list, $module_id);
+            ?>
         </div>
     </div>
-    <div id="error_msg" class="text-red"></div>
-    <div class="table-responsive">
-        <form action="<?= base_url('/rbac/rbac_permissions/create') ?>" name="permission_form" id="permission_form" method="post">
-            <table class="table table-sm table-bordered responsive table-striped">
-                <tr>
-                    <th>Modules</th>
-                    <?php
-                    foreach ($action_list as $action):
-                        echo '<th>' . $action['name'] . '</th>';
-                    endforeach;
-
-                    foreach ($module_list as $module):
-                        echo '<tr>';
-                        echo '<th>' . str_replace('_', ' ', ucfirst($module['name'])) . '</th>';
-                        foreach ($action_list as $actions):
-                            $checked = '';
-                            if (isset($permission_list[$module['module_id']])) {
-                                $assigned_actions = $permission_list[$module['module_id']]['action_list'];
-                                $arr_assigned_actions = explode(',', $assigned_actions);
-                                if (in_array($actions['action_id'], $arr_assigned_actions)) {
-                                    $checked = 'checked="checked"';
-                                }
-                            }
-                            echo '<td><input type="checkbox" class="check_item" ' . $checked . ' name="' . $module['module_id'] . '[]" value="' . $actions['action_id'] . '"></td>';
-                        endforeach;
-                        echo '</tr>';
-                    endforeach;
-                    ?>
-                </tr>
-            </table>
-            <div style="float:right;">
-                <input class="btn btn-primary" type="submit" name="save_rbac_permission" id="save_rbac_permission" value="Save">
-            </div>
-        </form>
+    <div class = 'form-group row'>
+        <label for = 'action_id' class = 'col-sm-2 col-form-label'>Action id</label>
+        <div class = 'col-sm-3'>
+            <?php
+            $attribute = array(
+                "name" => "action_id",
+                "id" => "action_id",
+                "class" => "form-control",
+                "title" => "",
+                "required" => "",
+            );
+            $action_id = (isset($data['action_id'])) ? $data['action_id'] : '';
+            echo form_error("action_id");
+            echo form_dropdown($attribute, $action_id_list, $action_id);
+            ?>
+        </div>
     </div>
-    <script>
-        (function ($) {
-            $('#check_all').on('click', function () {
-                $(':checkbox.check_item').prop('checked', this.checked);
-            });
-        })(jQuery);
-    </script>
+    <div class = 'form-group row'>
+        <div class = 'col-sm-1'>
+            <a class="text-right btn btn-default" href="<?php echo APP_BASE ?>rbac/rbac_permissions/index">
+                <span class="glyphicon glyphicon-th-list"></span> Cancel
+            </a>
+        </div>
+        <div class = 'col-sm-1'>
+            <input type="submit" id="submit" value="Save" class="btn btn-primary">
+        </div>
+    </div>
+    <?php echo form_close() ?>
+</div>

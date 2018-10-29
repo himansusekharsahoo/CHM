@@ -1,12 +1,12 @@
-<div class="pull-right" id="create_button_div">
-    <a class="btn btn-primary btn-sm" href="<?= APP_BASE ?>rbac/rbac_permissions/create">Create/Update</a>
-</div>
-<div class="row-fluid table-responsive">
+<div style="float:right;"><a class="btn btn-primary btn-sm" href="<?php echo APP_BASE ?>rbac/rbac_permissions/create">Create</a></div>
+<div class="row-fluid">
     <?php
     generate_gird($grid_config, "rbac_permissions_list");
     ?>
 </div><script type="text/javascript">
     $(function ($) {
+
+
         $(document).on('click', '.delete-record', function (e) {
             e.preventDefault();
             var data = {'permission_id': $(this).data('permission_id')}
@@ -23,11 +23,11 @@
                         label: 'Delete',
                         action: function (dialog) {
                             $.ajax({
-                                url: '<?= APP_BASE ?>rbac/rbac_permissions/delete',
+                                url: '<?php echo APP_BASE ?>rbac/rbac_permissions/delete',
                                 method: 'POST',
                                 data: data,
                                 success: function (result) {
-                                    if (result == 'success') {
+                                    if (result) {
                                         dialog.close();
                                         row.hide();
                                         BootstrapDialog.alert('Record successfully deleted!');
@@ -46,6 +46,6 @@
             });
 
         });
-        $('div.DTTT_container').prepend($('#create_button_div'));
+
     });
 </script>

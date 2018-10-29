@@ -1,14 +1,15 @@
-<?php if ($this->rbac->has_permission('RBAC_ACTION', 'create')): ?>
-    <div class="pull-right" id="create_button_div">
-        <a class="btn btn-primary btn-sm" href="<?= APP_BASE ?>rbac/rbac_actions/create">Create</a>
+<?php ?> <div class="row-fluid">
+    <div class="col-sm-12 no_pad">
+        <?php
+        $this->load->library('c_datatable');
+        $dt_data = $this->c_datatable->generate_grid($config);
+        echo $dt_data;
+        ?>
     </div>
-<?php endif; ?>
-
-<div class="table-responsive">
-    <?php generate_gird($grid_config, "rbac_actions_list"); ?>
-</div>
-<script type="text/javascript">
+</div><script type="text/javascript">
     $(function ($) {
+//delete record
+
         $(document).on('click', '.delete-record', function (e) {
             e.preventDefault();
             var data = {'action_id': $(this).data('action_id')}
@@ -25,11 +26,11 @@
                         label: 'Delete',
                         action: function (dialog) {
                             $.ajax({
-                                url: '<?= APP_BASE ?>rbac/rbac_actions/delete',
+                                url: '<?php echo APP_BASE ?>rbac/rbac_actions/delete',
                                 method: 'POST',
                                 data: data,
                                 success: function (result) {
-                                    if (result == 'success') {
+                                    if (result == 1) {
                                         dialog.close();
                                         row.hide();
                                         BootstrapDialog.alert('Record successfully deleted!');
@@ -48,7 +49,42 @@
             });
 
         });
-        $('div.DTTT_container').prepend($('#create_button_div'));
+//export raw data as excel 
+
+        $(document).on('click', '#export_table_xls', function (e) {
+            e.preventDefault();
+            $('#loading').css('display', 'block');
+            var param = {
+                "export_type": 'xlsx'
+            };
+            $.ajax({
+                type: 'POST',
+                url: "<?php echo base_url('rbac/rbac_actions/export_grid_data') ?>",
+                data: param,
+                dataType: 'json'
+            }).done(function (data) {
+                download(data.file, data.file_name, 'application/octet-stream');
+                $('#loading').css('display', 'none');
+            });
+        });
+        //export raw data as csv 
+
+        $(document).on('click', '#export_table_csv', function (e) {
+            e.preventDefault();
+            $('#loading').css('display', 'block');
+            var param = {
+                "export_type": 'csv'
+            };
+            $.ajax({
+                type: 'POST',
+                url: "<?php echo base_url('rbac/rbac_actions/export_grid_data') ?>",
+                data: param,
+                dataType: 'json'
+            }).done(function (data) {
+                download(data.file, data.file_name, 'application/octet-stream');
+                $('#loading').css('display', 'none');
+            });
+        });
 
     });
 </script>

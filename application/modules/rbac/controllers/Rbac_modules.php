@@ -1,17 +1,20 @@
 <?php
 
-if (!defined('BASEPATH'))
+if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
+}
 
 /**
  * @class   : Rbac_modules
  * @desc    :
  * @author  : HimansuS
- * @created :11/22/2016
+ * @created :09/29/2018
  */
-class Rbac_modules extends CI_Controller {
+class Rbac_modules extends CI_Controller
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
 
         $this->load->model('rbac_module');
@@ -25,19 +28,57 @@ class Rbac_modules extends CI_Controller {
     }
 
     /**
-     * @param  : $export=0
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:11/22/2016
+     * @param              : 
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:09/29/2018
      */
-    public function index($export = 0) {
+    public function index()
+    {
+
+        $this->breadcrumbs->push('index', '/rbac/rbac_modules/index');
         $this->scripts_include->includePlugins(array('datatable'), 'css');
-        $this->scripts_include->includePlugins(array('datatable'), 'js');        
+        $this->scripts_include->includePlugins(array('datatable'), 'js');
         $this->layout->navTitle = 'Rbac module list';
-        $data = array();
-        $data = array();
-        $buttons[] = array(
+        $header = array(
+            array(
+                'db_column' => 'name',
+                'name' => 'Name',
+                'title' => 'Name',
+                'class_name' => 'dt_name',
+                'orderable' => 'true',
+                'visible' => 'true',
+                'searchable' => 'true'
+            ), array(
+                'db_column' => 'code',
+                'name' => 'Code',
+                'title' => 'Code',
+                'class_name' => 'dt_name',
+                'orderable' => 'true',
+                'visible' => 'true',
+                'searchable' => 'true'
+            ), array(
+                'db_column' => 'status',
+                'name' => 'Status',
+                'title' => 'Status',
+                'class_name' => 'dt_name',
+                'orderable' => 'true',
+                'visible' => 'true',
+                'searchable' => 'true'
+            ), array(
+                'db_column' => 'Action',
+                'name' => 'Action',
+                'title' => 'Action',
+                'class_name' => 'dt_name',
+                'orderable' => 'true',
+                'visible' => 'true',
+                'searchable' => 'false'
+            )
+        );
+        $data = $grid_buttons = array();
+
+        $grid_buttons[] = array(
             'btn_class' => 'btn-info',
             'btn_href' => base_url('rbac/rbac_modules/view'),
             'btn_icon' => 'fa-eye',
@@ -46,7 +87,7 @@ class Rbac_modules extends CI_Controller {
             'param' => array('$1'),
             'style' => ''
         );
-        $buttons[] = array(
+        $grid_buttons[] = array(
             'btn_class' => 'btn-primary',
             'btn_href' => base_url('rbac/rbac_modules/edit'),
             'btn_icon' => 'fa-pencil',
@@ -56,7 +97,7 @@ class Rbac_modules extends CI_Controller {
             'style' => ''
         );
 
-        $buttons[] = array(
+        $grid_buttons[] = array(
             'btn_class' => 'btn-danger delete-record',
             'btn_href' => '#',
             'btn_icon' => 'fa-remove',
@@ -66,58 +107,136 @@ class Rbac_modules extends CI_Controller {
             'style' => '',
             'attr' => 'data-module_id="$1"'
         );
-        $button_set = get_link_buttons($buttons);
+        $button_set = get_link_buttons($grid_buttons);
         $data['button_set'] = $button_set;
 
         if ($this->input->is_ajax_request()) {
-            $returned_list = '';
             $returned_list = $this->rbac_module->get_rbac_module_datatable($data);
             echo $returned_list;
             exit();
         }
-        if ($export) {
-            $tableHeading = array('name' => 'name', 'code' => 'code',);
-            ;
-            $this->rbac_module->get_rbac_module_datatable($data, $export, $tableHeading);
-        }
 
-        $config['grid_config'] = array(
-            'table' => array(
-                'columns' => array('name', 'code'),
-                'columns_alias' => array('name', 'code', 'Action')
+        $dt_tool_btn = array(
+            array(
+                'btn_class' => 'btn-primary',
+                'btn_href' => base_url('rbac/rbac_modules/create'),
+                'btn_icon' => '',
+                'btn_title' => 'Create',
+                'btn_text' => 'Create',
+                'btn_separator' => ' '
             ),
-            'grid' => array(
-                'ajax_source' => 'rbac/rbac_modules/index',
-                'table_tools' => array('pdf', 'xls', 'csv'),
-                'cfilter_columns' => array('name', 'code'),
-                'sort_columns' => array('name', 'code'),
-                'column_order' => array('0' => 'ASC'),
-            //'cfilter_pos'=>'buttom'
+            array(
+                'btn_class' => 'no_pad',
+                'btn_href' => '#',
+                'btn_icon' => '',
+                'btn_title' => 'XLS',
+                'btn_text' => ' <img src="' . base_url("images/excel_icon.png") . '" alt="XLS">',
+                'btn_separator' => ' ',
+                'attr' => 'id="export_table_xls"'
             ),
-            'table_tools' => array(
-                'xls' => array(
-                    'url' => 'rbac/rbac_modules/index/xls'
-                ), 'csv' => array(
-                    'url' => 'rbac/rbac_modules/index/csv'
-                )
+            array(
+                'btn_class' => 'no_pad',
+                'btn_href' => '#',
+                'btn_icon' => '',
+                'btn_title' => 'CSV',
+                'btn_text' => ' <img src="' . base_url("images/csv_icon_sm.gif") . '" alt="CSV">',
+                'btn_separator' => ' ',
+                'attr' => 'id="export_table_csv"'
             )
         );
-        $data['data'] = $config;
+        $dt_tool_btn = get_link_buttons($dt_tool_btn);
+
+        $config = array(
+            'dt_markup' => true,
+            'dt_id' => 'raw_cert_data_dt_table',
+            'dt_header' => $header,
+            'dt_ajax' => array(
+                'dt_url' => base_url('rbac/rbac_modules/index'),
+            ),
+            'custom_lengh_change' => false,
+            'dt_dom' => array(
+                'top_dom' => true,
+                'top_length_change' => true,
+                'top_filter' => true,
+                'top_buttons' => $dt_tool_btn,
+                'top_pagination' => true,
+                'buttom_dom' => true,
+                'buttom_length_change' => true,
+                'buttom_pagination' => true
+            ),
+            'options' => array(
+                'iDisplayLength' => '15'
+            )
+        );
+        $data['data'] = array('config' => $config);
         $this->layout->render($data);
     }
 
     /**
-     * @param  : 
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:11/22/2016
+     * @param              : 
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:09/29/2018
      */
-    public function create() {
-        $this->scripts_include->includePlugins(array('jq_validation'), 'js');
+    public function export_grid_data()
+    {
+        if ($this->input->is_ajax_request()) :
+            $export_type = $this->input->post('export_type');
+            $tableHeading = array('name' => 'name', 'code' => 'code', 'status' => 'status');
+            $cols = 'name,code,status,created,modified';
+            $data = $this->rbac_module->get_rbac_module_datatable(null, true, $tableHeading);
+            $head_cols = $body_col_map = array();
+            $date = array(
+                array(
+                    'title' => 'Date of Export Report',
+                    'value' => date('d-m-Y')
+                )
+            );
+            foreach ($tableHeading as $db_col => $col) {
+                $head_cols[] = array(
+                    'title' => ucfirst($col),
+                    'track_auto_filter' => 1
+                );
+                $body_col_map[] = array('db_column' => $db_col);
+            }
+            $header = array($date, $head_cols);
+            $worksheet_name = 'rbac_modules';
+            $file_name = 'rbac_modules' . date('d_m_Y_H_i_s') . '.' . $export_type;
+            $config = array(
+                'db_data' => $data['aaData'],
+                'header_rows' => $header,
+                'body_column' => $body_col_map,
+                'worksheet_name' => $worksheet_name,
+                'file_name' => $file_name,
+                'download' => true
+            );
+
+            $this->load->library('excel_utility');
+            $this->excel_utility->download_excel($config, $export_type);
+            ob_end_flush();
+            exit;
+
+        else:
+            $this->layout->data = array('status_code' => '403', 'message' => 'Request Forbidden.');
+            $this->layout->render(array('error' => 'general'));
+        endif;
+    }
+
+    /**
+     * @param              : 
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:09/29/2018
+     */
+    public function create()
+    {
+        $this->breadcrumbs->push('create', '/rbac/rbac_modules/create');
+
         $this->layout->navTitle = 'Rbac module create';
         $data = array();
-        if ($this->input->post()):
+        if ($this->input->post()) :
             $config = array(
                 array(
                     'field' => 'name',
@@ -132,12 +251,12 @@ class Rbac_modules extends CI_Controller {
             );
             $this->form_validation->set_rules($config);
 
-            if ($this->form_validation->run()):
+            if ($this->form_validation->run()) :
 
                 $data['data'] = $this->input->post();
                 $result = $this->rbac_module->save($data['data']);
 
-                if ($result >= 1):
+                if ($result >= 1) :
                     $this->session->set_flashdata('success', 'Record successfully saved!');
                     redirect('/rbac/rbac_modules');
                 else:
@@ -150,17 +269,19 @@ class Rbac_modules extends CI_Controller {
     }
 
     /**
-     * @param  : $module_id=null
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:11/22/2016
+     * @param              : $module_id=null
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:09/29/2018
      */
-    public function edit($module_id = null) {
-        $this->scripts_include->includePlugins(array('jq_validation'), 'js');
+    public function edit($module_id = null)
+    {
+        $this->breadcrumbs->push('edit', '/rbac/rbac_modules/edit');
+
         $this->layout->navTitle = 'Rbac module edit';
-        $data = $error_view = array();
-        if ($this->input->post()):
+        $data = array();
+        if ($this->input->post()) :
             $data['data'] = $this->input->post();
             $config = array(
                 array(
@@ -176,11 +297,9 @@ class Rbac_modules extends CI_Controller {
             );
             $this->form_validation->set_rules($config);
 
-            if ($this->form_validation->run()):
-
+            if ($this->form_validation->run()) :
                 $result = $this->rbac_module->update($data['data']);
-
-                if ($result >= 1):
+                if ($result >= 1) :
                     $this->session->set_flashdata('success', 'Record successfully updated!');
                     redirect('/rbac/rbac_modules');
                 else:
@@ -188,80 +307,63 @@ class Rbac_modules extends CI_Controller {
                 endif;
             endif;
         else:
-            if ($module_id) {
-                $module_id = c_decode($module_id);
-                $result = $this->rbac_module->get_rbac_module(null, array('module_id' => $module_id));
-                if ($result):
-                    $result = current($result);
-                endif;
-                $data['data'] = $result;
-            }else {
-                $data = array(
-                    'status_code' => 404,
-                    'message' => 'No data found to edit!'
-                );
-                $error_view = array('error' => 'general');
-            }
+            $module_id = c_decode($module_id);
+            $result = $this->rbac_module->get_rbac_module(null, array('module_id' => $module_id));
+            if ($result) :
+                $result = current($result);
+            endif;
+            $data['data'] = $result;
         endif;
         $this->layout->data = $data;
-        if ($error_view) {
-            $this->layout->render($error_view);
-        } else {
-            $this->layout->render();
-        }
+        $this->layout->render();
     }
 
     /**
-     * @param  : $module_id
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:11/22/2016
+     * @param              : $module_id
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:09/29/2018
      */
-    public function view($module_id = null) {
-        $data = $error_view = array();
-        if ($module_id):
+    public function view($module_id)
+    {
+        $this->breadcrumbs->push('view', '/rbac/rbac_modules/view');
+
+        $data = array();
+        if ($module_id) :
             $module_id = c_decode($module_id);
 
             $this->layout->navTitle = 'Rbac module view';
             $result = $this->rbac_module->get_rbac_module(null, array('module_id' => $module_id), 1);
-            if ($result):
+            if ($result) :
                 $result = current($result);
             endif;
 
             $data['data'] = $result;
-        else:
-            $data = array(
-                'status_code' => 404,
-                'message' => 'No data found to edit!'
-            );
-            $error_view = array('error' => 'general');
-        endif;
-        $this->layout->data = $data;
-        if ($error_view) {
-            $this->layout->render($error_view);
-        } else {
+            $this->layout->data = $data;
             $this->layout->render();
-        }
+
+        endif;
+        return 0;
     }
 
     /**
-     * @param  : 
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:11/22/2016
+     * @param              : 
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:09/29/2018
      */
-    public function delete() {
-        $error_view = $data = array();
-        if ($this->input->is_ajax_request()):
+    public function delete()
+    {
+        if ($this->input->is_ajax_request()) :
             $module_id = $this->input->post('module_id');
-            if ($module_id):
+            if ($module_id) :
                 $module_id = c_decode($module_id);
 
                 $result = $this->rbac_module->delete($module_id);
-                if ($result == 1):
-                    echo 'success';
+                if ($result) :
+                    echo 1;
                     exit();
                 else:
                     echo 'Data deletion error !';
@@ -271,17 +373,11 @@ class Rbac_modules extends CI_Controller {
             echo 'No data found to delete';
             exit();
         else:
-            $data = array(
-                'status_code' => 404,
-                'message' => 'Invalid request type!'
-            );
-            $error_view = array('error' => 'general');
-            $this->layout->data = $data;
-            $this->layout->render($error_view);
+            $this->layout->data = array('status_code' => '403', 'message' => 'Request Forbidden.');
+            $this->layout->render(array('error' => 'general'));
         endif;
         return 'Invalid request type.';
     }
-
 }
 
 ?>

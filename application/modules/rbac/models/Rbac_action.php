@@ -1,74 +1,83 @@
 <?php
 
-if (!defined('BASEPATH'))
+if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
+}
 
 /**
  * @class   : Rbac_action
  * @desc    :
  * @author  : HimansuS
- * @created :11/22/2016
+ * @created :09/29/2018
  */
-class Rbac_action extends CI_Model {
+class Rbac_action extends CI_Model
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
 
 
         $this->layout->layout = 'admin_layout';
-        $this->layout->layoutsFolder = 'layout/admin';
+        $this->layout->layoutsFolder = 'layouts/admin';
         $this->layout->lMmenuFlag = 1;
         $this->layout->rightControlFlag = 1;
         $this->layout->navTitleFlag = 1;
     }
 
     /**
-     * @param  : $data=null,$export=null,$tableHeading=null,$columns=null
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:11/22/2016
+     * @param              : $data=null,$export=null,$tableHeading=null,$columns=null
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:09/29/2018
      */
-    public function get_rbac_action_datatable($data = null, $export = null, $tableHeading = null, $columns = null) {
+    public function get_rbac_action_datatable($data = null, $export = null, $tableHeading = null, $columns = null)
+    {
+        $this->load->library('datatables');
         if (!$columns) {
-            $columns = 'action_id,name';
+            //$columns = 'action_id,name,code,status,created,modified';
+            $columns = 'action_id,name,code,status';
         }
 
         /*
          */
-        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, FALSE, FALSE)->from('rbac_actions t1');
+        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, false, false)->from('rbac_actions t1');
 
-        $this->datatables->unset_column("action_id")
-                ->add_column("Action", $data['button_set'], 'c_encode(action_id)', 1, 1);
-        if ($export):
-            $data = $this->datatables->generate_export($export);       
-            export_data($data['aaData'], $export, rbac_actions, $tableHeading);
+        $this->datatables->unset_column("action_id");
+        if (isset($data['button_set'])) :
+            $this->datatables->add_column("Action", $data['button_set'], 'c_encode(action_id)', 1, 1);
+        endif;
+        if ($export) :
+            $data = $this->datatables->generate_export($export);
+            return $data;
         endif;
         return $this->datatables->generate();
     }
 
     /**
-     * @param  : $columns=null,$conditions=null,$limit=null,$offset=null
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:11/22/2016
+     * @param              : $columns=null,$conditions=null,$limit=null,$offset=null
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:09/29/2018
      */
-    public function get_rbac_action($columns = null, $conditions = null, $limit = null, $offset = null) {
+    public function get_rbac_action($columns = null, $conditions = null, $limit = null, $offset = null)
+    {
         if (!$columns) {
-            $columns = 'action_id,name';
+            $columns = 'action_id,name,status,created,modified,code';
         }
 
         /*
          */
         $this->db->select($columns)->from('rbac_actions t1');
 
-        if ($conditions && is_array($conditions)):
+        if ($conditions && is_array($conditions)) :
             foreach ($conditions as $col => $val):
                 $this->db->where($col, $val);
             endforeach;
         endif;
-        if ($limit > 0):
+        if ($limit > 0) :
             $this->db->limit($limit, $offset);
 
         endif;
@@ -78,18 +87,19 @@ class Rbac_action extends CI_Model {
     }
 
     /**
-     * @param  : $data
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:11/22/2016
+     * @param              : $data
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:09/29/2018
      */
-    public function save($data) {
-        if ($data):
+    public function save($data)
+    {
+        if ($data) :
             $this->db->insert("rbac_actions", $data);
             $action_id_inserted_id = $this->db->insert_id();
 
-            if ($action_id_inserted_id):
+            if ($action_id_inserted_id) :
                 return $action_id_inserted_id;
             endif;
             return 'No data found to store!';
@@ -98,14 +108,15 @@ class Rbac_action extends CI_Model {
     }
 
     /**
-     * @param  : $data
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:11/22/2016
+     * @param              : $data
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:09/29/2018
      */
-    public function update($data) {
-        if ($data):
+    public function update($data)
+    {
+        if ($data) :
             $this->db->where("action_id", $data['action_id']);
             return $this->db->update('rbac_actions', $data);
         endif;
@@ -113,30 +124,39 @@ class Rbac_action extends CI_Model {
     }
 
     /**
-     * @param  : $action_id
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:11/22/2016
+     * @param              : $action_id
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:09/29/2018
      */
-    public function delete($action_id) {
-        if ($action_id):
+    public function delete($action_id)
+    {
+        if ($action_id) :
+            $this->db->trans_begin();
             $result = 0;
-            $result = $this->db->delete('rbac_actions', array('action_id' => $action_id));
-            return $result;
+            $this->db->delete('rbac_actions', array('action_id' => $action_id));
+            if ($this->db->trans_status() === false) {
+                $this->db->trans_rollback();
+                return false;
+            } else {
+                $this->db->trans_commit();
+                return true;
+            }
 
         endif;
         return 'No data found to delete!';
     }
 
     /**
-     * @param  : $columns,$index=null, $conditions = null
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:11/22/2016
+     * @param              : $columns,$index=null, $conditions = null
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:09/29/2018
      */
-    public function get_options($columns, $index = null, $conditions = null) {
+    public function get_options($columns, $index = null, $conditions = null)
+    {
         if (!$columns) {
             $columns = 'action_id';
         }
@@ -145,7 +165,7 @@ class Rbac_action extends CI_Model {
         }
         $this->db->select("$columns,$index")->from('rbac_actions t1');
 
-        if ($conditions && is_array($conditions)):
+        if ($conditions && is_array($conditions)) :
             foreach ($conditions as $col => $val):
                 $this->db->where("$col", $val);
 
@@ -161,7 +181,8 @@ class Rbac_action extends CI_Model {
         return $list;
     }
 
-    public function record_count() {
+    public function record_count()
+    {
         return $this->db->count_all('rbac_actions');
     }
 

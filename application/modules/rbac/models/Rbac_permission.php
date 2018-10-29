@@ -1,168 +1,89 @@
 <?php
 
-if (!defined('BASEPATH'))
+if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
+}
 
 /**
  * @class   : Rbac_permission
  * @desc    :
  * @author  : HimansuS
- * @created :11/22/2016
+ * @created :05/17/2018
  */
-class Rbac_permission extends CI_Model {
+class Rbac_permission extends CI_Model
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
 
         $this->load->model('rbac/rbac_action');
         $this->load->model('rbac/rbac_module');
         $this->layout->layout = 'admin_layout';
-        $this->layout->layoutsFolder = 'layout/admin';
+        $this->layout->layoutsFolder = 'layouts/admin';
         $this->layout->lMmenuFlag = 1;
         $this->layout->rightControlFlag = 1;
         $this->layout->navTitleFlag = 1;
     }
 
-    /**
-     * @param  : $data=null,$export=null,$tableHeading=null,$columns=null
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:11/22/2016
-     */
-    public function get_rbac_permission_datatable($data = null, $export = null, $tableHeading = null, $columns = null) {
+     /**
+      * @param              : $columns=null,$conditions=null,$limit=null,$offset=null
+      * @desc               :
+      * @return             :
+      * @author             :
+      * @created:05/17/2018
+      */
+    public function get_rbac_permission($columns = null, $conditions = null, $limit = null, $offset = null)
+    {
         if (!$columns) {
-            $columns = 'rp.permission_id,rm.name as "rm.name",ra.name as "ra.name"';
+            $columns = 't1.permission_id,rm.module_id,ra.action_id,t1.status,t1.created,t1.modified'
+                    . ',rm.name module_name,rm.code module_code,ra.name action_name,ra.code action_code';
         }
 
         /*
-          Table:-	rbac_actions
-          Columns:-	action_id,name
+          Table:-    rbac_actions
+          Columns:-    action_id,name,status,created,modified,code
 
-          Table:-	rbac_modules
-          Columns:-	module_id,name,code
+          Table:-    rbac_modules
+          Columns:-    module_id,name,code,status,created,modified
 
          */
-        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, FALSE, FALSE)
-                ->unset_column("rp.permission_id")
-                ->from('rbac_permissions rp')
-                ->join('rbac_modules rm', 'rm.module_id=rp.module_id')
-                ->join('rbac_actions ra', 'ra.action_id=rp.action_id')
-                ->add_column("Action", $data['button_set'], 'c_encode(rp.permission_id)', 1, 1);
-        if ($export):
-            $data = $this->datatables->generate_export($export);
-            export_data($data['aaData'], $export, rbac_permissions, $tableHeading);
-        endif;
-        return $this->datatables->generate();
-    }
-
-    /**
-     * @param  : $columns=null,$conditions=null,$limit=null,$offset=null
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:11/22/2016
-     */
-    public function get_rbac_permission($columns = null, $conditions = null) {
-        if (!$columns) {
-            $columns = 'rp.permission_id,rp.module_id,rp.action_id,rp.order,rp.parent,rp.menu_name,menu_header,rp.url,rp.menu_class,rp.header_class,rp.menu_type';
-            $columns .= ',rm.name as "module_name",rm.code';
-            $columns .= ',ra.name as "action_name", CONCAT(rm.name," - ",ra.name) module_action';
-        }
-
-        /*
-          Table:-	rbac_actions
-          Columns:-	action_id,name
-          Table:-	rbac_modules
-          Columns:-	module_id,name,code
-         */
-        $this->db->select($columns)->from('rbac_permissions rp')
-                ->join('rbac_modules rm', 'rm.module_id=rp.module_id')
-                ->join('rbac_actions ra', 'ra.action_id=rp.action_id')
-                ->group_by('rp.permission_id')
-                ->order_by('rp.permission_id,rp.module_id');
-
-        if ($conditions && is_array($conditions)):
+        /* $this->db->select($columns)->from('rbac_permissions t1')
+          ->join('rbac_modules rm','rm.module_id=t1.module_id','LEFT')
+          ->join('rbac_actions ra','ra.action_id=t1.action_id','LEFT')
+          ->order_by('t1.module_id','asc')
+          ->order_by('ra.name','dsc'); */
+        $this->db->select($columns)->from('rbac_modules rm')
+            ->join('rbac_permissions t1', 'rm.module_id=t1.module_id', 'LEFT')
+            ->join('rbac_actions ra', 'ra.action_id=t1.action_id', 'LEFT')
+            ->where('trim(rm.name)!=', '')
+            ->where('trim(rm.code)!=', '')
+            ->order_by('rm.name', 'asc')
+            ->order_by('ra.name', 'dsc');
+            
+        if ($conditions && is_array($conditions)) :
             foreach ($conditions as $col => $val):
                 $this->db->where($col, $val);
             endforeach;
-        elseif($conditions && is_string($conditions)):
-            $this->db->where($conditions);        
         endif;
+        if ($limit > 0) :
+            $this->db->limit($limit, $offset);
 
+        endif;
         $result = $this->db->get()->result_array();
         //echo $this->db->last_query();
-
-
         return $result;
-    }
+    }    
 
     /**
-     * @param  : $data
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:11/22/2016
+     * @param              : $columns,$index=null, $conditions = null
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:05/17/2018
      */
-    public function save($data) {
-        if ($data):
-            $this->db->insert("rbac_permissions", $data);
-            $permission_id_inserted_id = $this->db->insert_id();
-
-            if ($permission_id_inserted_id):
-                return $permission_id_inserted_id;
-            endif;
-            return 'No data found to store!';
-        endif;
-        return 'Unable to store the data, please try again later!';
-    }
-
-    /**
-     * @param  : $data
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:11/22/2016
-     */
-    public function update($data) {
-        if ($data):
-            $this->db->where("permission_id", $data['permission_id']);
-            return $this->db->update('rbac_permissions', $data);
-        endif;
-        return 'Unable to update the data, please try again later!';
-    }
-
-    /**
-     * @param  : $permission_id
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:11/22/2016
-     */
-    public function delete($permission_id, $condition = null) {
-        if ($permission_id):
-            $result = 0;
-            $result = $this->db->delete('rbac_permissions', array('permission_id' => $permission_id));
-            return $result;
-        else:
-            if ($condition && is_array($condition)):
-                foreach ($condition as $col => $val):
-                    $this->db->where($col, "$val");
-                endforeach;
-                $this->db->delete('rbac_permissions');
-            endif;
-        endif;
-        return 'No data found to delete!';
-    }
-
-    /**
-     * @param  : $columns,$index=null, $conditions = null
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:11/22/2016
-     */
-    public function get_options($columns, $index = null, $conditions = null) {
+    public function get_options($columns, $index = null, $conditions = null,$blank_list=true)
+    {
         if (!$columns) {
             $columns = 'permission_id';
         }
@@ -171,7 +92,7 @@ class Rbac_permission extends CI_Model {
         }
         $this->db->select("$columns,$index")->from('rbac_permissions t1');
 
-        if ($conditions && is_array($conditions)):
+        if ($conditions && is_array($conditions)) :
             foreach ($conditions as $col => $val):
                 $this->db->where("$col", $val);
 
@@ -180,7 +101,9 @@ class Rbac_permission extends CI_Model {
         $result = $this->db->get()->result_array();
 
         $list = array();
-        $list[''] = 'Select rbac permissions';
+        if($blank_list) {
+            $list[''] = 'Select rbac permissions';
+        }
         foreach ($result as $key => $val):
             $list[$val[$index]] = $val[$columns];
         endforeach;
@@ -188,127 +111,174 @@ class Rbac_permission extends CI_Model {
     }
 
     /**
-     * @param  : $columns,$index=null, $conditions = null
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:11/22/2016
+     * @param              : $columns,$index=null, $conditions = null
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:05/17/2018
      */
-    public function get_rbac_actions_options($columns, $index = null, $conditions = null) {
+    public function get_rbac_actions_options($columns, $index = null, $conditions = null)
+    {
         return $this->rbac_action->get_options($columns, $index, $conditions);
     }
 
     /**
-     * @param  : $columns,$index=null, $conditions = null
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:11/22/2016
+     * @param              : $columns,$index=null, $conditions = null
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:05/17/2018
      */
-    public function get_rbac_modules_options($columns, $index = null, $conditions = null) {
+    public function get_rbac_modules_options($columns, $index = null, $conditions = null)
+    {
         return $this->rbac_module->get_options($columns, $index, $conditions);
     }
 
-    public function record_count() {
-        return $this->db->count_all('rbac_permissions');
-    }
+    
 
-    public function get_rbac_permission_concat($columns = null, $conditions = null, $limit = null, $offset = null, $action_list = false) {
-        if (!$columns) {
-            $columns = 'rp.permission_id,rp.module_id,rp.action_id';
-            $columns .= ',rm.name,rm.code';
-            $columns .= ',ra.name';
-            $columns .= ',GROUP_CONCAT(DISTINCT rp.action_id SEPARATOR ",") as action_list';
+    /**
+     * @param
+     * @return
+     * @desc
+     * @author
+     */
+    private function _save_module_actions($new_module_actions)
+    {
+        if ($new_module_actions) {
+            return $this->db->insert_batch('rbac_permissions', $new_module_actions);
         }
-        if ($action_list) {
-            $columns = 'rp.module_id';
-            $columns .= ',GROUP_CONCAT(DISTINCT rp.action_id SEPARATOR ",") as action_list';
-        }
-        /*
-          Table:-	rbac_actions
-          Columns:-	action_id,name
-
-          Table:-	rbac_modules
-          Columns:-	module_id,name,code
-
-         */
-        $this->db->select($columns)->from('rbac_permissions rp')
-                ->join('rbac_modules rm', 'rm.module_id=rp.module_id')
-                ->join('rbac_actions ra', 'ra.action_id=ra.action_id')
-                ->where('rp.module_id !=', '')
-                ->group_by('rp.module_id');
-
-        if ($conditions && is_array($conditions)):
-            foreach ($conditions as $col => $val):
-                $this->db->where($col, $val);
-            endforeach;
-        endif;
-        if ($limit > 0):
-            $this->db->limit($limit, $offset);
-
-        endif;
-        $result = $this->db->get()->result_array();
-        //echo $this->db->last_query();
-        $data = array();
-        foreach ($result as $indx => $record) {
-            if ($record['module_id']) {
-                $data[$record['module_id']] = $record;
-            }
-        }
-        return $data;
     }
 
     /**
-     * @param  : 
-     * @desc   :
-     * @return :
-     * @author :
+     * @param
+     * @return
+     * @desc   get existing module permissions
+     * @author
      */
-    public function update_menu($data) {
-        $this->db->trans_begin();
+    private function _get_existing_module_perms($columns = '*', $cond = "")
+    {
+        $query = "SELECT $columns FROM rbac_permissions WHERE 1=1 $cond";
+        $result = $this->db->query($query)->result_array();
+        return $result;
+    }
 
-        foreach ($data as $rec) {
-            $this->update($rec);
+    /**
+     * @param              : $columns,$index=null, $conditions = null
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:05/17/2018
+     */
+    public function get_perm_options($columns = null, $index = null, $conditions = null)
+    {
+        if (!$columns) {
+            $columns = 'rm.name module_name,ra.name action_name,';
+        }
+        if (!$index) {
+            $index = 'permission_id';
+        }
+        $this->db->select("$columns,$index")
+            ->from('rbac_permissions rp')
+            ->join('rbac_modules rm', 'rm.module_id=rp.module_id','LEFT')
+            ->join('rbac_actions ra', 'ra.action_id=rp.action_id','LEFT');
+        
+        $this->db->where('rm.module_id=rp.module_id')
+        ->where('ra.action_id=rp.action_id')
+        ->where('lower(rp.status)','active')
+        ->order_by('module_name','ASC')
+        ->order_by('action_name','ASC');
+        
+        if ($conditions && is_array($conditions)) :
+            foreach ($conditions as $col => $val):
+                $this->db->where("$col", $val);
+            endforeach;
+        endif;
+        $result = $this->db->get()->result_array();
+        //echo $this->db->last_query();
+        //pma($result,1);
+        $list = array();
+        $list[''] = 'Select permissions';
+        foreach ($result as $key => $val):
+            $list[$val[$index]] = $val['module_name'] . '-' . $val['action_name'];
+        endforeach;
+        return $list;
+    }
+
+    /**
+     * @param
+     * @return
+     * @desc   save module permissions
+     * @author
+     */
+    public function save_module_permissions($form_data)
+    {
+        //get all existing module permissions
+        $existing_perms = $this->_get_existing_module_perms("module_id,action_id");
+        $new_perms = array();
+        //find out new permissions
+        $new_perms = array_filter(
+            $form_data, function ($array2Element) use ($existing_perms) {
+                foreach ($existing_perms as $array1Element) {
+                    if ($array1Element['module_id'] == $array2Element['module_id'] && $array1Element['action_id'] == $array2Element['action_id']) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        );
+
+        //find common permissions to update
+        $common_perms = array_filter(
+            $form_data, function ($array2Element) use ($existing_perms) {
+                foreach ($existing_perms as $array1Element) {
+                    if ($array1Element['module_id'] == $array2Element['module_id'] && $array1Element['action_id'] == $array2Element['action_id']) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        );
+
+        //find perm to delete
+        $merge_perm = array_merge($new_perms, $common_perms);
+        $del_perms = array_filter(
+            $existing_perms, function ($array2Element) use ($merge_perm) {
+                foreach ($merge_perm as $array1Element) {
+                    if ($array1Element['module_id'] == $array2Element['module_id'] && $array1Element['action_id'] == $array2Element['action_id']) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        );
+
+        $this->db->trans_begin();
+        //save new permissions
+        $this->_save_module_actions($new_perms);
+        //update permissions
+        foreach ($common_perms as $perm) {
+            $data = array(
+                'status' => 'active',
+                'modified' => date('Y-m-d H:i:s')
+            );
+            $this->db->update('rbac_permissions', $data, array('module_id' => $perm['module_id'], 'action_id' => $perm['action_id']));
+        }
+        //inactive permissions
+        foreach ($del_perms as $perm) {
+            $data = array(
+                'status' => 'inactive',
+                'modified' => date('Y-m-d H:i:s')
+            );
+            $this->db->update('rbac_permissions', $data, array('module_id' => $perm['module_id'], 'action_id' => $perm['action_id']));
         }
 
-        if ($this->db->trans_status() === FALSE) {
+        if ($this->db->trans_status() === false) {
             $this->db->trans_rollback();
             return false;
         } else {
             $this->db->trans_commit();
             return true;
         }
-    }
-
-    /**
-     * @param  : 
-     * @desc   :
-     * @return :
-     * @author :
-     */
-    public function save_delete_permissions($data) {
-        if ($data) {
-            $this->db->trans_begin();
-            if (isset($data['save'])) {
-                foreach ($data['save'] as $rec) {
-                    $this->save($rec);
-                }
-            }
-            if (isset($data['delete'])) {
-                foreach ($data['delete'] as $rec) {
-                    $this->delete(null, $rec);
-                }
-            }
-
-            if ($this->db->trans_status() === FALSE) {
-                $this->db->trans_rollback();
-                return false;
-            } else {
-                $this->db->trans_commit();
-                return true;
-            }
-        }
-        return;
     }
 
 }

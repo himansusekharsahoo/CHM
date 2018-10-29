@@ -1,200 +1,161 @@
 <?php
 
-if (!defined('BASEPATH'))
+if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
+}
 
 /**
  * @class   : Rbac_user
  * @desc    :
  * @author  : HimansuS
- * @created :11/22/2016
+ * @created :10/08/2018
  */
-class Rbac_user extends CI_Model {
+class Rbac_user extends CI_Model
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
-        $this->load->model('rbac/rbac_user_role');
+
+
+        $this->layout->layout = 'admin_layout';
+        $this->layout->layoutsFolder = 'layouts/admin';
+        $this->layout->lMmenuFlag = 1;
+        $this->layout->rightControlFlag = 1;
+        $this->layout->navTitleFlag = 1;
     }
 
     /**
-     * @param  : $data=null,$export=null,$tableHeading=null,$columns=null
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:11/22/2016
+     * @param              : $data=null,$export=null,$tableHeading=null,$columns=null
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:10/08/2018
      */
-    public function get_rbac_user_datatable($data = null, $export = null, $tableHeading = null, $columns = null) {
+    public function get_rbac_user_datatable($data = null, $export = null, $tableHeading = null, $columns = null)
+    {
+        $this->load->library('datatables');
         if (!$columns) {
-            $columns = 't1.user_id,t1.email,t1.mobile,t4.name,t1.login_status,t1.status,t1.created'
-                    . ',t1.modified,if(ru3.user_id,ru3.user_id,""),if(t2.user_id,t2.user_id,"")';
-        }
-
-        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, FALSE, FALSE)
-                ->from('rbac_users t1')
-                ->join('rbac_users t2', 't1.created_by=t2.user_id', 'LEFT OUTER')
-                ->join('rbac_users ru3', 't1.modified_by=ru3.user_id', 'LEFT OUTER')
-                ->join('rbac_user_roles t3', 't1.user_id=t3.user_id', 'LEFT')
-                ->join('rbac_roles t4', 't3.role_id=t4.role_id', 'LEFT');
-        if(isset($data['condition'])){
-            foreach ($data['condition'] as $col=>$val){
-                $this->datatables->where($col,$val);
-            }
-        }
-        if ($export):
-            $this->datatables->unset_column("user_id");
-            $data = $this->datatables->generate_export($export);        
-            export_data($data['aaData'], $export, 'rbac_users', $tableHeading);
-        else:
-            $this->datatables->unset_column("t1.user_id")
-            ->add_column("Action", $data['button_set'], 'c_encode(t1.user_id)', 1, 1);
-        endif;
-        
-        return $this->datatables->generate();
-    }
-
-    /**
-     * @param  : $columns=null,$conditions=null,$limit=null,$offset=null
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:11/22/2016
-     */
-    public function get_rbac_user($columns = null, $conditions = null, $limit = null, $offset = null) {
-        if (!$columns) {
-            $columns = 't1.user_id,t1.mobile,t1.password,t1.email,t1.login_status,t1.status,t1.created'
-                    . ',t1.modified,t1.created_by,t1.modified_by,t2.user_id as parent'
-                    . ',t4.role_id,t4.name,t4.code';
+            $columns = 'user_id,first_name,last_name,login_id,email,password,login_status,mobile,mobile_verified,emial_verified,created,modified,created_by,modified_by,status';
         }
 
         /*
          */
-        $this->db->select($columns)
-                ->from('rbac_users t1')
-                ->join('rbac_users t2', 't1.created_by=t2.user_id', 'LEFT OUTER')
-                ->join('rbac_user_roles t3', 't1.user_id=t3.user_id', 'LEFT')
-                ->join('rbac_roles t4', 't3.role_id=t4.role_id', 'LEFT');
+        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, false, false)->from('rbac_users t1');
 
-        if ($conditions && is_array($conditions)):
+        $this->datatables->unset_column("user_id");
+        if (isset($data['button_set'])) :
+            $this->datatables->add_column("Action", $data['button_set'], 'c_encode(user_id)', 1, 1);
+        endif;
+        if ($export) :
+            $data = $this->datatables->generate_export($export);
+            return $data;
+        endif;
+        return $this->datatables->generate();
+    }
+
+    /**
+     * @param              : $columns=null,$conditions=null,$limit=null,$offset=null
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:10/08/2018
+     */
+    public function get_rbac_user($columns = null, $conditions = null, $limit = null, $offset = null)
+    {
+        if (!$columns) {
+            $columns = 'user_id,first_name,last_name,login_id,email,password,login_status,mobile,mobile_verified,emial_verified,created,modified,created_by,modified_by,status';
+        }
+
+        /*
+         */
+        $this->db->select($columns)->from('rbac_users t1');
+
+        if ($conditions && is_array($conditions)) :
             foreach ($conditions as $col => $val):
                 $this->db->where($col, $val);
             endforeach;
         endif;
-        if ($limit > 0):
+        if ($limit > 0) :
             $this->db->limit($limit, $offset);
 
         endif;
         $result = $this->db->get()->result_array();
+
         return $result;
     }
 
     /**
-     * @param  : $data
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:11/22/2016
+     * @param              : $data
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:10/08/2018
      */
-    public function save($data) {
-        if ($data):
-
-            $this->db->trans_begin();
-            if (isset($data['roles'])):
-                $roles = $data['roles'];
-                unset($data['roles']);
-            endif;
+    public function save($data)
+    {
+        if ($data) :
             $this->db->insert("rbac_users", $data);
             $user_id_inserted_id = $this->db->insert_id();
 
-            if ($user_id_inserted_id):
-                foreach ($roles as $role):
-                    $role['user_id'] = $user_id_inserted_id;
-                    $this->rbac_user_role->save($role);
-                endforeach;
-            endif;
-
-            if ($this->db->trans_status() === FALSE) {
-                $this->db->trans_rollback();
-                return FALSE;
-            } else {
-                $this->db->trans_commit();
+            if ($user_id_inserted_id) :
                 return $user_id_inserted_id;
-            }
-
+            endif;
+            return 'No data found to store!';
         endif;
-        return FALSE;
+        return 'Unable to store the data, please try again later!';
     }
 
     /**
-     * @param  : $data
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:11/22/2016
+     * @param              : $data
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:10/08/2018
      */
-    public function update($data) {
-        if ($data):
-            $this->db->trans_begin();
-
-            if (isset($data['roles'])){
-                $roles = $data['roles'];
-                unset($data['roles']);
-            }
-
+    public function update($data)
+    {
+        if ($data) :
             $this->db->where("user_id", $data['user_id']);
-
-            if ($this->db->update('rbac_users', $data)){
-                if ($this->rbac_user_role->delete_user_role($data['user_id'])) {
-                    foreach ($roles as $role){
-                        $this->rbac_user_role->save($role);
-                    }
-                }
-            }
-
-            if ($this->db->trans_status() === FALSE) {
-                $this->db->trans_rollback();
-                return FALSE;
-            } else {
-                $this->db->trans_commit();
-                return TRUE;
-            }
-
+            return $this->db->update('rbac_users', $data);
         endif;
-        return FALSE;
+        return 'Unable to update the data, please try again later!';
     }
 
     /**
-     * @param  : $user_id
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:11/22/2016
+     * @param              : $user_id
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:10/08/2018
      */
-    public function delete($user_id) {
-        if ($user_id):
+    public function delete($user_id)
+    {
+        if ($user_id) :
             $this->db->trans_begin();
-            $condition=array('user_id'=>$user_id);
-            if($this->rbac_user_role->delete($condition)){
-                $this->db->delete('rbac_users', $condition);
-            }
-            if ($this->db->trans_status() === FALSE) {
+            $result = 0;
+            $this->db->delete('rbac_users', array('user_id' => $user_id));
+            if ($this->db->trans_status() === false) {
                 $this->db->trans_rollback();
-                return FALSE;
+                return false;
             } else {
                 $this->db->trans_commit();
-                return TRUE;
+                return true;
             }
+
         endif;
-        return FALSE;
+        return 'No data found to delete!';
     }
 
     /**
-     * @param  : $columns,$index=null, $conditions = null
-     * @desc   :
-     * @return :
-     * @author :
-     * @created:11/22/2016
+     * @param              : $columns,$index=null, $conditions = null
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:10/08/2018
      */
-    public function get_options($columns, $index = null, $conditions = null) {
+    public function get_options($columns, $index = null, $conditions = null)
+    {
         if (!$columns) {
             $columns = 'user_id';
         }
@@ -203,7 +164,7 @@ class Rbac_user extends CI_Model {
         }
         $this->db->select("$columns,$index")->from('rbac_users t1');
 
-        if ($conditions && is_array($conditions)):
+        if ($conditions && is_array($conditions)) :
             foreach ($conditions as $col => $val):
                 $this->db->where("$col", $val);
 
@@ -219,34 +180,9 @@ class Rbac_user extends CI_Model {
         return $list;
     }
 
-    /**
-     * @param  : NA
-     * @desc   :
-     * @return :INT
-     * @author :
-     * @created:11/22/2016
-     */
-    public function record_count() {
+    public function record_count()
+    {
         return $this->db->count_all('rbac_users');
-    }
-
-    /**
-     * @param  : array $condition
-     * @desc   : check user value is exist or not
-     * @return :INT
-     * @author :
-     * @created:18/22/2016
-     */
-    public function check_user_unique($condition = null) {
-        $this->db->select('count(user_id) as cnt')->from('rbac_users');
-        if ($condition && is_array($condition)) {
-            foreach ($condition as $col => $val) {
-                $this->db->where($col, "$val");
-            }
-        }
-        $res = $this->db->get()->result_array();
-        //app_log('CUSTOM', 'APP', $this->db->last_query());
-        return $res[0]['cnt'];
     }
 
 }

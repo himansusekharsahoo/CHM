@@ -1,5 +1,4 @@
-<div class="container">
-    <h2>Edit rbac permissions</h2>
+<div class="col-sm-12">
     <?php
     $form_attribute = array(
         "name" => "rbac_permissions",
@@ -13,7 +12,7 @@
     $attribute = array(
         "name" => "permission_id",
         "id" => "permission_id",
-        "class" => "",
+        "class" => "form-control",
         "title" => "",
         "required" => "",
         "type" => "hidden",
@@ -23,12 +22,12 @@
     echo form_input($attribute);
     ?><div class = 'form-group row'>
         <label for = 'module_id' class = 'col-sm-2 col-form-label'>Module id</label>
-        <div class = 'col-sm-10'>
+        <div class = 'col-sm-3'>
             <?php
             $attribute = array(
                 "name" => "module_id",
                 "id" => "module_id",
-                "class" => "",
+                "class" => "form-control",
                 "title" => "",
                 "required" => "",
             );
@@ -40,12 +39,12 @@
     </div>
     <div class = 'form-group row'>
         <label for = 'action_id' class = 'col-sm-2 col-form-label'>Action id</label>
-        <div class = 'col-sm-10'>
+        <div class = 'col-sm-3'>
             <?php
             $attribute = array(
                 "name" => "action_id",
                 "id" => "action_id",
-                "class" => "",
+                "class" => "form-control",
                 "title" => "",
                 "required" => "",
             );
@@ -55,10 +54,27 @@
             ?>
         </div>
     </div>
+    <div class = 'form-group row'>
+        <label for = 'status' class = 'col-sm-2 col-form-label'>Status</label>
+        <div class = 'col-sm-3'>
+            <?php
+            $attribute = array(
+                "name" => "status",
+                "id" => "status",
+                "class" => "form-control",
+                "title" => "",
+                "required" => "",
+            );
+            $status = (isset($data['status'])) ? $data['status'] : '';
+            echo form_error("status");
+            echo form_dropdown($attribute, $status_list, $status);
+            ?>
+        </div>
+    </div>
 
     <div class = 'form-group row'>
         <div class = 'col-sm-1'>
-            <a class="text-right btn btn-default" href="<?= APP_BASE ?>rbac/rbac_permissions/index">
+            <a class="text-right btn btn-default" href="<?php echo APP_BASE ?>rbac/rbac_permissions/index">
                 <span class="glyphicon glyphicon-th-list"></span> Cancel
             </a>
         </div>
@@ -66,5 +82,5 @@
             <input type="submit" id="submit" value="Update" class="btn btn-primary">
         </div>
     </div>
-    <?= form_close() ?>
+    <?php echo form_close() ?>
 </div>

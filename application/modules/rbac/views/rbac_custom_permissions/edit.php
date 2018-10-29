@@ -1,5 +1,4 @@
-<div class="container">
-    <h2>Edit rbac custom permissions</h2>
+<div class="col-sm-12">
     <?php
     $form_attribute = array(
         "name" => "rbac_custom_permissions",
@@ -13,7 +12,7 @@
     $attribute = array(
         "name" => "custom_permission_id",
         "id" => "custom_permission_id",
-        "class" => "",
+        "class" => "form-control",
         "title" => "",
         "required" => "",
         "type" => "hidden",
@@ -23,12 +22,12 @@
     echo form_input($attribute);
     ?><div class = 'form-group row'>
         <label for = 'user_id' class = 'col-sm-2 col-form-label'>User id</label>
-        <div class = 'col-sm-10'>
+        <div class = 'col-sm-3'>
             <?php
             $attribute = array(
                 "name" => "user_id",
                 "id" => "user_id",
-                "class" => "",
+                "class" => "form-control",
                 "title" => "",
                 "required" => "",
                 "type" => "number",
@@ -41,12 +40,12 @@
     </div>
     <div class = 'form-group row'>
         <label for = 'permission_id' class = 'col-sm-2 col-form-label'>Permission id</label>
-        <div class = 'col-sm-10'>
+        <div class = 'col-sm-3'>
             <?php
             $attribute = array(
                 "name" => "permission_id",
                 "id" => "permission_id",
-                "class" => "",
+                "class" => "form-control",
                 "title" => "",
                 "required" => "",
             );
@@ -58,12 +57,12 @@
     </div>
     <div class = 'form-group row'>
         <label for = 'assigned_by' class = 'col-sm-2 col-form-label'>Assigned by</label>
-        <div class = 'col-sm-10'>
+        <div class = 'col-sm-3'>
             <?php
             $attribute = array(
                 "name" => "assigned_by",
                 "id" => "assigned_by",
-                "class" => "",
+                "class" => "form-control",
                 "title" => "",
                 "required" => "",
             );
@@ -73,63 +72,10 @@
             ?>
         </div>
     </div>
-    <div class = 'form-group row'>
-        <label for = 'status' class = 'col-sm-2 col-form-label'>Status</label>
-        <div class = 'col-sm-10'>
-            <?php
-            $attribute = array(
-                "name" => "status",
-                "id" => "status",
-                "class" => "",
-                "title" => "",
-                "required" => "",
-            );
-            $status = (isset($data['status'])) ? $data['status'] : '';
-            echo form_error("status");
-            echo form_dropdown($attribute, $status_list, $status);
-            ?>
-        </div>
-    </div>
-    <div class = 'form-group row'>
-        <label for = 'created' class = 'col-sm-2 col-form-label'>Created</label>
-        <div class = 'col-sm-10'>
-            <?php
-            $attribute = array(
-                "name" => "created",
-                "id" => "created",
-                "class" => "",
-                "title" => "",
-                "required" => "",
-                "type" => "datetime ",
-                "value" => (isset($data["created"])) ? $data["created"] : ""
-            );
-            echo form_error("created");
-            echo form_input($attribute);
-            ?>
-        </div>
-    </div>
-    <div class = 'form-group row'>
-        <label for = 'modified' class = 'col-sm-2 col-form-label'>Modified</label>
-        <div class = 'col-sm-10'>
-            <?php
-            $attribute = array(
-                "name" => "modified",
-                "id" => "modified",
-                "class" => "",
-                "title" => "",
-                "required" => "",
-                "type" => "datetime ",
-                "value" => (isset($data["modified"])) ? $data["modified"] : ""
-            );
-            echo form_error("modified");
-            echo form_input($attribute);
-            ?>
-        </div>
-    </div>
 
     <div class = 'form-group row'>
         <div class = 'col-sm-1'>
-            <a class="text-right btn btn-default" href="<?= APP_BASE ?>rbac/rbac_custom_permissions/index">
+            <a class="text-right btn btn-default" href="<?php echo APP_BASE ?>rbac/rbac_custom_permissions/index">
                 <span class="glyphicon glyphicon-th-list"></span> Cancel
             </a>
         </div>
@@ -137,5 +83,5 @@
             <input type="submit" id="submit" value="Update" class="btn btn-primary">
         </div>
     </div>
-    <?= form_close() ?>
+    <?php echo form_close() ?>
 </div>

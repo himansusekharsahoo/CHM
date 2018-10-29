@@ -1,24 +1,21 @@
-<?php 
-if ($this->rbac->has_permission('RBAC_USER', 'create')):
-    echo '<div class="pull-right" id="create_button_div">
-        <a class="btn btn-primary btn-sm" href="'.APP_BASE.'rbac/rbac_users/create">
-            '.$this->lang->line("user_create_user").'
-        </a>
-    </div>';
-endif; ?>
-<div class="table-responsive">
-    <?php echo generate_gird($grid_config, "rbac_users_list")?>
-</div>
-
-<script type="text/javascript">
+<?php ?> <div class="row-fluid">
+    <div class="col-sm-12 no_pad table-responsive">
+        <?php
+        $this->load->library('c_datatable');
+        $dt_data = $this->c_datatable->generate_grid($config);
+        echo $dt_data;
+        ?>
+    </div>
+</div><script type="text/javascript">
     $(function ($) {
+//delete record
+
         $(document).on('click', '.delete-record', function (e) {
             e.preventDefault();
             var data = {'user_id': $(this).data('user_id')}
             var row = $(this).closest('tr');
             BootstrapDialog.show({
-                cssClass: 'modal-warning',
-                title: 'Warning!',
+                title: 'Alert',
                 message: 'Do you want to delete the record?',
                 buttons: [{
                         label: 'Cancel',
@@ -29,23 +26,22 @@ endif; ?>
                         label: 'Delete',
                         action: function (dialog) {
                             $.ajax({
-                                url: '<?= APP_BASE ?>rbac/rbac_users/delete',
+                                url: '<?php echo APP_BASE ?>rbac/rbac_users/delete',
                                 method: 'POST',
                                 data: data,
                                 success: function (result) {
-                                    dialog.close();
-                                    row.hide(result);
-                                    var response=JSON.parse(result);
-                                    myApp.modal.alert(response);
+                                    if (result == 1) {
+                                        dialog.close();
+                                        row.hide();
+                                        BootstrapDialog.alert('Record successfully deleted!');
+                                    } else {
+                                        dialog.close();
+                                        BootstrapDialog.alert('Data deletion error,please contact site admin!');
+                                    }
                                 },
                                 error: function (error) {
                                     dialog.close();
-                                    var param={
-                                        'type':'danger',
-                                        'title':'Error',
-                                        'message':error.statusText
-                                    }
-                                    myApp.modal.alert(param);
+                                    BootstrapDialog.alert('Error:' + error);
                                 }
                             });
                         }
@@ -53,6 +49,42 @@ endif; ?>
             });
 
         });
-        $('div.DTTT_container').prepend($('#create_button_div'));
+//export raw data as excel 
+
+        $(document).on('click', '#export_table_xls', function (e) {
+            e.preventDefault();
+            $('#loading').css('display', 'block');
+            var param = {
+                "export_type": 'xlsx'
+            };
+            $.ajax({
+                type: 'POST',
+                url: "<?php echo base_url('rbac/rbac_users/export_grid_data') ?>",
+                data: param,
+                dataType: 'json'
+            }).done(function (data) {
+                download(data.file, data.file_name, 'application/octet-stream');
+                $('#loading').css('display', 'none');
+            });
+        });
+//export raw data as csv 
+
+        $(document).on('click', '#export_table_csv', function (e) {
+            e.preventDefault();
+            $('#loading').css('display', 'block');
+            var param = {
+                "export_type": 'csv'
+            };
+            $.ajax({
+                type: 'POST',
+                url: "<?php echo base_url('rbac/rbac_users/export_grid_data') ?>",
+                data: param,
+                dataType: 'json'
+            }).done(function (data) {
+                download(data.file, data.file_name, 'application/octet-stream');
+                $('#loading').css('display', 'none');
+            });
+        });
+
     });
 </script>
