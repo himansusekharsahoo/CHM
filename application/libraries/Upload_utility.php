@@ -119,7 +119,7 @@ class Upload_utility {
         if ($this->_config['uploaded_file_heading_comparison'] == '') {
             $this->_config['uploaded_file_heading_comparison'] = array();
             foreach ($this->_config['uploaded_file_heading'] as $col_name) {
-                $this->_config['uploaded_file_heading_comparison'][] = str_replace(' ','_',strtolower(trim($col_name)));
+                $this->_config['uploaded_file_heading_comparison'][] = str_replace(' ', '_', strtolower(trim($col_name)));
             }
         }
         //set utility default errror messages
@@ -169,18 +169,31 @@ class Upload_utility {
             $drop_table = "DROP TABLE $table";
             $this->_ci->db->query($drop_table);
         }
-        //TEMP_ID VARCHAR2(10) NOT NULL CONSTRAINT PK_CATALOG_TEMP_" . $cuid . " PRIMARY KEY
-        $create_table = 'CREATE TABLE ' . $table . '(RECORD_NO NUMBER';
-        if ($heading && is_array($heading)) {
-            foreach ($heading as $key => $head) {
-                $create_table .= ',"' . $head . '" VARCHAR2(4000 BYTE)';
+        if ($this->_ci->db->dbdriver == 'mysqli') {
+            $create_table = 'CREATE TABLE ' . $table . '(RECORD_NO INT UNSIGNED NOT NULL AUTO_INCREMENT';
+            if ($heading && is_array($heading)) {
+                foreach ($heading as $key => $head) {
+                    $create_table .= ',' . $head . ' VARCHAR(4000)';
+                }
+            } else {
+                $this->_ci->session->set_flashdata($this->_config['file_element'], $this->_messages['INVALID_FILE_HEADING']);
             }
-            //coulmn to store affected employees
-            $create_table .= ',"JOB_AFFECTED_EMPS" VARCHAR2(4000 BYTE)';
+            $create_table .= ',PRIMARY KEY (RECORD_NO))';
+            
         } else {
-            $this->_ci->session->set_flashdata($this->_config['file_element'], $this->_messages['INVALID_FILE_HEADING']);
+            //oracle
+            //TEMP_ID VARCHAR2(10) NOT NULL CONSTRAINT PK_CATALOG_TEMP_" . $cuid . " PRIMARY KEY
+            $create_table = 'CREATE TABLE ' . $table . '(RECORD_NO NUMBER AUTO_INCREMENT';
+            if ($heading && is_array($heading)) {
+                foreach ($heading as $key => $head) {
+                    $create_table .= ',"' . $head . '" VARCHAR2(4000 BYTE)';
+                }                
+            } else {
+                $this->_ci->session->set_flashdata($this->_config['file_element'], $this->_messages['INVALID_FILE_HEADING']);
+            }
+            $create_table .= ')';
         }
-        $create_table .= ')';
+
 
         $this->_ci->db->query($create_table);
         if ($this->_ci->db->trans_status() === FALSE) {
@@ -199,12 +212,22 @@ class Upload_utility {
      * @author HimansuS
      */
     private function _is_table_exist($table_name) {
-        $query = "SELECT COUNT(1) COUNTX  FROM USER_TAB_COLUMNS WHERE TABLE_NAME= '" . $table_name . "'";
-        $result = $this->_ci->db->query($query)->row_array();
-        if (isset($result['COUNTX']) && $result['COUNTX'] != 0) {
-            return TRUE;
+        if ($this->_ci->db->dbdriver == 'mysqli') {
+            $result = $this->_ci->db->list_tables();            
+            foreach ($result as $row) {
+                if (strtolower($row) == strtolower($table_name)) {
+                    return TRUE;
+                }
+            }
+            return FALSE;
+        } else {
+            $query = "SELECT COUNT(1) COUNTX  FROM USER_TAB_COLUMNS WHERE TABLE_NAME= '" . $table_name . "'";
+            $result = $this->_ci->db->query($query)->row_array();
+            if (isset($result['COUNTX']) && $result['COUNTX'] != 0) {
+                return TRUE;
+            }
+            return FALSE;
         }
-        return FALSE;
     }
 
     /**
@@ -325,11 +348,35 @@ class Upload_utility {
      */
     private function _update_remark($message, $condition) {
         $update_remarks = "UPDATE " . $this->_config['temp_table_name'] . "
-            SET REMARKS = CASE WHEN REMARKS IS NULL THEN CONCAT(REMARKS,'$message')
-                WHEN REMARKS IS NOT NULL THEN CONCAT(REMARKS,',<br>$message')
+            SET remarks = CASE WHEN remarks is null THEN '$message'
+                WHEN remarks is not null THEN CONCAT(remarks,', <br>$message')
                 END 
-            WHERE $condition";
+            WHERE $condition";        
         $this->_ci->db->query($update_remarks);
+    }
+
+    /**
+     * @param  string $full_csv_file_path
+     * @param  string $temp_table_name
+     * @param  array $temp_table_columns
+     * @param  string $delemeter default is ";"
+     * 
+     * @desc   : used to load data into temp table using mysql
+     * @return :
+     * @author : HimansuS
+     * @created:
+     */
+    private function _load_temp_data($full_csv_file_path, $temp_table_name, $temp_table_columns, $delemeter = ';') {
+        $load_query = "LOAD DATA local INFILE '" . $full_csv_file_path . "'
+                IGNORE INTO TABLE $temp_table_name CHARACTER SET UTF8
+                FIELDS TERMINATED BY '$delemeter'  ENCLOSED BY '\"'				
+                LINES TERMINATED BY '\r\n' 				
+                IGNORE 1 LINES
+                (" . implode(', ', $temp_table_columns) . ")";        
+        if ($this->_ci->db->simple_query($load_query)) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -387,7 +434,7 @@ class Upload_utility {
                 }
 
                 if ($this->_config['uploaded_file_details']['converted_to_csv'] === 1) {
-                    $this->_config['temp_table_name'] = $this->_config['temp_table_name'] . $this->_ci->rbac->get_cuid();
+                    $this->_config['temp_table_name'] = $this->_config['temp_table_name'] . $this->_ci->rbac->get_user_id();
 
                     //validate uploaded file columns
                     $csv_file_heading = get_csv_heading($this->_config['uploaded_file_details']['csv_full_path'], $this->_config['csv_delimeter']);
@@ -405,15 +452,10 @@ class Upload_utility {
                         $this->_ci->session->set_flashdata($this->_config['file_element'], $this->_messages['TEMP_TABLE_CREATE_ERR']);
                         redirect($this->_config['on_failure_redirect']);
                     } else {
-                        //create ctl file
-                        if ($this->_create_ctl_file($this->_config['uploaded_file_details']['file_path']
-                                        , $this->_config['uploaded_file_details']['csv_full_path']
-                                        , $this->_config['temp_table_name']
-                                        , $this->_config['temp_table_heading'])) {
-
-                            if ($this->_execute_ctl_file($this->_config['full_ctl_file_path']
-                                            , $this->_config['uploaded_file_details']['file_path']
-                                            , $this->_config['temp_table_name'])) {
+                        if ($this->_ci->db->dbdriver == 'mysqli') {
+                            if ($this->_load_temp_data($this->_config['uploaded_file_details']['csv_full_path']
+                                            , $this->_config['temp_table_name']
+                                            , $this->_config['temp_table_heading'])) {
                                 if ($this->_validate_records($this->_config['validation_rules'])) {
                                     //render grid page                                    
                                     return $this->_config['temp_table_name'];
@@ -426,12 +468,39 @@ class Upload_utility {
                                     redirect($this->_config['on_failure_redirect']);
                                 }
                             } else {
-                                $this->_ci->session->set_flashdata($this->_config['file_element'], $this->_messages['CTL_FILE_EXE_ERR']);
+                                $this->_ci->session->set_flashdata($this->_config['file_element'], $this->_messages['CTL_FILE_CREATE_ERR']);
                                 redirect($this->_config['on_failure_redirect']);
                             }
                         } else {
-                            $this->_ci->session->set_flashdata($this->_config['file_element'], $this->_messages['CTL_FILE_CREATE_ERR']);
-                            redirect($this->_config['on_failure_redirect']);
+                            //create ctl file
+                            if ($this->_create_ctl_file($this->_config['uploaded_file_details']['file_path']
+                                            , $this->_config['uploaded_file_details']['csv_full_path']
+                                            , $this->_config['temp_table_name']
+                                            , $this->_config['temp_table_heading'])) {
+
+                                if ($this->_execute_ctl_file($this->_config['full_ctl_file_path']
+                                                , $this->_config['uploaded_file_details']['file_path']
+                                                , $this->_config['temp_table_name'])) {
+
+                                    if ($this->_validate_records($this->_config['validation_rules'])) {
+                                        //render grid page                                    
+                                        return $this->_config['temp_table_name'];
+                                    } else {
+                                        if (isset($this->_config['validation_rules_error'])) {
+                                            $this->_ci->session->set_flashdata($this->_config['file_element'], $this->_config['validation_rules_error']);
+                                        } else {
+                                            $this->_ci->session->set_flashdata($this->_config['file_element'], $this->_messages['DATA_VALIDATION_PRC_ERR']);
+                                        }
+                                        redirect($this->_config['on_failure_redirect']);
+                                    }
+                                } else {
+                                    $this->_ci->session->set_flashdata($this->_config['file_element'], $this->_messages['CTL_FILE_EXE_ERR']);
+                                    redirect($this->_config['on_failure_redirect']);
+                                }
+                            } else {
+                                $this->_ci->session->set_flashdata($this->_config['file_element'], $this->_messages['CTL_FILE_CREATE_ERR']);
+                                redirect($this->_config['on_failure_redirect']);
+                            }
                         }
                     }
                 }
@@ -492,7 +561,7 @@ class Upload_utility {
             return FALSE;
         }
         $invalid_records = $this->get_temp_table_records($this->_config['temp_table_name'], FALSE);
-        $cuid = $this->_ci->rbac->get_cuid();
+        $cuid = $this->_ci->rbac->get_user_id();
         $gmt_date = date('m_d_Y_H_i_s', convert_to_time(date('Y-m-d H:i:s')));
         $this->_config['download_file_name'] = $this->_config['download_file_name'] . '_' . $cuid . '_' . $gmt_date . '.xlsx';
 

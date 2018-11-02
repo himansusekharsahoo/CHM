@@ -538,18 +538,18 @@ if (!function_exists('get_link_buttons')) {
                 if (isset($attribute['attr'])) {
                     $attr = $attribute['attr'];
                 }
-                
+
                 $btn.='<a class="btn ' . $attribute["btn_class"] . ' btn-xs" ' . $attr . ' href="' . $href . '"'
                         . ' title="' . $attribute["btn_title"] . '" data-toggle="tooltip" data-placement="top"'
-                        .  $style.'>';
-                
-                if(isset($attribute["btn_icon"])){
+                        . $style . '>';
+
+                if (isset($attribute["btn_icon"])) {
                     $btn.='<i class="fa ' . $attribute["btn_icon"] . '"></i>';
                 }
-                if(isset($attribute["btn_text"])){
+                if (isset($attribute["btn_text"])) {
                     $btn.=$attribute["btn_text"];
                 }
-                
+
                 $btn.='</a>' . $attribute["btn_separator"];
             }
         }
@@ -1079,7 +1079,7 @@ if (!function_exists('tree_on_key_column')) {
                         'actions' => array()
                     );
                 }
-                $result[$key_col_val]['actions'][$rec['permission_id']] = array(
+                $result[$key_col_val]['actions'][$rec['action_code']] = array(
                     'permission_id' => $rec['permission_id'],
                     'action_id' => $rec['action_id'],
                     'action_name' => $rec['action_name'],
@@ -1119,6 +1119,59 @@ if (!function_exists('assoc_array_merge')) {
             $merged[$key] = $array2[$key];
         }
         return $merged;
+    }
+
+}
+
+if (!function_exists('create_dir')) {
+
+    /**
+     * @param <p>string $dir_name - full path of directory</p>
+     * @param <p>string $permission: 0777</p>
+     * @return array of headings
+     * @desc used to create directory
+     * @author
+     */
+    function create_dir($dir_name, $permission = "0777") {
+        if (is_dir($dir_name) === TRUE) {
+            return TRUE;
+        } else {
+            return mkdir($dir_name, $permission);
+        }
+    }
+
+}
+
+if (!function_exists('tree_array')) {
+
+    /**
+     * @param  : array $flat- data array
+     * @param  : string $pidKey- parent key column name
+     * @param  : string $idKey- primary key column name
+     * @desc   : populate tree view form menu array
+     * @return : array $tree - tree view array
+     * @author : HimansuS
+     * @created:
+     */
+    function tree_array($flat, $pidKey, $idKey = null) {
+        $tree = array();
+        $grouped = array();
+        foreach ($flat as $sub) {
+            $grouped[$sub[$pidKey]][] = $sub;
+        }
+        $fnBuilder = function($siblings) use (&$fnBuilder, $grouped, $idKey) {
+            foreach ($siblings as $k => $sibling) {
+                $id = $sibling[$idKey];
+                if (isset($grouped[$id])) {
+                    $sibling['children'] = $fnBuilder($grouped[$id]);
+                }
+                $siblings[$k] = $sibling;
+            }
+
+            return $siblings;
+        };
+        $tree = $fnBuilder($grouped[0]);
+        return $tree;
     }
 
 }

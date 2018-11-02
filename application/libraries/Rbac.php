@@ -21,8 +21,9 @@ class Rbac {
     public function is_login() {
         if (isset($this->_session['user_data']['user_id'])) {
             return $this->_session['user_data']['user_id'];
-        }
-        return 0;
+        }else{
+            redirect('admin-login');
+        }        
     }
 
     /**
@@ -88,12 +89,13 @@ class Rbac {
 
             $permissions = $this->_session['user_data']['permissions'];
             $module_codes = $this->_session['user_data']['permission_modules'];
-
+            
+            
             if ($module && $action) {
-                if (in_array($module, $module_codes)) {
+                if (in_array($module, $module_codes)) { 
                     if ($action) {
-                        $action_details = $permissions[$module];
-                        if (array_key_exists($action, $action_details) && isset($permissions[$module][$action]['action_name'])) {
+                        $action_details = $permissions[$module]['actions'];                        
+                        if (array_key_exists($action, $action_details) && isset($permissions[$module]['actions'][$action]['action_name'])) {
                             return TRUE;
                         }
                     }

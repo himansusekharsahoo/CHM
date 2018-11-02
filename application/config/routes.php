@@ -57,5 +57,5 @@ $route['translate_uri_dashes'] = FALSE;
 $route['admin-login'] = 'admin_users/sign_in';
 $route['admin-dashboard'] = 'admin_users/dashboard';
 
-//rbac
-$route['user-list'] = 'rbac/rbac_users/index';
+require_once 'custom_routs/rbac.php';
+require_once 'custom_routs/upload_utilities.php';

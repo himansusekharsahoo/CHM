@@ -75,16 +75,13 @@ class Admin_users extends CI_Controller {
                         $role_ids = array_column($user_detail['roles'], 'role_id');
                         if ($role_ids) {
                             $condition = 'rrp.role_id IN(' . implode(',', $role_ids) . ')';
-                            $permissions = $this->rbac_role_permission->get_rbac_role_permission_lib(null, $condition);
-                            $condition = 'rrp.role_id IN(' . implode(',', $role_ids) . ')';
-                            //$menus = $this->rbac_role_permission->get_rbac_role_permission_lib(null, $condition);
+                            $permissions = $this->rbac_role_permission->get_rbac_role_permission_lib(null, $condition);                            
                         }
                     }
                     //remove action list, does not required her..
                     unset($permissions['action_list']);
-                    $user_detail['permissions'] = $permissions;
-                    //$user_detail['menus'] = $menus;
-                    $user_detail['permission_modules'] = array_keys($permissions);
+                    $user_detail['permissions'] = $permissions;                    
+                    $user_detail['permission_modules'] = array_keys($permissions);                    
                     $this->session->set_userdata('user_data', $user_detail);
                     redirect('admin-dashboard');
                 } else {

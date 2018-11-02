@@ -164,9 +164,14 @@ class Datatables {
      * @param bool $backtick_protect
      * @return mixed
      */
-    public function where($key_condition, $val = NULL, $backtick_protect = TRUE) {
-        $this->where[] = array($key_condition, $val, $backtick_protect);
-        $this->ci->db->where($key_condition, $val, $backtick_protect);
+    public function where($key_condition, $val = NULL, $backtick_protect = TRUE, $string_condition = null) {
+        if ($string_condition) {
+            $this->ci->db->where($string_condition);
+        } else {
+            $this->where[] = array($key_condition, $val, $backtick_protect);
+            $this->ci->db->where($key_condition, $val, $backtick_protect);
+        }
+
         return $this;
     }
 
@@ -328,6 +333,9 @@ class Datatables {
         } else if ($this->ci->input->post('order')) {
             $order = $this->ci->input->post('order');
             foreach ($order as $ord) {
+                if (is_numeric($ord['column'])) {
+                    $ord['column']+=1;
+                }
                 $this->ci->db->order_by($ord['column'], $ord['dir']);
             }
         }
@@ -385,9 +393,9 @@ class Datatables {
                 if ($this->ci->input->post('bSearchable_' . $i) == 'true' || (isset($post_cols[$i]['orderable']) && $post_cols[$i]['searchable'] == true)) {
                     if ((in_array(trim($mColArray[$i]), $columns))) {
                         if (in_array($mColArray[$i], $this->select)) {
-                            $sWhere .= $this->select[$mColArray[$i]] . " LIKE '%" . $sSearch . "%' OR ";
+                            $sWhere .= $this->select[$mColArray[$i]] . " LIKE '%" . trim($sSearch) . "%' OR ";
                         } else if (array_key_exists('"' . $mColArray[$i] . '"', $this->select)) {
-                            $sWhere .= $mColArray[$i] . " LIKE '%" . $sSearch . "%' OR ";
+                            $sWhere .= $mColArray[$i] . " LIKE '%" . trim($sSearch) . "%' OR ";
                         }
                     }
                 }
@@ -434,7 +442,7 @@ class Datatables {
      */
     protected function get_display_result() {
         $data = $this->ci->db->get();
-        //pma($this->ci->db->last_query(),1);
+        //pma($this->ci->db->last_query(),1);        
         return $data;
     }
 

@@ -47,7 +47,10 @@ class Scripts_include {
     private $__appJsFiles = array(
         'rbac' => array('/js/rbac.js'),
         'multiselect' => array('/assets/multiselect/jquery.multiselect.js'),
-        'jq_validation' => array(COMPONENT_PATH . 'jquery-validation/dist/jquery.validate.min.js'),
+        'jq_validation' => array(
+            COMPONENT_PATH . 'jquery-validation/dist/jquery.validate.min.js',
+            COMPONENT_PATH . 'jquery-validation/dist/additional-methods.min.js'
+        ),
         'datatable' => array(
             COMPONENT_PATH . 'datatables/media/js/jquery.dataTables.min.js',
             COMPONENT_PATH . 'datatables/media/js/dataTables.bootstrap.min.js',
@@ -56,12 +59,12 @@ class Scripts_include {
             COMPONENT_PATH . 'datatables-fixedcolumns/js/dataTables.fixedColumns.js',
             COMPONENT_PATH . 'datatables-keytable/js/dataTables.keyTable.js',
             COMPONENT_PATH . 'datatables-scroller/js/dataTables.scroller.js',
-            COMPONENT_PATH . 'dataTables.treeGrid.js/dataTables.treeGrid.js',            
+            COMPONENT_PATH . 'dataTables.treeGrid.js/dataTables.treeGrid.js',
         ),
         'chosen' => array('/assets/bootstrap-chosen/chosen.jquery.js'),
         'tree' => array('/js/tree.js'),
         'jstree' => array(COMPONENT_PATH . 'jstree/dist/jstree.min.js'),
-        'promise' => array(COMPONENT_PATH.'bluebird/js/browser/bluebird.min.js'),
+        'promise' => array(COMPONENT_PATH . 'bluebird/js/browser/bluebird.min.js'),
         'bs_multiselect' => array('/assets/layout/default/bootstrap/js/bootstrap-multiselect.js')
     );
     private $__cssFiles = array(

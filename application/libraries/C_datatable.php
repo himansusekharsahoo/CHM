@@ -6,7 +6,6 @@ class C_datatable {
 
     public function __construct() {
         $this->_ci = &get_instance();
-
         $this->_initiate_dt_configs();
     }
 
@@ -323,7 +322,7 @@ class C_datatable {
 
                 //set top buttons
                 if (isset($dt_dom['top_buttons']) && $dt_dom['top_buttons']) {
-                    $dom .= ' <"dt_button pull-right marginR5 marginT5">';
+                    $dom .= ' <"'.$this->_dt_id.'_dt_button pull-right marginR5 marginT5">';
                     $this->_dom_buttons = $dt_dom['top_buttons'];
                 }
 
@@ -381,7 +380,7 @@ class C_datatable {
         if ($this->_dom_buttons) {
             $append_buttons = 'if ($.fn.DataTable.isDataTable($(\'#' . $this->_dt_id . '\'))) {
                         if (typeof ' . $this->_dt_obj . ' != \'undefined\') {
-                            $(".dt_button").append(\'' . $this->_dom_buttons . '\');
+                            $(".'.$this->_dt_id.'_dt_button").append(\'' . $this->_dom_buttons . '\');
                         }
                     }' . PHP_EOL;
         }
@@ -639,6 +638,7 @@ class C_datatable {
     public function generate_grid($config) {
         //pma($config,1);
         $this
+                ->_reset()
                 ->_prepare_dt_options($config)
                 ->_prepare_dt_code()
                 ->_applay_datatable()
@@ -649,5 +649,16 @@ class C_datatable {
         //return $this->_dt_code;
         return '<div class="' . $this->_dt_id . '_table_cont">' . $this->_loading_markup . $this->_dt_configs['dt_markup'] . $this->_dt_code . '</div>';
     }
-
+    
+    /**
+     * @param  : 
+     * @desc   : reset all variable in case of multi calling of generate_grid()
+     * @return :
+     * @author : HimansuS
+     * @created:
+     */
+    private function _reset(){
+        $this->_initiate_dt_configs();
+        return $this;
+    }
 }

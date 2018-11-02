@@ -1,4 +1,5 @@
-<?php ?> <div class="row-fluid">
+<?php ?> 
+<div class="row-fluid">
     <div class="col-sm-12 no_pad table-responsive">
         <?php
         $this->load->library('c_datatable');
@@ -6,7 +7,8 @@
         echo $dt_data;
         ?>
     </div>
-</div><script type="text/javascript">
+</div>
+<script type="text/javascript">
     $(function ($) {
 //delete record
 

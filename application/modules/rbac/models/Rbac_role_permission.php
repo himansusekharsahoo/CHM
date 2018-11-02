@@ -125,36 +125,41 @@ class Rbac_role_permission extends CI_Model {
      */
     public function save_role_permissions($form_data) {
         //get all existing module permissions
-        $existing_perms = $this->_get_existing_role_perms("permission_id,role_id,role_permission_id");
+        $existing_perms = $this->_get_existing_role_perms("permission_id,role_id,role_permission_id","AND status='active'");
         $new_perms = array();
         //find out new permissions
-        $new_perms = array_filter(
-                $form_data, function ($array2Element) use ($existing_perms) {
+        $new_perms = array_filter($form_data, function ($array2Element) use ($existing_perms) {
             foreach ($existing_perms as $array1Element) {
                 if ($array1Element['permission_id'] == $array2Element['permission_id'] && $array1Element['role_id'] == $array2Element['role_id']) {
                     return false;
                 }
             }
             return true;
-        }
+            }
         );
-
+        
+        //filter zero value        
+        $new_perms=array_filter($new_perms,function($element){
+            if($element['permission_id']!=0){
+                return true;
+            }
+            return false;
+        });
+        
         //find common permissions to update
-        $common_perms = array_filter(
-                $form_data, function ($array2Element) use ($existing_perms) {
+        $common_perms = array_filter($form_data, function ($array2Element) use ($existing_perms) {
             foreach ($existing_perms as $array1Element) {
                 if ($array1Element['permission_id'] == $array2Element['permission_id'] && $array1Element['role_id'] == $array2Element['role_id']) {
                     return true;
                 }
             }
             return false;
-        }
+            }
         );
-
+        
         //find perm to delete
         $merge_perm = array_merge($new_perms, $common_perms);
-        $del_perms = array_filter(
-                $existing_perms, function ($array2Element) use ($merge_perm) {
+        $del_perms = array_filter($existing_perms, function ($array2Element) use ($merge_perm) {
             foreach ($merge_perm as $array1Element) {
                 if ($array1Element['permission_id'] == $array2Element['permission_id'] && $array1Element['role_id'] == $array2Element['role_id']) {
                     return false;
@@ -163,7 +168,8 @@ class Rbac_role_permission extends CI_Model {
             return true;
         }
         );
-
+        
+        
         $this->db->trans_begin();
         //save new permissions
         $this->_save_role_permissions($new_perms);
@@ -212,15 +218,15 @@ class Rbac_role_permission extends CI_Model {
      * @author :
      * @created:11/22/2016
      */
-    public function get_rbac_role_permission_lib($columns = null, $conditions = null, $admin_flag = false) {
+    public function get_rbac_role_permission_lib($columns = null, $conditions = null, $admin_flag = false,$tree_flag=true) {
         if (!$columns) {
             //$columns = ',rp.permission_id,rp.module_id,rp.action_id,rp.position,rp.parent,rp.menu_name,rp.menu_header';
             //$columns = ',rp.permission_id,rp.module_id,rp.action_id,rp.order,rp.parent,rp.menu_name,rp.menu_header'
             //. ',rp.url,rp.header_class,rp.menu_class,rp.menu_type,rp.status';
             $columns = ',rp.permission_id,rp.module_id,rp.action_id'
                     . ',rp.status';
-            $columns .= ',rm.name as "module_name",rm.code';
-            $columns .= ',ra.name as "action_name"';
+            $columns .= ',rm.name as "module_name",rm.code module_code';
+            $columns .= ',ra.name as "action_name",ra.code action_code ';
         }
 
         /*
@@ -259,8 +265,9 @@ class Rbac_role_permission extends CI_Model {
         endif;
 
         $result = $this->db->get()->result_array();
-        //pma($this->db->last_query(),1);
-
+        if($tree_flag){
+            $result=tree_on_key_column($result, 'module_code');            
+        }
         return $result;
     }
 
