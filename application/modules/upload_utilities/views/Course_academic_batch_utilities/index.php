@@ -2,7 +2,7 @@
 <div class="row-fluid">
     <div class="col-sm-6 col_centered">
         <div class="row-fluid">
-            <div class="col-sm-12 no_pad" id="utility_error">
+            <div class="col-sm-12 no_pad text-danger" id="utility_error">
                 <?php
                 if ($this->session->flashdata('upload_file')) {
                     echo $this->session->flashdata('upload_file');
@@ -23,7 +23,7 @@
                             <input type="file" name="upload_file" id="upload_file" class="custom_file">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-file-excel-o"></i></span>
-                                <input type="text" class="form-control input-lg" disabled placeholder="Upload Image">
+                                <input type="text" class="form-control input-lg" disabled placeholder="Upload File">
                                 <span class="input-group-btn">
                                     <button class="browse btn btn-primary input-lg" type="button"><i class="fa fa-search"></i> Browse</button>
                                 </span>

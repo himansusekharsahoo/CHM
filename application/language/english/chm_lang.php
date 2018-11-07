@@ -43,4 +43,5 @@ $lang["UPLOAD_UTIL_TEMP_TBL_CREATE_ERR"]="Temporary table creation error, please
 $lang["UPLOAD_UTIL_DATA_VAL_PROC_ERR"]="Data validation process error, please contact site admin.";
 $lang["UPLOAD_UTIL_CTL_EXE_ERR"]="CTL file execution error, please contact site admin.";
 $lang["UPLOAD_UTIL_CTL_CREATE_ERR"]='CTL file creation error, please contact site admin.';
+$lang["UPLOAD_UTILITY_COLUMN_ERR_MSG"] = "Uploaded file header do not match expected header columns. Expected column are";
 //end Upload utility

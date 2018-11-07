@@ -10,10 +10,9 @@
             </label>
         </div>
         <div class="col-sm-6 no-pad">
-            <div class="pull-right">
-                <input type="hidden" id="temp_table_name" name="temp_table_name" value="<?= ($temp_table) ? c_encode($temp_table) : set_value('temp_table_name') ?>" />
-                <input type="submit" name="import_hrbp_upload" id="import_hrbp_upload" value="Import"  class="btn btn-default pannel_button pannel_button_w90" >&nbsp;&nbsp;
-                <a href="course-academic-batch-upload" class="btn btn-default pannel_button pannel_button_w90 ">Cancel</a>
+            <div class="pull-right">                
+                <span><input type="submit" name="import_data" id="import_data" style="display:none;float: left;" value="Import"  class="btn btn-default pannel_button pannel_button_w90" >&nbsp;&nbsp;</span>
+                <span><a href="course-academic-batch-upload" class="btn btn-default pannel_button pannel_button_w90 ">Cancel</a></span>
             </div>
         </div>
     </div>
@@ -44,9 +43,11 @@
             if ($(this).val() == 'valid') {
                 $('#invalid_rec_grid').removeClass('show').addClass('hide');
                 $('#valid_rec_grid').removeClass('hide').addClass('show');
+                $('#import_data').css('display','block');
             } else if ($(this).val() == 'invalid') {
                 $('#valid_rec_grid').removeClass('show').addClass('hide');
                 $('#invalid_rec_grid').removeClass('hide').addClass('show');
+                $('#import_data').css('display','none');
             }
         });
 
@@ -90,15 +91,12 @@
 
         });
 
-        $(document).on('click', '#import_hrbp_upload', function () {
+        $(document).on('click', '#import_data', function () {
             //save valid data
             $('#loading').css('display', 'none');
             $.ajax({
                 type: 'POST',
-                url: "<?= base_url('/osa/osa_hrbp_uploads/import_hrbp_data') ?>",
-                data: {
-                    table_name: $('#temp_table_name').val()
-                },
+                url: "<?= base_url('course-academic-batch-import') ?>",                
                 dataType: 'json'
             }).done(function (data) {
 
@@ -112,10 +110,6 @@
                     myApp.modal.alert(errMsg);
                 } else if (typeof data.type !== 'undefined' && data.type == 'success') {
                     $('#loading').css('display', 'none');
-                    if (data.has_inv_record) {
-                        download_invalid_data();
-                    }
-
                     BootstrapDialog.show({
                         type: BootstrapDialog.TYPE_DEFAULT,
                         title: data.title,
@@ -124,7 +118,7 @@
                             {
                                 label: '<?= $this->lang->line('POP_UP_CLOSE') ?>',
                                 action: function (dialogItself) {
-                                    window.location.href = '/osa/osa_hrbp_uploads';
+                                    window.location.href = 'course-academic-batch-upload';
                                     dialogItself.close();
                                 }
                             }]

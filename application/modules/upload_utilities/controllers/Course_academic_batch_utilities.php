@@ -74,13 +74,13 @@ class Course_academic_batch_utilities extends CI_Controller {
             $this->scripts_include->includePlugins(array('datatable'), 'css');
             $config = array();
             $user_id = $this->rbac->get_user_id();
-            $temp_table_name = 'TEMP_COURSE_A_B_M_' . $user_id;
+            $temp_table_name = 'temp_course_a_b_m_' . $user_id;
             $config['upload_path'] = './uploads/course_aca_batch_master';
             $config['allowed_types'] = array('xls', 'xlsx', 'csv');
             $config['file_element'] = 'upload_file';
             $config['on_failure_redirect'] = 'course-academic-batch-upload';
             $config['file'] = $_FILES;
-            $config['temp_table_name'] = 'TEMP_COURSE_A_B_M_';
+            $config['temp_table_name'] = 'temp_course_a_b_m_';
 
             $config['temp_table_heading'] = array(
                 'CATEGORY_NAME',
@@ -252,7 +252,7 @@ class Course_academic_batch_utilities extends CI_Controller {
             if ($this->input->is_ajax_request()) {
                 $columns = "";
                 $user_id = $this->rbac->get_user_id();
-                $temp_table_name = 'TEMP_COURSE_A_B_M_' . $user_id;
+                $temp_table_name = 'temp_course_a_b_m_' . $user_id;
                 $type = $this->input->post('type');
                 if ($type == 'invalid') {
                     $condition = "LENGTH(TRIM(REMARKS))>0";
@@ -303,7 +303,7 @@ class Course_academic_batch_utilities extends CI_Controller {
             if ($this->input->is_ajax_request()):
                 $row_id = $this->input->post('record_no');
                 $user_id = $this->rbac->get_user_id();
-                $temp_table_name = 'TEMP_COURSE_A_B_M_' . $user_id;
+                $temp_table_name = 'temp_course_a_b_m_' . $user_id;
 
                 if ($row_id):
                     $row_id = c_decode($row_id);
@@ -344,7 +344,7 @@ class Course_academic_batch_utilities extends CI_Controller {
 
                 $columns = "category_name,category_code,category_desc,department_name,department_code,batch_name,batch_desc,start_year,end_year,no_of_semister,record_no";
                 $user_id = $this->rbac->get_user_id();
-                $temp_table_name = 'TEMP_COURSE_A_B_M_' . $user_id;
+                $temp_table_name = 'temp_course_a_b_m_' . $user_id;
                 if ($type == 'invalid') {
                     $condition = "LENGTH(TRIM(REMARKS))>0";
                 } else {
@@ -412,7 +412,7 @@ class Course_academic_batch_utilities extends CI_Controller {
         } else {
             $this->layout->render(array('error' => '401'));
         }
-    }    
+    }
 
     /**
      * @param  : 
@@ -422,7 +422,13 @@ class Course_academic_batch_utilities extends CI_Controller {
      * @created:
      */
     public function save_import_data() {
-        //TODO::
+        if ($this->Course_academic_batch_utility->save_import_data_db()) {
+            echo json_encode(array('type'=>'success','message'=>'Data uploaded successfully.'));
+            exit();
+        }else{
+            echo json_encode(array('type'=>'error','message'=>'Data saving error, Please tray again!'));            
+            exit();
+        }
     }
 
 }

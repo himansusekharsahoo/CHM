@@ -441,7 +441,7 @@ class Upload_utility {
 
                     if (count($this->_config['uploaded_file_heading_comparison']) != count($csv_file_heading) ||
                             array_diff_uassoc($this->_config['uploaded_file_heading_comparison'], $csv_file_heading, "array_key_val_check")) {
-                        $this->_ci->session->set_flashdata($this->_config['file_element'], '<br>' . $this->_ci->lang->line('OSA_UPLOAD_UTILITY_COLUMN_ERR_MSG') . ' - <br>' . str_replace('_', ' ', implode('<br>', $this->_config['uploaded_file_heading']) . '<br>'));
+                        $this->_ci->session->set_flashdata($this->_config['file_element'], '<br>' . $this->_ci->lang->line('UPLOAD_UTILITY_COLUMN_ERR_MSG') . ' - <br>' . str_replace('_', ' ', implode('<br>', $this->_config['uploaded_file_heading']) . '<br>'));
                         redirect($this->_config['on_failure_redirect']);
                     }
                     //add remarks column
