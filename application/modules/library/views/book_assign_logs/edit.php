@@ -38,19 +38,19 @@
         </div>
     </div>
     <div class = 'form-group row'>
-        <label for = 'user_id' class = 'col-sm-2 col-form-label'>User id</label>
+        <label for = 'member_id' class = 'col-sm-2 col-form-label'>Member id</label>
         <div class = 'col-sm-3'>
             <?php
             $attribute = array(
-                "name" => "user_id",
-                "id" => "user_id",
+                "name" => "member_id",
+                "id" => "member_id",
                 "class" => "form-control",
                 "title" => "",
                 "required" => "",
                 "type" => "number",
-                "value" => (isset($data["user_id"])) ? $data["user_id"] : ""
+                "value" => (isset($data["member_id"])) ? $data["member_id"] : ""
             );
-            echo form_error("user_id");
+            echo form_error("member_id");
             echo form_input($attribute);
             ?>
         </div>

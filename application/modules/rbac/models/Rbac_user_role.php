@@ -39,7 +39,7 @@ class Rbac_user_role extends CI_Model
         Columns:-    role_id,name,code,status,created,modified,created_by,modified_by
 
         Table:-    rbac_users
-        Columns:-    user_id,first_name,last_name,login_id,email,password,login_status,mobile,mobile_verified,emial_verified,created,modified,created_by,modified_by,status
+        Columns:-    user_id,first_name,last_name,login_id,email,password,login_status,mobile,mobile_verified,email_verified,created,modified,created_by,modified_by,status
 
         */
         $this->datatables->select('SQL_CALC_FOUND_ROWS '. $columns, false, false)->from('rbac_user_roles t1');
@@ -72,7 +72,7 @@ class Rbac_user_role extends CI_Model
         Columns:-    role_id,name,code,status,created,modified,created_by,modified_by
 
         Table:-    rbac_users
-        Columns:-    user_id,first_name,last_name,login_id,email,password,login_status,mobile,mobile_verified,emial_verified,created,modified,created_by,modified_by,status
+        Columns:-    user_id,first_name,last_name,login_id,email,password,login_status,mobile,mobile_verified,email_verified,created,modified,created_by,modified_by,status
 
         */
         $this->db->select($columns)->from('rbac_user_roles t1');

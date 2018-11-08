@@ -12,7 +12,7 @@
  * @author     HimansuS <himansu.php@gmail.com>                
  * @license    
  * @link       
- * @since   10/28/2018
+ * @since   11/08/2018
  */
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
@@ -25,7 +25,7 @@ if (!defined('BASEPATH'))
  * @class      Book_assigns
  * @desc    
  * @author     HimansuS                  
- * @since   10/28/2018
+ * @since   11/08/2018
  */
 class Book_assigns extends CI_Controller {
 
@@ -36,7 +36,7 @@ class Book_assigns extends CI_Controller {
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   11/08/2018
      */
     public function __construct() {
         parent::__construct();
@@ -58,7 +58,7 @@ class Book_assigns extends CI_Controller {
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   11/08/2018
      */
     public function index() {
 
@@ -77,9 +77,9 @@ class Book_assigns extends CI_Controller {
                 'visible' => 'true',
                 'searchable' => 'true'
             ), array(
-                'db_column' => 'user_id',
-                'name' => 'User_id',
-                'title' => 'User_id',
+                'db_column' => 'member_id',
+                'name' => 'Member_id',
+                'title' => 'Member_id',
                 'class_name' => 'dt_name',
                 'orderable' => 'true',
                 'visible' => 'true',
@@ -277,13 +277,13 @@ class Book_assigns extends CI_Controller {
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   11/08/2018
      */
     public function export_grid_data() {
         if ($this->input->is_ajax_request()):
             $export_type = $this->input->post('export_type');
-            $tableHeading = array('bledger_id' => 'bledger_id', 'user_id' => 'user_id', 'issue_date' => 'issue_date', 'due_date' => 'due_date', 'return_date' => 'return_date', 'return_delay_fine' => 'return_delay_fine', 'book_return_condition' => 'book_return_condition', 'book_lost_fine' => 'book_lost_fine', 'remarks' => 'remarks', 'created' => 'created', 'created_by' => 'created_by', 'user_type' => 'user_type',);
-            $cols = 'bledger_id,user_id,issue_date,due_date,return_date,return_delay_fine,book_return_condition,book_lost_fine,remarks,created,created_by,user_type';
+            $tableHeading = array('bledger_id' => 'bledger_id', 'member_id' => 'member_id', 'issue_date' => 'issue_date', 'due_date' => 'due_date', 'return_date' => 'return_date', 'return_delay_fine' => 'return_delay_fine', 'book_return_condition' => 'book_return_condition', 'book_lost_fine' => 'book_lost_fine', 'remarks' => 'remarks', 'created' => 'created', 'created_by' => 'created_by', 'user_type' => 'user_type',);
+            $cols = 'bledger_id,member_id,issue_date,due_date,return_date,return_delay_fine,book_return_condition,book_lost_fine,remarks,created,created_by,user_type';
             $data = $this->book_assign->get_book_assign_datatable(null, true, $tableHeading);
             $head_cols = $body_col_map = array();
             $date = array(
@@ -329,7 +329,7 @@ class Book_assigns extends CI_Controller {
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   11/08/2018
      */
     public function create() {
         $this->breadcrumbs->push('create', '/library/book_assigns/create');
@@ -344,8 +344,8 @@ class Book_assigns extends CI_Controller {
                     'rules' => 'required'
                 ),
                 array(
-                    'field' => 'user_id',
-                    'label' => 'user_id',
+                    'field' => 'member_id',
+                    'label' => 'member_id',
                     'rules' => 'required'
                 ),
                 array(
@@ -405,6 +405,7 @@ class Book_assigns extends CI_Controller {
             endif;
         endif;
         $data['bledger_id_list'] = $this->book_assign->get_book_ledgers_options('bledger_id', 'bledger_id');
+        $data['member_id_list'] = $this->book_assign->get_library_members_options('member_id', 'member_id');
         $this->layout->data = $data;
         $this->layout->render();
     }
@@ -416,7 +417,7 @@ class Book_assigns extends CI_Controller {
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   11/08/2018
      */
     public function edit($bassign_id = null) {
         $this->breadcrumbs->push('edit', '/library/book_assigns/edit');
@@ -432,8 +433,8 @@ class Book_assigns extends CI_Controller {
                     'rules' => 'required'
                 ),
                 array(
-                    'field' => 'user_id',
-                    'label' => 'user_id',
+                    'field' => 'member_id',
+                    'label' => 'member_id',
                     'rules' => 'required'
                 ),
                 array(
@@ -497,6 +498,7 @@ class Book_assigns extends CI_Controller {
             $data['data'] = $result;
         endif;
         $data['bledger_id_list'] = $this->book_assign->get_book_ledgers_options('bledger_id', 'bledger_id');
+        $data['member_id_list'] = $this->book_assign->get_library_members_options('member_id', 'member_id');
         $this->layout->data = $data;
         $this->layout->render();
     }
@@ -508,7 +510,7 @@ class Book_assigns extends CI_Controller {
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   11/08/2018
      */
     public function view($bassign_id) {
         $this->breadcrumbs->push('view', '/library/book_assigns/view');
@@ -538,7 +540,7 @@ class Book_assigns extends CI_Controller {
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   11/08/2018
      */
     public function delete() {
         if ($this->input->is_ajax_request()):

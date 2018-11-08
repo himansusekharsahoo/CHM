@@ -34,7 +34,7 @@ class Rbac {
      * @created:
      */
     public function is_admin() {
-        if ($this->is_login()) {
+        if ($this->is_login()) {            
             if (in_array('ADMIN', $this->_session['user_data']['role_codes'])) {
                 return 1;
             }

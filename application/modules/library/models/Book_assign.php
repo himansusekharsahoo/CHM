@@ -12,7 +12,7 @@
  * @author     HimansuS <himansu.php@gmail.com>                
  * @license    
  * @link       
- * @since   10/28/2018
+ * @since   11/08/2018
  */
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
@@ -25,7 +25,7 @@ if (!defined('BASEPATH'))
  * @class      Book_assign
  * @desc    
  * @author     HimansuS                  
- * @since   10/28/2018
+ * @since   11/08/2018
  */
 class Book_assign extends CI_Model {
 
@@ -36,12 +36,13 @@ class Book_assign extends CI_Model {
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   11/08/2018
      */
     public function __construct() {
         parent::__construct();
 
         $this->load->model('book_ledger');
+        $this->load->model('library_member');
         $this->layout->layout = 'admin_layout';
         $this->layout->layoutsFolder = 'layouts/admin';
         $this->layout->lMmenuFlag = 1;
@@ -56,17 +57,20 @@ class Book_assign extends CI_Model {
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   11/08/2018
      */
     public function get_book_assign_datatable($data = null, $export = null, $tableHeading = null, $columns = null) {
         $this->load->library('datatables');
         if (!$columns) {
-            $columns = 'bassign_id,bledger_id,user_id,issue_date,due_date,return_date,return_delay_fine,book_return_condition,book_lost_fine,remarks,created,created_by,user_type';
+            $columns = 'bassign_id,bledger_id,member_id,issue_date,due_date,return_date,return_delay_fine,book_return_condition,book_lost_fine,remarks,created,created_by,user_type';
         }
 
         /*
           Table:-	book_ledgers
           Columns:-	bledger_id,book_id,bcategory_id,bpublication_id,bauthor_id,blocation_id,page,mrp,isbn_no,edition,bar_code,qr_code,created,created_by,modified,midified_by
+
+          Table:-	library_members
+          Columns:-	member_id,card_no,date_issue,expiry_date,user_id,user_role_id,created,created_by,status
 
          */
         $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, FALSE, FALSE)->from('book_assigns t1');
@@ -89,16 +93,19 @@ class Book_assign extends CI_Model {
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   11/08/2018
      */
     public function get_book_assign($columns = null, $conditions = null, $limit = null, $offset = null) {
         if (!$columns) {
-            $columns = 'bassign_id,bledger_id,user_id,issue_date,due_date,return_date,return_delay_fine,book_return_condition,book_lost_fine,remarks,created,created_by,user_type';
+            $columns = 'bassign_id,bledger_id,member_id,issue_date,due_date,return_date,return_delay_fine,book_return_condition,book_lost_fine,remarks,created,created_by,user_type';
         }
 
         /*
           Table:-	book_ledgers
           Columns:-	bledger_id,book_id,bcategory_id,bpublication_id,bauthor_id,blocation_id,page,mrp,isbn_no,edition,bar_code,qr_code,created,created_by,modified,midified_by
+
+          Table:-	library_members
+          Columns:-	member_id,card_no,date_issue,expiry_date,user_id,user_role_id,created,created_by,status
 
          */
         $this->db->select($columns)->from('book_assigns t1');
@@ -124,7 +131,7 @@ class Book_assign extends CI_Model {
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   11/08/2018
      */
     public function save($data) {
         if ($data):
@@ -146,7 +153,7 @@ class Book_assign extends CI_Model {
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   11/08/2018
      */
     public function update($data) {
         if ($data):
@@ -163,7 +170,7 @@ class Book_assign extends CI_Model {
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   11/08/2018
      */
     public function delete($bassign_id) {
         if ($bassign_id):
@@ -189,7 +196,7 @@ class Book_assign extends CI_Model {
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   11/08/2018
      */
     public function get_options($columns, $index = null, $conditions = null) {
         if (!$columns) {
@@ -223,10 +230,23 @@ class Book_assign extends CI_Model {
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   11/08/2018
      */
     public function get_book_ledgers_options($columns, $index = null, $conditions = null) {
         return $this->book_ledger->get_options($columns, $index, $conditions);
+    }
+
+    /**
+     * Get_library_members_options Method
+     * 
+     * @param   $columns,$index=null, $conditions = null
+     * @desc    
+     * @return 
+     * @author  HimansuS                  
+     * @since   11/08/2018
+     */
+    public function get_library_members_options($columns, $index = null, $conditions = null) {
+        return $this->library_member->get_options($columns, $index, $conditions);
     }
 
     public function record_count() {

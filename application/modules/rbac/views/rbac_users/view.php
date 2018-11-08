@@ -48,9 +48,9 @@
         </div>
     </div>
     <div class = 'form-group row'>
-        <label for = 'emial_verified' class = 'col-sm-2 col-form-label'>Emial verified</label>
+        <label for = 'email_verified' class = 'col-sm-2 col-form-label'>Emial verified</label>
         <div class = 'col-sm-3'>
-            <?php echo (isset($data["emial_verified"])) ? $data["emial_verified"] : "" ?>
+            <?php echo (isset($data["email_verified"])) ? $data["email_verified"] : "" ?>
         </div>
     </div>
 

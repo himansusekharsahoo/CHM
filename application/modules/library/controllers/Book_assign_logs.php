@@ -12,7 +12,7 @@
  * @author     HimansuS <himansu.php@gmail.com>                
  * @license    
  * @link       
- * @since   10/28/2018
+ * @since   11/08/2018
  */
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
@@ -25,7 +25,7 @@ if (!defined('BASEPATH'))
  * @class      Book_assign_logs
  * @desc    
  * @author     HimansuS                  
- * @since   10/28/2018
+ * @since   11/08/2018
  */
 class Book_assign_logs extends CI_Controller {
 
@@ -36,7 +36,7 @@ class Book_assign_logs extends CI_Controller {
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   11/08/2018
      */
     public function __construct() {
         parent::__construct();
@@ -58,7 +58,7 @@ class Book_assign_logs extends CI_Controller {
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   11/08/2018
      */
     public function index() {
 
@@ -77,9 +77,9 @@ class Book_assign_logs extends CI_Controller {
                 'visible' => 'true',
                 'searchable' => 'true'
             ), array(
-                'db_column' => 'user_id',
-                'name' => 'User_id',
-                'title' => 'User_id',
+                'db_column' => 'member_id',
+                'name' => 'Member_id',
+                'title' => 'Member_id',
                 'class_name' => 'dt_name',
                 'orderable' => 'true',
                 'visible' => 'true',
@@ -277,13 +277,13 @@ class Book_assign_logs extends CI_Controller {
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   11/08/2018
      */
     public function export_grid_data() {
         if ($this->input->is_ajax_request()):
             $export_type = $this->input->post('export_type');
-            $tableHeading = array('bledger_id' => 'bledger_id', 'user_id' => 'user_id', 'user_type' => 'user_type', 'issue_date' => 'issue_date', 'due_date' => 'due_date', 'return_date' => 'return_date', 'return_delay_fine' => 'return_delay_fine', 'book_return_condition' => 'book_return_condition', 'book_lost_fine' => 'book_lost_fine', 'remarks' => 'remarks', 'created' => 'created', 'created_by' => 'created_by',);
-            $cols = 'bledger_id,user_id,user_type,issue_date,due_date,return_date,return_delay_fine,book_return_condition,book_lost_fine,remarks,created,created_by';
+            $tableHeading = array('bledger_id' => 'bledger_id', 'member_id' => 'member_id', 'user_type' => 'user_type', 'issue_date' => 'issue_date', 'due_date' => 'due_date', 'return_date' => 'return_date', 'return_delay_fine' => 'return_delay_fine', 'book_return_condition' => 'book_return_condition', 'book_lost_fine' => 'book_lost_fine', 'remarks' => 'remarks', 'created' => 'created', 'created_by' => 'created_by',);
+            $cols = 'bledger_id,member_id,user_type,issue_date,due_date,return_date,return_delay_fine,book_return_condition,book_lost_fine,remarks,created,created_by';
             $data = $this->book_assign_log->get_book_assign_log_datatable(null, true, $tableHeading);
             $head_cols = $body_col_map = array();
             $date = array(
@@ -329,7 +329,7 @@ class Book_assign_logs extends CI_Controller {
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   11/08/2018
      */
     public function create() {
         $this->breadcrumbs->push('create', '/library/book_assign_logs/create');
@@ -344,8 +344,8 @@ class Book_assign_logs extends CI_Controller {
                     'rules' => 'required'
                 ),
                 array(
-                    'field' => 'user_id',
-                    'label' => 'user_id',
+                    'field' => 'member_id',
+                    'label' => 'member_id',
                     'rules' => 'required'
                 ),
                 array(
@@ -416,7 +416,7 @@ class Book_assign_logs extends CI_Controller {
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   11/08/2018
      */
     public function edit($bassign_id = null) {
         $this->breadcrumbs->push('edit', '/library/book_assign_logs/edit');
@@ -432,8 +432,8 @@ class Book_assign_logs extends CI_Controller {
                     'rules' => 'required'
                 ),
                 array(
-                    'field' => 'user_id',
-                    'label' => 'user_id',
+                    'field' => 'member_id',
+                    'label' => 'member_id',
                     'rules' => 'required'
                 ),
                 array(
@@ -508,7 +508,7 @@ class Book_assign_logs extends CI_Controller {
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   11/08/2018
      */
     public function view($bassign_id) {
         $this->breadcrumbs->push('view', '/library/book_assign_logs/view');
@@ -538,7 +538,7 @@ class Book_assign_logs extends CI_Controller {
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   11/08/2018
      */
     public function delete() {
         if ($this->input->is_ajax_request()):

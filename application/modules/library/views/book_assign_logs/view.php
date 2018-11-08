@@ -6,9 +6,9 @@
         </div>
     </div>
     <div class = 'form-group row'>
-        <label for = 'user_id' class = 'col-sm-2 col-form-label'>User id</label>
+        <label for = 'member_id' class = 'col-sm-2 col-form-label'>Member id</label>
         <div class = 'col-sm-3'>
-            <?= (isset($data["user_id"])) ? $data["user_id"] : "" ?>
+            <?= (isset($data["member_id"])) ? $data["member_id"] : "" ?>
         </div>
     </div>
     <div class = 'form-group row'>

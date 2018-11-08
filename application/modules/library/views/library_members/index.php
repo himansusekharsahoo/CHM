@@ -12,7 +12,7 @@
 
         $(document).on('click', '.delete-record', function (e) {
             e.preventDefault();
-            var data = {'bassign_id': $(this).data('bassign_id')}
+            var data = {'member_id': $(this).data('member_id')}
             var row = $(this).closest('tr');
             BootstrapDialog.show({
                 title: 'Alert',
@@ -26,7 +26,7 @@
                         label: 'Delete',
                         action: function (dialog) {
                             $.ajax({
-                                url: '<?= APP_BASE ?>library/book_assign_logs/delete',
+                                url: '<?= APP_BASE ?>library/library_members/delete',
                                 method: 'POST',
                                 data: data,
                                 success: function (result) {
@@ -59,7 +59,7 @@
             };
             $.ajax({
                 type: 'POST',
-                url: "<?= base_url('library/book_assign_logs/export_grid_data') ?>",
+                url: "<?= base_url('library/library_members/export_grid_data') ?>",
                 data: param,
                 dataType: 'json'
             }).done(function (data) {
@@ -77,7 +77,7 @@
             };
             $.ajax({
                 type: 'POST',
-                url: "<?= base_url('library/book_assign_logs/export_grid_data') ?>",
+                url: "<?= base_url('library/library_members/export_grid_data') ?>",
                 data: param,
                 dataType: 'json'
             }).done(function (data) {

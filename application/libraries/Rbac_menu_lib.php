@@ -75,7 +75,9 @@ class Rbac_menu_lib {
 
             return $siblings;
         };
-        $tree = $fnBuilder($grouped[0]);
+        if(isset($grouped[0])){
+            $tree = $fnBuilder($grouped[0]);
+        }
         return $tree;
     }
 

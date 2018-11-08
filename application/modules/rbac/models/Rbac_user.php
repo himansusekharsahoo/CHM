@@ -36,7 +36,7 @@ class Rbac_user extends CI_Model
     {
         $this->load->library('datatables');
         if (!$columns) {
-            $columns = 'user_id,first_name,last_name,login_id,email,password,login_status,mobile,mobile_verified,emial_verified,created,modified,created_by,modified_by,status';
+            $columns = 'user_id,first_name,last_name,login_id,email,password,login_status,mobile,mobile_verified,email_verified,created,modified,created_by,modified_by,status';
         }
 
         /*
@@ -64,7 +64,7 @@ class Rbac_user extends CI_Model
     public function get_rbac_user($columns = null, $conditions = null, $limit = null, $offset = null)
     {
         if (!$columns) {
-            $columns = 'user_id,first_name,last_name,login_id,email,password,login_status,mobile,mobile_verified,emial_verified,created,modified,created_by,modified_by,status';
+            $columns = 'user_id,first_name,last_name,login_id,email,password,login_status,mobile,mobile_verified,email_verified,created,modified,created_by,modified_by,status';
         }
 
         /*

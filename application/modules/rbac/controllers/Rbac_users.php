@@ -108,9 +108,9 @@ class Rbac_users extends CI_Controller
                 'visible' => 'true',
                 'searchable' => 'true'
             ), array(
-                'db_column' => 'emial_verified',
-                'name' => 'Emial_verified',
-                'title' => 'Emial_verified',
+                'db_column' => 'email_verified',
+                'name' => 'email_verified',
+                'title' => 'email_verified',
                 'class_name' => 'dt_name',
                 'orderable' => 'true',
                 'visible' => 'true',
@@ -272,8 +272,8 @@ class Rbac_users extends CI_Controller
     {
         if ($this->input->is_ajax_request()) :
             $export_type = $this->input->post('export_type');
-            $tableHeading = array('first_name' => 'first_name', 'last_name' => 'last_name', 'login_id' => 'login_id', 'email' => 'email', 'password' => 'password', 'login_status' => 'login_status', 'mobile' => 'mobile', 'mobile_verified' => 'mobile_verified', 'emial_verified' => 'emial_verified', 'created' => 'created', 'modified' => 'modified', 'created_by' => 'created_by', 'modified_by' => 'modified_by', 'status' => 'status',);
-            $cols = 'first_name,last_name,login_id,email,password,login_status,mobile,mobile_verified,emial_verified,created,modified,created_by,modified_by,status';
+            $tableHeading = array('first_name' => 'first_name', 'last_name' => 'last_name', 'login_id' => 'login_id', 'email' => 'email', 'password' => 'password', 'login_status' => 'login_status', 'mobile' => 'mobile', 'mobile_verified' => 'mobile_verified', 'email_verified' => 'email_verified', 'created' => 'created', 'modified' => 'modified', 'created_by' => 'created_by', 'modified_by' => 'modified_by', 'status' => 'status',);
+            $cols = 'first_name,last_name,login_id,email,password,login_status,mobile,mobile_verified,email_verified,created,modified,created_by,modified_by,status';
             $data = $this->rbac_user->get_rbac_user_datatable(null, true, $tableHeading);
             $head_cols = $body_col_map = array();
             $date = array(
@@ -435,8 +435,8 @@ class Rbac_users extends CI_Controller
                     'rules' => 'required'
                 ),
                 array(
-                    'field' => 'emial_verified',
-                    'label' => 'emial_verified',
+                    'field' => 'email_verified',
+                    'label' => 'email_verified',
                     'rules' => 'required'
                 ),
             );

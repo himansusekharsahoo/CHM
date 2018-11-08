@@ -67,7 +67,7 @@ class Rbac_custom_permission extends CI_Model {
 
         /*
           Table:-	rbac_users
-          Columns:-	user_id,first_name,last_name,login_id,email,password,login_status,mobile,mobile_verified,emial_verified,created,modified,created_by,modified_by,status
+          Columns:-	user_id,first_name,last_name,login_id,email,password,login_status,mobile,mobile_verified,email_verified,created,modified,created_by,modified_by,status
 
           Table:-	rbac_permissions
           Columns:-	permission_id,module_id,action_id,status,created,modified
@@ -102,7 +102,7 @@ class Rbac_custom_permission extends CI_Model {
 
         /*
           Table:-	rbac_users
-          Columns:-	user_id,first_name,last_name,login_id,email,password,login_status,mobile,mobile_verified,emial_verified,created,modified,created_by,modified_by,status
+          Columns:-	user_id,first_name,last_name,login_id,email,password,login_status,mobile,mobile_verified,email_verified,created,modified,created_by,modified_by,status
 
           Table:-	rbac_permissions
           Columns:-	permission_id,module_id,action_id,status,created,modified

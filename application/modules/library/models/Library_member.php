@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Book_assign_log Class File
+ * Library_member Class File
  * PHP Version 7.1.1
  * 
  * @category   Library
  * @package    Library
- * @subpackage Book_assign_log
- * @class      Book_assign_log
+ * @subpackage Library_member
+ * @class      Library_member
  * @desc    
  * @author     HimansuS <himansu.php@gmail.com>                
  * @license    
@@ -18,16 +18,16 @@ if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 /**
- * Book_assign_log Class
+ * Library_member Class
  * 
  * @category   Library
  * @package    Library
- * @class      Book_assign_log
+ * @class      Library_member
  * @desc    
  * @author     HimansuS                  
  * @since   11/08/2018
  */
-class Book_assign_log extends CI_Model {
+class Library_member extends CI_Model {
 
     /**
      * __construct Method
@@ -41,7 +41,7 @@ class Book_assign_log extends CI_Model {
     public function __construct() {
         parent::__construct();
 
-        $this->load->model('book_ledger');
+
         $this->layout->layout = 'admin_layout';
         $this->layout->layoutsFolder = 'layouts/admin';
         $this->layout->lMmenuFlag = 1;
@@ -50,7 +50,7 @@ class Book_assign_log extends CI_Model {
     }
 
     /**
-     * Get_book_assign_log_datatable Method
+     * Get_library_member_datatable Method
      * 
      * @param   $data=null,$export=null,$tableHeading=null,$columns=null
      * @desc    
@@ -58,22 +58,19 @@ class Book_assign_log extends CI_Model {
      * @author  HimansuS                  
      * @since   11/08/2018
      */
-    public function get_book_assign_log_datatable($data = null, $export = null, $tableHeading = null, $columns = null) {
+    public function get_library_member_datatable($data = null, $export = null, $tableHeading = null, $columns = null) {
         $this->load->library('datatables');
         if (!$columns) {
-            $columns = 'bassign_id,bledger_id,member_id,user_type,issue_date,due_date,return_date,return_delay_fine,book_return_condition,book_lost_fine,remarks,created,created_by';
+            $columns = 'member_id,card_no,date_issue,expiry_date,user_id,user_role_id,created,created_by,status';
         }
 
         /*
-          Table:-	book_ledgers
-          Columns:-	bledger_id,book_id,bcategory_id,bpublication_id,bauthor_id,blocation_id,page,mrp,isbn_no,edition,bar_code,qr_code,created,created_by,modified,midified_by
-
          */
-        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, FALSE, FALSE)->from('book_assign_logs t1');
+        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, FALSE, FALSE)->from('library_members t1');
 
-        $this->datatables->unset_column("bassign_id");
+        $this->datatables->unset_column("member_id");
         if (isset($data['button_set'])):
-            $this->datatables->add_column("Action", $data['button_set'], 'c_encode(bassign_id)', 1, 1);
+            $this->datatables->add_column("Action", $data['button_set'], 'c_encode(member_id)', 1, 1);
         endif;
         if ($export):
             $data = $this->datatables->generate_export($export);
@@ -83,7 +80,7 @@ class Book_assign_log extends CI_Model {
     }
 
     /**
-     * Get_book_assign_log Method
+     * Get_library_member Method
      * 
      * @param   $columns=null,$conditions=null,$limit=null,$offset=null
      * @desc    
@@ -91,17 +88,14 @@ class Book_assign_log extends CI_Model {
      * @author  HimansuS                  
      * @since   11/08/2018
      */
-    public function get_book_assign_log($columns = null, $conditions = null, $limit = null, $offset = null) {
+    public function get_library_member($columns = null, $conditions = null, $limit = null, $offset = null) {
         if (!$columns) {
-            $columns = 'bassign_id,bledger_id,member_id,user_type,issue_date,due_date,return_date,return_delay_fine,book_return_condition,book_lost_fine,remarks,created,created_by';
+            $columns = 'member_id,card_no,date_issue,expiry_date,user_id,user_role_id,created,created_by,status';
         }
 
         /*
-          Table:-	book_ledgers
-          Columns:-	bledger_id,book_id,bcategory_id,bpublication_id,bauthor_id,blocation_id,page,mrp,isbn_no,edition,bar_code,qr_code,created,created_by,modified,midified_by
-
          */
-        $this->db->select($columns)->from('book_assign_logs t1');
+        $this->db->select($columns)->from('library_members t1');
 
         if ($conditions && is_array($conditions)):
             foreach ($conditions as $col => $val):
@@ -128,11 +122,11 @@ class Book_assign_log extends CI_Model {
      */
     public function save($data) {
         if ($data):
-            $this->db->insert("book_assign_logs", $data);
-            $bassign_id_inserted_id = $this->db->insert_id();
+            $this->db->insert("library_members", $data);
+            $member_id_inserted_id = $this->db->insert_id();
 
-            if ($bassign_id_inserted_id):
-                return $bassign_id_inserted_id;
+            if ($member_id_inserted_id):
+                return $member_id_inserted_id;
             endif;
             return 'No data found to store!';
         endif;
@@ -150,8 +144,8 @@ class Book_assign_log extends CI_Model {
      */
     public function update($data) {
         if ($data):
-            $this->db->where("bassign_id", $data['bassign_id']);
-            return $this->db->update('book_assign_logs', $data);
+            $this->db->where("member_id", $data['member_id']);
+            return $this->db->update('library_members', $data);
         endif;
         return 'Unable to update the data, please try again later!';
     }
@@ -159,17 +153,17 @@ class Book_assign_log extends CI_Model {
     /**
      * Delete Method
      * 
-     * @param   $bassign_id
+     * @param   $member_id
      * @desc    
      * @return 
      * @author  HimansuS                  
      * @since   11/08/2018
      */
-    public function delete($bassign_id) {
-        if ($bassign_id):
+    public function delete($member_id) {
+        if ($member_id):
             $this->db->trans_begin();
             $result = 0;
-            $this->db->delete('book_assign_logs', array('bassign_id' => $bassign_id));
+            $this->db->delete('library_members', array('member_id' => $member_id));
             if ($this->db->trans_status() === FALSE) {
                 $this->db->trans_rollback();
                 return false;
@@ -193,12 +187,12 @@ class Book_assign_log extends CI_Model {
      */
     public function get_options($columns, $index = null, $conditions = null) {
         if (!$columns) {
-            $columns = 'bassign_id';
+            $columns = 'member_id';
         }
         if (!$index) {
-            $index = 'bassign_id';
+            $index = 'member_id';
         }
-        $this->db->select("$columns,$index")->from('book_assign_logs t1');
+        $this->db->select("$columns,$index")->from('library_members t1');
 
         if ($conditions && is_array($conditions)):
             foreach ($conditions as $col => $val):
@@ -209,28 +203,15 @@ class Book_assign_log extends CI_Model {
         $result = $this->db->get()->result_array();
 
         $list = array();
-        $list[''] = 'Select book assign logs';
+        $list[''] = 'Select library members';
         foreach ($result as $key => $val):
             $list[$val[$index]] = $val[$columns];
         endforeach;
         return $list;
     }
 
-    /**
-     * Get_book_ledgers_options Method
-     * 
-     * @param   $columns,$index=null, $conditions = null
-     * @desc    
-     * @return 
-     * @author  HimansuS                  
-     * @since   11/08/2018
-     */
-    public function get_book_ledgers_options($columns, $index = null, $conditions = null) {
-        return $this->book_ledger->get_options($columns, $index, $conditions);
-    }
-
     public function record_count() {
-        return $this->db->count_all('book_assign_logs');
+        return $this->db->count_all('library_members');
     }
 
 }
