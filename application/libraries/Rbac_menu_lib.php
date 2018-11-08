@@ -1,6 +1,6 @@
 <?php
 
-class Rbac_menu {
+class Rbac_menu_lib {
 
     public function __construct($param) {
         $this->_ci = & get_instance();

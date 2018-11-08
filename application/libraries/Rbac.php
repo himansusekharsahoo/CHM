@@ -147,8 +147,8 @@ class Rbac {
      */
     public function show_user_menu_top() {
         $params = array('rbac_session' => $this->_session);
-        $this->_ci->load->library('rbac_menu', $params);
-        $menu=$this->_ci->rbac_menu->get_user_menus(" AND lower(menu_type)='l'");
+        $this->_ci->load->library('rbac_menu_lib', $params);
+        $menu=$this->_ci->rbac_menu_lib->get_user_menus(" AND lower(menu_type)='l'");
         return $menu;
         //return $this->_ci->rbac_menu->show_menu();
     }
