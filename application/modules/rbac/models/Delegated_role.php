@@ -5,19 +5,20 @@ if (!defined('BASEPATH')) {
 }
 
 /**
- * @class   : Rbac_action
+ * @class   : Delegated_role
  * @desc    :
  * @author  : HimansuS
  * @created :09/29/2018
  */
-class Rbac_action extends CI_Model
+class Delegated_role extends CI_Model
 {
 
     public function __construct()
     {
         parent::__construct();
 
-
+        $this->load->model('rbac_user');
+        $this->load->model('rbac_role');
         $this->layout->layout = 'admin_layout';
         $this->layout->layoutsFolder = 'layouts/admin';
         $this->layout->lMmenuFlag = 1;
@@ -32,22 +33,26 @@ class Rbac_action extends CI_Model
      * @author             :
      * @created:09/29/2018
      */
-    public function get_rbac_action_datatable($data = null, $export = null, $tableHeading = null, $columns = null)
+    public function get_delegated_role_datatable($data = null, $export = null, $tableHeading = null, $columns = null)
     {
         $this->load->library('datatables');
         if (!$columns) {
-            //$columns = 'action_id,name,code,status,created,modified';
-            $columns = 'action_id,name,code,status';
+            $columns = 'delegated_role_id,role_id,role_code,user_id,delegated_by,created,modified,status';
         }
 
         /*
-         */
-        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, false, false)->from('rbac_actions t1');
+          Table:-    rbac_users
+          Columns:-    user_id,first_name,last_name,login_id,email,password,login_status,mobile,mobile_verified,email_verified,created,modified,created_by,modified_by,status
 
-        $this->datatables->unset_column("action_id");
-        $this->datatables->unset_column("status");
+          Table:-    rbac_roles
+          Columns:-    role_id,name,code,status,created,modified,created_by,modified_by
+
+         */
+        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, false, false)->from('delegated_role t1');
+
+        $this->datatables->unset_column("delegated_role_id");
         if (isset($data['button_set'])) :
-            $this->datatables->add_column("Action", $data['button_set'], 'c_encode(action_id)', 1, 1);
+            $this->datatables->add_column("Action", $data['button_set'], 'c_encode(delegated_role_id)', 1, 1);
         endif;
         if ($export) :
             $data = $this->datatables->generate_export($export);
@@ -63,15 +68,21 @@ class Rbac_action extends CI_Model
      * @author             :
      * @created:09/29/2018
      */
-    public function get_rbac_action($columns = null, $conditions = null, $limit = null, $offset = null)
+    public function get_delegated_role($columns = null, $conditions = null, $limit = null, $offset = null)
     {
         if (!$columns) {
-            $columns = 'action_id,name,status,created,modified,code';
+            $columns = 'delegated_role_id,role_id,role_code,user_id,delegated_by,created,modified,status';
         }
 
         /*
+          Table:-    rbac_users
+          Columns:-    user_id,first_name,last_name,login_id,email,password,login_status,mobile,mobile_verified,email_verified,created,modified,created_by,modified_by,status
+
+          Table:-    rbac_roles
+          Columns:-    role_id,name,code,status,created,modified,created_by,modified_by
+
          */
-        $this->db->select($columns)->from('rbac_actions t1');
+        $this->db->select($columns)->from('delegated_role t1');
 
         if ($conditions && is_array($conditions)) :
             foreach ($conditions as $col => $val):
@@ -97,11 +108,11 @@ class Rbac_action extends CI_Model
     public function save($data)
     {
         if ($data) :
-            $this->db->insert("rbac_actions", $data);
-            $action_id_inserted_id = $this->db->insert_id();
+            $this->db->insert("delegated_role", $data);
+            $delegated_role_id_inserted_id = $this->db->insert_id();
 
-            if ($action_id_inserted_id) :
-                return $action_id_inserted_id;
+            if ($delegated_role_id_inserted_id) :
+                return $delegated_role_id_inserted_id;
             endif;
             return 'No data found to store!';
         endif;
@@ -118,25 +129,25 @@ class Rbac_action extends CI_Model
     public function update($data)
     {
         if ($data) :
-            $this->db->where("action_id", $data['action_id']);
-            return $this->db->update('rbac_actions', $data);
+            $this->db->where("delegated_role_id", $data['delegated_role_id']);
+            return $this->db->update('delegated_role', $data);
         endif;
         return 'Unable to update the data, please try again later!';
     }
 
     /**
-     * @param              : $action_id
+     * @param              : $delegated_role_id
      * @desc               :
      * @return             :
      * @author             :
      * @created:09/29/2018
      */
-    public function delete($action_id)
+    public function delete($delegated_role_id)
     {
-        if ($action_id) :
+        if ($delegated_role_id) :
             $this->db->trans_begin();
             $result = 0;
-            $this->db->delete('rbac_actions', array('action_id' => $action_id));
+            $this->db->delete('delegated_role', array('delegated_role_id' => $delegated_role_id));
             if ($this->db->trans_status() === false) {
                 $this->db->trans_rollback();
                 return false;
@@ -159,12 +170,12 @@ class Rbac_action extends CI_Model
     public function get_options($columns, $index = null, $conditions = null)
     {
         if (!$columns) {
-            $columns = 'action_id';
+            $columns = 'delegated_role_id';
         }
         if (!$index) {
-            $index = 'action_id';
+            $index = 'delegated_role_id';
         }
-        $this->db->select("$columns,$index")->from('rbac_actions t1');
+        $this->db->select("$columns,$index")->from('delegated_role t1');
 
         if ($conditions && is_array($conditions)) :
             foreach ($conditions as $col => $val):
@@ -175,16 +186,40 @@ class Rbac_action extends CI_Model
         $result = $this->db->get()->result_array();
 
         $list = array();
-        $list[''] = 'Select rbac actions';
+        $list[''] = 'Select delegated role';
         foreach ($result as $key => $val):
             $list[$val[$index]] = $val[$columns];
         endforeach;
         return $list;
     }
 
+    /**
+     * @param              : $columns,$index=null, $conditions = null
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:09/29/2018
+     */
+    public function get_rbac_users_options($columns, $index = null, $conditions = null)
+    {
+        return $this->rbac_user->get_options($columns, $index, $conditions);
+    }
+
+    /**
+     * @param              : $columns,$index=null, $conditions = null
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:09/29/2018
+     */
+    public function get_rbac_roles_options($columns, $index = null, $conditions = null)
+    {
+        return $this->rbac_role->get_options($columns, $index, $conditions);
+    }
+
     public function record_count()
     {
-        return $this->db->count_all('rbac_actions');
+        return $this->db->count_all('delegated_role');
     }
 
 }

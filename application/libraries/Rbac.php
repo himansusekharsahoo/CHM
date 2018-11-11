@@ -21,9 +21,9 @@ class Rbac {
     public function is_login() {
         if (isset($this->_session['user_data']['user_id'])) {
             return $this->_session['user_data']['user_id'];
-        }else{
+        } else {
             redirect('admin-login');
-        }        
+        }
     }
 
     /**
@@ -34,8 +34,24 @@ class Rbac {
      * @created:
      */
     public function is_admin() {
-        if ($this->is_login()) {            
+        if ($this->is_login()) {
             if (in_array('ADMIN', $this->_session['user_data']['role_codes'])) {
+                return 1;
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * @param  : 
+     * @desc   : use to check logged in user is admin or not
+     * @return :
+     * @author : HimansuS
+     * @created:
+     */
+    public function is_developer() {
+        if ($this->is_login()) {
+            if (in_array('DEVELOPER', $this->_session['user_data']['role_codes'])) {
                 return 1;
             }
         }
@@ -53,6 +69,21 @@ class Rbac {
         if ($this->is_login()) {
             $role_ids = array_column($this->_session['user_data']['roles'], 'role_id');
             return $role_ids;
+        }
+        return 0;
+    }
+
+    /**
+     * @param  : 
+     * @desc   : used to fetch all assigned role id
+     * @return :
+     * @author : HimansuS
+     * @created:
+     */
+    public function get_role_codes() {
+        if ($this->is_login()) {
+            $role_codes = $this->_session['user_data']['role_codes'];
+            return $role_codes;
         }
         return 0;
     }
@@ -81,7 +112,7 @@ class Rbac {
     public function has_permission($module, $action = null) {
         if ($this->is_login()) {
 
-            if ($this->is_admin()) {
+            if ($this->is_developer()) {
                 return 1;
             }
             $module = strtoupper($module);
@@ -89,12 +120,12 @@ class Rbac {
 
             $permissions = $this->_session['user_data']['permissions'];
             $module_codes = $this->_session['user_data']['permission_modules'];
-            
-            
+            //pma($module_codes,1);
+
             if ($module && $action) {
-                if (in_array($module, $module_codes)) { 
+                if (in_array($module, $module_codes)) {
                     if ($action) {
-                        $action_details = $permissions[$module]['actions'];                        
+                        $action_details = $permissions[$module]['actions'];
                         if (array_key_exists($action, $action_details) && isset($permissions[$module]['actions'][$action]['action_name'])) {
                             return TRUE;
                         }
@@ -107,6 +138,20 @@ class Rbac {
             }
         }
         return FALSE;
+    }
+
+    /**
+     * @param  : String $module_code, String $action_code
+     * @desc   : used to check user has permition or not
+     * @return :
+     * @author : HimansuS
+     * @created:
+     */
+    public function has_role($role_code) {
+        if ($this->is_login() && in_array($role_code, $this->_session['user_data']['role_codes'])) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -130,7 +175,7 @@ class Rbac {
      * @desc: Function to enable/disable the user
      */
     public function get_user_permission($user_id = null) {
-        if ($this->_session['user_data']['permissions'] || $this->is_admin()) {
+        if ($this->_session['user_data']['permissions'] || $this->is_developer()) {
             return $this->_session['user_data']['permissions'];
         } else {
             $this->_ci->session->set_flashdata('error', 'No permission assigned you to access the Dashboard,Please contact site Admin.');
@@ -148,7 +193,7 @@ class Rbac {
     public function show_user_menu_top() {
         $params = array('rbac_session' => $this->_session);
         $this->_ci->load->library('rbac_menu_lib', $params);
-        $menu=$this->_ci->rbac_menu_lib->get_user_menus(" AND lower(menu_type)='l'");
+        $menu = $this->_ci->rbac_menu_lib->get_user_menus(" AND lower(menu_type)='l'");
         return $menu;
         //return $this->_ci->rbac_menu->show_menu();
     }

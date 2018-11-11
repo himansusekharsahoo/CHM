@@ -57,6 +57,8 @@ class Rbac_role_permission extends CI_Model {
             foreach ($conditions as $col => $val):
                 $this->db->where($col, $val);
             endforeach;
+        elseif(is_string($conditions)):
+            $this->db->where($conditions);
         endif;
         $this->db->order_by('rr.name', 'asc');
 
@@ -87,7 +89,7 @@ class Rbac_role_permission extends CI_Model {
      * @author             :
      * @created:09/29/2018
      */
-    public function get_rbac_roles_options($columns, $index = null, $conditions = null) {
+    public function get_rbac_roles_options($columns, $index = null, $conditions = null) {        
         return $this->rbac_role->get_options($columns, $index, $conditions);
     }
 

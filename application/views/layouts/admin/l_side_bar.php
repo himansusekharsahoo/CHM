@@ -5,7 +5,7 @@
 </aside>
 <script>
     $(document).ready(function () {
-        /*$('.set_rbac_select_menu').on('click', function (e) {
+        $('.set_rbac_select_menu').on('click', function (e) {
             e.preventDefault();
             var ids = $(this).attr('data-rbac_sel_menu');
             var menu_url=$(this).attr('href');
@@ -31,6 +31,6 @@
                 console.log('error', reason);                
             });
             
-        });*/
+        });
     });
 </script>

@@ -38,10 +38,10 @@ class Rbac_role extends CI_Model
         if (!$columns) {
             $columns = 'role_id,name,code,created_by,modified_by,created,modified,status';
         }
-
-        /*
-         */
-        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, false, false)->from('rbac_roles t1');
+        $user_id=  $this->rbac->get_user_id();
+        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, false, false)
+                ->from('rbac_roles t1')
+                ->where('created_by',$user_id);
 
         $this->datatables->unset_column("role_id");
         if (isset($data['button_set'])) :
@@ -171,7 +171,7 @@ class Rbac_role extends CI_Model
             endforeach;
         endif;
         $result = $this->db->get()->result_array();
-
+        
         $list = array();
         $list[''] = 'Select rbac roles';
         foreach ($result as $key => $val):

@@ -283,10 +283,13 @@ class Rbac_roles extends CI_Controller
             );
             $this->form_validation->set_rules($config);
 
-            if ($this->form_validation->run()) :
-
-                $data['data'] = $this->input->post();
-                $result = $this->rbac_role->save($data['data']);
+            if ($this->form_validation->run()) :                
+                $db_data=array(
+                    'name'=>$this->input->post('name'),
+                    'code'=>$this->input->post('code'),
+                    'created_by'=>  $this->rbac->get_user_id()
+                );
+                $result = $this->rbac_role->save($db_data);
 
                 if ($result >= 1) :
                     $this->session->set_flashdata('success', 'Record successfully saved!');
@@ -314,7 +317,7 @@ class Rbac_roles extends CI_Controller
         $this->layout->navTitle = 'Rbac role edit';
         $data = array();
         if ($this->input->post()) :
-            $data['data'] = $this->input->post();
+            
             $config = array(
                 array(
                     'field' => 'name',
@@ -330,7 +333,13 @@ class Rbac_roles extends CI_Controller
             $this->form_validation->set_rules($config);
 
             if ($this->form_validation->run()) :
-                $result = $this->rbac_role->update($data['data']);
+                $db_data=array(
+                    'name'=>$this->input->post('name'),
+                    'code'=>$this->input->post('code'),
+                    'created_by'=>  $this->rbac->get_user_id()
+                );
+            
+                $result = $this->rbac_role->update($db_data);
                 if ($result >= 1) :
                     $this->session->set_flashdata('success', 'Record successfully updated!');
                     redirect('/rbac/rbac_roles');

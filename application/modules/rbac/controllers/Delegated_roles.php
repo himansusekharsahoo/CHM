@@ -1,47 +1,48 @@
 <?php
 
 /**
- * Library_members Class File
- * PHP Version 7.1.1
+ * Delegated Class File
+ * PHP Version 7.1
  * 
- * @category   Library
- * @package    Library
- * @subpackage Library_members
- * @class      Library_members
+ * @category   Rbac
+ * @package    Rbac
+ * @subpackage Delegated_Roles
+ * @class      Delegated_Roles
  * @desc    
- * @author     HimansuS <himansu.php@gmail.com>                
+ * @author     HimansuS <himansu.php@gmail.com>
+ * @created    09/29/2018
  * @license    
  * @link       
- * @since   11/08/2018
+ * @since   09/29/2018
  */
-if (!defined('BASEPATH'))
+if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
+}
 
 /**
- * Library_members Class
- * 
- * @category   Library
- * @package    Library
- * @class      Library_members
- * @desc    
- * @author     HimansuS                  
- * @since   11/08/2018
+ * Delegated_Roles class
+ *
+ * The class holding delegated roles functionality
+ *
+ * @category Rbac
+ * @package  Rbac
+ * @author   HimansuS <himansu.php@gmail.com>
+ * @license  http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @link     
  */
-class Library_members extends CI_Controller {
+class Delegated_roles extends CI_Controller {
 
     /**
-     * __construct Method
-     * 
-     * @param   
-     * @desc    
-     * @return 
-     * @author  HimansuS                  
-     * @since   11/08/2018
+     * @param    : NA
+     * @desc     : initiate object
+     * @return   : NA
+     * @author   : HimansuS
+     * @created:
      */
     public function __construct() {
         parent::__construct();
 
-        $this->load->model('library_member');
+        $this->load->model('delegated_role');
         $this->load->library('pagination');
         $this->load->library('form_validation');
         $this->layout->layout = 'admin_layout';
@@ -52,42 +53,31 @@ class Library_members extends CI_Controller {
     }
 
     /**
-     * Index Method
-     * 
-     * @param   
-     * @desc    
-     * @return 
-     * @author  HimansuS                  
-     * @since   11/08/2018
+     * @param              : 
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:09/29/2018
      */
     public function index() {
 
-        $this->breadcrumbs->push('index', '/library/library_members/index');
+        $this->breadcrumbs->push('index', '/rbac/delegated_roles/index');
         $this->scripts_include->includePlugins(array('datatable'), 'css');
         $this->scripts_include->includePlugins(array('datatable'), 'js');
-        $this->layout->navTitle = 'Library member list';
-        $this->layout->title = 'Library member list';
+        $this->layout->navTitle = 'Delegated role list';
         $header = array(
             array(
-                'db_column' => 'card_no',
-                'name' => 'Card_no',
-                'title' => 'Card_no',
+                'db_column' => 'role_id',
+                'name' => 'Role_id',
+                'title' => 'Role_id',
                 'class_name' => 'dt_name',
                 'orderable' => 'true',
                 'visible' => 'true',
                 'searchable' => 'true'
             ), array(
-                'db_column' => 'date_issue',
-                'name' => 'Date_issue',
-                'title' => 'Date_issue',
-                'class_name' => 'dt_name',
-                'orderable' => 'true',
-                'visible' => 'true',
-                'searchable' => 'true'
-            ), array(
-                'db_column' => 'expiry_date',
-                'name' => 'Expiry_date',
-                'title' => 'Expiry_date',
+                'db_column' => 'role_code',
+                'name' => 'Role_code',
+                'title' => 'Role_code',
                 'class_name' => 'dt_name',
                 'orderable' => 'true',
                 'visible' => 'true',
@@ -101,9 +91,9 @@ class Library_members extends CI_Controller {
                 'visible' => 'true',
                 'searchable' => 'true'
             ), array(
-                'db_column' => 'user_role_id',
-                'name' => 'User_role_id',
-                'title' => 'User_role_id',
+                'db_column' => 'delegated_by',
+                'name' => 'Delegated_by',
+                'title' => 'Delegated_by',
                 'class_name' => 'dt_name',
                 'orderable' => 'true',
                 'visible' => 'true',
@@ -117,9 +107,9 @@ class Library_members extends CI_Controller {
                 'visible' => 'true',
                 'searchable' => 'true'
             ), array(
-                'db_column' => 'created_by',
-                'name' => 'Created_by',
-                'title' => 'Created_by',
+                'db_column' => 'modified',
+                'name' => 'Modified',
+                'title' => 'Modified',
                 'class_name' => 'dt_name',
                 'orderable' => 'true',
                 'visible' => 'true',
@@ -146,7 +136,7 @@ class Library_members extends CI_Controller {
 
         $grid_buttons[] = array(
             'btn_class' => 'btn-info',
-            'btn_href' => base_url('library/library_members/view'),
+            'btn_href' => base_url('rbac/delegated_roles/view'),
             'btn_icon' => 'fa-eye',
             'btn_title' => 'view record',
             'btn_separator' => ' ',
@@ -155,7 +145,7 @@ class Library_members extends CI_Controller {
         );
         $grid_buttons[] = array(
             'btn_class' => 'btn-primary',
-            'btn_href' => base_url('library/library_members/edit'),
+            'btn_href' => base_url('rbac/delegated_roles/edit'),
             'btn_icon' => 'fa-pencil',
             'btn_title' => 'edit record',
             'btn_separator' => ' ',
@@ -171,13 +161,13 @@ class Library_members extends CI_Controller {
             'btn_separator' => '',
             'param' => array('$1'),
             'style' => '',
-            'attr' => 'data-member_id="$1"'
+            'attr' => 'data-delegated_role_id="$1"'
         );
         $button_set = get_link_buttons($grid_buttons);
         $data['button_set'] = $button_set;
 
         if ($this->input->is_ajax_request()) {
-            $returned_list = $this->library_member->get_library_member_datatable($data);
+            $returned_list = $this->delegated_role->get_delegated_role_datatable($data);
             echo $returned_list;
             exit();
         }
@@ -185,7 +175,7 @@ class Library_members extends CI_Controller {
         $dt_tool_btn = array(
             array(
                 'btn_class' => 'btn-primary',
-                'btn_href' => base_url('library/library_members/create'),
+                'btn_href' => base_url('rbac/delegated_roles/create'),
                 'btn_icon' => '',
                 'btn_title' => 'Create',
                 'btn_text' => 'Create',
@@ -213,11 +203,11 @@ class Library_members extends CI_Controller {
         $dt_tool_btn = get_link_buttons($dt_tool_btn);
 
         $config = array(
-            'dt_markup' => TRUE,
+            'dt_markup' => true,
             'dt_id' => 'raw_cert_data_dt_table',
             'dt_header' => $header,
             'dt_ajax' => array(
-                'dt_url' => base_url('library/library_members/index'),
+                'dt_url' => base_url('rbac/delegated_roles/index'),
             ),
             'custom_lengh_change' => false,
             'dt_dom' => array(
@@ -239,20 +229,18 @@ class Library_members extends CI_Controller {
     }
 
     /**
-     * Export_grid_data Method
-     * 
-     * @param   
-     * @desc    
-     * @return 
-     * @author  HimansuS                  
-     * @since   11/08/2018
+     * @param              : 
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:09/29/2018
      */
     public function export_grid_data() {
-        if ($this->input->is_ajax_request()):
+        if ($this->input->is_ajax_request()) :
             $export_type = $this->input->post('export_type');
-            $tableHeading = array('card_no' => 'card_no', 'date_issue' => 'date_issue', 'expiry_date' => 'expiry_date', 'user_id' => 'user_id', 'user_role_id' => 'user_role_id', 'created' => 'created', 'created_by' => 'created_by', 'status' => 'status',);
-            $cols = 'card_no,date_issue,expiry_date,user_id,user_role_id,created,created_by,status';
-            $data = $this->library_member->get_library_member_datatable(null, true, $tableHeading);
+            $tableHeading = array('role_id' => 'role_id', 'role_code' => 'role_code', 'user_id' => 'user_id', 'delegated_by' => 'delegated_by', 'created' => 'created', 'modified' => 'modified', 'status' => 'status',);
+            $cols = 'role_id,role_code,user_id,delegated_by,created,modified,status';
+            $data = $this->delegated_role->get_delegated_role_datatable(null, true, $tableHeading);
             $head_cols = $body_col_map = array();
             $date = array(
                 array(
@@ -268,8 +256,8 @@ class Library_members extends CI_Controller {
                 $body_col_map[] = array('db_column' => $db_col);
             }
             $header = array($date, $head_cols);
-            $worksheet_name = 'library_members';
-            $file_name = 'library_members' . date('d_m_Y_H_i_s') . '.' . $export_type;
+            $worksheet_name = 'delegated_roles';
+            $file_name = 'delegated_roles' . date('d_m_Y_H_i_s') . '.' . $export_type;
             $config = array(
                 'db_data' => $data['aaData'],
                 'header_rows' => $header,
@@ -291,34 +279,27 @@ class Library_members extends CI_Controller {
     }
 
     /**
-     * Create Method
-     * 
-     * @param   
-     * @desc    
-     * @return 
-     * @author  HimansuS                  
-     * @since   11/08/2018
+     * @param              : 
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:09/29/2018
      */
     public function create() {
-        $this->breadcrumbs->push('create', '/library/library_members/create');
+        $this->breadcrumbs->push('create', '/rbac/delegated_roles/create');
 
-        $this->layout->navTitle = 'Library member create';
+        $this->layout->navTitle = 'Delegated role create';
         $data = array();
-        if ($this->input->post()):
+        if ($this->input->post()) :
             $config = array(
                 array(
-                    'field' => 'card_no',
-                    'label' => 'card_no',
+                    'field' => 'role_id',
+                    'label' => 'role_id',
                     'rules' => 'required'
                 ),
                 array(
-                    'field' => 'date_issue',
-                    'label' => 'date_issue',
-                    'rules' => 'required'
-                ),
-                array(
-                    'field' => 'expiry_date',
-                    'label' => 'expiry_date',
+                    'field' => 'role_code',
+                    'label' => 'role_code',
                     'rules' => 'required'
                 ),
                 array(
@@ -327,60 +308,55 @@ class Library_members extends CI_Controller {
                     'rules' => 'required'
                 ),
                 array(
-                    'field' => 'user_role_id',
-                    'label' => 'user_role_id',
+                    'field' => 'delegated_by',
+                    'label' => 'delegated_by',
                     'rules' => 'required'
                 ),
             );
             $this->form_validation->set_rules($config);
 
-            if ($this->form_validation->run()):
+            if ($this->form_validation->run()) :
 
                 $data['data'] = $this->input->post();
-                $result = $this->library_member->save($data['data']);
+                $result = $this->delegated_role->save($data['data']);
 
-                if ($result >= 1):
+                if ($result >= 1) :
                     $this->session->set_flashdata('success', 'Record successfully saved!');
-                    redirect('/library/library_members');
+                    redirect('/rbac/delegated_roles');
                 else:
                     $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
                 endif;
             endif;
         endif;
+        $data['delegated_by_list'] = $this->delegated_role->get_rbac_users_options('user_id', 'user_id');
+        $data['role_id_list'] = $this->delegated_role->get_rbac_roles_options('role_id', 'role_id');
         $this->layout->data = $data;
         $this->layout->render();
     }
 
     /**
-     * Edit Method
-     * 
-     * @param   $member_id=null
-     * @desc    
-     * @return 
-     * @author  HimansuS                  
-     * @since   11/08/2018
+     * @param              : $delegated_role_id=null
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:09/29/2018
      */
-    public function edit($member_id = null) {
-        $this->breadcrumbs->push('edit', '/library/library_members/edit');
+    public function edit($delegated_role_id = null) {
+        $this->breadcrumbs->push('edit', '/rbac/delegated_roles/edit');
 
-        $this->layout->navTitle = 'Library member edit';
+        $this->layout->navTitle = 'Delegated role edit';
         $data = array();
-        if ($this->input->post()):
+        if ($this->input->post()) :
             $data['data'] = $this->input->post();
             $config = array(
                 array(
-                    'field' => 'card_no',
-                    'label' => 'card_no',
+                    'field' => 'role_id',
+                    'label' => 'role_id',
                     'rules' => 'required'
                 ),
                 array(
-                    'field' => 'date_issue',
-                    'label' => 'date_issue',
-                    'rules' => 'required'
-                ),
-                array(
-                    'field' => 'expiry_date',
-                    'label' => 'expiry_date',
+                    'field' => 'role_code',
+                    'label' => 'role_code',
                     'rules' => 'required'
                 ),
                 array(
@@ -389,53 +365,53 @@ class Library_members extends CI_Controller {
                     'rules' => 'required'
                 ),
                 array(
-                    'field' => 'user_role_id',
-                    'label' => 'user_role_id',
+                    'field' => 'delegated_by',
+                    'label' => 'delegated_by',
                     'rules' => 'required'
                 ),
             );
             $this->form_validation->set_rules($config);
 
-            if ($this->form_validation->run()):
-                $result = $this->library_member->update($data['data']);
-                if ($result >= 1):
+            if ($this->form_validation->run()) :
+                $result = $this->delegated_role->update($data['data']);
+                if ($result >= 1) :
                     $this->session->set_flashdata('success', 'Record successfully updated!');
-                    redirect('/library/library_members');
+                    redirect('/rbac/delegated_roles');
                 else:
                     $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
                 endif;
             endif;
         else:
-            $member_id = c_decode($member_id);
-            $result = $this->library_member->get_library_member(null, array('member_id' => $member_id));
-            if ($result):
+            $delegated_role_id = c_decode($delegated_role_id);
+            $result = $this->delegated_role->get_delegated_role(null, array('delegated_role_id' => $delegated_role_id));
+            if ($result) :
                 $result = current($result);
             endif;
             $data['data'] = $result;
         endif;
+        $data['delegated_by_list'] = $this->delegated_role->get_rbac_users_options('user_id', 'user_id');
+        $data['role_id_list'] = $this->delegated_role->get_rbac_roles_options('role_id', 'role_id');
         $this->layout->data = $data;
         $this->layout->render();
     }
 
     /**
-     * View Method
-     * 
-     * @param   $member_id
-     * @desc    
-     * @return 
-     * @author  HimansuS                  
-     * @since   11/08/2018
+     * @param              : $delegated_role_id
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:09/29/2018
      */
-    public function view($member_id) {
-        $this->breadcrumbs->push('view', '/library/library_members/view');
+    public function view($delegated_role_id) {
+        $this->breadcrumbs->push('view', '/rbac/delegated_roles/view');
 
         $data = array();
-        if ($member_id):
-            $member_id = c_decode($member_id);
+        if ($delegated_role_id) :
+            $delegated_role_id = c_decode($delegated_role_id);
 
-            $this->layout->navTitle = 'Library member view';
-            $result = $this->library_member->get_library_member(null, array('member_id' => $member_id), 1);
-            if ($result):
+            $this->layout->navTitle = 'Delegated role view';
+            $result = $this->delegated_role->get_delegated_role(null, array('delegated_role_id' => $delegated_role_id), 1);
+            if ($result) :
                 $result = current($result);
             endif;
 
@@ -448,22 +424,20 @@ class Library_members extends CI_Controller {
     }
 
     /**
-     * Delete Method
-     * 
-     * @param   
-     * @desc    
-     * @return 
-     * @author  HimansuS                  
-     * @since   11/08/2018
+     * @param              : 
+     * @desc               :
+     * @return             :
+     * @author             :
+     * @created:09/29/2018
      */
     public function delete() {
-        if ($this->input->is_ajax_request()):
-            $member_id = $this->input->post('member_id');
-            if ($member_id):
-                $member_id = c_decode($member_id);
+        if ($this->input->is_ajax_request()) :
+            $delegated_role_id = $this->input->post('delegated_role_id');
+            if ($delegated_role_id) :
+                $delegated_role_id = c_decode($delegated_role_id);
 
-                $result = $this->library_member->delete($member_id);
-                if ($result):
+                $result = $this->delegated_role->delete($delegated_role_id);
+                if ($result) :
                     echo 1;
                     exit();
                 else:

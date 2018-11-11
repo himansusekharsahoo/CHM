@@ -45,23 +45,29 @@ class Rbac_role_permissions extends CI_Controller {
     public function role_permissions() {
         $this->layout->navTitle = 'Role Permissions';
         $data = array();
-        $role_options = $this->rbac_role_permission->get_rbac_roles_options('name');
+        $user_id = $this->rbac->get_user_id();
+        $condition = array('created_by' => $user_id);
+        $role_options = $this->rbac_role_permission->get_rbac_roles_options('name', null, $condition);
         $role_options = array_slice($role_options, 1, null, true);
-        $role_codes = $this->rbac_role_permission->get_rbac_roles_options('code');
+        $role_codes = $this->rbac_role_permission->get_rbac_roles_options('code', null, $condition);
         $role_codes = array_slice($role_codes, 1, null, true);
 
-        $condition = array('t1.status' => 'active');
-        $permission_masters = $this->rbac_role_permission->get_rbac_permissions_options('permission_id', 'permission_id', $condition);
-        //$permission_masters=  flattenArray($permission_masters);
-        $permission_masters_all = $this->rbac_role_permission->get_rbac_permissions(null, $condition);
-        $conditions=array('t1.status'=>'active');
-        $existing_role_permissions = $this->rbac_role_permission->get_rbac_role_permission(null,$conditions);
-        //pma($existing_role_permissions);
+        if ($this->rbac->has_role('DEVELOPER')) {
+            $condition = array('t1.status' => 'active');
+            $permission_masters_all = $this->rbac_role_permission->get_rbac_permissions(null, $condition);
+        } else {
+            $user_role_ids = $this->rbac->get_role_ids();
+            $user_role_ids = implode(",", $user_role_ids);
+            $condition = "t1.status='active' AND t1.role_id IN($user_role_ids)";
+            $permission_masters_all = $this->rbac_role_permission->get_rbac_role_permission(null, $condition);
+        }        
 
+        $conditions = array('t1.status' => 'active');
+        $existing_role_permissions = $this->rbac_role_permission->get_rbac_role_permission(null, $conditions);
+        
         $action_options = $action_codes = $existing_perms = array();
         $data = array(
-            'role_options' => $role_options,
-            'permission_master_ids' => $permission_masters,
+            'role_options' => $role_options,            
             'permission_master_all' => $permission_masters_all,
             'existing_role_permissions' => $existing_role_permissions
         );

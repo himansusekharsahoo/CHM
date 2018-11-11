@@ -1,5 +1,4 @@
 <?php
-
 /**
  * NOTE:-
  * 1. Declare only the constants for global configuration

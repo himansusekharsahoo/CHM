@@ -64,12 +64,11 @@ class Admin_users extends CI_Controller {
                 if ($user_detail) {
                     $admin_flag = FALSE;
                     $menus = $permissions = array();
-                    if (in_array('ADMIN', $user_detail['role_codes'])) {
+                    if (in_array('DEVELOPER', $user_detail['role_codes'])) {
                         //fetch all the permissions
                         $condition = '';
-                        $permissions = $this->rbac_role_permission->get_rbac_role_permission_lib(null, null, TRUE);
-                        //$menus = $this->rbac_role_permission->get_rbac_role_permission_lib(null, $condition, TRUE);pma('hello',1);
-                        //pma($menus,1);
+                        $permissions = $this->rbac_role_permission->get_rbac_role_permission_lib(null, null, TRUE);                        
+                        //pma($permissions,1);
                     } else {
                         //fetch only assigned permissions
                         $role_ids = array_column($user_detail['roles'], 'role_id');
