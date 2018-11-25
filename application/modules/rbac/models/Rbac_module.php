@@ -16,13 +16,6 @@ class Rbac_module extends CI_Model
     public function __construct()
     {
         parent::__construct();
-
-
-        $this->layout->layout = 'admin_layout';
-        $this->layout->layoutsFolder = 'layouts/admin';
-        $this->layout->lMmenuFlag = 1;
-        $this->layout->rightControlFlag = 1;
-        $this->layout->navTitleFlag = 1;
     }
 
     /**

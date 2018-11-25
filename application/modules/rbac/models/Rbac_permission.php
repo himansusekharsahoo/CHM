@@ -16,14 +16,8 @@ class Rbac_permission extends CI_Model
     public function __construct()
     {
         parent::__construct();
-
         $this->load->model('rbac/rbac_action');
         $this->load->model('rbac/rbac_module');
-        $this->layout->layout = 'admin_layout';
-        $this->layout->layoutsFolder = 'layouts/admin';
-        $this->layout->lMmenuFlag = 1;
-        $this->layout->rightControlFlag = 1;
-        $this->layout->navTitleFlag = 1;
     }
 
      /**

@@ -16,9 +16,7 @@ class Rbac_user_roles extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-
         $this->load->model('rbac_user_role');
-        $this->load->library('pagination');
         $this->load->library('form_validation');
         $this->layout->layout = 'admin_layout';
         $this->layout->layoutsFolder = 'layouts/admin';
