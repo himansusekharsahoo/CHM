@@ -358,7 +358,7 @@ class Book_ledgers extends CI_Controller {
     public function create() {
         $this->breadcrumbs->push('create', '/library/book_ledgers/create');
 
-        $this->layout->navTitle = 'Book ledger create';
+        $this->layout->navTitle = '';
         $data = array();
         if ($this->input->post()):
             $config = array(
@@ -438,11 +438,11 @@ class Book_ledgers extends CI_Controller {
                 endif;
             endif;
         endif;
-        $data['bauthor_id_list'] = $this->book_ledger->get_book_author_masters_options('bauthor_id', 'bauthor_id');
-        $data['bcategory_id_list'] = $this->book_ledger->get_book_category_masters_options('bcategory_id', 'bcategory_id');
-        $data['book_id_list'] = $this->book_ledger->get_books_options('book_id', 'book_id');
-        $data['blocation_id_list'] = $this->book_ledger->get_book_location_masters_options('blocation_id', 'blocation_id');
-        $data['bpublication_id_list'] = $this->book_ledger->get_book_publication_masters_options('publication_id', 'publication_id');
+        $data['bauthor_id_list'] = $this->book_ledger->get_book_author_masters_options('author_name', 'bauthor_id');
+        $data['bcategory_id_list'] = $this->book_ledger->get_book_category_masters_options('name', 'bcategory_id');
+        $data['book_id_list'] = $this->book_ledger->get_books_options('name', 'book_id');
+        $data['blocation_id_list'] = $this->book_ledger->get_book_location_masters_options('block', 'blocation_id');
+        $data['bpublication_id_list'] = $this->book_ledger->get_book_publication_masters_options('name', 'publication_id');
         $this->layout->data = $data;
         $this->layout->render();
     }

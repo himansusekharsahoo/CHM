@@ -294,7 +294,7 @@ class Books extends CI_Controller {
     public function create() {
         $this->breadcrumbs->push('create', '/library/books/create');
 
-        $this->layout->navTitle = 'Book create';
+        $this->layout->navTitle = 'Add new book';
         $data = array();
         if ($this->input->post()):
             $config = array(
