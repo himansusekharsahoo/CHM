@@ -64,7 +64,7 @@ class Book_ledgers extends CI_Controller {
 
         $this->breadcrumbs->push('index', '/library/book_ledgers/index');
         $this->scripts_include->includePlugins(array('datatable'), 'css');
-        $this->scripts_include->includePlugins(array('datatable'), 'js');
+        $this->scripts_include->includePlugins(array('datatable', 'jq_validation'), 'js');
         $this->layout->navTitle = 'Book ledger list';
         $this->layout->title = 'Book ledger list';
         $header = array(
@@ -416,12 +416,7 @@ class Book_ledgers extends CI_Controller {
                     'field' => 'qr_code',
                     'label' => 'qr_code',
                     'rules' => 'required'
-                ),
-                array(
-                    'field' => 'midified_by',
-                    'label' => 'midified_by',
-                    'rules' => 'required'
-                ),
+                )
             );
             $this->form_validation->set_rules($config);
 

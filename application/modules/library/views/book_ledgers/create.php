@@ -1,3 +1,4 @@
+<script src="<?php echo base_url('assets/bower_components/jquery-validation/dist/jquery.validate.js'); ?>"></script>
 <div class="col-sm-6">
     <div class="box box-primary">
         <div class="box-header with-border">
@@ -20,9 +21,8 @@
                     $attribute = array(
                         "name" => "book_id",
                         "id" => "book_id",
-                        "class" => "form-control",
+                        "class" => "form-control required",
                         "title" => "",
-                        "required" => "",
                     );
                     $book_id = (isset($data['book_id'])) ? $data['book_id'] : '';
                     echo form_error("book_id");
@@ -37,9 +37,8 @@
                     $attribute = array(
                         "name" => "bcategory_id",
                         "id" => "bcategory_id",
-                        "class" => "form-control",
+                        "class" => "form-control required",
                         "title" => "",
-                        "required" => "",
                     );
                     $bcategory_id = (isset($data['bcategory_id'])) ? $data['bcategory_id'] : '';
                     echo form_error("bcategory_id");
@@ -54,9 +53,8 @@
                     $attribute = array(
                         "name" => "bpublication_id",
                         "id" => "bpublication_id",
-                        "class" => "form-control",
+                        "class" => "form-control required",
                         "title" => "",
-                        "required" => "",
                     );
                     $bpublication_id = (isset($data['bpublication_id'])) ? $data['bpublication_id'] : '';
                     echo form_error("bpublication_id");
@@ -71,9 +69,8 @@
                     $attribute = array(
                         "name" => "bauthor_id",
                         "id" => "bauthor_id",
-                        "class" => "form-control",
+                        "class" => "form-control required",
                         "title" => "",
-                        "required" => "",
                     );
                     $bauthor_id = (isset($data['bauthor_id'])) ? $data['bauthor_id'] : '';
                     echo form_error("bauthor_id");
@@ -88,9 +85,8 @@
                     $attribute = array(
                         "name" => "blocation_id",
                         "id" => "blocation_id",
-                        "class" => "form-control",
+                        "class" => "form-control required",
                         "title" => "",
-                        "required" => "",
                     );
                     $blocation_id = (isset($data['blocation_id'])) ? $data['blocation_id'] : '';
                     echo form_error("blocation_id");
@@ -105,9 +101,8 @@
                     $attribute = array(
                         "name" => "page",
                         "id" => "page",
-                        "class" => "form-control",
+                        "class" => "form-control required",
                         "title" => "",
-                        "required" => "",
                         "type" => "number",
                         "value" => (isset($data["page"])) ? $data["page"] : ""
                     );
@@ -123,9 +118,8 @@
                     $attribute = array(
                         "name" => "mrp",
                         "id" => "mrp",
-                        "class" => "form-control",
+                        "class" => "form-control required",
                         "title" => "",
-                        "required" => "",
                         "type" => "text",
                         "value" => (isset($data["mrp"])) ? $data["mrp"] : ""
                     );
@@ -141,9 +135,8 @@
                     $attribute = array(
                         "name" => "isbn_no",
                         "id" => "isbn_no",
-                        "class" => "form-control",
+                        "class" => "form-control required",
                         "title" => "",
-                        "required" => "",
                         "type" => "text",
                         "value" => (isset($data["isbn_no"])) ? $data["isbn_no"] : ""
                     );
@@ -159,9 +152,8 @@
                     $attribute = array(
                         "name" => "edition",
                         "id" => "edition",
-                        "class" => "form-control",
+                        "class" => "form-control required",
                         "title" => "",
-                        "required" => "",
                         "type" => "text",
                         "value" => (isset($data["edition"])) ? $data["edition"] : ""
                     );
@@ -177,9 +169,8 @@
                     $attribute = array(
                         "name" => "bar_code",
                         "id" => "bar_code",
-                        "class" => "form-control",
+                        "class" => "form-control required",
                         "title" => "",
-                        "required" => "",
                         "type" => "text",
                         "value" => (isset($data["bar_code"])) ? $data["bar_code"] : ""
                     );
@@ -195,31 +186,12 @@
                     $attribute = array(
                         "name" => "qr_code",
                         "id" => "qr_code",
-                        "class" => "form-control",
+                        "class" => "form-control required",
                         "title" => "",
-                        "required" => "",
                         "type" => "text",
                         "value" => (isset($data["qr_code"])) ? $data["qr_code"] : ""
                     );
                     echo form_error("qr_code");
-                    echo form_input($attribute);
-                    ?>
-                </div>
-            </div>
-            <div class = 'form-group row'>
-                <label for = 'midified_by' class = 'col-sm-3 col-form-label'>Modified by: </label>
-                <div class = 'col-sm-5'>
-                    <?php
-                    $attribute = array(
-                        "name" => "midified_by",
-                        "id" => "midified_by",
-                        "class" => "form-control",
-                        "title" => "",
-                        "required" => "",
-                        "type" => "number",
-                        "value" => (isset($data["midified_by"])) ? $data["midified_by"] : ""
-                    );
-                    echo form_error("midified_by");
                     echo form_input($attribute);
                     ?>
                 </div>
@@ -232,10 +204,39 @@
                     </a>
                 </div>
                 <div class = 'col-sm-3'>
-                    <input type="submit" id="submit" value="Save" class="btn btn-primary">
+                    <input type="submit" id="submit" name="submit" value="Save" class="btn btn-primary">
                 </div>
             </div>
             <?= form_close() ?>
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#book_ledgers').validate({
+            messages: {
+                book_id: 'Book name is required',
+                bcategory_id: 'Book category is required',
+                bpublication_id: 'Book publication is required',
+                bauthor_id: 'Book author is required',
+                blocation_id: 'Books location is required',
+                page: 'Number of pages in books is required',
+                mrp: 'MRP of book is required',
+                isbn_no: 'ISBN of book is required',
+                edition: 'Book edition is required',
+                bar_code: 'Bar code of books is required',
+                qr_code: 'QR code is required',
+
+            }
+        });
+        $('#book_ledgers').on('click', '#submit', function (e) {
+
+            if ($('#book_ledgers').valid()) {
+                $('#book_ledgers').submit();
+            } else {
+                alert('invalid');
+            }
+            e.preventDefault();
+        });
+    });
+</script>
