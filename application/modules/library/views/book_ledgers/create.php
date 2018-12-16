@@ -1,4 +1,3 @@
-<script src="<?php echo base_url('assets/bower_components/jquery-validation/dist/jquery.validate.js'); ?>"></script>
 <div class="col-sm-6">
     <div class="box box-primary">
         <div class="box-header with-border">
@@ -227,14 +226,17 @@
                 bar_code: 'Bar code of books is required',
                 qr_code: 'QR code is required',
 
+            },
+            submitHandler: function (form) {
+                if ($(form).valid())
+                    form.submit();
+                return false; // prevent normal form posting
             }
         });
         $('#book_ledgers').on('click', '#submit', function (e) {
 
             if ($('#book_ledgers').valid()) {
                 $('#book_ledgers').submit();
-            } else {
-                alert('invalid');
             }
             e.preventDefault();
         });

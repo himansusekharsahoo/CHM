@@ -69,41 +69,41 @@ class Book_ledgers extends CI_Controller {
         $this->layout->title = 'Book ledger list';
         $header = array(
             array(
-                'db_column' => 'book_id',
-                'name' => 'Book_id',
-                'title' => 'Book_id',
+                'db_column' => 'book_name',
+                'name' => 'book_name',
+                'title' => 'Book name',
                 'class_name' => 'dt_name',
                 'orderable' => 'true',
                 'visible' => 'true',
                 'searchable' => 'true'
             ), array(
-                'db_column' => 'bcategory_id',
+                'db_column' => 'bcategory_name',
                 'name' => 'Bcategory_id',
-                'title' => 'Bcategory_id',
+                'title' => 'Book category',
                 'class_name' => 'dt_name',
                 'orderable' => 'true',
                 'visible' => 'true',
                 'searchable' => 'true'
             ), array(
-                'db_column' => 'bpublication_id',
+                'db_column' => 'publicatoin_name',
                 'name' => 'Bpublication_id',
-                'title' => 'Bpublication_id',
+                'title' => 'Publication',
                 'class_name' => 'dt_name',
                 'orderable' => 'true',
                 'visible' => 'true',
                 'searchable' => 'true'
             ), array(
-                'db_column' => 'bauthor_id',
+                'db_column' => 'author_name',
                 'name' => 'Bauthor_id',
-                'title' => 'Bauthor_id',
+                'title' => 'Author',
                 'class_name' => 'dt_name',
                 'orderable' => 'true',
                 'visible' => 'true',
                 'searchable' => 'true'
             ), array(
-                'db_column' => 'blocation_id',
+                'db_column' => 'location',
                 'name' => 'Blocation_id',
-                'title' => 'Blocation_id',
+                'title' => 'Location',
                 'class_name' => 'dt_name',
                 'orderable' => 'true',
                 'visible' => 'true',
@@ -357,6 +357,7 @@ class Book_ledgers extends CI_Controller {
      */
     public function create() {
         $this->breadcrumbs->push('create', '/library/book_ledgers/create');
+        $this->scripts_include->includePlugins(array('jq_validation'), 'js');
 
         $this->layout->navTitle = '';
         $data = array();
@@ -423,6 +424,7 @@ class Book_ledgers extends CI_Controller {
             if ($this->form_validation->run()):
 
                 $data['data'] = $this->input->post();
+                unset($data['data']['submit']);
                 $result = $this->book_ledger->save($data['data']);
 
                 if ($result >= 1):
@@ -453,6 +455,7 @@ class Book_ledgers extends CI_Controller {
      */
     public function edit($bledger_id = null) {
         $this->breadcrumbs->push('edit', '/library/book_ledgers/edit');
+        $this->scripts_include->includePlugins(array('jq_validation'), 'js');
 
         $this->layout->navTitle = 'Book ledger edit';
         $data = array();
@@ -513,16 +516,12 @@ class Book_ledgers extends CI_Controller {
                     'field' => 'qr_code',
                     'label' => 'qr_code',
                     'rules' => 'required'
-                ),
-                array(
-                    'field' => 'midified_by',
-                    'label' => 'midified_by',
-                    'rules' => 'required'
-                ),
+                )
             );
             $this->form_validation->set_rules($config);
 
             if ($this->form_validation->run()):
+                $data['data']['modified'] = date("Y-m-d H:i:s");
                 $result = $this->book_ledger->update($data['data']);
                 if ($result >= 1):
                     $this->session->set_flashdata('success', 'Record successfully updated!');
@@ -539,11 +538,12 @@ class Book_ledgers extends CI_Controller {
             endif;
             $data['data'] = $result;
         endif;
-        $data['bauthor_id_list'] = $this->book_ledger->get_book_author_masters_options('bauthor_id', 'bauthor_id');
-        $data['bcategory_id_list'] = $this->book_ledger->get_book_category_masters_options('bcategory_id', 'bcategory_id');
-        $data['book_id_list'] = $this->book_ledger->get_books_options('book_id', 'book_id');
-        $data['blocation_id_list'] = $this->book_ledger->get_book_location_masters_options('blocation_id', 'blocation_id');
-        $data['bpublication_id_list'] = $this->book_ledger->get_book_publication_masters_options('publication_id', 'publication_id');
+
+        $data['bauthor_id_list'] = $this->book_ledger->get_book_author_masters_options('author_name', 'bauthor_id');
+        $data['bcategory_id_list'] = $this->book_ledger->get_book_category_masters_options('name', 'bcategory_id');
+        $data['book_id_list'] = $this->book_ledger->get_books_options('name', 'book_id');
+        $data['blocation_id_list'] = $this->book_ledger->get_book_location_masters_options('block', 'blocation_id');
+        $data['bpublication_id_list'] = $this->book_ledger->get_book_publication_masters_options('name', 'publication_id');
         $this->layout->data = $data;
         $this->layout->render();
     }
