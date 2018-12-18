@@ -1,0 +1,60 @@
+DB - 2018-10-28 10:04:39 --> select * from rbac_menu
+            where menu_id in(
+                select parent from rbac_menu
+                where permission_id in(
+                    select permission_id 
+                    from rbac_role_permissions rrp
+                    WHERE rrp.role_id IN(7)
+                    and lower(rrp.status)='active'
+                )
+            )
+            union all
+                select * from rbac_menu
+                where permission_id in(
+                    select permission_id 
+                    from rbac_role_permissions rrp
+                    WHERE rrp.role_id IN(7)
+                    and lower(rrp.status)='active'
+                )
+              AND lower(menu_type)='l' 
+ Execution Time:0.145427942276
+DB - 2018-10-28 10:04:53 --> select * from rbac_menu
+            where menu_id in(
+                select parent from rbac_menu
+                where permission_id in(
+                    select permission_id 
+                    from rbac_role_permissions rrp
+                    WHERE rrp.role_id IN(7)
+                    and lower(rrp.status)='active'
+                )
+            )
+            union all
+                select * from rbac_menu
+                where permission_id in(
+                    select permission_id 
+                    from rbac_role_permissions rrp
+                    WHERE rrp.role_id IN(7)
+                    and lower(rrp.status)='active'
+                )
+              AND lower(menu_type)='l' 
+ Execution Time:0.0013420581817627
+DB - 2018-10-28 10:04:57 --> select * from rbac_menu
+            where menu_id in(
+                select parent from rbac_menu
+                where permission_id in(
+                    select permission_id 
+                    from rbac_role_permissions rrp
+                    WHERE rrp.role_id IN(7)
+                    and lower(rrp.status)='active'
+                )
+            )
+            union all
+                select * from rbac_menu
+                where permission_id in(
+                    select permission_id 
+                    from rbac_role_permissions rrp
+                    WHERE rrp.role_id IN(7)
+                    and lower(rrp.status)='active'
+                )
+              AND lower(menu_type)='l' 
+ Execution Time:0.0014300346374512

@@ -65,7 +65,8 @@ class Scripts_include {
         'tree' => array('/js/tree.js'),
         'jstree' => array(COMPONENT_PATH . 'jstree/dist/jstree.min.js'),
         'promise' => array(COMPONENT_PATH . 'bluebird/js/browser/bluebird.min.js'),
-        'bs_multiselect' => array('/assets/layout/default/bootstrap/js/bootstrap-multiselect.js')
+        'bs_multiselect' => array('/assets/layout/default/bootstrap/js/bootstrap-multiselect.js'),
+        'js_validation' => array('/assets/bower_components/jquery-validation/jquery.validate.js'),
     );
     private $__cssFiles = array(
         'admin_layout' => array(
@@ -128,7 +129,7 @@ class Scripts_include {
             foreach ($this->cssFile as $pluginName) {
                 if (array_key_exists($pluginName, $this->__cssFiles[$layout])) {
                     foreach ($this->__cssFiles[$layout][$pluginName] as $files) {
-                        $str.='<link rel="stylesheet" href="' . base_url($files) . '" />';
+                        $str .= '<link rel="stylesheet" href="' . base_url($files) . '" />';
                     }
                 }
             }
@@ -146,10 +147,10 @@ class Scripts_include {
                     foreach ($this->__jsFiles[$layout][$pluginName] as $key => $files) {
                         if (is_array($files)) {
                             foreach ($files as $scripts) {
-                                $str.=$scripts;
+                                $str .= $scripts;
                             }
                         } else {
-                            $str.='<script src="' . base_url($files) . '" ></script>';
+                            $str .= '<script src="' . base_url($files) . '" ></script>';
                         }
                     }
                 }
@@ -163,7 +164,7 @@ class Scripts_include {
         $str = '';
         if (isset($this->__jsFiles[$layout]['top'])) {
             foreach ($this->__jsFiles[$layout]['top'] as $files) {
-                $str.='<script src="' . base_url($files) . '" ></script>';
+                $str .= '<script src="' . base_url($files) . '" ></script>';
             }
         }
         return $str;
