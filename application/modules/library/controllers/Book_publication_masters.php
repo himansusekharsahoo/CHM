@@ -109,7 +109,7 @@ class Book_publication_masters extends CI_Controller {
                 'visible' => 'true',
                 'searchable' => 'true'
             ), array(
-                'db_column' => 'created_by',
+                'db_column' => 'created_by_name',
                 'name' => 'Created_by',
                 'title' => 'Created_by',
                 'class_name' => 'dt_name',
@@ -310,7 +310,9 @@ class Book_publication_masters extends CI_Controller {
 
             if ($this->form_validation->run()):
 
-                $data['data'] = $this->input->post();
+                $post_data = $this->input->post();
+                $post_data['created_by']=  $this->rbac->get_user_id();
+                $data['data'] = $post_data;
                 $result = $this->book_publication_master->save($data['data']);
 
                 if ($result >= 1):

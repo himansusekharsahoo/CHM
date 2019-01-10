@@ -37,6 +37,14 @@ class C_datatable {
         "__dt_object__" = $(\'#"__dt_selector__"\').DataTable({
             "__dt_options__"
         }); ';
+
+    /**
+     * Datatable sleep
+     */
+    private $_dt_sleep = '
+        setTimeout(function () {
+            "__dt_codes__"
+        }, "__dt_interval__");';
     /*     * ****Datatable Constructor***** */
 
     /**
@@ -142,11 +150,12 @@ class C_datatable {
             'sScrollX' => false,
             'bScrollCollapse' => false,
             'bSortCellsTop' => 'true',
-            'iDisplayLength' => 15,
+            'iDisplayLength' => 10,
             'iDisplayStart' => 0,
             'sScrollXInner' => false,
             'searching' => 'true',
-            'lengthMenu' => array(15, 30, 50, 100),
+            'lengthMenu' => array(1, 10, 20, 30, 50, 100),
+            //'destroy'=> 'true',
             'order' => array(
                 array(
                     'column' => 0,
@@ -221,7 +230,8 @@ class C_datatable {
             ),
             'options' => $this->_dt_options,
             'callbacks' => false,
-            'show_loading' => true
+            'show_loading' => true,
+            'dt_sleep' => false
         );
     }
 
@@ -278,7 +288,8 @@ class C_datatable {
                 $columns.='searchable:' . $searchable . ',';
 
                 if (isset($cols['data'])) {
-                    //$columns.='data:' . $cols['data'] . '';
+                    $columns.='data:' . $cols['data'] . '';
+                    //$columns.='data:function (item) {return \'<a href="#" data-filter-id="\' + item.FILTER_ID + \'" class="rev_orange_link load_table_filter">\' + item.FILTER_TITLE + \'</a>\';}';
                 } else {
                     //$columns.='data:function(item) {
                     //                return item.' . $cols['db_column'] . ';
@@ -289,7 +300,6 @@ class C_datatable {
             $columns = substr($columns, 0, -1);
             $columns.=']';
             $this->_dt_configs['options']['columns'] = $columns;
-            
         }
     }
 
@@ -306,14 +316,14 @@ class C_datatable {
                 //set length change
                 if (isset($dt_dom['top_length_change']) && $dt_dom['top_length_change']) {
                     $dom .= ' <"col-md-2 no-pad" l>';
-                }else{
+                } else {
                     $dom .= ' <"col-md-2 no-pad">';
                 }
                 $dom .= ' <"col-md-10 no-pad" <"col-md-12 no-pad"';
 
                 //set top filter
                 if (isset($dt_dom['top_pagination']) && $dt_dom['top_pagination']) {
-                    $dom .= ' <"pull-right" p>';
+                    $dom .= ' <"pull-right pagination_holder" p>';
                 }
                 //set top filter
                 if (isset($dt_dom['top_filter']) && $dt_dom['top_filter']) {
@@ -322,7 +332,7 @@ class C_datatable {
 
                 //set top buttons
                 if (isset($dt_dom['top_buttons']) && $dt_dom['top_buttons']) {
-                    $dom .= ' <"'.$this->_dt_id.'_dt_button pull-right marginR5 marginT5">';
+                    $dom .= ' <"' . $this->_dt_id . '_dt_button pull-right marginR5 marginT5">';
                     $this->_dom_buttons = $dt_dom['top_buttons'];
                 }
 
@@ -335,7 +345,7 @@ class C_datatable {
                 //set length change
                 if (isset($dt_dom['buttom_length_change'])) {
                     $dom .= ' <"col-md-2 no-pad" l>';
-                }else{
+                } else {
                     $dom .= ' <"col-md-2 no-pad">';
                 }
                 $dom .= ' <"col-md-10 no-pad" <"col-md-12 no-pad"';
@@ -380,7 +390,7 @@ class C_datatable {
         if ($this->_dom_buttons) {
             $append_buttons = 'if ($.fn.DataTable.isDataTable($(\'#' . $this->_dt_id . '\'))) {
                         if (typeof ' . $this->_dt_obj . ' != \'undefined\') {
-                            $(".'.$this->_dt_id.'_dt_button").append(\'' . $this->_dom_buttons . '\');
+                            $(".' . $this->_dt_id . '_dt_button").append(\'' . $this->_dom_buttons . '\');
                         }
                     }' . PHP_EOL;
         }
@@ -402,6 +412,10 @@ class C_datatable {
             $ajax = '{';
             $ajax.='"beforeSend":function(){' . $show_loading . PHP_EOL . $this->_dt_configs['dt_ajax']['before_send'] . '},';
             $ajax.='"complete":function(){' . $hide_loading . PHP_EOL . $this->_dt_configs['dt_ajax']['complete'] . '},';
+            if (!isset($this->_dt_configs['dt_ajax']['async'])) {
+                $this->_dt_configs['dt_ajax']['async'] = 'true';
+            }
+            $ajax.='"async":"' . $this->_dt_configs['dt_ajax']['async'] . '",';
             $ajax.='"url":"' . $this->_dt_configs['dt_ajax']['dt_url'] . '",';
             $ajax.='"type":"' . $this->_dt_configs['dt_ajax']['dt_request_type'] . '",';
             $ajax.='"dataType":"' . $this->_dt_configs['dt_ajax']['dt_response_type'] . '",';
@@ -410,7 +424,6 @@ class C_datatable {
             $this->_dt_configs['options']['ajax'] = $ajax;
             //$this->_dt_configs['options']['sAjaxSource'] = $this->_dt_configs['dt_ajax']['dt_url'];
             //$this->_dt_configs['options']['sServerMethod'] ='POST';
-            
         }
     }
 
@@ -568,6 +581,7 @@ class C_datatable {
 
         if (is_string($extra_header) && strlen(trim($extra_header) > 1)) {
             //TODO::now showing error if we pass string
+            $this->_after_dt_script = '';
             $this->_after_dt_script.=$this->_dt_configs['dt_extra_header'];
         } else if (is_array($extra_header) && count($extra_header) > 0) {
             $markup = '';
@@ -599,6 +613,7 @@ class C_datatable {
             //pma($markup,1);
             $this->_after_dt_script.='var ' . $this->_dt_id . '_extra_head="' . $markup . '"; ';
             $this->_after_dt_script.="$('." . $this->_dt_id . "_table_cont').find('div.dataTables_scrollHeadInner').find('table').find('thead').prepend(" . $this->_dt_id . "_extra_head);";
+            //$this->_after_dt_script.="$('." . $this->_dt_id . "').DataTable().clear()";
         }
         return $this->_after_dt_script;
     }
@@ -615,6 +630,16 @@ class C_datatable {
         return $this;
     }
 
+//Applay datatable method
+    private function _applay_sleep() {
+        if ($this->_dt_configs['dt_sleep'] > -1) {
+            //applay interval 
+            $datatable = preg_replace('/\"__dt_codes__\"/', $this->_dt_code, $this->_dt_sleep);
+            $this->_dt_code = preg_replace('/\"__dt_interval__\"/', $this->_dt_configs['dt_sleep'], $datatable);
+        }
+        return $this;
+    }
+
     //applay extra code after dt function
     private function _applay_extra_code() {
         $this->_dt_code.=$this->_prepare_dt_extra_header();
@@ -623,6 +648,7 @@ class C_datatable {
         }
         $this->_dt_code.=$this->_set_custom_datalength_change();
         $this->_dt_code.=$this->_set_dt_buttons();
+        $this->_dt_code.=' window.win_' . $this->_dt_obj . '=' . $this->_dt_obj . ';';
         return $this;
     }
 
@@ -643,13 +669,14 @@ class C_datatable {
                 ->_prepare_dt_code()
                 ->_applay_datatable()
                 ->_applay_extra_code()
+                ->_applay_sleep()
                 ->_applay_script()
                 ->_set_table_markup()
                 ->_set_loading_markup();
         //return $this->_dt_code;
-        return '<div class="' . $this->_dt_id . '_table_cont">' . $this->_loading_markup . $this->_dt_configs['dt_markup'] . $this->_dt_code . '</div>';
+        return '<div class="' . $this->_dt_id . '_table_cont">' . $this->_loading_markup . $this->_dt_code . '</div>';
     }
-    
+
     /**
      * @param  : 
      * @desc   : reset all variable in case of multi calling of generate_grid()
@@ -657,8 +684,10 @@ class C_datatable {
      * @author : HimansuS
      * @created:
      */
-    private function _reset(){
+    private function _reset() {
         $this->_initiate_dt_configs();
+        $this->_after_dt_script = $this->_dt_code = $this->_loading_markup = $this->_dt_id = '';
         return $this;
     }
+
 }

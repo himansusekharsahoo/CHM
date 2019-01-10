@@ -61,14 +61,17 @@ class Book_author_master extends CI_Model {
     public function get_book_author_master_datatable($data = null, $export = null, $tableHeading = null, $columns = null) {
         $this->load->library('datatables');
         if (!$columns) {
-            $columns = 'bauthor_id,author_name,status,remarks,created,created_by';
+            $columns = 't1.bauthor_id,t1.author_name,t1.status,t1.remarks,t1.created';
+            $columns .= ',concat(first_name," ",last_name) created_by_name';
         }
 
         /*
          */
-        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, FALSE, FALSE)->from('book_author_masters t1');
+        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, FALSE, FALSE)
+                ->from('book_author_masters t1')
+                 ->join('rbac_users u','u.user_id=t1.created_by','LEFT');
 
-        $this->datatables->unset_column("bauthor_id");
+        $this->datatables->unset_column("t1.bauthor_id");
         if (isset($data['button_set'])):
             $this->datatables->add_column("Action", $data['button_set'], 'c_encode(bauthor_id)', 1, 1);
         endif;

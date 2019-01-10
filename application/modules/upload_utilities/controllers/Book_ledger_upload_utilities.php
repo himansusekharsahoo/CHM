@@ -1,35 +1,23 @@
 <?php
 
-//if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'COURSE_ACADEMIC_BATCH_MASTERS')) {
-//    
-//} else {
-//    $this->layout->render(array('error' => '401'));
-//}
-//
-//if ($this->input->is_ajax_request()) {
-//    
-//} else {
-//    $this->layout->data = array('status_code' => '403', 'message' => 'Request Forbidden.');
-//    $this->layout->render(array('error' => 'general'));
-//}
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 /**
- * Book_assign_logs Class File
+ * Book_ledger_upload_utilities Class File
  * PHP Version 7.1.1
  * 
  * @category   Upload Utility
  * @package    Upload Utility
- * @subpackage course academic batch upload utility
- * @class      Course_academic_batch_utilities
+ * @subpackage book ledger upload utility
+ * @class      Book_ledger_upload_utilities
  * @desc    
  * @author     HimansuS <himansu.php@gmail.com>                
  * @license    
  * @link       
  * @since   11/01/2018
  */
-class Course_academic_batch_utilities extends CI_Controller {
+class Book_ledger_upload_utilities extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
@@ -41,18 +29,18 @@ class Course_academic_batch_utilities extends CI_Controller {
         $this->layout->rightControlFlag = 1;
         $this->layout->navTitleFlag = 1;
         $this->layout->breadcrumbsFlag = false;
-        $this->load->model('Course_academic_batch_utility');
+        $this->load->model('Book_ledger_upload_utility');
     }
 
     /**
      * @param  : 
-     * @desc   :
+     * @desc   : load book ledger uplod utility page
      * @return :
      * @author : HimansuS
      * @created:
      */
     public function index() {
-        if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'COURSE_ACADEMIC_BATCH_MASTERS')) {
+        if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'BOOK_LEDGER_UPLOAD_UTILTIY')) {
             $this->scripts_include->includePlugins(array('jq_validation'), 'js');
             $this->layout->render();
         } else {
@@ -62,74 +50,108 @@ class Course_academic_batch_utilities extends CI_Controller {
 
     /**
      * @param  : 
-     * @desc   :
+     * @desc   : process the excel file and display valid and invalid record grid
      * @return :
      * @author : HimansuS
      * @created:
      */
     public function upload_file() {
-        if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'COURSE_ACADEMIC_BATCH_MASTERS')) {
+        if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'BOOK_LEDGER_UPLOAD_UTILTIY')) {
 
             $this->scripts_include->includePlugins(array('datatable', 'jq_validation'), 'js');
             $this->scripts_include->includePlugins(array('datatable'), 'css');
             $config = array();
             $user_id = $this->rbac->get_user_id();
-            $temp_table_name = 'temp_course_a_b_m_' . $user_id;
-            $config['upload_path'] = './uploads/course_aca_batch_master';
+            $temp_table_name = 'temp_book_ledger_' . $user_id;
+            $config['upload_path'] = './uploads/book_ledger';
             $config['allowed_types'] = array('xls', 'xlsx', 'csv');
             $config['file_element'] = 'upload_file';
-            $config['on_failure_redirect'] = 'course-academic-batch-upload';
+            $config['on_failure_redirect'] = 'book-ledger-upload';
             $config['file'] = $_FILES;
-            $config['temp_table_name'] = 'temp_course_a_b_m_';
+            $config['temp_table_name'] = 'temp_book_ledger_';
 
             $config['temp_table_heading'] = array(
-                'CATEGORY_NAME',
-                'CATEGORY_CODE',
-                'CATEGORY_DESC',
-                'DEPARTMENT_NAME',
-                'DEPARTMENT_CODE',
-                'BATCH_NAME',
-                'BATCH_DESC',
-                'START_YEAR',
-                'END_YEAR',
-                'NO_OF_SEMISTER'
+                'BOOK_NAME',
+                'BOOK_CATEGORY_NAME',
+                'BOOK_PUBLICATION',
+                'AUTHOR_NAME',
+                'ISBN',
+                'PAGES',
+                'MRP',
+                'EDITION',
+                'BOOK_LOCATION'
             );
             $config['uploaded_file_heading'] = array(
-                'CATEGORY_NAME',
-                'CATEGORY_CODE',
-                'CATEGORY_DESC',
-                'DEPARTMENT_NAME',
-                'DEPARTMENT_CODE',
-                'BATCH_NAME',
-                'BATCH_DESC',
-                'START_YEAR',
-                'END_YEAR',
-                'NO_OF_SEMISTER'
+                'BOOK_NAME',
+                'BOOK_CATEGORY_NAME',
+                'BOOK_PUBLICATION',
+                'AUTHOR_NAME',
+                'ISBN',
+                'PAGES',
+                'MRP',
+                'EDITION',
+                'BOOK_LOCATION'
             );
 
             $config['validation_rules'] = array(
                 //Blank validation
-                array('message' => "''CATEGORY_NAME'' can not be blank."
-                    , 'condition' => "CATEGORY_NAME IS NULL OR CATEGORY_NAME=''"
+                array('message' => "''BOOK_NAME'' can not be blank."
+                    , 'condition' => "BOOK_NAME IS NULL OR BOOK_NAME=''"
                 ),
-                array('message' => "''CATEGORY_CODE'' can not be blank."
-                    , 'condition' => "CATEGORY_CODE IS NULL OR CATEGORY_CODE=''"
+                array('message' => "''BOOK_CATEGORY_NAME'' can not be blank."
+                    , 'condition' => "BOOK_CATEGORY_NAME IS NULL OR BOOK_CATEGORY_NAME=''"
                 ),
-                array('message' => "''DEPARTMENT_NAME'' can not be blank."
-                    , 'condition' => "DEPARTMENT_NAME IS NULL OR DEPARTMENT_NAME=''"
+                array('message' => "''BOOK_PUBLICATION'' can not be blank."
+                    , 'condition' => "BOOK_PUBLICATION IS NULL OR BOOK_PUBLICATION=''"
                 ),
-                array('message' => "''BATCH_NAME'' can not be blank."
-                    , 'condition' => "BATCH_NAME IS NULL OR BATCH_NAME=''"
+                array('message' => "''ISBN'' can not be blank."
+                    , 'condition' => "ISBN IS NULL OR ISBN=''"
                 ),
-                array('message' => "''START_YEAR'' can not be blank."
-                    , 'condition' => "START_YEAR IS NULL OR START_YEAR=''"
+                array('message' => "''PAGES'' can not be blank."
+                    , 'condition' => "PAGES IS NULL OR PAGES=''"
                 ),
-                array('message' => "''END_YEAR'' can not be blank."
-                    , 'condition' => "END_YEAR IS NULL OR END_YEAR=''"
+                array('message' => "''MRP'' can not be blank."
+                    , 'condition' => "MRP IS NULL OR MRP=''"
                 ),
-                array('message' => "''NO_OF_SEMISTER'' can not be blank."
-                    , 'condition' => "NO_OF_SEMISTER IS NULL OR NO_OF_SEMISTER=''"
-                )
+                //duplicate record validation                
+                //book name,category,publication,author,edition
+                array('message' => "Duplicate record."
+                    , 'condition' => "RECORD_NO IN(
+                    SELECT D.record_no
+                        FROM(
+                            SELECT main.record_no 
+                            FROM $temp_table_name main 
+                            INNER JOIN (
+                                SELECT book_name,book_category_name,book_publication,author_name,edition,COUNT(book_name),record_no 
+                                FROM $temp_table_name t 
+                                GROUP BY book_name,book_category_name,book_publication,author_name,edition 
+                                HAVING COUNT(book_name) > 1 
+                            ) dup ON 
+                            main.book_name=dup.book_name 
+                            AND main.book_category_name=dup.book_category_name 
+                            AND main.book_publication=dup.book_publication 
+                            AND main.author_name=dup.author_name 
+                            AND main.edition=dup.edition 
+                        ) D
+                    )"
+                ),
+                //duplicate isbn validation                
+                array('message' => "Duplicate \'ISBN\'"
+                    , 'condition' => "RECORD_NO IN(
+                        SELECT record_no
+                        FROM(
+                            SELECT main.record_no 
+                            FROM $temp_table_name main 
+                            INNER JOIN (
+                                SELECT isbn,COUNT(isbn),record_no 
+                                FROM $temp_table_name t 
+                                GROUP BY isbn
+                                HAVING COUNT(isbn) > 1 
+                            ) dup ON 
+                            main.isbn=dup.isbn
+                        ) D
+                    )"
+                ),
             );
             $this->load->library('upload_utility', $config);
             $temp_table_name = $this->upload_utility->upload_file();
@@ -137,12 +159,12 @@ class Course_academic_batch_utilities extends CI_Controller {
             if ($temp_table_name) {
                 $data = array();
                 $data['temp_table'] = $temp_table_name;
-                $data['valid_table_config'] = $this->_get_grid_config($config['uploaded_file_heading'], 'course-academic-batch-upload-valid', 'valid_rec_dt');
-                $data['invalid_table_config'] = $this->_get_grid_config($config['uploaded_file_heading'], 'course-academic-batch-upload-invalid', 'invalid_rec_dt', 'invalid');
+                $data['valid_table_config'] = $this->_get_grid_config($config['uploaded_file_heading'], 'book-ledger-upload-valid', 'valid_rec_dt');
+                $data['invalid_table_config'] = $this->_get_grid_config($config['uploaded_file_heading'], 'book-ledger-upload-invalid', 'invalid_rec_dt', 'invalid');
                 $this->layout->data = $data;
-                $this->layout->render(array('view' => 'upload_utilities/course_academic_batch_utilities/upload_file'));
+                $this->layout->render(array('view' => 'upload_utilities/book_ledger_upload_utilities/upload_file'));
             } else {
-                redirect('course-academic-batch-upload');
+                redirect('book-ledger-upload');
             }
         } else {
             $this->layout->render(array('error' => '401'));
@@ -233,7 +255,7 @@ class Course_academic_batch_utilities extends CI_Controller {
                 'buttom_pagination' => true
             ),
             'options' => array(
-                'iDisplayLength' => '15'
+                'iDisplayLength' => '15',
             )
         );
         if($type == 'valid'){
@@ -251,11 +273,11 @@ class Course_academic_batch_utilities extends CI_Controller {
      */
     public function get_temp_table_data_grid() {
 
-        if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'COURSE_ACADEMIC_BATCH_MASTERS')) {
+        if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'BOOK_LEDGER_UPLOAD_UTILTIY')) {
             if ($this->input->is_ajax_request()) {
                 $columns = "";
                 $user_id = $this->rbac->get_user_id();
-                $temp_table_name = 'temp_course_a_b_m_' . $user_id;
+                $temp_table_name = 'temp_book_ledger_' . $user_id;
                 $type = $this->input->post('type');
                 if ($type == 'invalid') {
                     $condition = "LENGTH(TRIM(REMARKS))>0";
@@ -263,7 +285,7 @@ class Course_academic_batch_utilities extends CI_Controller {
                 } else {
                     $condition = "REMARKS IS NULL OR REMARKS=''";
                 }
-                $columns.= "category_name,category_code,category_desc,department_name,department_code,batch_name,batch_desc,start_year,end_year,no_of_semister,record_no";
+                $columns.= "book_name,book_category_name,book_publication,author_name,isbn,pages,mrp,edition,book_location";
 
                 $data = array();
                 $grid_buttons = array(
@@ -281,7 +303,7 @@ class Course_academic_batch_utilities extends CI_Controller {
 
                 $button_set = get_link_buttons($grid_buttons);
                 $data['button_set'] = $button_set;
-                $returned_list = $this->Course_academic_batch_utility->get_temp_table_data_dt($columns, $temp_table_name, $data, $condition);
+                $returned_list = $this->Book_ledger_upload_utility->get_temp_table_data_dt($columns, $temp_table_name, $data, $condition);
                 echo $returned_list;
                 exit();
             } else {
@@ -301,16 +323,16 @@ class Course_academic_batch_utilities extends CI_Controller {
      * @created:
      */
     public function delete_temp_record() {
-        if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'COURSE_ACADEMIC_BATCH_MASTERS')) {
+        if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'BOOK_LEDGER_UPLOAD_UTILTIY')) {
 
             if ($this->input->is_ajax_request()):
                 $row_id = $this->input->post('record_no');
                 $user_id = $this->rbac->get_user_id();
-                $temp_table_name = 'temp_course_a_b_m_' . $user_id;
+                $temp_table_name = 'temp_book_ledger_' . $user_id;
 
                 if ($row_id):
                     $row_id = c_decode($row_id);
-                    $result = $this->Course_academic_batch_utility->delete_temp_row($row_id, $temp_table_name);
+                    $result = $this->Book_ledger_upload_utility->delete_temp_row($row_id, $temp_table_name);
                     if ($result):
                         echo 1;
                         exit();
@@ -339,7 +361,7 @@ class Course_academic_batch_utilities extends CI_Controller {
      */
     public function export_grid_data() {
 
-        if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'COURSE_ACADEMIC_BATCH_MASTERS')) {
+        if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'BOOK_LEDGER_UPLOAD_UTILTIY')) {
             if ($this->input->is_ajax_request()):
 
                 $export_type = $this->input->post('export_type');
@@ -347,7 +369,7 @@ class Course_academic_batch_utilities extends CI_Controller {
 
                 $columns = "category_name,category_code,category_desc,department_name,department_code,batch_name,batch_desc,start_year,end_year,no_of_semister,record_no";
                 $user_id = $this->rbac->get_user_id();
-                $temp_table_name = 'temp_course_a_b_m_' . $user_id;
+                $temp_table_name = 'temp_book_ledger_' . $user_id;
                 if ($type == 'invalid') {
                     $condition = "LENGTH(TRIM(REMARKS))>0";
                 } else {
@@ -367,7 +389,7 @@ class Course_academic_batch_utilities extends CI_Controller {
                     'no_of_semister' => 'no_of_semister',
                     'record_no' => 'record_no'
                 );
-                $data = $this->Course_academic_batch_utility->get_temp_table_data_dt($columns, $temp_table_name, null, $condition, true);
+                $data = $this->Book_ledger_upload_utility->get_temp_table_data_dt($columns, $temp_table_name, null, $condition, true);
                 $head_cols = $body_col_map = array();
                 $date = array(
                     array(
@@ -425,12 +447,90 @@ class Course_academic_batch_utilities extends CI_Controller {
      * @created:
      */
     public function save_import_data() {
-        if ($this->Course_academic_batch_utility->save_import_data_db()) {
-            echo json_encode(array('type'=>'success','message'=>'Data uploaded successfully.'));
+        if ($this->Book_ledger_upload_utility->save_import_data_db()) {
+            echo json_encode(array('type' => 'success', 'message' => 'Data uploaded successfully.'));
             exit();
-        }else{
-            echo json_encode(array('type'=>'error','message'=>'Data saving error, Please tray again!'));            
+        } else {
+            echo json_encode(array('type' => 'error', 'message' => 'Data saving error, Please tray again!'));
             exit();
+        }
+    }
+
+    /**
+     * @param  : 
+     * @desc   : used to downlod the book ledger template excel file
+     * @return :
+     * @author : HimansuS
+     * @created:
+     */
+    public function get_ledger_template() {
+        if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'BOOK_LEDGER_UPLOAD_UTILTIY')) {
+            if ($this->input->is_ajax_request()):
+                $export_type = 'xlsx';
+                $user_id = $this->rbac->get_user_id();
+                $temp_table_name = 'temp_book_ledger_' . $user_id;
+                $book_location=  $this->Book_ledger_upload_utility->get_book_location_xls_validation();
+                $tableHeading = array(
+                    'book_name' => 'book_name',
+                    'book_category_name' => 'book_category_name',
+                    'book_publication' => 'book_publication',
+                    'author_name' => 'author_name',
+                    'isbn' => 'isbn',
+                    'pages' => 'pages',
+                    'mrp' => 'mrp',
+                    'edition' => 'edition',
+                    'book_location' => 'book_location'
+                );
+                $head_cols = $body_col_map = array();
+                $date = array(
+                    array(
+                        'title' => 'Date of Export Report',
+                        'value' => date('d-m-Y')
+                    )
+                );
+                foreach ($tableHeading as $db_col => $col) {
+                    $head_cols[] = array(
+                        'title' => strtoupper($col),
+                        'track_auto_filter' => 1
+                    );
+                    $body_col_map[] = array('db_column' => $db_col);
+                }
+                $header = array($head_cols);
+                $worksheet_name = 'book_ledger_data';
+                $file_name = 'book_ledger_upload_template_' . date('d_m_Y_H_i_s') . '.' . $export_type;
+                $config = array(
+                    'db_data' => array(),
+                    'header_rows' => $header,
+                    'body_column' => $body_col_map,
+                    'worksheet_name' => $worksheet_name,
+                    'file_name' => $file_name,
+                    'download' => true,
+                    'data_validation' => array(
+                        'I2:I5000' => array(
+                            'allow_blank_flag' => false,
+                            'show_input_message_flag' => true,
+                            'show_error_message_flag' => true,
+                            'show_dropdown_flag' => true,
+                            'error_popup_title_message' => 'Error',
+                            'error_popup_body_message' => 'Select book location from list.',
+                            'tooltip_title_message' => 'Select book location.',
+                            'tooltip_body_message' => '',
+                            'formula_data' => '"'.$book_location.'"',
+                            'range_flag' => 'true'
+                        )
+                    )
+                );
+                //pma($config,1);
+                $this->load->library('excel_utility');
+                $this->excel_utility->download_excel($config, $export_type);
+                ob_end_flush();
+                exit;
+            else:
+                $this->layout->data = array('status_code' => '403', 'message' => 'Request Forbidden.');
+                $this->layout->render(array('error' => 'general'));
+            endif;
+        } else {
+            $this->layout->render(array('error' => '401'));
         }
     }
 

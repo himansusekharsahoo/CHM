@@ -310,7 +310,9 @@ class Book_category_masters extends CI_Controller {
 
             if ($this->form_validation->run()):
 
-                $data['data'] = $this->input->post();
+                $post_data = $this->input->post();
+                $post_data['created_by'] = $this->rbac->get_user_id();
+                $data['data'] = $post_data;
                 $result = $this->book_category_master->save($data['data']);
 
                 if ($result >= 1):
@@ -339,8 +341,9 @@ class Book_category_masters extends CI_Controller {
 
         $this->layout->navTitle = 'Book category master edit';
         $data = array();
-        if ($this->input->post()):
-            $data['data'] = $this->input->post();
+        if ($this->input->post()):            
+            $post_data = $this->input->post();            
+            $data['data'] = $post_data;
             $config = array(
                 array(
                     'field' => 'name',

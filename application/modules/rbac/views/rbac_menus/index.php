@@ -3,10 +3,10 @@
     <?php
     if ($this->rbac->has_permission('MANAGE_MENU', 'CREATE')) {
         echo '<button class="btn btn-primary" id="add_root" ><span class="fa fa-plus">Add Root</span></button>';
-        echo '<button class="btn btn-primary" id="add_chield" ><span class="fa fa-plus">Add Chield</span></button>';
+        echo '&nbsp;&nbsp;<button class="btn btn-primary" id="add_chield" ><span class="fa fa-plus">Add Chield</span></button>';
     }
     if ($this->rbac->has_permission('MANAGE_MENU', 'DELETE')) {
-        echo '<button class="btn btn-danger" id="delete"><span class="fa fa-trash"> Delete</span></button>';
+        echo '&nbsp;&nbsp;<button class="btn btn-danger" id="delete"><span class="fa fa-trash"> Delete</span></button>';
     }
     ?>
 
