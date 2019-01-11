@@ -72,7 +72,7 @@ class Book_ledgers extends CI_Controller {
                 'db_column' => 'book_name',
                 'name' => 'book_name',
                 'title' => 'Book name',
-                'class_name' => 'dt_name',
+                'class_name' => 'book_name',
                 'orderable' => 'true',
                 'visible' => 'true',
                 'searchable' => 'true'
@@ -141,22 +141,6 @@ class Book_ledgers extends CI_Controller {
                 'visible' => 'true',
                 'searchable' => 'true'
             ), array(
-                'db_column' => 'bar_code',
-                'name' => 'Bar_code',
-                'title' => 'Bar_code',
-                'class_name' => 'dt_name',
-                'orderable' => 'true',
-                'visible' => 'true',
-                'searchable' => 'true'
-            ), array(
-                'db_column' => 'qr_code',
-                'name' => 'Qr_code',
-                'title' => 'Qr_code',
-                'class_name' => 'dt_name',
-                'orderable' => 'true',
-                'visible' => 'true',
-                'searchable' => 'true'
-            ), array(
                 'db_column' => 'created',
                 'name' => 'Created',
                 'title' => 'Created',
@@ -168,22 +152,6 @@ class Book_ledgers extends CI_Controller {
                 'db_column' => 'created_by',
                 'name' => 'Created_by',
                 'title' => 'Created_by',
-                'class_name' => 'dt_name',
-                'orderable' => 'true',
-                'visible' => 'true',
-                'searchable' => 'true'
-            ), array(
-                'db_column' => 'modified',
-                'name' => 'Modified',
-                'title' => 'Modified',
-                'class_name' => 'dt_name',
-                'orderable' => 'true',
-                'visible' => 'true',
-                'searchable' => 'true'
-            ), array(
-                'db_column' => 'midified_by',
-                'name' => 'Midified_by',
-                'title' => 'Midified_by',
                 'class_name' => 'dt_name',
                 'orderable' => 'true',
                 'visible' => 'true',
@@ -271,7 +239,7 @@ class Book_ledgers extends CI_Controller {
         $config = array(
             'dt_markup' => TRUE,
             'dt_id' => 'raw_cert_data_dt_table',
-            'dt_header' => $header,
+            'dt_header' => $header,            
             'dt_ajax' => array(
                 'dt_url' => base_url('manage-book-ledger'),
             ),
@@ -310,10 +278,10 @@ class Book_ledgers extends CI_Controller {
                 'book_name' => 'book_name', 'bcategory_name' => 'category_name'
                 , 'publicatoin_name' => 'ublicatoin_name', 'author_name' => 'author_name'
                 , 'location' => 'location', 'page' => 'page', 'mrp' => 'mrp'
-                , 'isbn_no' => 'isbn_no', 'edition' => 'edition','created' => 'created', 'created_by' => 'created_by'
+                , 'isbn_no' => 'isbn_no', 'edition' => 'edition', 'created' => 'created', 'created_by' => 'created_by'
                 , 'modified' => 'modified', 'midified_by' => 'midified_by'
             );
-            
+
             $data = $this->book_ledger->get_book_ledger_datatable(null, true, $tableHeading);
             $head_cols = $body_col_map = array();
             $date = array(
@@ -363,79 +331,99 @@ class Book_ledgers extends CI_Controller {
      */
     public function create() {
         $this->breadcrumbs->push('create', '/library/book_ledgers/create');
-        $this->scripts_include->includePlugins(array('jq_validation'), 'js');
-
+        $this->scripts_include->includePlugins(array('jq_validation','bs_datepicker'), 'js');
+        $this->scripts_include->includePlugins(array('bs_datepicker'), 'css');
         $this->layout->navTitle = 'Book ledger create';
         $data = array();
+        $user_id = $this->rbac->get_user_id();
         if ($this->input->post()):
+            $data['data'] = $post_data = $this->input->post();
             $config = array(
                 array(
                     'field' => 'book_id',
                     'label' => 'book_id',
-                    'rules' => 'required'
+                    'rules' => 'required',
+                    'errors' => array(
+                        'required' => 'Book name is required',
+                    ),
                 ),
                 array(
                     'field' => 'bcategory_id',
                     'label' => 'bcategory_id',
-                    'rules' => 'required'
+                    'rules' => 'required',
+                    'errors' => array(
+                        'required' => 'Book category is required',
+                    ),
                 ),
                 array(
                     'field' => 'bpublication_id',
                     'label' => 'bpublication_id',
-                    'rules' => 'required'
+                    'rules' => 'required',
+                    'errors' => array(
+                        'required' => 'Book publication is required',
+                    ),
                 ),
                 array(
                     'field' => 'bauthor_id',
                     'label' => 'bauthor_id',
-                    'rules' => 'required'
+                    'rules' => 'required',
+                    'errors' => array(
+                        'required' => 'Book author is required',
+                    ),
                 ),
                 array(
                     'field' => 'blocation_id',
                     'label' => 'blocation_id',
-                    'rules' => 'required'
+                    'rules' => 'required',
+                    'errors' => array(
+                        'required' => 'Book location is required',
+                    ),
                 ),
                 array(
                     'field' => 'page',
                     'label' => 'page',
-                    'rules' => 'required'
-                ),
-                array(
-                    'field' => 'mrp',
-                    'label' => 'mrp',
-                    'rules' => 'required'
-                ),
-                array(
-                    'field' => 'isbn_no',
-                    'label' => 'isbn_no',
-                    'rules' => 'required'
-                ),
-                array(
-                    'field' => 'edition',
-                    'label' => 'edition',
-                    'rules' => 'required'
-                ),
-                array(
-                    'field' => 'bar_code',
-                    'label' => 'bar_code',
-                    'rules' => 'required'
-                ),
-                array(
-                    'field' => 'qr_code',
-                    'label' => 'qr_code',
-                    'rules' => 'required'
+                    'rules' => 'required',
+                    'errors' => array(
+                        'required' => 'Number of pages in books is required',
+                    ),
                 )
             );
+            if (isset($post_data['purchase_det_flag']) && $post_data['purchase_det_flag']) {
+                $config[] = array(
+                    'field' => 'bill_number',
+                    'label' => 'bill_number',
+                    'rules' => 'required',
+                    'errors' => array(
+                        'required' => 'Bill number is required',
+                    ),
+                );
+                $config[] = array(
+                    'field' => 'purchase_date',
+                    'label' => 'purchase_date',
+                    'rules' => 'required',
+                    'errors' => array(
+                        'required' => 'Purchase date is required',
+                    ),
+                );
+                $config[] = array(
+                    'field' => 'price',
+                    'label' => 'price',
+                    'rules' => 'required',
+                    'errors' => array(
+                        'required' => 'Price is required',
+                    ),
+                );
+            }
             $this->form_validation->set_rules($config);
 
             if ($this->form_validation->run()):
-
-                $data['data'] = $this->input->post();
-                unset($data['data']['submit']);
-                $result = $this->book_ledger->save($data['data']);
-
-                if ($result >= 1):
+                $post_data['created_by'] = $user_id;
+                //pma($post_data, 1);
+                unset($post_data['submit']);
+                $result = $this->book_ledger->save($post_data);
+                if ($result):
                     $this->session->set_flashdata('success', 'Record successfully saved!');
-                    redirect('/library/book_ledgers');
+                    redirect(base_url('manage-book-ledger'));
                 else:
                     $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
                 endif;

@@ -66,8 +66,7 @@ class Book_ledger extends CI_Model {
         $this->load->library('datatables');
         if (!$columns) {
             $columns = 'bledger_id,book_name,bcategory_name,publicatoin_name
-                ,author_name,location,page,mrp,isbn_no,edition,bar_code
-                ,qr_code,created,created_by,modified,midified_by';
+                ,author_name,location,page,mrp,isbn_no,edition,created,created_by';
         }
 
         /*
@@ -87,8 +86,8 @@ class Book_ledger extends CI_Model {
           Columns:-	publication_id,name,code,status,remarks,created,created_by
 
          */
-        
-        
+
+
         $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, FALSE, FALSE)
                 ->from('book_ledger_list_view');
 
@@ -162,13 +161,41 @@ class Book_ledger extends CI_Model {
      */
     public function save($data) {
         if ($data):
-            $this->db->insert("book_ledgers", $data);
+            $this->db->trans_begin();
+            $ledger_data = array(
+                'book_id' => $data['book_id'],
+                'bcategory_id' => $data['bcategory_id'],
+                'bpublication_id' => $data['bpublication_id'],
+                'bauthor_id' => $data['bauthor_id'],
+                'blocation_id' => $data['blocation_id'],
+                'page' => $data['page'],
+                'mrp' => $data['mrp'],
+                'isbn_no' => $data['isbn_no'],
+                'edition' => $data['edition'],
+                'created_by' => $data['created_by'],
+            );
+            $this->db->insert("book_ledgers", $ledger_data);
             $bledger_id_inserted_id = $this->db->insert_id();
+            //store puchage details
+            if ($bledger_id_inserted_id) {
+                $purchase_data = array(
+                    'bledger_id' => $bledger_id_inserted_id,
+                    'bill_number' => $data['bill_number'],
+                    'purchase_date' => $data['purchase_date'],
+                    'price' => $data['price'],
+                    'vendor_name' => $data['vendor_name'],
+                    'remarks' => $data['remarks']
+                );
+                $this->db->insert("book_purchage_detail_logs", $purchase_data);
+            }
 
-            if ($bledger_id_inserted_id):
-                return $bledger_id_inserted_id;
-            endif;
-            return 'No data found to store!';
+            if ($this->db->trans_status() === false) {
+                $this->db->trans_rollback();
+                return false;
+            } else {
+                $this->db->trans_commit();
+                return true;
+            }
         endif;
         return 'Unable to store the data, please try again later!';
     }

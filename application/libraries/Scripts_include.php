@@ -26,6 +26,7 @@ class Scripts_include {
                 '/js/messages.js',
                 '/js/myapp.js'
             ),
+            'bs_datepicker' => array(COMPONENT_PATH . 'bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js'),
         ),
         'blank_layout' => array(
             'top' => array(
