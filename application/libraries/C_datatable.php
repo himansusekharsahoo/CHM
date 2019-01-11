@@ -150,11 +150,11 @@ class C_datatable {
             'sScrollX' => false,
             'bScrollCollapse' => false,
             'bSortCellsTop' => 'true',
-            'iDisplayLength' => 10,
+            'iDisplayLength' => 15,
             'iDisplayStart' => 0,
             'sScrollXInner' => false,
             'searching' => 'true',
-            'lengthMenu' => array(1, 10, 20, 30, 50, 100),
+            'lengthMenu' => array(15, 30, 60, 100),
             //'destroy'=> 'true',
             'order' => array(
                 array(

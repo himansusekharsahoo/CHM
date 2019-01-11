@@ -65,8 +65,9 @@ class Book_ledger extends CI_Model {
     public function get_book_ledger_datatable($data = null, $export = null, $tableHeading = null, $columns = null) {
         $this->load->library('datatables');
         if (!$columns) {
-            $columns = 'bledger_id,t2.name as book_name,t3.name as bcategory_name,t4.name as publicatoin_name,author_name,concat(floor," ",block," ",rack_no) as location,
-                page,mrp,isbn_no,edition,bar_code,qr_code,t1.created,t1.created_by,t1.modified,t1.midified_by';
+            $columns = 'bledger_id,book_name,bcategory_name,publicatoin_name
+                ,author_name,location,page,mrp,isbn_no,edition,bar_code
+                ,qr_code,created,created_by,modified,midified_by';
         }
 
         /*
@@ -86,12 +87,10 @@ class Book_ledger extends CI_Model {
           Columns:-	publication_id,name,code,status,remarks,created,created_by
 
          */
-        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, FALSE, FALSE)->from('book_ledgers t1')
-                ->join('books t2', 't1.book_id=t2.book_id')
-                ->join('book_category_masters t3', 't3.bcategory_id=t1.bcategory_id')
-                ->join('book_publication_masters t4', 't4.publication_id=t1.bpublication_id')
-                ->join('book_author_masters t5', 't5.bauthor_id=t1.bauthor_id')
-                ->join('book_location_masters t6', 't6.blocation_id=t1.blocation_id');
+        
+        
+        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, FALSE, FALSE)
+                ->from('book_ledger_list_view');
 
         $this->datatables->unset_column("bledger_id");
         if (isset($data['button_set'])):
@@ -115,7 +114,8 @@ class Book_ledger extends CI_Model {
      */
     public function get_book_ledger($columns = null, $conditions = null, $limit = null, $offset = null) {
         if (!$columns) {
-            $columns = 'bledger_id,book_id,bcategory_id,bpublication_id,bauthor_id,blocation_id,page,mrp,isbn_no,edition,bar_code,qr_code,created,created_by,modified,midified_by';
+            $columns = 'bledger_id,book_id,bcategory_id,bpublication_id,bauthor_id,blocation_id,page,mrp,isbn_no,edition'
+                    . ',bar_code,qr_code,created,created_by,modified,midified_by';
         }
 
         /*

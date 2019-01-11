@@ -59,3 +59,4 @@ $route['admin-dashboard'] = 'admin_users/dashboard';
 
 require_once 'custom_routs/rbac.php';
 require_once 'custom_routs/upload_utilities.php';
+require_once 'custom_routs/book_ledgers.php';

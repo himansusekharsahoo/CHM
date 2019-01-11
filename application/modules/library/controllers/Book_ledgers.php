@@ -202,7 +202,7 @@ class Book_ledgers extends CI_Controller {
 
         $grid_buttons[] = array(
             'btn_class' => 'btn-info',
-            'btn_href' => base_url('library/book_ledgers/view'),
+            'btn_href' => base_url('view-book-ledger'),
             'btn_icon' => 'fa-eye',
             'btn_title' => 'view record',
             'btn_separator' => ' ',
@@ -211,7 +211,7 @@ class Book_ledgers extends CI_Controller {
         );
         $grid_buttons[] = array(
             'btn_class' => 'btn-primary',
-            'btn_href' => base_url('library/book_ledgers/edit'),
+            'btn_href' => base_url('edit-book-ledger'),
             'btn_icon' => 'fa-pencil',
             'btn_title' => 'edit record',
             'btn_separator' => ' ',
@@ -241,7 +241,7 @@ class Book_ledgers extends CI_Controller {
         $dt_tool_btn = array(
             array(
                 'btn_class' => 'btn-primary',
-                'btn_href' => base_url('library/book_ledgers/create'),
+                'btn_href' => base_url('create-book-ledger'),
                 'btn_icon' => '',
                 'btn_title' => 'Create',
                 'btn_text' => 'Create',
@@ -273,7 +273,7 @@ class Book_ledgers extends CI_Controller {
             'dt_id' => 'raw_cert_data_dt_table',
             'dt_header' => $header,
             'dt_ajax' => array(
-                'dt_url' => base_url('library/book_ledgers/index'),
+                'dt_url' => base_url('manage-book-ledger'),
             ),
             'custom_lengh_change' => false,
             'dt_dom' => array(
@@ -306,8 +306,14 @@ class Book_ledgers extends CI_Controller {
     public function export_grid_data() {
         if ($this->input->is_ajax_request()):
             $export_type = $this->input->post('export_type');
-            $tableHeading = array('book_id' => 'book_id', 'bcategory_id' => 'bcategory_id', 'bpublication_id' => 'bpublication_id', 'bauthor_id' => 'bauthor_id', 'blocation_id' => 'blocation_id', 'page' => 'page', 'mrp' => 'mrp', 'isbn_no' => 'isbn_no', 'edition' => 'edition', 'bar_code' => 'bar_code', 'qr_code' => 'qr_code', 'created' => 'created', 'created_by' => 'created_by', 'modified' => 'modified', 'midified_by' => 'midified_by',);
-            $cols = 'book_id,bcategory_id,bpublication_id,bauthor_id,blocation_id,page,mrp,isbn_no,edition,bar_code,qr_code,created,created_by,modified,midified_by';
+            $tableHeading = array(
+                'book_name' => 'book_name', 'bcategory_name' => 'category_name'
+                , 'publicatoin_name' => 'ublicatoin_name', 'author_name' => 'author_name'
+                , 'location' => 'location', 'page' => 'page', 'mrp' => 'mrp'
+                , 'isbn_no' => 'isbn_no', 'edition' => 'edition','created' => 'created', 'created_by' => 'created_by'
+                , 'modified' => 'modified', 'midified_by' => 'midified_by'
+            );
+            
             $data = $this->book_ledger->get_book_ledger_datatable(null, true, $tableHeading);
             $head_cols = $body_col_map = array();
             $date = array(
@@ -359,7 +365,7 @@ class Book_ledgers extends CI_Controller {
         $this->breadcrumbs->push('create', '/library/book_ledgers/create');
         $this->scripts_include->includePlugins(array('jq_validation'), 'js');
 
-        $this->layout->navTitle = '';
+        $this->layout->navTitle = 'Book ledger create';
         $data = array();
         if ($this->input->post()):
             $config = array(

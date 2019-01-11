@@ -1,4 +1,5 @@
-<?php ?> <div class="row-fluid">
+<?php ?> 
+<div class="row-fluid">
     <div class="col-sm-12 no_pad table-responsive">
         <?php
         $this->load->library('c_datatable');
@@ -6,7 +7,8 @@
         echo $dt_data;
         ?>
     </div>
-</div><script type="text/javascript">
+</div>
+<script type="text/javascript">
     $(function ($) {
 //delete record
 
@@ -26,7 +28,7 @@
                         label: 'Delete',
                         action: function (dialog) {
                             $.ajax({
-                                url: '<?= APP_BASE ?>library/book_ledgers/delete',
+                                url: '<?= base_url('delete-book-ledger') ?>',
                                 method: 'POST',
                                 data: data,
                                 success: function (result) {
@@ -59,7 +61,7 @@
             };
             $.ajax({
                 type: 'POST',
-                url: "<?= base_url('library/book_ledgers/export_grid_data') ?>",
+                url: "<?= base_url('export-book-ledger') ?>",
                 data: param,
                 dataType: 'json'
             }).done(function (data) {
@@ -77,7 +79,7 @@
             };
             $.ajax({
                 type: 'POST',
-                url: "<?= base_url('library/book_ledgers/export_grid_data') ?>",
+                url: "<?= base_url('export-book-ledger') ?>",
                 data: param,
                 dataType: 'json'
             }).done(function (data) {
