@@ -10,7 +10,7 @@
                 "id" => "book_ledgers",
                 "method" => "POST"
             );
-            $form_action = "/library/book_ledgers/edit";
+            $form_action = base_url('edit-book-ledger-save');
             echo form_open($form_action, $form_attribute);
             ?>
             <div class = 'form-group row'>                

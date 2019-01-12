@@ -432,7 +432,7 @@ class Book_ledgers extends CI_Controller {
         $data['bauthor_id_list'] = $this->book_ledger->get_book_author_masters_options('author_name', 'bauthor_id');
         $data['bcategory_id_list'] = $this->book_ledger->get_book_category_masters_options('name', 'bcategory_id');
         $data['book_id_list'] = $this->book_ledger->get_books_options('name', 'book_id');
-        $data['blocation_id_list'] = $this->book_ledger->get_book_location_masters_options('block', 'blocation_id');
+        $data['blocation_id_list'] = $this->book_ledger->get_book_location_masters_options('concat(floor, " ", block, " ", rack_no, " ", self_no)', 'blocation_id');
         $data['bpublication_id_list'] = $this->book_ledger->get_book_publication_masters_options('name', 'publication_id');
         $this->layout->data = $data;
         $this->layout->render();
@@ -537,8 +537,8 @@ class Book_ledgers extends CI_Controller {
 
             if ($this->form_validation->run()):
                 $post_data['modified'] = date("Y-m-d H:i:s");
-                $post_data['modified_by'] = $user_id;                
-                unset($post_data['submit']);                
+                $post_data['modified_by'] = $user_id;
+                unset($post_data['submit']);
                 $result = $this->book_ledger->update($post_data);
                 if ($result >= 1):
                     $this->session->set_flashdata('success', 'Record successfully updated!');
@@ -559,7 +559,7 @@ class Book_ledgers extends CI_Controller {
         $data['bauthor_id_list'] = $this->book_ledger->get_book_author_masters_options('author_name', 'bauthor_id');
         $data['bcategory_id_list'] = $this->book_ledger->get_book_category_masters_options('name', 'bcategory_id');
         $data['book_id_list'] = $this->book_ledger->get_books_options('name', 'book_id');
-        $data['blocation_id_list'] = $this->book_ledger->get_book_location_masters_options('block', 'blocation_id');
+        $data['blocation_id_list'] = $this->book_ledger->get_book_location_masters_options('concat(floor, " ", block, " ", rack_no, " ", self_no)', 'blocation_id');
         $data['bpublication_id_list'] = $this->book_ledger->get_book_publication_masters_options('name', 'publication_id');
         $this->layout->data = $data;
         $this->layout->render();

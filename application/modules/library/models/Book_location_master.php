@@ -192,16 +192,14 @@ class Book_location_master extends CI_Model {
         if (!$index) {
             $index = 'blocation_id';
         }
-        $this->db->select("$columns,$index")->from('book_location_masters t1');
-
+        $this->db->select("$columns,$index",false)->from('book_location_masters t1');
+        
         if ($conditions && is_array($conditions)):
             foreach ($conditions as $col => $val):
                 $this->db->where("$col", $val);
-
             endforeach;
         endif;
         $result = $this->db->get()->result_array();
-
         $list = array();
         $list[''] = 'Select book location masters';
         foreach ($result as $key => $val):
