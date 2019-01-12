@@ -79,7 +79,12 @@ class Book_ledger_upload_utilities extends CI_Controller {
                 'PAGES',
                 'MRP',
                 'EDITION',
-                'BOOK_LOCATION'
+                'BOOK_LOCATION',
+                'BILL_NUMBER',
+                'PURCHASE_DATE',
+                'PRICE',
+                'VENDOR_NAME',
+                'PURCHASE_REMARKS'
             );
             $config['uploaded_file_heading'] = array(
                 'BOOK_NAME',
@@ -90,7 +95,12 @@ class Book_ledger_upload_utilities extends CI_Controller {
                 'PAGES',
                 'MRP',
                 'EDITION',
-                'BOOK_LOCATION'
+                'BOOK_LOCATION',
+                'BILL_NUMBER',
+                'PURCHASE_DATE',
+                'PRICE',
+                'VENDOR_NAME',
+                'PURCHASE_REMARKS'
             );
 
             $config['validation_rules'] = array(
@@ -255,7 +265,7 @@ class Book_ledger_upload_utilities extends CI_Controller {
                 'buttom_pagination' => true
             ),
             'options' => array(
-                'iDisplayLength' => '15',
+                'iDisplayLength' => 15,
             )
         );
         if($type == 'valid'){

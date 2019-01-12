@@ -4,6 +4,7 @@
         </div>
         <div class="box-body">
             <?php
+            
             $form_attribute = array(
                 "name" => "book_ledgers",
                 "id" => "book_ledgers",
@@ -32,6 +33,14 @@
                         "class" => "form-control required",
                         "type" => "hidden",
                         "value" => (isset($data["bledger_id"])) ? $data["bledger_id"] : ""
+                    );
+                    echo form_input($attribute);
+                    $attribute = array(
+                        "name" => "bpurchase_id",
+                        "id" => "bpurchase_id",
+                        "class" => "form-control required",
+                        "type" => "hidden",
+                        "value" => (isset($data["bpurchase_id"])) ? $data["bpurchase_id"] : ""
                     );
                     echo form_input($attribute);
                     ?>
@@ -201,7 +210,7 @@
                                         <label for = 'purchase_date' class = 'col-sm-4 col-form-label ele_required'>Purchase date</label>
                                         <div class = 'col-sm-7'>
                                             <div class="input-group date">                
-                                                <input type="text" class="form-control pull-right" id="purchase_date" name="purchase_date" value="<?= (isset($data["purchase_date"])) ? $data["purchase_date"] : set_value('purchase_date') ?>">
+                                                <input type="text" class="form-control pull-right" id="purchase_date" name="purchase_date" value="<?= (isset($data["purchase_date"]) && $data["purchase_date"]!='0000-00-00') ? $data["purchase_date"] : set_value('purchase_date') ?>">
                                                 <div class="input-group-addon focus_date">
                                                     <i class="fa fa-calendar"></i>
                                                 </div>
@@ -283,18 +292,28 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('#book_ledgers').validate({
+            rules: {
+                book_id: "required",
+                bcategory_id: "required",
+                bpublication_id: "required",
+                bauthor_id: "required",
+                blocation_id: "required",
+                page: "required"
+            },
             messages: {
                 book_id: 'Book name is required',
                 bcategory_id: 'Book category is required',
                 bpublication_id: 'Book publication is required',
                 bauthor_id: 'Book author is required',
                 blocation_id: 'Books location is required',
-                page: 'Number of pages in books is required',
-                mrp: 'MRP of book is required',
-                isbn_no: 'ISBN of book is required',
-                edition: 'Book edition is required',
-                bar_code: 'Bar code of books is required',
-                qr_code: 'QR code is required',
+                page: 'Number of pages in books is required'
+            },
+            errorPlacement: function (error, element) {
+                if (element.attr("name") == "purchase_date") {
+                    error.appendTo(element.parent("div").next("span"));
+                } else {
+                    error.insertAfter(element);
+                }
             },
             submitHandler: function (form) {
                 if ($(form).valid())
@@ -302,12 +321,54 @@
                 return false; // prevent normal form posting
             }
         });
+
         $('#book_ledgers').on('click', '#submit', function (e) {
 
             if ($('#book_ledgers').valid()) {
                 $('#book_ledgers').submit();
             }
             e.preventDefault();
+        });
+        $('#purchase_det_flag').on('change', function () {
+            // Get the jQuery validation plugin's settings
+            var settings = $('#book_ledgers').validate().settings;
+            if ($(this).is(':checked')) {
+                // Modify validation settings
+                $.extend(true, settings, {
+                    rules: {
+                        bill_number: "required",
+                        purchase_date: "required",
+                        price: "required"
+                    },
+                    messages: {
+                        bill_number: 'Bill number is required',
+                        purchase_date: 'Purchase date is required',
+                        price: 'Price is required'
+                    }
+                });
+            } else {
+                // Modify validation settings
+                $.extend(true, settings, {
+                    rules: {
+                        bill_number: {},
+                        purchase_date: {},
+                        price: {}
+                    }
+                });
+            }
+        });
+
+        $('#purchase_date').datepicker({
+            format: 'd-m-yyyy',
+            autoclose: true,
+            clearBtn: true,
+            endDate: '0d'
+        }).on('change', function () {
+            $(this).valid();  // triggers the validation test
+            // '$(this)' refers to '$("#datepicker")'
+        });
+        $('.focus_date').on('click', function () {
+            $(this).parent('div').find('input').focus();
         });
     });
 </script>

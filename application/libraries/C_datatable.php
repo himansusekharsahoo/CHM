@@ -154,7 +154,7 @@ class C_datatable {
             'iDisplayStart' => 0,
             'sScrollXInner' => false,
             'searching' => 'true',
-            'lengthMenu' => array(15, 30, 60, 100),
+            'lengthMenu' => array(2,15, 30, 60, 100),
             //'destroy'=> 'true',
             'order' => array(
                 array(

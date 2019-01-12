@@ -171,7 +171,7 @@ class Rbac_modules extends CI_Controller {
                     'buttom_pagination' => true
                 ),
                 'options' => array(
-                    'iDisplayLength' => '15'
+                    'iDisplayLength' => 15
                 )
             );
             $data['data'] = array('config' => $config);

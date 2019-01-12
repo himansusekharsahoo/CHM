@@ -292,8 +292,17 @@ class Datatables {
      * @return mixed
      */
     protected function get_paging() {
+        
         $iStart = $this->ci->input->post('iDisplayStart');
-        $iLength = $this->ci->input->post('iDisplayLength');
+        if($iStart==''){
+            $iStart = $this->ci->input->post('start');
+        }
+        $iStart=(int)$iStart;
+        $iLength = $this->ci->input->post('iDisplayLength');        
+        if($iLength==''){
+            $iLength = $this->ci->input->post('length');
+        }
+        $iLength=(int)$iLength;
         //$this->ci->db->limit(($iLength != '' && $iLength != '-1') ? $iLength : 100, ($iStart)? $iStart : 0);
         //Modified for displaying all rows in Grouping lists for projects and users
         if ($iLength != '' && $iLength != '-1') {

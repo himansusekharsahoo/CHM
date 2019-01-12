@@ -239,7 +239,7 @@ class Book_ledgers extends CI_Controller {
         $config = array(
             'dt_markup' => TRUE,
             'dt_id' => 'raw_cert_data_dt_table',
-            'dt_header' => $header,            
+            'dt_header' => $header,
             'dt_ajax' => array(
                 'dt_url' => base_url('manage-book-ledger'),
             ),
@@ -255,7 +255,7 @@ class Book_ledgers extends CI_Controller {
                 'buttom_pagination' => true
             ),
             'options' => array(
-                'iDisplayLength' => '15'
+                'iDisplayLength' => 15
             )
         );
         $data['data'] = array('config' => $config);
@@ -331,7 +331,7 @@ class Book_ledgers extends CI_Controller {
      */
     public function create() {
         $this->breadcrumbs->push('create', '/library/book_ledgers/create');
-        $this->scripts_include->includePlugins(array('jq_validation','bs_datepicker'), 'js');
+        $this->scripts_include->includePlugins(array('jq_validation', 'bs_datepicker'), 'js');
         $this->scripts_include->includePlugins(array('bs_datepicker'), 'css');
         $this->layout->navTitle = 'Book ledger create';
         $data = array();
@@ -449,74 +449,97 @@ class Book_ledgers extends CI_Controller {
      */
     public function edit($bledger_id = null) {
         $this->breadcrumbs->push('edit', '/library/book_ledgers/edit');
-        $this->scripts_include->includePlugins(array('jq_validation'), 'js');
+        $this->scripts_include->includePlugins(array('jq_validation', 'bs_datepicker'), 'js');
+        $this->scripts_include->includePlugins(array('bs_datepicker'), 'css');
 
         $this->layout->navTitle = 'Book ledger edit';
         $data = array();
         if ($this->input->post()):
-            $data['data'] = $this->input->post();
+            $user_id = $this->rbac->get_user_id();
+            $data['data'] = $post_data = $this->input->post();
             $config = array(
                 array(
                     'field' => 'book_id',
                     'label' => 'book_id',
-                    'rules' => 'required'
+                    'rules' => 'required',
+                    'errors' => array(
+                        'required' => 'Book name is required',
+                    ),
                 ),
                 array(
                     'field' => 'bcategory_id',
                     'label' => 'bcategory_id',
-                    'rules' => 'required'
+                    'rules' => 'required',
+                    'errors' => array(
+                        'required' => 'Book category is required',
+                    ),
                 ),
                 array(
                     'field' => 'bpublication_id',
                     'label' => 'bpublication_id',
-                    'rules' => 'required'
+                    'rules' => 'required',
+                    'errors' => array(
+                        'required' => 'Book publication is required',
+                    ),
                 ),
                 array(
                     'field' => 'bauthor_id',
                     'label' => 'bauthor_id',
-                    'rules' => 'required'
+                    'rules' => 'required',
+                    'errors' => array(
+                        'required' => 'Book author is required',
+                    ),
                 ),
                 array(
                     'field' => 'blocation_id',
                     'label' => 'blocation_id',
-                    'rules' => 'required'
+                    'rules' => 'required',
+                    'errors' => array(
+                        'required' => 'Book location is required',
+                    ),
                 ),
                 array(
                     'field' => 'page',
                     'label' => 'page',
-                    'rules' => 'required'
-                ),
-                array(
-                    'field' => 'mrp',
-                    'label' => 'mrp',
-                    'rules' => 'required'
-                ),
-                array(
-                    'field' => 'isbn_no',
-                    'label' => 'isbn_no',
-                    'rules' => 'required'
-                ),
-                array(
-                    'field' => 'edition',
-                    'label' => 'edition',
-                    'rules' => 'required'
-                ),
-                array(
-                    'field' => 'bar_code',
-                    'label' => 'bar_code',
-                    'rules' => 'required'
-                ),
-                array(
-                    'field' => 'qr_code',
-                    'label' => 'qr_code',
-                    'rules' => 'required'
+                    'rules' => 'required',
+                    'errors' => array(
+                        'required' => 'Number of pages in books is required',
+                    ),
                 )
             );
+            if (isset($post_data['purchase_det_flag']) && $post_data['purchase_det_flag']) {
+                $config[] = array(
+                    'field' => 'bill_number',
+                    'label' => 'bill_number',
+                    'rules' => 'required',
+                    'errors' => array(
+                        'required' => 'Bill number is required',
+                    ),
+                );
+                $config[] = array(
+                    'field' => 'purchase_date',
+                    'label' => 'purchase_date',
+                    'rules' => 'required',
+                    'errors' => array(
+                        'required' => 'Purchase date is required',
+                    ),
+                );
+                $config[] = array(
+                    'field' => 'price',
+                    'label' => 'price',
+                    'rules' => 'required',
+                    'errors' => array(
+                        'required' => 'Price is required',
+                    ),
+                );
+            }
             $this->form_validation->set_rules($config);
 
             if ($this->form_validation->run()):
-                $data['data']['modified'] = date("Y-m-d H:i:s");
-                $result = $this->book_ledger->update($data['data']);
+                $post_data['modified'] = date("Y-m-d H:i:s");
+                $post_data['modified_by'] = $user_id;                
+                unset($post_data['submit']);                
+                $result = $this->book_ledger->update($post_data);
                 if ($result >= 1):
                     $this->session->set_flashdata('success', 'Record successfully updated!');
                     redirect('/library/book_ledgers');
@@ -526,7 +549,7 @@ class Book_ledgers extends CI_Controller {
             endif;
         else:
             $bledger_id = c_decode($bledger_id);
-            $result = $this->book_ledger->get_book_ledger(null, array('bledger_id' => $bledger_id));
+            $result = $this->book_ledger->get_book_ledger(null, array('t1.bledger_id' => $bledger_id));
             if ($result):
                 $result = current($result);
             endif;
@@ -559,7 +582,8 @@ class Book_ledgers extends CI_Controller {
             $bledger_id = c_decode($bledger_id);
 
             $this->layout->navTitle = 'Book ledger view';
-            $result = $this->book_ledger->get_book_ledger(null, array('bledger_id' => $bledger_id), 1);
+            $result = $this->book_ledger->get_book_ledger(null, array('t1.bledger_id' => $bledger_id), 1);
+            //pma($result,1);
             if ($result):
                 $result = current($result);
             endif;
@@ -586,7 +610,6 @@ class Book_ledgers extends CI_Controller {
             $bledger_id = $this->input->post('bledger_id');
             if ($bledger_id):
                 $bledger_id = c_decode($bledger_id);
-
                 $result = $this->book_ledger->delete($bledger_id);
                 if ($result):
                     echo 1;

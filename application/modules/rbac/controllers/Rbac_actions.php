@@ -178,7 +178,7 @@ class Rbac_actions extends CI_Controller {
                     'buttom_pagination' => true
                 ),
                 'options' => array(
-                    'iDisplayLength' => '15'
+                    'iDisplayLength' => 15
                 )
             );
             //pma($config,1);

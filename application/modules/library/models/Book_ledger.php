@@ -113,8 +113,10 @@ class Book_ledger extends CI_Model {
      */
     public function get_book_ledger($columns = null, $conditions = null, $limit = null, $offset = null) {
         if (!$columns) {
-            $columns = 'bledger_id,book_id,bcategory_id,bpublication_id,bauthor_id,blocation_id,page,mrp,isbn_no,edition'
-                    . ',bar_code,qr_code,created,created_by,modified,midified_by';
+            $columns = 'book_name,bcategory_name,publicatoin_name
+                ,author_name,location,page,mrp,isbn_no,edition,created,created_by,modified,midified_by
+                ,bill_number,purchase_date,price,vendor_name,remarks,t1.bledger_id,book_id,bcategory_id
+                ,bpublication_id,bauthor_id,blocation_id,bpurchase_id';
         }
 
         /*
@@ -134,7 +136,10 @@ class Book_ledger extends CI_Model {
           Columns:-	publication_id,name,code,status,remarks,created,created_by
 
          */
-        $this->db->select($columns)->from('book_ledgers t1');
+
+        $this->db->select($columns)
+                ->from('book_ledger_list_view t1')
+                ->join('book_purchage_detail_logs bp', 'bp.bledger_id=t1.bledger_id', 'LEFT');
 
         if ($conditions && is_array($conditions)):
             foreach ($conditions as $col => $val):
@@ -181,7 +186,7 @@ class Book_ledger extends CI_Model {
                 $purchase_data = array(
                     'bledger_id' => $bledger_id_inserted_id,
                     'bill_number' => $data['bill_number'],
-                    'purchase_date' => $data['purchase_date'],
+                    'purchase_date' => date('Y-m-d',  strtotime($data['purchase_date'])),
                     'price' => $data['price'],
                     'vendor_name' => $data['vendor_name'],
                     'remarks' => $data['remarks']
@@ -211,8 +216,42 @@ class Book_ledger extends CI_Model {
      */
     public function update($data) {
         if ($data):
-            $this->db->where("bledger_id", $data['bledger_id']);
-            return $this->db->update('book_ledgers', $data);
+            $this->db->trans_begin();
+            $ledger_data = array(
+                'bledger_id' => $data['bledger_id'],
+                'book_id' => $data['book_id'],
+                'bcategory_id' => $data['bcategory_id'],
+                'bpublication_id' => $data['bpublication_id'],
+                'bauthor_id' => $data['bauthor_id'],
+                'blocation_id' => $data['blocation_id'],
+                'page' => $data['page'],
+                'mrp' => $data['mrp'],
+                'isbn_no' => $data['isbn_no'],
+                'edition' => $data['edition'],
+                'midified_by' => $data['modified_by'],
+            );
+            $this->db->where("bledger_id", $ledger_data['bledger_id']);
+            if ($this->db->update('book_ledgers', $ledger_data)) {
+                $purchase_data = array(
+                    'bpurchase_id' => $data['bpurchase_id'],
+                    'bledger_id' => $data['bledger_id'],
+                    'bill_number' => $data['bill_number'],
+                    'purchase_date' => date('Y-m-d',  strtotime($data['purchase_date'])),
+                    'price' => $data['price'],
+                    'vendor_name' => $data['vendor_name'],
+                    'remarks' => $data['remarks']
+                );
+                
+                $this->db->where("bpurchase_id", $purchase_data['bpurchase_id']);
+                $this->db->update('book_purchage_detail_logs', $purchase_data);
+            }
+            if ($this->db->trans_status() === false) {
+                $this->db->trans_rollback();
+                return false;
+            } else {
+                $this->db->trans_commit();
+                return true;
+            }
         endif;
         return 'Unable to update the data, please try again later!';
     }
@@ -230,6 +269,7 @@ class Book_ledger extends CI_Model {
         if ($bledger_id):
             $this->db->trans_begin();
             $result = 0;
+            $this->db->delete('book_purchage_detail_logs', array('bledger_id' => $bledger_id));            
             $this->db->delete('book_ledgers', array('bledger_id' => $bledger_id));
             if ($this->db->trans_status() === FALSE) {
                 $this->db->trans_rollback();

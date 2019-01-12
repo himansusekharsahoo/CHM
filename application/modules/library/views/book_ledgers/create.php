@@ -32,7 +32,7 @@
                 <div class="col-sm-6">
 
                     <div class = 'form-group row'>
-                        <label for = 'book_id' class = 'col-sm-4 col-form-label ele_required'>Book name: </label>
+                        <label for = 'book_id' class = 'col-sm-4 col-form-label ele_required'>Book name </label>
                         <div class = 'col-sm-7'>
                             <?php
                             $attribute = array(
@@ -46,7 +46,7 @@
                         </div>
                     </div>
                     <div class = 'form-group row'>
-                        <label for = 'bcategory_id' class = 'col-sm-4 col-form-label ele_required'>Book category: </label>
+                        <label for = 'bcategory_id' class = 'col-sm-4 col-form-label ele_required'>Book category </label>
                         <div class = 'col-sm-7'>
                             <?php
                             $attribute = array(
@@ -60,7 +60,7 @@
                         </div>
                     </div>
                     <div class = 'form-group row'>
-                        <label for = 'bpublication_id' class = 'col-sm-4 col-form-label ele_required'>Book publication: </label>
+                        <label for = 'bpublication_id' class = 'col-sm-4 col-form-label ele_required'>Book publication </label>
                         <div class = 'col-sm-7'>
                             <?php
                             $attribute = array(
@@ -74,7 +74,7 @@
                         </div>
                     </div>
                     <div class = 'form-group row'>
-                        <label for = 'bauthor_id' class = 'col-sm-4 col-form-label ele_required'>Book author: </label>
+                        <label for = 'bauthor_id' class = 'col-sm-4 col-form-label ele_required'>Book author </label>
                         <div class = 'col-sm-7'>
                             <?php
                             $attribute = array(
@@ -88,7 +88,7 @@
                         </div>
                     </div>
                     <div class = 'form-group row'>
-                        <label for = 'blocation_id' class = 'col-sm-4 col-form-label ele_required'>Book location: </label>
+                        <label for = 'blocation_id' class = 'col-sm-4 col-form-label ele_required'>Book location </label>
                         <div class = 'col-sm-7'>
                             <?php
                             $attribute = array(
@@ -105,7 +105,7 @@
                 </div>
                 <div class="col-sm-6">
                     <div class = 'form-group row'>
-                        <label for = 'page' class = 'col-sm-4 col-form-label ele_required'>Pages: </label>
+                        <label for = 'page' class = 'col-sm-4 col-form-label ele_required'>Pages </label>
                         <div class = 'col-sm-7'>
                             <?php
                             $attribute = array(
@@ -120,7 +120,7 @@
                         </div>
                     </div>
                     <div class = 'form-group row'>
-                        <label for = 'mrp' class = 'col-sm-4 col-form-label'>MRP: </label>
+                        <label for = 'mrp' class = 'col-sm-4 col-form-label'>MRP </label>
                         <div class = 'col-sm-7'>
                             <?php
                             $attribute = array(
@@ -135,7 +135,7 @@
                         </div>
                     </div>
                     <div class = 'form-group row'>
-                        <label for = 'isbn_no' class = 'col-sm-4 col-form-label'>ISBN: </label>
+                        <label for = 'isbn_no' class = 'col-sm-4 col-form-label'>ISBN </label>
                         <div class = 'col-sm-7'>
                             <?php
                             $attribute = array(
@@ -151,7 +151,7 @@
                         </div>
                     </div>
                     <div class = 'form-group row'>
-                        <label for = 'edition' class = 'col-sm-4 col-form-label'>Edition: </label>
+                        <label for = 'edition' class = 'col-sm-4 col-form-label'>Edition </label>
                         <div class = 'col-sm-7'>
                             <?php
                             $attribute = array(
