@@ -294,8 +294,9 @@ class Book_ledger_upload_utilities extends CI_Controller {
                     $columns.="remarks,";
                 } else {
                     $condition = "REMARKS IS NULL OR REMARKS=''";
-                }
-                $columns.= "book_name,book_category_name,book_publication,author_name,isbn,pages,mrp,edition,book_location";
+                }                
+                $columns.= "book_name,book_category_name,book_publication,author_name,isbn,pages"
+                        . ",mrp,edition,book_location,bill_number,purchase_date,price,vendor_name,purchase_remarks";
 
                 $data = array();
                 $grid_buttons = array(
