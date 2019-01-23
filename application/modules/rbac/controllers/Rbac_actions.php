@@ -233,6 +233,8 @@ class Rbac_actions extends CI_Controller {
                 $this->excel_utility->download_excel($config, $export_type);
                 ob_end_flush();
                 exit;
+            } else {
+                $this->layout->render(array('error' => '401'));
             }
         } else {
             $this->layout->data = array('status_code' => '403', 'message' => 'Request Forbidden.');

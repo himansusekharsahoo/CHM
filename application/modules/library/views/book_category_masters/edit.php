@@ -5,7 +5,7 @@
         "id" => "book_category_masters",
         "method" => "POST"
     );
-    $form_action = "/library/book_category_masters/edit";
+    $form_action = base_url('edit-book-category-save');
     echo form_open($form_action, $form_attribute);
     ?>
     <?php
@@ -56,28 +56,26 @@
             ?>
         </div>
     </div>
-    <div class = 'form-group row'>
+<!--    <div class = 'form-group row'>
         <label for = 'parent_id' class = 'col-sm-2 col-form-label'>Parent id</label>
-        <div class = 'col-sm-3'>
+        <div class = 'col-sm-3'>-->
             <?php
             $attribute = array(
                 "name" => "parent_id",
                 "id" => "parent_id",
                 "class" => "form-control",
-                "title" => "",
-                "required" => "",
-                "type" => "number",
-                "value" => (isset($data["parent_id"])) ? $data["parent_id"] : ""
+                "type" => "hidden",
+                "value" => (isset($data["parent_id"])) ? $data["parent_id"] : "0"
             );
             echo form_error("parent_id");
             echo form_input($attribute);
             ?>
-        </div>
-    </div>
+<!--        </div>
+    </div>-->
 
     <div class = 'form-group row'>
         <div class = 'col-sm-1'>
-            <a class="text-right btn btn-default" href="<?= APP_BASE ?>library/book_category_masters/index">
+            <a class="text-right btn btn-default" href="<?= base_url('manage-book-category')?>">
                 <span class="glyphicon glyphicon-th-list"></span> Cancel
             </a>
         </div>

@@ -5,7 +5,7 @@
         "id" => "book_publication_masters",
         "method" => "POST"
     );
-    $form_action = "/library/book_publication_masters/create";
+    $form_action = base_url("create-book-publication");
     echo form_open($form_action, $form_attribute);
     ?>
     <div class = 'form-group row'>
@@ -64,7 +64,7 @@
 
     <div class = 'form-group row'>
         <div class = 'col-sm-1'>
-            <a class="text-right btn btn-default" href="<?= APP_BASE ?>library/book_publication_masters/index">
+            <a class="text-right btn btn-default" href="<?= base_url('manage-book-publication')?>">
                 <span class="glyphicon glyphicon-th-list"></span> Cancel
             </a>
         </div>

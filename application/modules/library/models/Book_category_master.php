@@ -61,12 +61,13 @@ class Book_category_master extends CI_Model {
     public function get_book_category_master_datatable($data = null, $export = null, $tableHeading = null, $columns = null) {
         $this->load->library('datatables');
         if (!$columns) {
-            $columns = 'bcategory_id,name,code,status,parent_id,created,created_by';
+            $columns = 'bcategory_id,name,code,status,created,created_by_name';            
         }
 
         /*
          */
-        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, FALSE, FALSE)->from('book_category_masters t1');
+        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, FALSE, FALSE)
+                ->from('book_category_list_view t1');
 
         $this->datatables->unset_column("bcategory_id");
         if (isset($data['button_set'])):

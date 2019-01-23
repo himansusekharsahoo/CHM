@@ -26,7 +26,7 @@
                         label: 'Delete',
                         action: function (dialog) {
                             $.ajax({
-                                url: '<?= APP_BASE ?>library/book_category_masters/delete',
+                                url: '<?= base_url('delete-book-category')?>',
                                 method: 'POST',
                                 data: data,
                                 success: function (result) {
@@ -59,7 +59,7 @@
             };
             $.ajax({
                 type: 'POST',
-                url: "<?= base_url('library/book_category_masters/export_grid_data') ?>",
+                url: "<?= base_url('export-book-category')?>",
                 data: param,
                 dataType: 'json'
             }).done(function (data) {
@@ -77,7 +77,7 @@
             };
             $.ajax({
                 type: 'POST',
-                url: "<?= base_url('library/book_category_masters/export_grid_data') ?>",
+                url: "<?= base_url('export-book-category')?>",
                 data: param,
                 dataType: 'json'
             }).done(function (data) {

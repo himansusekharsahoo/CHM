@@ -11,17 +11,17 @@
             <?= (isset($data["code"])) ? $data["code"] : "" ?>
         </div>
     </div>
-    <div class = 'form-group row'>
+<!--    <div class = 'form-group row'>
         <label for = 'parent_id' class = 'col-sm-2 col-form-label'>Parent id</label>
         <div class = 'col-sm-3'>
             <?= (isset($data["parent_id"])) ? $data["parent_id"] : "" ?>
         </div>
-    </div>
+    </div>-->
 
     <div class = 'form-group row'>
         <div class = 'col-sm-1'>
-            <a class="text-right btn btn-default" href="<?= APP_BASE ?>library/book_category_masters/index">
-                <span class="glyphicon glyphicon-th-list"></span> Cancel
+            <a class="text-right btn btn-default" href="<?= base_url('manage-book-category')?>">
+                <span class="glyphicon glyphicon-th-list"></span> Back
             </a>
         </div>
     </div>

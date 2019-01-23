@@ -5,7 +5,7 @@
         "id" => "book_author_masters",
         "method" => "POST"
     );
-    $form_action = "/library/book_author_masters/edit";
+    $form_action = base_url('edit-book-author-save');
     echo form_open($form_action, $form_attribute);
     ?>
     <?php
@@ -59,7 +59,7 @@
 
     <div class = 'form-group row'>
         <div class = 'col-sm-1'>
-            <a class="text-right btn btn-default" href="<?= APP_BASE ?>library/book_author_masters/index">
+            <a class="text-right btn btn-default" href="<?= base_url('manage-book-author')?>">
                 <span class="glyphicon glyphicon-th-list"></span> Cancel
             </a>
         </div>
