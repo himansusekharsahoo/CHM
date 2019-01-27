@@ -135,6 +135,7 @@ class Book_assign extends CI_Model {
      */
     public function save($data) {
         if ($data):
+            //$data[''] = $data
             $this->db->insert("book_assigns", $data);
             $bassign_id_inserted_id = $this->db->insert_id();
 
@@ -251,6 +252,19 @@ class Book_assign extends CI_Model {
 
     public function record_count() {
         return $this->db->count_all('book_assigns');
+    }
+    
+    public function enroll_member($data) {
+        if ($data):
+            $this->db->insert("library_members", $data);
+            $member_id = $this->db->insert_id();
+
+            if ($member_id):
+                return true;
+            endif;
+            return 'No data found to store!';
+        endif;
+        return 'Unable to store the data, please try again later!';
     }
 
 }

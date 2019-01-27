@@ -178,7 +178,7 @@ class Book_assigns extends CI_Controller {
 
         $grid_buttons[] = array(
             'btn_class' => 'btn-info',
-            'btn_href' => base_url('library/book_assigns/view'),
+            'btn_href' => base_url('view-book-assign'),
             'btn_icon' => 'fa-eye',
             'btn_title' => 'view record',
             'btn_separator' => ' ',
@@ -187,7 +187,7 @@ class Book_assigns extends CI_Controller {
         );
         $grid_buttons[] = array(
             'btn_class' => 'btn-primary',
-            'btn_href' => base_url('library/book_assigns/edit'),
+            'btn_href' => base_url('edit-book-assign'),
             'btn_icon' => 'fa-pencil',
             'btn_title' => 'edit record',
             'btn_separator' => ' ',
@@ -217,7 +217,7 @@ class Book_assigns extends CI_Controller {
         $dt_tool_btn = array(
             array(
                 'btn_class' => 'btn-primary',
-                'btn_href' => base_url('library/book_assigns/create'),
+                'btn_href' => base_url('create-book-assign'),
                 'btn_icon' => '',
                 'btn_title' => 'Create',
                 'btn_text' => 'Create',
@@ -332,6 +332,8 @@ class Book_assigns extends CI_Controller {
      * @since   11/08/2018
      */
     public function create() {
+        $this->scripts_include->includePlugins(array('jq_validation', 'bs_datepicker'), 'js');
+        $this->scripts_include->includePlugins(array('bs_datepicker'), 'css');
         $this->breadcrumbs->push('create', '/library/book_assigns/create');
 
         $this->layout->navTitle = 'Book assign create';
@@ -360,28 +362,23 @@ class Book_assigns extends CI_Controller {
                 ),
                 array(
                     'field' => 'return_date',
-                    'label' => 'return_date',
-                    'rules' => 'required'
+                    'label' => 'return_date'
                 ),
                 array(
                     'field' => 'return_delay_fine',
-                    'label' => 'return_delay_fine',
-                    'rules' => 'required'
+                    'label' => 'return_delay_fine'
                 ),
                 array(
                     'field' => 'book_return_condition',
-                    'label' => 'book_return_condition',
-                    'rules' => 'required'
+                    'label' => 'book_return_condition'
                 ),
                 array(
                     'field' => 'book_lost_fine',
-                    'label' => 'book_lost_fine',
-                    'rules' => 'required'
+                    'label' => 'book_lost_fine'
                 ),
                 array(
                     'field' => 'remarks',
-                    'label' => 'remarks',
-                    'rules' => 'required'
+                    'label' => 'remarks'
                 ),
                 array(
                     'field' => 'user_type',
@@ -398,14 +395,21 @@ class Book_assigns extends CI_Controller {
 
                 if ($result >= 1):
                     $this->session->set_flashdata('success', 'Record successfully saved!');
-                    redirect('/library/book_assigns');
+                    redirect('book-assigns');
                 else:
                     $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
                 endif;
             endif;
         endif;
-        $data['bledger_id_list'] = $this->book_assign->get_book_ledgers_options('bledger_id', 'bledger_id');
-        $data['member_id_list'] = $this->book_assign->get_library_members_options('member_id', 'member_id');
+        $data['bledger_id_list'] = $this->book_assign->get_book_ledgers_options('isbn_no','bledger_id');
+        $data['member_id_list'] = $this->book_assign->get_library_members_options('card_no', 'member_id');
+        /*
+         * @TODO : Fetch list from the database column comments. For book_return_condition_list and user_type_list.
+         */
+        $data['book_return_condition_list'] = array('ok' => 'Good',
+                                                'damaged' => 'Damaged',
+                                                'lost' => 'Lost');
+        $data['user_type_list'] = array('student' => 'Student','staff' => 'Staff');
         $this->layout->data = $data;
         $this->layout->render();
     }
@@ -420,6 +424,8 @@ class Book_assigns extends CI_Controller {
      * @since   11/08/2018
      */
     public function edit($bassign_id = null) {
+        $this->scripts_include->includePlugins(array('jq_validation', 'bs_datepicker'), 'js');
+        $this->scripts_include->includePlugins(array('bs_datepicker'), 'css');
         $this->breadcrumbs->push('edit', '/library/book_assigns/edit');
 
         $this->layout->navTitle = 'Book assign edit';
@@ -444,8 +450,7 @@ class Book_assigns extends CI_Controller {
                 ),
                 array(
                     'field' => 'due_date',
-                    'label' => 'due_date',
-                    'rules' => 'required'
+                    'label' => 'due_date'
                 ),
                 array(
                     'field' => 'return_date',
@@ -454,23 +459,19 @@ class Book_assigns extends CI_Controller {
                 ),
                 array(
                     'field' => 'return_delay_fine',
-                    'label' => 'return_delay_fine',
-                    'rules' => 'required'
+                    'label' => 'return_delay_fine'
                 ),
                 array(
                     'field' => 'book_return_condition',
-                    'label' => 'book_return_condition',
-                    'rules' => 'required'
+                    'label' => 'book_return_condition'
                 ),
                 array(
                     'field' => 'book_lost_fine',
-                    'label' => 'book_lost_fine',
-                    'rules' => 'required'
+                    'label' => 'book_lost_fine'
                 ),
                 array(
                     'field' => 'remarks',
-                    'label' => 'remarks',
-                    'rules' => 'required'
+                    'label' => 'remarks'
                 ),
                 array(
                     'field' => 'user_type',
@@ -497,8 +498,15 @@ class Book_assigns extends CI_Controller {
             endif;
             $data['data'] = $result;
         endif;
-        $data['bledger_id_list'] = $this->book_assign->get_book_ledgers_options('bledger_id', 'bledger_id');
-        $data['member_id_list'] = $this->book_assign->get_library_members_options('member_id', 'member_id');
+        $data['bledger_id_list'] = $this->book_assign->get_book_ledgers_options('isbn_no','bledger_id');
+        $data['member_id_list'] = $this->book_assign->get_library_members_options('card_no', 'member_id');
+        /*
+         * @TODO : Fetch list from the database column comments. For book_return_condition_list and user_type_list.
+         */
+        $data['book_return_condition_list'] = array('ok' => 'Good',
+                                                'damaged' => 'Damaged',
+                                                'lost' => 'Lost');
+        $data['user_type_list'] = array('student' => 'Student','staff' => 'Staff');
         $this->layout->data = $data;
         $this->layout->render();
     }
@@ -564,6 +572,18 @@ class Book_assigns extends CI_Controller {
             $this->layout->render(array('error' => 'general'));
         endif;
         return 'Invalid request type.';
+    }
+    
+    public function add_member() {
+        //print_r($_POST);
+        $data['data'] = array(
+            'card_no' => $this->input->post('card_no'),
+            'user_id' => $this->input->post('user_id'),
+            'expiry_date' => $this->input->post('expiry_date'),
+            'date_issue' => date('Y-m-d')
+        );
+        $result = $this->book_assign->enroll_member($data['data']);
+        echo $result;
     }
 
 }
