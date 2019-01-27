@@ -62,7 +62,7 @@ class Book_assign extends CI_Model {
     public function get_book_assign_datatable($data = null, $export = null, $tableHeading = null, $columns = null) {
         $this->load->library('datatables');
         if (!$columns) {
-            $columns = 'bassign_id,bledger_id,member_id,issue_date,due_date,return_date,return_delay_fine,book_return_condition,book_lost_fine,remarks,created,created_by,user_type';
+            $columns = 'bassign_id,isbn_no,card_no,issue_date,due_date,return_date,return_delay_fine,book_return_condition,remarks,user_type';
         }
 
         /*
@@ -73,7 +73,9 @@ class Book_assign extends CI_Model {
           Columns:-	member_id,card_no,date_issue,expiry_date,user_id,user_role_id,created,created_by,status
 
          */
-        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, FALSE, FALSE)->from('book_assigns t1');
+        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, FALSE, FALSE)->from('book_assigns t1')
+                ->join('library_members','t1.member_id=library_members.member_id')
+                ->join('book_ledgers','t1.bledger_id=book_ledgers.bledger_id');
 
         $this->datatables->unset_column("bassign_id");
         if (isset($data['button_set'])):

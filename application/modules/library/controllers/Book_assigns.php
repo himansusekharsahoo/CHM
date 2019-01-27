@@ -69,65 +69,57 @@ class Book_assigns extends CI_Controller {
         $this->layout->title = 'Book assign list';
         $header = array(
             array(
-                'db_column' => 'bledger_id',
-                'name' => 'Bledger_id',
-                'title' => 'Bledger_id',
+                'db_column' => 'isbn_no',
+                'name' => 'Ledger ID',
+                'title' => 'Ledger ID',
                 'class_name' => 'dt_name',
                 'orderable' => 'true',
                 'visible' => 'true',
                 'searchable' => 'true'
             ), array(
-                'db_column' => 'member_id',
-                'name' => 'Member_id',
-                'title' => 'Member_id',
+                'db_column' => 'card_no',
+                'name' => 'Card Number',
+                'title' => 'Card Number',
                 'class_name' => 'dt_name',
                 'orderable' => 'true',
                 'visible' => 'true',
                 'searchable' => 'true'
             ), array(
                 'db_column' => 'issue_date',
-                'name' => 'Issue_date',
-                'title' => 'Issue_date',
+                'name' => 'Issue Date',
+                'title' => 'Issue Date',
                 'class_name' => 'dt_name',
                 'orderable' => 'true',
                 'visible' => 'true',
                 'searchable' => 'true'
             ), array(
                 'db_column' => 'due_date',
-                'name' => 'Due_date',
-                'title' => 'Due_date',
+                'name' => 'Due Date',
+                'title' => 'Due Date',
                 'class_name' => 'dt_name',
                 'orderable' => 'true',
                 'visible' => 'true',
                 'searchable' => 'true'
             ), array(
                 'db_column' => 'return_date',
-                'name' => 'Return_date',
-                'title' => 'Return_date',
+                'name' => 'Return Date',
+                'title' => 'Return Date',
                 'class_name' => 'dt_name',
                 'orderable' => 'true',
                 'visible' => 'true',
                 'searchable' => 'true'
             ), array(
                 'db_column' => 'return_delay_fine',
-                'name' => 'Return_delay_fine',
-                'title' => 'Return_delay_fine',
+                'name' => 'Delay Fine',
+                'title' => 'Delay Fine',
                 'class_name' => 'dt_name',
                 'orderable' => 'true',
                 'visible' => 'true',
                 'searchable' => 'true'
             ), array(
                 'db_column' => 'book_return_condition',
-                'name' => 'Book_return_condition',
-                'title' => 'Book_return_condition',
-                'class_name' => 'dt_name',
-                'orderable' => 'true',
-                'visible' => 'true',
-                'searchable' => 'true'
-            ), array(
-                'db_column' => 'book_lost_fine',
-                'name' => 'Book_lost_fine',
-                'title' => 'Book_lost_fine',
+                'name' => 'Book Condition',
+                'title' => 'Book Condition',
                 'class_name' => 'dt_name',
                 'orderable' => 'true',
                 'visible' => 'true',
@@ -141,25 +133,9 @@ class Book_assigns extends CI_Controller {
                 'visible' => 'true',
                 'searchable' => 'true'
             ), array(
-                'db_column' => 'created',
-                'name' => 'Created',
-                'title' => 'Created',
-                'class_name' => 'dt_name',
-                'orderable' => 'true',
-                'visible' => 'true',
-                'searchable' => 'true'
-            ), array(
-                'db_column' => 'created_by',
-                'name' => 'Created_by',
-                'title' => 'Created_by',
-                'class_name' => 'dt_name',
-                'orderable' => 'true',
-                'visible' => 'true',
-                'searchable' => 'true'
-            ), array(
                 'db_column' => 'user_type',
-                'name' => 'User_type',
-                'title' => 'User_type',
+                'name' => 'User Type',
+                'title' => 'User Type',
                 'class_name' => 'dt_name',
                 'orderable' => 'true',
                 'visible' => 'true',
