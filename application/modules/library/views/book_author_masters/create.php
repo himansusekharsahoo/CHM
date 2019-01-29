@@ -15,9 +15,7 @@
             $attribute = array(
                 "name" => "author_name",
                 "id" => "author_name",
-                "class" => "form-control",
-                "title" => "",
-                "required" => "",
+                "class" => "form-control",                
                 "type" => "text",
                 "value" => (isset($data["author_name"])) ? $data["author_name"] : ""
             );
@@ -34,8 +32,6 @@
                 "name" => "remarks",
                 "id" => "remarks",
                 "class" => "form-control",
-                "title" => "",
-                "required" => "",
                 "type" => "text",
                 "value" => (isset($data["remarks"])) ? $data["remarks"] : ""
             );
@@ -57,3 +53,26 @@
     </div>
     <?= form_close() ?>
 </div>
+<script type="text/javascript">
+    $(document).ready(function () {       
+        
+        $('#book_author_masters').validate({
+            rules: {
+                author_name: {
+                    required: true,
+                    letters_space_only: true
+                }
+            },
+            messages: {
+                author_name:{
+                    required:'Please enter book author name'                    
+                }
+            },
+            submitHandler: function (form) {
+                if ($(form).valid())
+                    form.submit();
+                return false; // prevent normal form posting
+            }
+        });
+    });
+</script>

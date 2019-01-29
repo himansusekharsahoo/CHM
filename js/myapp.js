@@ -35,9 +35,17 @@
 
     jQuery.browser = browser;
 //APP CODE
+    jQuery.validator.addMethod("letters_space_only", function (value, element){
+        return this.optional(element) || /^[a-z," "]+$/i.test(value);
+    }, "Letters and spaces are only allowed");
+    
+    jQuery.validator.addMethod("letter_number_only", function (value, element){
+        return this.optional(element) || /^[a-z0-9," "]+$/i.test(value);
+    }, "Letters,number and spaces are only allowed");
+    
     $('#admin_login_submit').on('click', function (e) {
         e.preventDefault();
-        
+
         $("#admin_login").validate({
             rules: {
                 user_email: {
@@ -46,7 +54,7 @@
                 },
                 user_pass: "required"
             },
-            messages: {                
+            messages: {
                 user_email: {
                     required: "Please enter your email address",
                     email: "Please enter a valid emial address"
@@ -55,15 +63,15 @@
             },
             errorLabelContainer: $("#login_error")
         });
-        if($("#admin_login").valid()){            
+        if ($("#admin_login").valid()) {
             $("#admin_login").submit();
         }
     });
 
 
-$('#rbac_create_users_submit').on('click', function (e) {
+    $('#rbac_create_users_submit').on('click', function (e) {
         e.preventDefault();
-        
+
         $("#rbac_create_users").validate({
             rules: {
                 email: {
@@ -72,25 +80,25 @@ $('#rbac_create_users_submit').on('click', function (e) {
                 },
                 password: "required",
                 re_password: {
-                 equalTo: "#password"   
+                    equalTo: "#password"
                 },
                 mobile: "required",
                 roles: "required",
                 status: "required",
             },
-            messages: {                
+            messages: {
                 user_email: {
                     required: "Please enter email address",
                     email: "Please enter a valid emial address"
                 },
                 password: "Please enter password",
-                re_password:'Password do match',
+                re_password: 'Password do match',
                 mobile: "Please enter mobile number",
                 roles: "Please select roles for user",
                 status: "Please user status",
-            }            
+            }
         });
-        if($("#rbac_create_users").valid()){            
+        if ($("#rbac_create_users").valid()) {
             $("#rbac_create_users").submit();
         }
     });

@@ -5,7 +5,7 @@
         "id" => "book_location_masters",
         "method" => "POST"
     );
-    $form_action = "/library/book_location_masters/edit";
+    $form_action = base_url('edit-book-location-save');
     echo form_open($form_action, $form_attribute);
     ?>
     <?php
@@ -13,8 +13,6 @@
         "name" => "blocation_id",
         "id" => "blocation_id",
         "class" => "form-control",
-        "title" => "",
-        "required" => "",
         "type" => "hidden",
         "value" => (isset($data["blocation_id"])) ? $data["blocation_id"] : ""
     );
@@ -28,8 +26,6 @@
                 "name" => "floor",
                 "id" => "floor",
                 "class" => "form-control",
-                "title" => "",
-                "required" => "",
                 "type" => "text",
                 "value" => (isset($data["floor"])) ? $data["floor"] : ""
             );
@@ -46,8 +42,6 @@
                 "name" => "block",
                 "id" => "block",
                 "class" => "form-control",
-                "title" => "",
-                "required" => "",
                 "type" => "text",
                 "value" => (isset($data["block"])) ? $data["block"] : ""
             );
@@ -64,8 +58,6 @@
                 "name" => "rack_no",
                 "id" => "rack_no",
                 "class" => "form-control",
-                "title" => "",
-                "required" => "",
                 "type" => "text",
                 "value" => (isset($data["rack_no"])) ? $data["rack_no"] : ""
             );
@@ -82,8 +74,6 @@
                 "name" => "self_no",
                 "id" => "self_no",
                 "class" => "form-control",
-                "title" => "",
-                "required" => "",
                 "type" => "text",
                 "value" => (isset($data["self_no"])) ? $data["self_no"] : ""
             );
@@ -100,8 +90,6 @@
                 "name" => "remarks",
                 "id" => "remarks",
                 "class" => "form-control",
-                "title" => "",
-                "required" => "",
                 "type" => "text",
                 "value" => (isset($data["remarks"])) ? $data["remarks"] : ""
             );
@@ -113,7 +101,7 @@
 
     <div class = 'form-group row'>
         <div class = 'col-sm-1'>
-            <a class="text-right btn btn-default" href="<?= APP_BASE ?>library/book_location_masters/index">
+            <a class="text-right btn btn-default" href="<?= base_url('manage-book-location') ?>">
                 <span class="glyphicon glyphicon-th-list"></span> Cancel
             </a>
         </div>
@@ -123,3 +111,26 @@
     </div>
     <?= form_close() ?>
 </div>
+<script type="text/javascript">
+    $(document).ready(function () {       
+        
+        $('#book_location_masters').validate({
+            rules: {
+                floor: {
+                    required: true,
+                    letter_number_only: true
+                }
+            },
+            messages: {
+                floor:{
+                    required:'Please enter floor'
+                }
+            },
+            submitHandler: function (form) {
+                if ($(form).valid())
+                    form.submit();
+                return false; // prevent normal form posting
+            }
+        });
+    });
+</script>

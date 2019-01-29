@@ -88,7 +88,7 @@ class Users extends CI_Controller {
         if (!$this->rbac->is_login()) {
             redirect(APP_BASE . 'users/sign_in');
         } else {
-            $this->layout->title = 'test page title';
+            $this->layout->title = 'Dashboard';
             $this->breadcrumbs->push('dashboard', '/users/dashboard');
             $data = array();
             $this->layout->data = $data;

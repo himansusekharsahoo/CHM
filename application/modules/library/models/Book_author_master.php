@@ -211,7 +211,18 @@ class Book_author_master extends CI_Model {
     public function record_count() {
         return $this->db->count_all('book_author_masters');
     }
-
+/**
+     * @param  : string $condition
+     * @desc   : used to check duplicacy of book author name
+     * @return : number 0/count value
+     * @author : HimansuS
+     * @created:
+     */
+    public function check_duplicate($condition){
+        $query="select count(bauthor_id) count_rec from book_author_masters where 1=1 $condition";
+        $result=$this->db->query($query)->row();        
+        return $result->count_rec;
+    }
 }
 
 ?>

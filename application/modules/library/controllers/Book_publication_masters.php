@@ -261,8 +261,7 @@ class Book_publication_masters extends CI_Controller {
         if ($this->input->is_ajax_request()):
             if ($this->rbac->has_permission('MANAGE_BOOK_PUBLICATION', 'XLS_EXPORT') || $this->rbac->has_permission('MANAGE_BOOK_PUBLICATION', 'CSV_EXPORT')) {
                 $export_type = $this->input->post('export_type');
-                $tableHeading = array('name' => 'name', 'code' => 'code', 'status' => 'status', 'remarks' => 'remarks', 'created' => 'created', 'created_by' => 'created_by',);
-                $cols = 'name,code,status,remarks,created,created_by';
+                $tableHeading = array('name' => 'name', 'code' => 'code', 'status' => 'status', 'remarks' => 'remarks', 'created' => 'created', 'created_by_name' => 'created_by',);
                 $data = $this->book_publication_master->get_book_publication_master_datatable(null, true, $tableHeading);
                 $head_cols = $body_col_map = array();
                 $date = array(
@@ -315,7 +314,7 @@ class Book_publication_masters extends CI_Controller {
     public function create() {
         if ($this->rbac->has_permission('MANAGE_BOOK_PUBLICATION', 'CREATE')) {
             $this->breadcrumbs->push('create', '/library/book_publication_masters/create');
-
+            $this->scripts_include->includePlugins(array('jq_validation'), 'js');
             $this->layout->navTitle = 'Book publication master create';
             $data = array();
             if ($this->input->post()):
@@ -324,31 +323,28 @@ class Book_publication_masters extends CI_Controller {
                         'field' => 'name',
                         'label' => 'name',
                         'rules' => 'required'
-                    ),
-                    array(
-                        'field' => 'code',
-                        'label' => 'code',
-                        'rules' => 'required'
-                    ),
-                    array(
-                        'field' => 'remarks',
-                        'label' => 'remarks',
-                        'rules' => 'required'
-                    ),
+                    )
                 );
                 $this->form_validation->set_rules($config);
 
                 if ($this->form_validation->run()):
                     $post_data = $this->input->post();
                     $post_data['created_by'] = $this->rbac->get_user_id();
+                    $code = str_replace(" ", "_", trim($post_data['name']));
+                    $code = str_replace(array("__"), "_", $code);
+                    $post_data['code'] = strtoupper(strtolower($code));
                     $data['data'] = $post_data;
-                    $result = $this->book_publication_master->save($data['data']);
-
-                    if ($result >= 1):
-                        $this->session->set_flashdata('success', 'Record successfully saved!');
-                        redirect('manage-book-publication');
+                    $condition = " AND replace(lower(name),' ','')=replace(lower('" . $post_data['name'] . "'),' ','')";
+                    if (!$this->book_publication_master->check_duplicate($condition)) :                        
+                        $result = $this->book_publication_master->save($post_data);
+                        if ($result >= 1):
+                            $this->session->set_flashdata('success', 'Record successfully saved!');
+                            redirect('manage-book-publication');
+                        else:
+                            $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
+                        endif;
                     else:
-                        $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
+                        $this->session->set_flashdata('error', 'Book category name is already exists, Please try another!');
                     endif;
                 endif;
             endif;
@@ -371,37 +367,35 @@ class Book_publication_masters extends CI_Controller {
     public function edit($publication_id = null) {
         if ($this->rbac->has_permission('MANAGE_BOOK_PUBLICATION', 'EDIT')) {
             $this->breadcrumbs->push('edit', '/library/book_publication_masters/edit');
-
+            $this->scripts_include->includePlugins(array('jq_validation'), 'js');
             $this->layout->navTitle = 'Book publication master edit';
             $data = array();
             if ($this->input->post()):
-                $data['data'] = $this->input->post();
+                $data['data'] = $post_data=$this->input->post();
                 $config = array(
                     array(
                         'field' => 'name',
                         'label' => 'name',
                         'rules' => 'required'
-                    ),
-                    array(
-                        'field' => 'code',
-                        'label' => 'code',
-                        'rules' => 'required'
-                    ),
-                    array(
-                        'field' => 'remarks',
-                        'label' => 'remarks',
-                        'rules' => 'required'
-                    ),
+                    )
                 );
                 $this->form_validation->set_rules($config);
 
                 if ($this->form_validation->run()):
-                    $result = $this->book_publication_master->update($data['data']);
-                    if ($result >= 1):
-                        $this->session->set_flashdata('success', 'Record successfully updated!');
-                        redirect('manage-book-publication');
+                    $code = str_replace(" ", "_", trim($post_data['name']));
+                    $code = str_replace(array("__"), "_", $code);
+                    $post_data['code'] = strtoupper(strtolower($code));
+                    $condition = " AND publication_id!='".$post_data['publication_id']."' AND replace(lower(name),' ','')=replace(lower('" . $post_data['name'] . "'),' ','')";
+                    if (!$this->book_publication_master->check_duplicate($condition)) :                        
+                        $result = $this->book_publication_master->update($post_data);
+                        if ($result >= 1):
+                            $this->session->set_flashdata('success', 'Record successfully updated!');
+                            redirect('manage-book-publication');
+                        else:
+                            $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
+                        endif;
                     else:
-                        $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
+                        $this->session->set_flashdata('error', 'Book category name is already exists, Please try another!');
                     endif;
                 endif;
             else:

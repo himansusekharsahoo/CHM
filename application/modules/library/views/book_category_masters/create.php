@@ -9,15 +9,13 @@
     echo form_open($form_action, $form_attribute);
     ?>
     <div class = 'form-group row'>
-        <label for = 'name' class = 'col-sm-2 col-form-label'>Name</label>
+        <label for = 'name' class = 'col-sm-2 col-form-label ele_required'>Name</label>
         <div class = 'col-sm-3'>
             <?php
             $attribute = array(
                 "name" => "name",
                 "id" => "name",
-                "class" => "form-control",
-                "title" => "",
-                "required" => "",
+                "class" => "form-control ",
                 "type" => "text",
                 "value" => (isset($data["name"])) ? $data["name"] : ""
             );
@@ -27,42 +25,8 @@
         </div>
     </div>
     <div class = 'form-group row'>
-        <label for = 'code' class = 'col-sm-2 col-form-label'>Code</label>
-        <div class = 'col-sm-3'>
-            <?php
-            $attribute = array(
-                "name" => "code",
-                "id" => "code",
-                "class" => "form-control",
-                "title" => "",
-                "required" => "",
-                "type" => "text",
-                "value" => (isset($data["code"])) ? $data["code"] : ""
-            );
-            echo form_error("code");
-            echo form_input($attribute);
-            ?>
-        </div>
-    </div>
-<!--    <div class = 'form-group row'>
-        <label for = 'parent_id' class = 'col-sm-2 col-form-label'>Parent id</label>
-        <div class = 'col-sm-3'>-->
-            <?php
-            $attribute = array(
-                "name" => "parent_id",
-                "id" => "parent_id",
-                "class" => "form-control",
-                "type" => "hidden",
-                "value" => (isset($data["parent_id"])) ? $data["parent_id"] : "0"
-            );
-            echo form_input($attribute);
-            ?>
-<!--        </div>
-    </div>-->
-
-    <div class = 'form-group row'>
         <div class = 'col-sm-1'>
-            <a class="text-right btn btn-default" href="<?= base_url('manage-book-category')?>">
+            <a class="text-right btn btn-default" href="<?= base_url('manage-book-category') ?>">
                 <span class="glyphicon glyphicon-th-list"></span> Cancel
             </a>
         </div>
@@ -72,3 +36,26 @@
     </div>
     <?= form_close() ?>
 </div>
+<script type="text/javascript">
+    $(document).ready(function () {       
+        
+        $('#book_category_masters').validate({
+            rules: {
+                name: {
+                    required: true,
+                    letter_number_only: true
+                }
+            },
+            messages: {
+                name:{
+                    required:'Please enter book category name'                    
+                }
+            },
+            submitHandler: function (form) {
+                if ($(form).valid())
+                    form.submit();
+                return false; // prevent normal form posting
+            }
+        });
+    });
+</script>

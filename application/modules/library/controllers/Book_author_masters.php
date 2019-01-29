@@ -181,7 +181,7 @@ class Book_author_masters extends CI_Controller {
                     'btn_separator' => ' '
                 );
                 $dt_button_flag = true;
-            }            
+            }
             if ($this->rbac->has_permission('MANAGE_BOOK_AUTHOR', 'XLS_EXPORT')) {
                 $dt_tool_btn[] = array(
                     'btn_class' => 'no_pad',
@@ -194,7 +194,7 @@ class Book_author_masters extends CI_Controller {
                 );
                 $dt_button_flag = true;
             }
-            
+
             if ($this->rbac->has_permission('MANAGE_BOOK_AUTHOR', 'CSV_EXPORT')) {
                 $dt_tool_btn[] = array(
                     'btn_class' => 'no_pad',
@@ -254,8 +254,7 @@ class Book_author_masters extends CI_Controller {
         if ($this->input->is_ajax_request()):
             if ($this->rbac->has_permission('MANAGE_BOOK_AUTHOR', 'XLS_EXPORT') || $this->rbac->has_permission('MANAGE_BOOK_AUTHOR', 'CSV_EXPORT')) {
                 $export_type = $this->input->post('export_type');
-                $tableHeading = array('author_name' => 'author_name', 'status' => 'status', 'remarks' => 'remarks', 'created' => 'created', 'created_by' => 'created_by',);
-                $cols = 'author_name,status,remarks,created,created_by';
+                $tableHeading = array('author_name' => 'author_name', 'status' => 'status', 'remarks' => 'remarks', 'created' => 'created', 'created_by_name' => 'created_by');
                 $data = $this->book_author_master->get_book_author_master_datatable(null, true, $tableHeading);
                 $head_cols = $body_col_map = array();
                 $date = array(
@@ -309,6 +308,7 @@ class Book_author_masters extends CI_Controller {
         if ($this->rbac->has_permission('MANAGE_BOOK_AUTHOR', 'CREATE')) {
             $this->breadcrumbs->push('create', '/library/book_author_masters/create');
             $this->layout->navTitle = 'Book author create';
+            $this->scripts_include->includePlugins(array('jq_validation'), 'js');
             $data = array();
             if ($this->input->post()):
                 $config = array(
@@ -316,12 +316,7 @@ class Book_author_masters extends CI_Controller {
                         'field' => 'author_name',
                         'label' => 'author_name',
                         'rules' => 'required'
-                    ),
-                    array(
-                        'field' => 'remarks',
-                        'label' => 'remarks',
-                        'rules' => 'required'
-                    ),
+                    )
                 );
                 $this->form_validation->set_rules($config);
 
@@ -330,14 +325,20 @@ class Book_author_masters extends CI_Controller {
                     $post_data = $this->input->post();
                     $post_data['created_by'] = $this->rbac->get_user_id();
                     $data['data'] = $post_data;
-                    $result = $this->book_author_master->save($data['data']);
 
-                    if ($result >= 1):
-                        $this->session->set_flashdata('success', 'Record successfully saved!');
-                        redirect('manage-book-author');
+                    $condition = " AND replace(lower(author_name),' ','')=replace(lower('" . $post_data['author_name'] . "'),' ','')";
+                    if (!$this->book_author_master->check_duplicate($condition)) :
+                        $result = $this->book_author_master->save($data['data']);
+                        if ($result >= 1):
+                            $this->session->set_flashdata('success', 'Record successfully saved!');
+                            redirect('manage-book-author');
+                        else:
+                            $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
+                        endif;
                     else:
-                        $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
+                        $this->session->set_flashdata('error', 'Book category name is already exists, Please try another!');
                     endif;
+
                 endif;
             endif;
             $this->layout->data = $data;
@@ -359,37 +360,37 @@ class Book_author_masters extends CI_Controller {
     public function edit($bauthor_id = null) {
         if ($this->rbac->has_permission('MANAGE_BOOK_AUTHOR', 'EDIT')) {
             $this->breadcrumbs->push('edit', '/library/book_author_masters/edit');
-
+            $this->scripts_include->includePlugins(array('jq_validation'), 'js');
             $this->layout->navTitle = 'Book author edit';
             $data = array();
             if ($this->input->post()):
-                $data['data'] = $this->input->post();
+                $data['data'] = $post_data=$this->input->post();
                 $config = array(
                     array(
                         'field' => 'author_name',
                         'label' => 'author_name',
                         'rules' => 'required'
-                    ),
-                    array(
-                        'field' => 'remarks',
-                        'label' => 'remarks',
-                        'rules' => 'required'
-                    ),
+                    )
                 );
                 $this->form_validation->set_rules($config);
 
                 if ($this->form_validation->run()):
-                    $result = $this->book_author_master->update($data['data']);
-                    if ($result >= 1):
-                        $this->session->set_flashdata('success', 'Record successfully updated!');
-                        redirect('manage-book-author');
+                    $condition = " AND bauthor_id!='" . $post_data['bauthor_id'] . "'AND replace(lower(author_name),' ','')=replace(lower('" . $post_data['author_name'] . "'),' ','')";
+                    if (!$this->book_author_master->check_duplicate($condition)) :
+                        $result = $this->book_author_master->update($data['data']);
+                        if ($result >= 1):
+                            $this->session->set_flashdata('success', 'Record successfully updated!');
+                            redirect('manage-book-author');
+                        else:
+                            $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
+                        endif;
                     else:
-                        $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
+                        $this->session->set_flashdata('error', 'Book category name is already exists, Please try another!');
                     endif;
                 endif;
             else:
                 $bauthor_id = c_decode($bauthor_id);
-                $result = $this->book_author_master->get_book_author_master(null, array('bauthor_id' => $bauthor_id));                
+                $result = $this->book_author_master->get_book_author_master(null, array('bauthor_id' => $bauthor_id));
                 if ($result):
                     $result = current($result);
                 endif;

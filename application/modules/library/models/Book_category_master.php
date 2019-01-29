@@ -125,7 +125,6 @@ class Book_category_master extends CI_Model {
         if ($data):
             $this->db->insert("book_category_masters", $data);
             $bcategory_id_inserted_id = $this->db->insert_id();
-
             if ($bcategory_id_inserted_id):
                 return $bcategory_id_inserted_id;
             endif;
@@ -215,6 +214,18 @@ class Book_category_master extends CI_Model {
         return $this->db->count_all('book_category_masters');
     }
 
+    /**
+     * @param  : string $condition
+     * @desc   : used to check duplicacy of book category
+     * @return : number 0/count value
+     * @author : HimansuS
+     * @created:
+     */
+    public function check_duplicate($condition){
+        $query="select count(bcategory_id) count_rec from book_category_masters where 1=1 $condition";
+        $result=$this->db->query($query)->row();        
+        return $result->count_rec;
+    }
 }
 
 ?>

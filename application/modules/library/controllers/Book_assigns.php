@@ -61,7 +61,6 @@ class Book_assigns extends CI_Controller {
      * @since   11/08/2018
      */
     public function index() {
-
         $this->breadcrumbs->push('index', '/library/book_assigns/index');
         $this->scripts_include->includePlugins(array('datatable'), 'css');
         $this->scripts_include->includePlugins(array('datatable'), 'js');

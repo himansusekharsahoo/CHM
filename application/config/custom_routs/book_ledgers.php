@@ -30,3 +30,11 @@ $route['edit-book-author-save'] = 'library/book_author_masters/edit';
 $route['view-book-author/(:any)'] = 'library/book_author_masters/view/$1';
 $route['delete-book-author'] = 'library/book_author_masters/delete';
 $route['export-book-author'] = 'library/book_author_masters/export_grid_data';
+//Manage book location
+$route['manage-book-location'] = 'library/book_location_masters/index';
+$route['create-book-location'] = 'library/book_location_masters/create';
+$route['edit-book-location/(:any)'] = 'library/book_location_masters/edit/$1';
+$route['edit-book-location-save'] = 'library/book_location_masters/edit';
+$route['view-book-location/(:any)'] = 'library/book_location_masters/view/$1';
+$route['delete-book-location'] = 'library/book_location_masters/delete';
+$route['export-book-location'] = 'library/book_location_masters/export_grid_data';

@@ -258,7 +258,7 @@ class Book_category_masters extends CI_Controller {
             if ($this->rbac->has_permission('MANAGE_BOOK_CATEGORY', 'XLS_EXPORT') || $this->rbac->has_permission('MANAGE_BOOK_CATEGORY', 'CSV_EXPORT')) {
                 $export_type = $this->input->post('export_type');
                 $tableHeading = array('name' => 'name', 'code' => 'code', 'status' => 'status'
-                    , 'created' => 'created', 'concat(u.first_name," ",u.last_name) created_by_name' => 'created_by');
+                    , 'created' => 'created', 'created_by_name' => 'created_by');
                 $data = $this->book_category_master->get_book_category_master_datatable(null, true, $tableHeading);
                 $head_cols = $body_col_map = array();
                 $date = array(
@@ -312,6 +312,7 @@ class Book_category_masters extends CI_Controller {
         if ($this->rbac->has_permission('MANAGE_BOOK_CATEGORY', 'CREATE')) {
             $this->breadcrumbs->push('create', '/library/book_category_masters/create');
             $this->layout->navTitle = 'Book category master create';
+            $this->scripts_include->includePlugins(array('jq_validation'), 'js');
             $data = array();
             if ($this->input->post()):
                 $config = array(
@@ -319,32 +320,27 @@ class Book_category_masters extends CI_Controller {
                         'field' => 'name',
                         'label' => 'name',
                         'rules' => 'required'
-                    ),
-                    array(
-                        'field' => 'code',
-                        'label' => 'code',
-                        'rules' => 'required'
-                    ),
-                    array(
-                        'field' => 'parent_id',
-                        'label' => 'parent_id',
-                        'rules' => 'required'
-                    ),
+                    )
                 );
                 $this->form_validation->set_rules($config);
-
                 if ($this->form_validation->run()):
-
                     $post_data = $this->input->post();
                     $post_data['created_by'] = $this->rbac->get_user_id();
+                    $code = str_replace(" ", "_", trim($post_data['name']));
+                    $code = str_replace(array("__"), "_", $code);
+                    $post_data['code'] = strtoupper(strtolower($code));
                     $data['data'] = $post_data;
-                    $result = $this->book_category_master->save($data['data']);
-
-                    if ($result >= 1):
-                        $this->session->set_flashdata('success', 'Record successfully saved!');
-                        redirect('manage-book-category');
+                    $condition = " AND replace(lower(name),' ','')=replace(lower('" . $post_data['name'] . "'),' ','')";
+                    if (!$this->book_category_master->check_duplicate($condition)) :
+                        $result = $this->book_category_master->save($post_data);
+                        if ($result >= 1):
+                            $this->session->set_flashdata('success', 'Record successfully saved!');
+                            redirect('manage-book-category');
+                        else:
+                            $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
+                        endif;
                     else:
-                        $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
+                        $this->session->set_flashdata('error', 'Book category name is already exists, Please try another!');
                     endif;
                 endif;
             endif;
@@ -368,6 +364,7 @@ class Book_category_masters extends CI_Controller {
         if ($this->rbac->has_permission('MANAGE_BOOK_CATEGORY', 'EDIT')) {
             $this->breadcrumbs->push('edit', '/library/book_category_masters/edit');
             $this->layout->navTitle = 'Book category master edit';
+            $this->scripts_include->includePlugins(array('jq_validation'), 'js');
             $data = array();
             if ($this->input->post()):
                 $post_data = $this->input->post();
@@ -377,28 +374,30 @@ class Book_category_masters extends CI_Controller {
                         'field' => 'name',
                         'label' => 'name',
                         'rules' => 'required'
-                    ),
-                    array(
-                        'field' => 'code',
-                        'label' => 'code',
-                        'rules' => 'required'
-                    ),
-                    array(
-                        'field' => 'parent_id',
-                        'label' => 'parent_id',
-                        'rules' => 'required'
-                    ),
+                    )
                 );
                 $this->form_validation->set_rules($config);
 
                 if ($this->form_validation->run()):
-                    $result = $this->book_category_master->update($data['data']);
-                    if ($result >= 1):
-                        $this->session->set_flashdata('success', 'Record successfully updated!');
-                        redirect('manage-book-category');
+                    $condition = " AND bcategory_id!='" . $post_data['bcategory_id'] . "' and replace(lower(name),' ','')=replace(lower('" . $post_data['name'] . "'),' ','')";
+                    if (!$this->book_category_master->check_duplicate($condition)) :
+                        //$post_data['modified'] = date("Y-m-d H:i:s");
+                        //$post_data['modified_by'] = $this->rbac->get_user_id();
+                        $code = str_replace(" ", "_", trim($post_data['name']));
+                        $code = str_replace(array("__"), "_", $code);
+                        $post_data['code'] = strtoupper(strtolower($code));
+
+                        $result = $this->book_category_master->update($post_data);
+                        if ($result >= 1):
+                            $this->session->set_flashdata('success', 'Record successfully updated!');
+                            redirect('manage-book-category');
+                        else:
+                            $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
+                        endif;
                     else:
-                        $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
+                        $this->session->set_flashdata('error', 'Book category name is already exists, Please try another!');
                     endif;
+
                 endif;
             else:
                 $bcategory_id = c_decode($bcategory_id);

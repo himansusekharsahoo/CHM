@@ -212,6 +212,19 @@ class Book_publication_master extends CI_Model {
         return $this->db->count_all('book_publication_masters');
     }
 
+    /**
+     * @param  : string $condition
+     * @desc   : used to check duplicacy of book category
+     * @return : number 0/count value
+     * @author : HimansuS
+     * @created:
+     */
+    public function check_duplicate($condition) {
+        $query = "select count(publication_id) count_rec from book_publication_masters where 1=1 $condition";
+        $result = $this->db->query($query)->row();
+        return $result->count_rec;
+    }
+
 }
 
 ?>
