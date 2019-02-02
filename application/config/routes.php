@@ -61,3 +61,4 @@ require_once 'custom_routs/rbac.php';
 require_once 'custom_routs/upload_utilities.php';
 require_once 'custom_routs/book_ledgers.php';
 require_once 'custom_routs/book_assigns.php';
+require_once 'custom_routs/app_configs.php';
