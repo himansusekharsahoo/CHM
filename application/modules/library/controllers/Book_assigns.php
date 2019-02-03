@@ -378,6 +378,7 @@ class Book_assigns extends CI_Controller {
         endif;
         $data['bledger_id_list'] = $this->book_assign->get_book_ledgers_options('isbn_no','bledger_id');
         $data['member_id_list'] = $this->book_assign->get_library_members_options('card_no', 'member_id');
+        $data['member_id_list'][''] = "Select Card Number";
         /*
          * @TODO : Fetch list from the database column comments. For book_return_condition_list and user_type_list.
          */
@@ -559,6 +560,11 @@ class Book_assigns extends CI_Controller {
         );
         $result = $this->book_assign->enroll_member($data['data']);
         echo $result;
+    }
+    
+    public function autocomplete() {
+        $auto_suggest = array('kitty'=>'kitty','Patil'=>'Patil','RKP'=>'RKP');
+        echo json_encode($auto_suggest);
     }
 
 }

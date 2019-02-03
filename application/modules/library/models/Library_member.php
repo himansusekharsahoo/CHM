@@ -41,7 +41,7 @@ class Library_member extends CI_Model {
     public function __construct() {
         parent::__construct();
 
-
+        $this->load->model('rbac/rbac_user');
         $this->layout->layout = 'admin_layout';
         $this->layout->layoutsFolder = 'layouts/admin';
         $this->layout->lMmenuFlag = 1;
@@ -61,7 +61,7 @@ class Library_member extends CI_Model {
     public function get_library_member_datatable($data = null, $export = null, $tableHeading = null, $columns = null) {
         $this->load->library('datatables');
         if (!$columns) {
-            $columns = 'member_id,card_no,date_issue,expiry_date,user_id,user_role_id,created,created_by,status';
+            $columns = 'member_id,card_no,date_issue,expiry_date,user_id,user_role_id,status';
         }
 
         /*
@@ -214,6 +214,9 @@ class Library_member extends CI_Model {
         return $this->db->count_all('library_members');
     }
 
+    public function get_user_list($columns, $index = null, $conditions = null) {
+        return $this->rbac_user->get_options($columns, $index, $conditions);
+    }
 }
 
 ?>

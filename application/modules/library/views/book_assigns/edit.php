@@ -202,8 +202,7 @@
         $('#due_date').datepicker({
             format: 'yyyy-mm-dd',
             autoclose: true,
-            clearBtn: true,
-            endDate:'0d'
+            clearBtn: true
         }).on('change', function () {
             $(this).valid();  // triggers the validation test
             // '$(this)' refers to '$("#datepicker")'

@@ -32,7 +32,7 @@
 
     <div class = 'form-group row'>
         <div class = 'col-sm-1'>
-            <a class="text-right btn btn-default" href="<?= APP_BASE ?>library/library_members/index">
+            <a class="text-right btn btn-default" href="<?= APP_BASE ?>library-members">
                 <span class="glyphicon glyphicon-th-list"></span> Cancel
             </a>
         </div>

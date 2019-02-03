@@ -9,7 +9,7 @@
     echo form_open($form_action, $form_attribute);
     ?>
     <div class = 'form-group row'>
-        <label for = 'bledger_id' class = 'col-sm-2 col-form-label'>Bledger id</label>
+        <label for = 'bledger_id' class = 'col-sm-2 col-form-label ele_required'>Bledger id</label>
         <div class = 'col-sm-3'>
             <?php
             $attribute = array(
@@ -24,10 +24,25 @@
             echo form_dropdown($attribute, $bledger_id_list, $bledger_id);
             ?>
         </div>
+        <label for = 'user_type' class = 'col-sm-2 col-form-label ele_required'>User type</label>
+        <div class = 'col-sm-3'>
+            <?php
+            $attribute = array(
+                "name" => "user_type",
+                "id" => "user_type",
+                "class" => "form-control",
+                "title" => "",
+                "required" => "",
+            );
+            $user_type = (isset($data['user_type'])) ? $data['user_type'] : '';
+            echo form_error("user_type");
+            echo form_dropdown($attribute, $user_type_list, $user_type);
+            ?>
+        </div>
     </div>
     <div class = 'form-group row'>
-        <label for = 'member_id' class = 'col-sm-2 col-form-label'>Member id</label>
-        <div class = 'col-sm-3'>
+        <label for = 'member_id' class = 'col-sm-2 col-form-label ele_required'>Card number</label>
+        <div class = 'col-sm-3 ui-widget'>
             <?php
             $attribute = array(
                 "name" => "member_id",
@@ -38,13 +53,10 @@
             );
             $member_id = (isset($data['member_id'])) ? $data['member_id'] : '';
             echo form_error("member_id");
-            echo form_dropdown($attribute, $member_id_list, $member_id);
+            echo form_dropdown($attribute,$member_id_list,$member_id);
             ?>
-            Not a member in Library? <a href="#" id="add_member">Register</a>
         </div>
-    </div>
-    <div class = 'form-group row'>
-        <label for = 'issue_date' class = 'col-sm-2 col-form-label'>Issue date</label>
+        <label for = 'issue_date' class = 'col-sm-2 col-form-label ele_required'>Issue date</label>
         <div class = 'col-sm-3'>
             <div class="input-group date">                
                 <input type="text" class="form-control pull-right" id="issue_date" name="issue_date" value="<?= (isset($data["issue_date"])) ? $data["issue_date"] : set_value('issue_date') ?>">
@@ -52,6 +64,15 @@
                     <i class="fa fa-calendar"></i>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-3"><a href="create-library-member" target="_blank" id="issue_library_card">Click here</a> to issue Library Card</div>
+        <div class="col-sm-3">
+            <a class="text-right btn btn-default" href="#">
+                <span class="glyphicon glyphicon-print"></span> Print Library Card
+            </a>
         </div>
     </div>
     <div class = 'form-group row'>
@@ -64,8 +85,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class = 'form-group row'>
         <label for = 'return_date' class = 'col-sm-2 col-form-label'>Return date</label>
         <div class = 'col-sm-3'>
             <div class="input-group date">                
@@ -92,8 +111,6 @@
             echo form_input($attribute);
             ?>
         </div>
-    </div>
-    <div class = 'form-group row'>
         <label for = 'book_return_condition' class = 'col-sm-2 col-form-label'>Book return condition</label>
         <div class = 'col-sm-3'>
             <?php
@@ -143,24 +160,7 @@
             ?>
         </div>
     </div>
-    <div class = 'form-group row'>
-        <label for = 'user_type' class = 'col-sm-2 col-form-label'>User type</label>
-        <div class = 'col-sm-3'>
-            <?php
-            $attribute = array(
-                "name" => "user_type",
-                "id" => "user_type",
-                "class" => "form-control",
-                "title" => "",
-                "required" => "",
-            );
-            $user_type = (isset($data['user_type'])) ? $data['user_type'] : '';
-            echo form_error("user_type");
-            echo form_dropdown($attribute, $user_type_list, $user_type);
-            ?>
-        </div>
-    </div>
-
+   
     <div class = 'form-group row'>
         <div class = 'col-sm-1'>
             <a class="text-right btn btn-default" href="<?= APP_BASE ?>book-assigns">
@@ -191,8 +191,7 @@
         $('#due_date').datepicker({
             format: 'yyyy-mm-dd',
             autoclose: true,
-            clearBtn: true,
-            endDate:'0d'
+            clearBtn: true
         }).on('change', function () {
             $(this).valid();  // triggers the validation test
             // '$(this)' refers to '$("#datepicker")'
@@ -213,63 +212,41 @@
             $(this).parent('div').find('input').focus();
         });
   
-        $(document).on('click', '#add_member', function (e) {
+        $('#book_assigns').validate({
+            rules: {
+                bledger_id: "required",
+                user_type: "required",
+                member_id: "required",
+                issue_date: "required"
+            },
+            messages: {
+                bledger_id: 'Ledger id is required',
+                user_type: 'User Type is required',
+                member_id: 'Card Number is required',
+                issue_date: 'Issue date is required'
+            },
+            errorPlacement: function (error, element) {                
+                if (element.attr("name") == "issue_date") {
+                    error.appendTo(element.parent("div").next("span"));
+                } else {
+                    error.insertAfter(element);
+                }
+            },
+            submitHandler: function (form) {
+                if ($(form).valid())
+                    form.submit();
+                return false; // prevent normal form posting
+            }
+        });
+
+        $('#book_assigns').on('click', '#submit', function (e) {
+
+            if ($('#book_assigns').valid()) {
+                $('#book_assigns').submit();
+            }
             e.preventDefault();
-            $('#exp_date').datepicker({
-                format: 'd-m-yyyy',
-                autoclose: true,
-                clearBtn: true,
-                endDate:'0d'
-            }).on('change', function () {
-                $(this).valid();  // triggers the validation test
-                // '$(this)' refers to '$("#datepicker")'
-            });
-            $('.focus_date').on('click', function () {
-                $(this).parent('div').find('input').focus();
-            });
-            var new_member_temp = '<div class="form-group row"><label for="user_name" class="col-sm-4 col-form-label">Name</label><div class="col-sm-6"><input type="text " name="user_name" value="" id="user_name" class="form-control" /></div></div>\n\
-                                    <div class="form-group row"><label for="user_name" class="col-sm-4 col-form-label">Card number</label><div class="col-sm-6"><input type="text " name="cnumber" value="" id="cnumber" class="form-control" /></div></div>\n\
-                                    <div class="form-group row"><label for="exp_date" class="col-sm-4 col-form-label">Expiry Date</label><div class="col-sm-6"><div class="input-group date"><input type="date" class="form-control pull-right" id="exp_date" name="exp_date" ></div></div></div>';
-            
-            BootstrapDialog.show({
-                title: 'Enroll to Library',
-                message: new_member_temp,
-                buttons: [{
-                        label: 'Cancel',
-                        action: function (dialog) {
-                            dialog.close();
-                        }
-                    }, {
-                        label: 'Enroll',
-                        action: function (dialog) {
-                            var data = {
-                                'user_id': $('#user_name').val(),
-                                'card_no': $('#cnumber').val(),
-                                'expiry_date': $('#exp_date').val()
-                            };
-                            $.ajax({
-                                url: '<?= APP_BASE ?>add-library-member',
-                                method: 'POST',
-                                data: data,
-                                success: function (result) {
-                                    if (result == 1) {
-                                        dialog.close();
-                                        document.location.reload();
-                                        row.hide();
-                                        BootstrapDialog.alert('Enrolled successfully!');
-                                    } else {
-                                        dialog.close();
-                                        BootstrapDialog.alert('Enrollment error,please contact site admin!');
-                                    }
-                                },
-                                error: function (error) {
-                                    dialog.close();
-                                    BootstrapDialog.alert('Error:' + error);
-                                }
-                            });
-                        }
-                    }]
-            });
-        })
+        });
+        
+        
     });
 </script>

@@ -109,22 +109,6 @@ class Library_members extends CI_Controller {
                 'visible' => 'true',
                 'searchable' => 'true'
             ), array(
-                'db_column' => 'created',
-                'name' => 'Created',
-                'title' => 'Created',
-                'class_name' => 'dt_name',
-                'orderable' => 'true',
-                'visible' => 'true',
-                'searchable' => 'true'
-            ), array(
-                'db_column' => 'created_by',
-                'name' => 'Created_by',
-                'title' => 'Created_by',
-                'class_name' => 'dt_name',
-                'orderable' => 'true',
-                'visible' => 'true',
-                'searchable' => 'true'
-            ), array(
                 'db_column' => 'status',
                 'name' => 'Status',
                 'title' => 'Status',
@@ -146,7 +130,7 @@ class Library_members extends CI_Controller {
 
         $grid_buttons[] = array(
             'btn_class' => 'btn-info',
-            'btn_href' => base_url('library/library_members/view'),
+            'btn_href' => base_url('view-library-member'),
             'btn_icon' => 'fa-eye',
             'btn_title' => 'view record',
             'btn_separator' => ' ',
@@ -155,7 +139,7 @@ class Library_members extends CI_Controller {
         );
         $grid_buttons[] = array(
             'btn_class' => 'btn-primary',
-            'btn_href' => base_url('library/library_members/edit'),
+            'btn_href' => base_url('edit-library-member'),
             'btn_icon' => 'fa-pencil',
             'btn_title' => 'edit record',
             'btn_separator' => ' ',
@@ -185,7 +169,7 @@ class Library_members extends CI_Controller {
         $dt_tool_btn = array(
             array(
                 'btn_class' => 'btn-primary',
-                'btn_href' => base_url('library/library_members/create'),
+                'btn_href' => base_url('create-library-member'),
                 'btn_icon' => '',
                 'btn_title' => 'Create',
                 'btn_text' => 'Create',
@@ -217,7 +201,7 @@ class Library_members extends CI_Controller {
             'dt_id' => 'raw_cert_data_dt_table',
             'dt_header' => $header,
             'dt_ajax' => array(
-                'dt_url' => base_url('library/library_members/index'),
+                'dt_url' => base_url('library-members'),
             ),
             'custom_lengh_change' => false,
             'dt_dom' => array(
@@ -300,6 +284,8 @@ class Library_members extends CI_Controller {
      * @since   11/08/2018
      */
     public function create() {
+        $this->scripts_include->includePlugins(array('jq_validation', 'bs_datepicker'), 'js');
+        $this->scripts_include->includePlugins(array('bs_datepicker'), 'css');
         $this->breadcrumbs->push('create', '/library/library_members/create');
 
         $this->layout->navTitle = 'Library member create';
@@ -318,8 +304,7 @@ class Library_members extends CI_Controller {
                 ),
                 array(
                     'field' => 'expiry_date',
-                    'label' => 'expiry_date',
-                    'rules' => 'required'
+                    'label' => 'expiry_date'
                 ),
                 array(
                     'field' => 'user_id',
@@ -341,12 +326,15 @@ class Library_members extends CI_Controller {
 
                 if ($result >= 1):
                     $this->session->set_flashdata('success', 'Record successfully saved!');
-                    redirect('/library/library_members');
+                    redirect('library-members');
                 else:
                     $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
                 endif;
             endif;
         endif;
+        $data['user_list'] = $this->library_member->get_user_list('email', 'user_id');
+        $data['user_list'][''] = "Select user email";
+        $data['user_type_list'] = array('2' => 'Student','1' => 'Staff');
         $this->layout->data = $data;
         $this->layout->render();
     }
@@ -361,6 +349,8 @@ class Library_members extends CI_Controller {
      * @since   11/08/2018
      */
     public function edit($member_id = null) {
+        $this->scripts_include->includePlugins(array('jq_validation', 'bs_datepicker'), 'js');
+        $this->scripts_include->includePlugins(array('bs_datepicker'), 'css');
         $this->breadcrumbs->push('edit', '/library/library_members/edit');
 
         $this->layout->navTitle = 'Library member edit';
@@ -380,8 +370,7 @@ class Library_members extends CI_Controller {
                 ),
                 array(
                     'field' => 'expiry_date',
-                    'label' => 'expiry_date',
-                    'rules' => 'required'
+                    'label' => 'expiry_date'
                 ),
                 array(
                     'field' => 'user_id',
@@ -400,7 +389,7 @@ class Library_members extends CI_Controller {
                 $result = $this->library_member->update($data['data']);
                 if ($result >= 1):
                     $this->session->set_flashdata('success', 'Record successfully updated!');
-                    redirect('/library/library_members');
+                    redirect('library-members');
                 else:
                     $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
                 endif;
@@ -413,6 +402,10 @@ class Library_members extends CI_Controller {
             endif;
             $data['data'] = $result;
         endif;
+        
+        $data['user_list'] = $this->library_member->get_user_list('email', 'user_id');
+        $data['user_list'][''] = "Select user email";
+        $data['user_type_list'] = array('2' => 'Student','1' => 'Staff');
         $this->layout->data = $data;
         $this->layout->render();
     }
