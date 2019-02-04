@@ -70,40 +70,40 @@ class Library_members extends CI_Controller {
         $header = array(
             array(
                 'db_column' => 'card_no',
-                'name' => 'Card_no',
-                'title' => 'Card_no',
+                'name' => 'Card Number',
+                'title' => 'Card Number',
                 'class_name' => 'dt_name',
                 'orderable' => 'true',
                 'visible' => 'true',
                 'searchable' => 'true'
             ), array(
                 'db_column' => 'date_issue',
-                'name' => 'Date_issue',
-                'title' => 'Date_issue',
+                'name' => 'Issue Date',
+                'title' => 'Issue Date',
                 'class_name' => 'dt_name',
                 'orderable' => 'true',
                 'visible' => 'true',
                 'searchable' => 'true'
             ), array(
                 'db_column' => 'expiry_date',
-                'name' => 'Expiry_date',
-                'title' => 'Expiry_date',
+                'name' => 'Expiry Date',
+                'title' => 'Expiry Date',
                 'class_name' => 'dt_name',
                 'orderable' => 'true',
                 'visible' => 'true',
                 'searchable' => 'true'
             ), array(
-                'db_column' => 'user_id',
-                'name' => 'User_id',
-                'title' => 'User_id',
+                'db_column' => 'email',
+                'name' => 'User Email',
+                'title' => 'User Email',
                 'class_name' => 'dt_name',
                 'orderable' => 'true',
                 'visible' => 'true',
                 'searchable' => 'true'
             ), array(
                 'db_column' => 'user_role_id',
-                'name' => 'User_role_id',
-                'title' => 'User_role_id',
+                'name' => 'User Role',
+                'title' => 'User Role',
                 'class_name' => 'dt_name',
                 'orderable' => 'true',
                 'visible' => 'true',
