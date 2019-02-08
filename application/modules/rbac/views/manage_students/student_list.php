@@ -6,8 +6,7 @@
         echo $dt_data;
         ?>
     </div>
-</div>
-<script type="text/javascript">
+</div><script type="text/javascript">
     $(function ($) {
 //delete record
 
@@ -27,7 +26,7 @@
                         label: 'Delete',
                         action: function (dialog) {
                             $.ajax({
-                                url: '<?php echo APP_BASE ?>rbac/rbac_users/delete',
+                                url: '<?=base_url('delete-student-profile')?>',
                                 method: 'POST',
                                 data: data,
                                 success: function (result) {
@@ -60,7 +59,7 @@
             };
             $.ajax({
                 type: 'POST',
-                url: "<?php echo base_url('rbac/rbac_users/export_grid_data') ?>",
+                url: "<?php echo base_url('export-student-profile') ?>",
                 data: param,
                 dataType: 'json'
             }).done(function (data) {
@@ -78,7 +77,7 @@
             };
             $.ajax({
                 type: 'POST',
-                url: "<?php echo base_url('rbac/rbac_users/export_grid_data') ?>",
+                url: "<?php echo base_url('export-student-profile') ?>",
                 data: param,
                 dataType: 'json'
             }).done(function (data) {

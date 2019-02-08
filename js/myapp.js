@@ -34,15 +34,8 @@
     }
 
     jQuery.browser = browser;
-//APP CODE
-    jQuery.validator.addMethod("letters_space_only", function (value, element){
-        return this.optional(element) || /^[a-z," "]+$/i.test(value);
-    }, "Letters and spaces are only allowed");
-    
-    jQuery.validator.addMethod("letter_number_only", function (value, element){
-        return this.optional(element) || /^[a-z0-9," "]+$/i.test(value);
-    }, "Letters,number and spaces are only allowed");
-    
+    //APP CODE   
+
     $('#admin_login_submit').on('click', function (e) {
         e.preventDefault();
 
@@ -104,10 +97,6 @@
     });
 
 //APP CODE
-
-
-
-
     //enable tooltip
     $('[data-toggle="tooltip"]').tooltip()
 

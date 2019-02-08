@@ -29,7 +29,7 @@ class Rbac_user extends CI_Model
     {
         $this->load->library('datatables');
         if (!$columns) {
-            $columns = 'user_id,first_name,last_name,login_id,email,password,login_status,mobile,mobile_verified,email_verified,created,modified,created_by,modified_by,status';
+            $columns = 'user_id,first_name,last_name,login_id,email,login_status,mobile,mobile_verified,email_verified,created,modified,created_by,modified_by,status';
         }
 
         /*

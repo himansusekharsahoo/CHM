@@ -50,7 +50,8 @@ class Scripts_include {
         'multiselect' => array('/assets/multiselect/jquery.multiselect.js'),
         'jq_validation' => array(
             COMPONENT_PATH . 'jquery-validation/dist/jquery.validate.min.js',
-            COMPONENT_PATH . 'jquery-validation/dist/additional-methods.min.js'
+            COMPONENT_PATH . 'jquery-validation/dist/additional-methods.min.js',
+            '/js/additional_jq_validation.js'
         ),
         'datatable' => array(
             COMPONENT_PATH . 'datatables/media/js/jquery.dataTables.min.js',
