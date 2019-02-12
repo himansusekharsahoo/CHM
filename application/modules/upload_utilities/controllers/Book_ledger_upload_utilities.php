@@ -69,7 +69,7 @@ class Book_ledger_upload_utilities extends CI_Controller {
             $config['on_failure_redirect'] = 'book-ledger-upload';
             $config['file'] = $_FILES;
             $config['temp_table_name'] = 'temp_book_ledger_';
-
+            $config['seek_line'] = 1;
             $config['temp_table_heading'] = array(
                 'BOOK_NAME',
                 'BOOK_CATEGORY_NAME',

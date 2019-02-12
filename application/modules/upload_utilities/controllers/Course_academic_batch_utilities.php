@@ -81,7 +81,7 @@ class Course_academic_batch_utilities extends CI_Controller {
             $config['on_failure_redirect'] = 'course-academic-batch-upload';
             $config['file'] = $_FILES;
             $config['temp_table_name'] = 'temp_course_a_b_m_';
-
+            $config['seek_line'] = 1;
             $config['temp_table_heading'] = array(
                 'CATEGORY_NAME',
                 'CATEGORY_CODE',

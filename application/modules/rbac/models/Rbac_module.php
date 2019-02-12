@@ -127,6 +127,7 @@ class Rbac_module extends CI_Model
         if ($module_id) :
             $this->db->trans_begin();
             $result = 0;
+            $this->db->delete('rbac_permissions', array('module_id' => $module_id));
             $this->db->delete('rbac_modules', array('module_id' => $module_id));
             if ($this->db->trans_status() === false) {
                 $this->db->trans_rollback();
