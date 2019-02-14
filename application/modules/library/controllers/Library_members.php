@@ -157,6 +157,16 @@ class Library_members extends CI_Controller {
             'style' => '',
             'attr' => 'data-member_id="$1"'
         );
+        $grid_buttons[] = array(
+            'btn_class' => 'btn-primary',
+            'btn_href' => base_url('print-library-card'),
+            'btn_icon' => 'fa-print',
+            'btn_title' => 'print library card',
+            'btn_separator' => ' ',
+            'param' => array('$1'),
+            'style' => 'margin-left:5px;',
+            'attr' => 'target="_blank"'
+        );
         $button_set = get_link_buttons($grid_buttons);
         $data['button_set'] = $button_set;
 
@@ -473,6 +483,60 @@ class Library_members extends CI_Controller {
         return 'Invalid request type.';
     }
 
+    public function print_library_card($id) {
+        if ($id):
+            $member_id = c_decode($id);
+            $result = $this->library_member->get_library_member(null, array('member_id' => $member_id), 1);
+            //print_r($result);exit;
+            $style = array(
+                'position' => 'C',
+                'align' => 'C',
+                'stretch' => true,
+                'fitwidth' => true,
+                'cellfitalign' => '',
+                'border' => true,
+                'hpadding' => 'auto',
+                'vpadding' => 'auto',
+                'fgcolor' => array(0,0,0),
+                'bgcolor' => false, //array(255,255,255),
+                'text' => false,
+                'font' => 'helvetica',
+                'fontsize' => 24,
+                'stretchtext' => 10
+            );
+            ob_start();
+            $this->load->library('Pdf');
+            $pdf = new Pdf('P', 'mm', 'A4', true, 'UTF-8', false);
+            $pdf->SetTitle('Pdf Example');
+            $pdf->SetHeaderMargin(30);
+            $pdf->SetTopMargin(20);
+            //$pdf->setFooterMargin(20);
+            $pdf->SetAutoPageBreak(true);
+            $pdf->SetAuthor('Author');
+            $pdf->AddPage();
+            $pdf->SetLineStyle(array('width' => 1, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(255, 0, 0)));
+            $html = '<h1>Card Number: '.$result[0]['card_no'].'</h1>'
+                    . '<b>Name: </b>'.$result[0]['user_id'].'<br />'
+                    . '<b>Date of Issue: </b>'.$result[0]['date_issue'].'<br />'
+                    . 'Expiry Date: '.$result[0]['expiry_date'].'<br />'
+                    . 'Bar Code: <span style="font-size:24px;">'.$pdf->write1DBarcode($result[0]['card_no'], 'C39E+', '', '', '120', 25, 0.4, $style, 'N').'</span>';
+
+            // output the HTML content
+            $pdf->writeHTML($html, true, false, true, false, '');
+            $pdf->Output('example_006.pdf', 'I');
+        endif;
+        return 0;
+    }
+    
+    public function encode_id() {
+        if ($this->input->is_ajax_request()):
+            $id = $this->input->post('member_id');
+            echo c_encode($id);
+        else:
+            $this->layout->data = array('status_code' => '403', 'message' => 'Request Forbidden.');
+            $this->layout->render(array('error' => 'general'));
+        endif;
+    }
 }
 
 ?>

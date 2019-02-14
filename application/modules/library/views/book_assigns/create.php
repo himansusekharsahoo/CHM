@@ -70,7 +70,7 @@
         <div class="col-sm-2"></div>
         <div class="col-sm-3"><a href="create-library-member" target="_blank" id="issue_library_card">Click here</a> to issue Library Card</div>
         <div class="col-sm-3">
-            <a class="text-right btn btn-default" href="#">
+            <a class="text-right btn btn-default" id="print_library_card" href="#">
                 <span class="glyphicon glyphicon-print"></span> Print Library Card
             </a>
         </div>
@@ -143,6 +143,7 @@
             echo form_input($attribute);
             ?>
         </div>
+        <input type="hidden" id="member_encode_id" value="" />
     </div>
     <div class = 'form-group row'>
         <label for = 'remarks' class = 'col-sm-2 col-form-label'>Remarks</label>
@@ -245,6 +246,31 @@
                 $('#book_assigns').submit();
             }
             e.preventDefault();
+        });
+        
+        $('#member_id').change(function(){
+            var data = {'member_id':$(this).val()};
+            $.ajax({
+                url: '<?= APP_BASE ?>encode-id',
+                method: 'POST',
+                data: data,
+                success: function (result) {   
+                    if(result != ''){
+                        $('#member_encode_id').val(result);
+                    }
+                }
+            });
+        });
+        
+        $('#print_library_card').on('click',function(e){
+            e.preventDefault(e);
+            var card_no = $('#member_encode_id').val();
+            if(card_no != ''){
+                var url = '<?= APP_BASE ?>print-library-card/'+card_no;
+                window.open(url, '_blank');
+            } else {
+                alert('Select Card Number to print');
+            }
         });
         
         

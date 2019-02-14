@@ -90,12 +90,13 @@ class Library_member extends CI_Model {
      */
     public function get_library_member($columns = null, $conditions = null, $limit = null, $offset = null) {
         if (!$columns) {
-            $columns = 'member_id,card_no,date_issue,expiry_date,user_id,user_role_id,created,created_by,status';
+            $columns = 'member_id,card_no,date_issue,expiry_date,concat(u.first_name," ",u.last_name) as user_id,user_role_id,t1.created,t1.created_by,t1.status';
         }
 
         /*
          */
         $this->db->select($columns)->from('library_members t1');
+        $this->db->join('rbac_users u','t1.user_id=u.user_id');
 
         if ($conditions && is_array($conditions)):
             foreach ($conditions as $col => $val):
