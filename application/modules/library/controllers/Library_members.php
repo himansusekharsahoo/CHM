@@ -494,7 +494,7 @@ class Library_members extends CI_Controller {
                 'stretch' => true,
                 'fitwidth' => true,
                 'cellfitalign' => '',
-                'border' => true,
+                'border' => false,
                 'hpadding' => 'auto',
                 'vpadding' => 'auto',
                 'fgcolor' => array(0,0,0),
@@ -502,28 +502,30 @@ class Library_members extends CI_Controller {
                 'text' => false,
                 'font' => 'helvetica',
                 'fontsize' => 24,
-                'stretchtext' => 10
+                'stretchtext' => 20
             );
             ob_start();
             $this->load->library('Pdf');
-            $pdf = new Pdf('P', 'mm', 'A4', true, 'UTF-8', false);
-            $pdf->SetTitle('Pdf Example');
-            $pdf->SetHeaderMargin(30);
-            $pdf->SetTopMargin(20);
-            //$pdf->setFooterMargin(20);
+            $pdf = new Pdf('L', 'mm', array(59,98), true, 'UTF-8', false);
+            $pdf->setPrintHeader(false);
+            $pdf->setPrintFooter(false);
+            $pdf->SetTitle('Library member card');
+            $pdf->SetHeaderMargin(0);
+            $pdf->SetTopMargin(0);
+            $pdf->setFooterMargin(0);
             $pdf->SetAutoPageBreak(true);
-            $pdf->SetAuthor('Author');
+            $pdf->SetAuthor('CHM');
             $pdf->AddPage();
             $pdf->SetLineStyle(array('width' => 1, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(255, 0, 0)));
-            $html = '<h1>Card Number: '.$result[0]['card_no'].'</h1>'
+            $html = '<center><h1>Card Number: '.$result[0]['card_no'].'</h1>'
                     . '<b>Name: </b>'.$result[0]['user_id'].'<br />'
                     . '<b>Date of Issue: </b>'.$result[0]['date_issue'].'<br />'
                     . 'Expiry Date: '.$result[0]['expiry_date'].'<br />'
-                    . 'Bar Code: <span style="font-size:24px;">'.$pdf->write1DBarcode($result[0]['card_no'], 'C39E+', '', '', '120', 25, 0.4, $style, 'N').'</span>';
+                    . ''.$pdf->write1DBarcode($result[0]['card_no'], 'C39E+', '', '', '120', 15, 0.4, $style, 'N').'</center>';
 
             // output the HTML content
             $pdf->writeHTML($html, true, false, true, false, '');
-            $pdf->Output('example_006.pdf', 'I');
+            $pdf->Output($result[0]['card_no'].'.pdf', 'I');
         endif;
         return 0;
     }
