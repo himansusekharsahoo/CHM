@@ -218,6 +218,18 @@ class Library_member extends CI_Model {
     public function get_user_list($columns, $index = null, $conditions = null) {
         return $this->rbac_user->get_options($columns, $index, $conditions);
     }
+    
+    public function unique_card_number($card_no) {
+        $this->db->where('card_no', $card_no);
+        $query = $this->db->get('library_members');
+        return $query->num_rows();
+    }
+    
+    public function unique_user($user_id) {
+        $this->db->where('user_id',$user_id);
+        $query = $this->db->get('library_members');
+        return $query->num_rows();
+    }
 }
 
 ?>

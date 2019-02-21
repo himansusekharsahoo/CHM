@@ -5,7 +5,7 @@
         "id" => "book_assigns",
         "method" => "POST"
     );
-    $form_action = "create-book-assign";
+    $form_action = base_url("create-book-assign");
     echo form_open($form_action, $form_attribute);
     ?>
     <div class = 'form-group row'>

@@ -63,6 +63,7 @@
                 "class" => "form-control",
                 "title" => "",
                 "required" => "",
+                "readonly" => "",
                 "type" => "text",
                 "value" => (isset($data["card_no"])) ? $data["card_no"] : ""
             );

@@ -5,7 +5,7 @@
         "id" => "library_members",
         "method" => "POST"
     );
-    $form_action = "/library/library_members/create";
+    $form_action = base_url("create-library-member");
     echo form_open($form_action, $form_attribute);
     ?>
     <div class = 'form-group row'>
@@ -119,17 +119,40 @@
             $(this).parent('div').find('input').focus();
         });
         
+        
         $('#library_members').validate({
             rules: {
                 user_role_id: "required",
-                user_id: "required",
-                card_no: "required",
+                user_id: {
+                    required:true,
+                    remote: {
+                        url: '<?= APP_BASE ?>unique-user',
+                        type: 'post',
+                        data: {
+                            user_id: function(){
+                                return $('#library_members :input[name="user_id"]').val();
+                            }
+                        }
+                    }
+                },
+                card_no: {required:true,
+                            remote: {
+                            url: '<?= APP_BASE ?>unique-card-number',
+                            type: "post",
+                            data:{
+                                    card_no: function()
+                                    {
+                                        return $('#library_members :input[name="card_no"]').val();
+                                    }
+                                }
+                            } 
+                        },
                 date_issue: "required"
             },
             messages: {
                 user_role_id: 'User Type is required',
-                user_id: 'User Email is required',
-                card_no: 'Card Number is required',
+                user_id: {required: 'User Email is required', remote: jQuery.validator.format('This mail id exists in Library records')},
+                card_no: {required: 'Card Number is required', remote: jQuery.validator.format('{0} Card number exists')},
                 date_issue: 'Issue date is required'
             },
             errorPlacement: function (error, element) {                
