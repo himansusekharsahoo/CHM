@@ -20,7 +20,8 @@
     );
     echo form_error("bassign_id");
     echo form_input($attribute);
-    ?><div class = 'form-group row'>
+    ?>
+    <div class = 'form-group row'>
         <label for = 'bledger_id' class = 'col-sm-2 col-form-label'>Bledger id</label>
         <div class = 'col-sm-3'>
             <?php
@@ -36,9 +37,24 @@
             echo form_dropdown($attribute, $bledger_id_list, $bledger_id);
             ?>
         </div>
+        <label for = 'user_type' class = 'col-sm-2 col-form-label'>User type</label>
+        <div class = 'col-sm-3'>
+            <?php
+            $attribute = array(
+                "name" => "user_type",
+                "id" => "user_type",
+                "class" => "form-control",
+                "title" => "",
+                "required" => "",
+            );
+            $user_type = (isset($data['user_type'])) ? $data['user_type'] : '';
+            echo form_error("user_type");
+            echo form_dropdown($attribute, $user_type_list, $user_type);
+            ?>
+        </div>
     </div>
     <div class = 'form-group row'>
-        <label for = 'member_id' class = 'col-sm-2 col-form-label'>Member id</label>
+        <label for = 'member_id' class = 'col-sm-2 col-form-label'>Card number</label>
         <div class = 'col-sm-3'>
             <?php
             $attribute = array(
@@ -53,8 +69,6 @@
             echo form_dropdown($attribute, $member_id_list, $member_id);
             ?>
         </div>
-    </div>
-    <div class = 'form-group row'>
         <label for = 'issue_date' class = 'col-sm-2 col-form-label'>Issue date</label>
         <div class = 'col-sm-3'>
             <div class="input-group date">                
@@ -75,8 +89,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class = 'form-group row'>
         <label for = 'return_date' class = 'col-sm-2 col-form-label'>Return date</label>
         <div class = 'col-sm-3'>
             <div class="input-group date">                
@@ -103,8 +115,6 @@
             echo form_input($attribute);
             ?>
         </div>
-    </div>
-    <div class = 'form-group row'>
         <label for = 'book_return_condition' class = 'col-sm-2 col-form-label'>Book return condition</label>
         <div class = 'col-sm-3'>
             <?php
@@ -155,21 +165,7 @@
         </div>
     </div>
     <div class = 'form-group row'>
-        <label for = 'user_type' class = 'col-sm-2 col-form-label'>User type</label>
-        <div class = 'col-sm-3'>
-            <?php
-            $attribute = array(
-                "name" => "user_type",
-                "id" => "user_type",
-                "class" => "form-control",
-                "title" => "",
-                "required" => "",
-            );
-            $user_type = (isset($data['user_type'])) ? $data['user_type'] : '';
-            echo form_error("user_type");
-            echo form_dropdown($attribute, $user_type_list, $user_type);
-            ?>
-        </div>
+        
     </div>
 
     <div class = 'form-group row'>
