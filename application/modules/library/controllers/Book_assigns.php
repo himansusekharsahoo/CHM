@@ -585,11 +585,15 @@ class Book_assigns extends CI_Controller {
         echo $result;
     }
     
-    public function autocomplete() {
-        $auto_suggest = array('kitty'=>'kitty','Patil'=>'Patil','RKP'=>'RKP');
-        echo json_encode($auto_suggest);
+    public function isbn_status() {
+        $bledger_id = $this->input->post('bledger_id');
+        $count = $this->book_assign->isbn_status($bledger_id);
+        if ($count > 0) {
+            echo 'false';
+        } else {
+            echo 'true';
+        }
     }
-
 }
 
 ?>

@@ -215,13 +215,24 @@
   
         $('#book_assigns').validate({
             rules: {
-                bledger_id: "required",
+                bledger_id: {
+                    required: true,
+                    remote: {
+                        url: '<?= APP_BASE ?>isbn-status',
+                        type: 'post',
+                        data: {
+                            user_id: function(){
+                                return $('#book_assigns :input[name="bledger_id"]').val();
+                            }
+                        }
+                    }
+                },
                 user_type: "required",
                 member_id: "required",
                 issue_date: "required"
             },
             messages: {
-                bledger_id: 'Ledger id is required',
+                bledger_id: { required: 'Ledger id is required', remote: jQuery.validator.format('This book is assigned to other user!')},
                 user_type: 'User Type is required',
                 member_id: 'Card Number is required',
                 issue_date: 'Issue date is required'
@@ -241,7 +252,6 @@
         });
 
         $('#book_assigns').on('click', '#submit', function (e) {
-
             if ($('#book_assigns').valid()) {
                 $('#book_assigns').submit();
             }
@@ -271,8 +281,6 @@
             } else {
                 alert('Select Card Number to print');
             }
-        });
-        
-        
+        });        
     });
 </script>
