@@ -45,11 +45,12 @@
                 "id" => "user_id",
                 "class" => "form-control",
                 "required" => "",
-                "value" => (isset($data["user_id"])) ? $data["user_id"] : ""
+                "readonly" => "",
+                "value" => (isset($data["user_id"])) ? $user_list[$data["user_id"]] : ""
             );
             $user_email = (isset($data['user_id'])) ? $data['user_id'] : '';
             echo form_error("user_id");
-            echo form_dropdown($attribute, $user_list, $user_email);
+            echo form_input($attribute, $user_list, $user_email);
             ?>
         </div>
     </div>

@@ -90,7 +90,7 @@ class Library_member extends CI_Model {
      */
     public function get_library_member($columns = null, $conditions = null, $limit = null, $offset = null) {
         if (!$columns) {
-            $columns = 'member_id,card_no,date_issue,expiry_date,concat(u.first_name," ",u.last_name) as user_id,user_role_id,t1.created,t1.created_by,t1.status';
+            $columns = 'member_id,card_no,date_issue,expiry_date, t1.user_id,user_role_id,t1.created,t1.created_by,t1.status';
         }
 
         /*

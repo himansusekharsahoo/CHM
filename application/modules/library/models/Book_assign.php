@@ -269,6 +269,12 @@ class Book_assign extends CI_Model {
         return 'Unable to store the data, please try again later!';
     }
 
+    public function isbn_status($bledger_id) {
+        $this->db->where('bledger_id',$bledger_id);
+        $this->db->where('return_date',0);
+        $query = $this->db->get('book_assigns');
+        return $query->num_rows();
+    }
 }
 
 ?>
