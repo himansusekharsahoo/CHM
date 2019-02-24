@@ -33,7 +33,7 @@ class Rbac_roles extends CI_Controller {
      */
     public function index() {
         if ($this->rbac->has_permission('USER_ROLES', 'LIST')) {
-            $this->breadcrumbs->push('index', '/rbac/rbac_roles/index');
+            $this->breadcrumbs->push('index', base_url('rbac-roles-list'));
             $this->scripts_include->includePlugins(array('datatable'), 'css');
             $this->scripts_include->includePlugins(array('datatable'), 'js');
             $this->layout->navTitle = 'Rbac role list';
@@ -109,7 +109,7 @@ class Rbac_roles extends CI_Controller {
             if ($this->rbac->has_permission('USER_ROLES', 'VIEW')) {
                 $grid_buttons[] = array(
                     'btn_class' => 'btn-info',
-                    'btn_href' => base_url('rbac/rbac_roles/view'),
+                    'btn_href' => base_url('view-rbac-role'),
                     'btn_icon' => 'fa-eye',
                     'btn_title' => 'view record',
                     'btn_separator' => ' ',
@@ -120,7 +120,7 @@ class Rbac_roles extends CI_Controller {
             if ($this->rbac->has_permission('USER_ROLES', 'EDIT')) {
                 $grid_buttons[] = array(
                     'btn_class' => 'btn-primary',
-                    'btn_href' => base_url('rbac/rbac_roles/edit'),
+                    'btn_href' => base_url('edit-rbac-role'),
                     'btn_icon' => 'fa-pencil',
                     'btn_title' => 'edit record',
                     'btn_separator' => ' ',
@@ -152,7 +152,7 @@ class Rbac_roles extends CI_Controller {
             if ($this->rbac->has_permission('USER_ROLES', 'CREATE')) {
                 $dt_tool_btn[] = array(
                     'btn_class' => 'btn-primary',
-                    'btn_href' => base_url('rbac/rbac_roles/create'),
+                    'btn_href' => base_url('create-rbac-role'),
                     'btn_icon' => '',
                     'btn_title' => 'Create',
                     'btn_text' => 'Create',
@@ -189,7 +189,7 @@ class Rbac_roles extends CI_Controller {
                 'dt_id' => 'raw_cert_data_dt_table',
                 'dt_header' => $header,
                 'dt_ajax' => array(
-                    'dt_url' => base_url('rbac/rbac_roles/index'),
+                    'dt_url' => base_url('rbac-roles-list'),
                 ),
                 'custom_lengh_change' => false,
                 'dt_dom' => array(
@@ -276,7 +276,7 @@ class Rbac_roles extends CI_Controller {
      */
     public function create() {
         if ($this->rbac->has_permission('USER_ROLES', 'CREATE')) {
-            $this->breadcrumbs->push('create', '/rbac/rbac_roles/create');
+            $this->breadcrumbs->push('create', base_url('create-rbac-role'));
 
             $this->layout->navTitle = 'Rbac role create';
             $data = array();
@@ -305,7 +305,7 @@ class Rbac_roles extends CI_Controller {
 
                     if ($result >= 1) :
                         $this->session->set_flashdata('success', 'Record successfully saved!');
-                        redirect('/rbac/rbac_roles');
+                        redirect(base_url('rbac-roles-list'));
                     else:
                         $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
                     endif;
@@ -327,7 +327,7 @@ class Rbac_roles extends CI_Controller {
      */
     public function edit($role_id = null) {
         if ($this->rbac->has_permission('USER_ROLES', 'EDIT')) {
-            $this->breadcrumbs->push('edit', '/rbac/rbac_roles/edit');
+            $this->breadcrumbs->push('edit', base_url('edit-rbac-role'));
 
             $this->layout->navTitle = 'Rbac role edit';
             $data = array();
@@ -357,7 +357,7 @@ class Rbac_roles extends CI_Controller {
                     $result = $this->rbac_role->update($db_data);
                     if ($result >= 1) :
                         $this->session->set_flashdata('success', 'Record successfully updated!');
-                        redirect('/rbac/rbac_roles');
+                        redirect(base_url('rbac-roles-list'));
                     else:
                         $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
                     endif;
@@ -386,7 +386,7 @@ class Rbac_roles extends CI_Controller {
      */
     public function view($role_id) {
         if ($this->rbac->has_permission('USER_ROLES', 'VIEW')) {
-            $this->breadcrumbs->push('view', '/rbac/rbac_roles/view');
+            $this->breadcrumbs->push('view', base_url('view-rbac-role'));
 
             $data = array();
             if ($role_id) :

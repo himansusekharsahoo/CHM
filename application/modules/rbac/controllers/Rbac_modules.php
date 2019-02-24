@@ -33,7 +33,7 @@ class Rbac_modules extends CI_Controller {
      */
     public function index() {
         if ($this->rbac->has_permission('MANAGE_MODULES', 'LIST')) {
-            $this->breadcrumbs->push('index', '/rbac/rbac_modules/index');
+            $this->breadcrumbs->push('index', base_url('rbac-modules-list'));
             $this->scripts_include->includePlugins(array('datatable'), 'css');
             $this->scripts_include->includePlugins(array('datatable'), 'js');
             $this->layout->navTitle = 'Rbac module list';
@@ -77,7 +77,7 @@ class Rbac_modules extends CI_Controller {
             if ($this->rbac->has_permission('MANAGE_MODULES', 'VIEW')) {
                 $grid_buttons[] = array(
                     'btn_class' => 'btn-info',
-                    'btn_href' => base_url('rbac/rbac_modules/view'),
+                    'btn_href' => base_url('view-rbac-module'),
                     'btn_icon' => 'fa-eye',
                     'btn_title' => 'view record',
                     'btn_separator' => ' ',
@@ -88,7 +88,7 @@ class Rbac_modules extends CI_Controller {
             if ($this->rbac->has_permission('MANAGE_MODULES', 'EDIT')) {
                 $grid_buttons[] = array(
                     'btn_class' => 'btn-primary',
-                    'btn_href' => base_url('rbac/rbac_modules/edit'),
+                    'btn_href' => base_url('edit-rbac-module'),
                     'btn_icon' => 'fa-pencil',
                     'btn_title' => 'edit record',
                     'btn_separator' => ' ',
@@ -120,7 +120,7 @@ class Rbac_modules extends CI_Controller {
             if ($this->rbac->has_permission('MANAGE_MODULES', 'CREATE')) {
                 $dt_tool_btn[] = array(
                     'btn_class' => 'btn-primary',
-                    'btn_href' => base_url('rbac/rbac_modules/create'),
+                    'btn_href' => base_url('create-rbac-module'),
                     'btn_icon' => '',
                     'btn_title' => 'Create',
                     'btn_text' => 'Create',
@@ -157,7 +157,7 @@ class Rbac_modules extends CI_Controller {
                 'dt_id' => 'raw_cert_data_dt_table',
                 'dt_header' => $header,
                 'dt_ajax' => array(
-                    'dt_url' => base_url('rbac/rbac_modules/index'),
+                    'dt_url' => base_url('rbac-modules-list'),
                 ),
                 'custom_lengh_change' => false,
                 'dt_dom' => array(
@@ -243,7 +243,7 @@ class Rbac_modules extends CI_Controller {
      */
     public function create() {
         if ($this->rbac->has_permission('MANAGE_MODULES', 'CREATE')) {
-            $this->breadcrumbs->push('create', '/rbac/rbac_modules/create');
+            $this->breadcrumbs->push('create', base_url('create-rbac-module'));
 
             $this->layout->navTitle = 'Rbac module create';
             $data = array();
@@ -269,7 +269,7 @@ class Rbac_modules extends CI_Controller {
 
                     if ($result >= 1) :
                         $this->session->set_flashdata('success', 'Record successfully saved!');
-                        redirect('/rbac/rbac_modules');
+                        redirect( base_url('rbac-modules-list'));
                     else:
                         $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
                     endif;
@@ -291,7 +291,7 @@ class Rbac_modules extends CI_Controller {
      */
     public function edit($module_id = null) {
         if ($this->rbac->has_permission('MANAGE_MODULES', 'EDIT')) {
-            $this->breadcrumbs->push('edit', '/rbac/rbac_modules/edit');
+            $this->breadcrumbs->push('edit', base_url('edit-rbac-module'));
 
             $this->layout->navTitle = 'Rbac module edit';
             $data = array();
@@ -315,7 +315,7 @@ class Rbac_modules extends CI_Controller {
                     $result = $this->rbac_module->update($data['data']);
                     if ($result >= 1) :
                         $this->session->set_flashdata('success', 'Record successfully updated!');
-                        redirect('/rbac/rbac_modules');
+                        redirect(base_url('rbac-modules-list'));
                     else:
                         $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
                     endif;
@@ -344,7 +344,7 @@ class Rbac_modules extends CI_Controller {
      */
     public function view($module_id) {
         if ($this->rbac->has_permission('MANAGE_MODULES', 'VIEW')) {
-            $this->breadcrumbs->push('view', '/rbac/rbac_modules/view');
+            $this->breadcrumbs->push('view',  base_url('view-rbac-module'));
             $data = array();
             if ($module_id) :
                 $module_id = c_decode($module_id);

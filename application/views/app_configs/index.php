@@ -11,7 +11,6 @@
     }
 </style>
 <?php
-
 $form_attribute = array(
     "name" => "app_config",
     "id" => "app_config",
@@ -54,8 +53,8 @@ echo form_open($form_action, $form_attribute);
                                     $attribute = array(
                                         "name" => "app_configs_category",
                                         "id" => "default_app_configs_category",
-                                        "class" => "form-control",                                        
-                                        "type" => "hidden",                                        
+                                        "class" => "form-control",
+                                        "type" => "hidden",
                                         "value" => 'LIBRARY'
                                     );
                                     echo form_input($attribute);
@@ -127,6 +126,67 @@ echo form_open($form_action, $form_attribute);
                                     ?>
                                 </div>
                             </div>
+                        </div>
+                        <div class = 'form-group row'>
+                            <div class="col-sm-3 no_rpad">
+                                <label class = 'col-sm-7 col-form-label no_pad'>Registration No. Prefix</label>
+                                <div class = 'col-sm-5 no_pad'>
+                                    <?php
+                                    $attribute = array(
+                                        "name" => "app_configs[library][lib_card_num_prefix]",
+                                        "id" => "lib_card_num_prefix",
+                                        "class" => "form-control",
+                                        "title" => "Library card no pre-fix",
+                                        "type" => "text",
+                                        "placeholder" => "Library card no pre-fix",
+                                        "value" => (isset($data['library']['lib_card_num_prefix'])) ? $data['library']['lib_card_num_prefix'] : 'USR'
+                                    );
+                                    echo form_input($attribute);
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 no_rpad">
+                                <label class = 'col-sm-7 col-form-label no_pad'>Registration No. Zero Prefix</label>
+                                <div class = 'col-sm-5 no_pad'>
+                                    <?php
+                                    $attribute = array(
+                                        "name" => "app_configs[library][lib_card_num_zero_prefix]",
+                                        "id" => "lib_card_num_zero_prefix",
+                                        "class" => "form-control",
+                                        "title" => "Library card no pre-fix",
+                                        "type" => "text",
+                                        "placeholder" => "Library card no pre-fix",
+                                        "value" => (isset($data['library']['lib_card_num_zero_prefix'])) ? $data['library']['lib_card_num_zero_prefix'] : 5
+                                    );
+                                    echo form_input($attribute);
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 no_rpad">
+                                <label class = 'col-sm-7 col-form-label no_pad'>I-card validity</label>
+                                <div class = 'col-sm-5 no_pad'>                                    
+                                    <?php
+                                    $month_list = array(
+                                        1 => '1 Month',2 => '2 Months',3 => '3 Months',
+                                        4 => '4 Months',5 => '5 Months',6 => '6 Months',
+                                        7 => '7 Months',8 => '8 Months',9 => '9 Months',
+                                        10 => '10 Months',11 => '11 Months',12 => '1 Year',
+                                        24 => '2 Years',36 => '3 Years',48 => '4 Years',
+                                        60 => '5 Years',100 => 'Life time'
+                                    );//100 means life time
+                                    $attribute = array(
+                                        "name" => "app_configs[library][lib_card_expire_month]",
+                                        "id" => "lib_card_num_prefix",
+                                        "class" => "form-control",
+                                        "title" => "Library card no pre-fix",
+                                        "type" => "text",
+                                        "placeholder" => "Library card no pre-fix",
+                                        "value" => (isset($data['library']['lib_card_expire_month'])) ? $data['library']['lib_card_expire_month'] : 'USR'
+                                    );
+                                    echo form_dropdown($attribute, $month_list, 6);
+                                    ?>
+                                </div>
+                            </div>
                         </div> 
                     </div>
                     <!-- /.box-body -->
@@ -142,8 +202,16 @@ echo form_open($form_action, $form_attribute);
 <script type="text/javascript">
     $(function () {
         $('#submit').on('click', function () {
-
             $('#chart_config').submit();
+        });
+//lib_card_num_prefix validateion allows only a-z A-Z 0-9
+        $('#lib_card_num_prefix').on('keypress', function (event) {
+            var regex = new RegExp("^[a-zA-Z0-9\b]+$");
+            var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+            if (!regex.test(key)) {
+                event.preventDefault();
+                return false;
+            }
         });
 
     });

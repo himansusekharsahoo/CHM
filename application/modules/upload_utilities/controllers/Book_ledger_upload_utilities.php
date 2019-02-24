@@ -40,6 +40,8 @@ class Book_ledger_upload_utilities extends CI_Controller {
      * @created:
      */
     public function index() {
+        $this->layout->navTitle = 'Book ledger upload utility';
+        $this->layout->title = 'Book ledger upload utility';
         if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'BOOK_LEDGER_UPLOAD_UTILTIY')) {
             $this->scripts_include->includePlugins(array('jq_validation'), 'js');
             $this->layout->render();
@@ -56,6 +58,8 @@ class Book_ledger_upload_utilities extends CI_Controller {
      * @created:
      */
     public function upload_file() {
+         $this->layout->navTitle = 'Book ledger upload utility';
+        $this->layout->title = 'Book ledger upload utility';
         if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'BOOK_LEDGER_UPLOAD_UTILTIY')) {
 
             $this->scripts_include->includePlugins(array('datatable', 'jq_validation'), 'js');
@@ -80,11 +84,11 @@ class Book_ledger_upload_utilities extends CI_Controller {
                 'MRP',
                 'EDITION',
                 'BOOK_LOCATION',
-                'BILL_NUMBER',
-                'PURCHASE_DATE',
-                'PRICE',
-                'VENDOR_NAME',
-                'PURCHASE_REMARKS'
+                //'BILL_NUMBER',
+                //'PURCHASE_DATE',
+                //'PRICE',
+                //'VENDOR_NAME',
+                //'PURCHASE_REMARKS'
             );
             $config['uploaded_file_heading'] = array(
                 'BOOK_NAME',
@@ -96,11 +100,11 @@ class Book_ledger_upload_utilities extends CI_Controller {
                 'MRP',
                 'EDITION',
                 'BOOK_LOCATION',
-                'BILL_NUMBER',
-                'PURCHASE_DATE',
-                'PRICE',
-                'VENDOR_NAME',
-                'PURCHASE_REMARKS'
+                //'BILL_NUMBER',
+                //'PURCHASE_DATE',
+                //'PRICE',
+                //'VENDOR_NAME',
+                //'PURCHASE_REMARKS'
             );
 
             $config['validation_rules'] = array(
@@ -296,7 +300,8 @@ class Book_ledger_upload_utilities extends CI_Controller {
                     $condition = "REMARKS IS NULL OR REMARKS=''";
                 }                
                 $columns.= "book_name,book_category_name,book_publication,author_name,isbn,pages"
-                        . ",mrp,edition,book_location,bill_number,purchase_date,price,vendor_name,purchase_remarks";
+                        . ",mrp,edition,book_location";
+                        //. ",bill_number,purchase_date,price,vendor_name,purchase_remarks";
 
                 $data = array();
                 $grid_buttons = array(
@@ -376,30 +381,31 @@ class Book_ledger_upload_utilities extends CI_Controller {
             if ($this->input->is_ajax_request()):
 
                 $export_type = $this->input->post('export_type');
-                $data_type = $this->input->post('data');
-
-                $columns = "category_name,category_code,category_desc,department_name,department_code,batch_name,batch_desc,start_year,end_year,no_of_semister,record_no";
+                $type = $this->input->post('data');                
                 $user_id = $this->rbac->get_user_id();
+                $columns="";
+                $remarks=array();
                 $temp_table_name = 'temp_book_ledger_' . $user_id;
                 if ($type == 'invalid') {
                     $condition = "LENGTH(TRIM(REMARKS))>0";
+                    $columns='remarks,';
+                    $remarks=array('remarks'=>'remarks');
                 } else {
                     $condition = "REMARKS IS NULL OR REMARKS=''";
                 }
-
+                $columns .= "record_no,category_name,category_code,category_desc,department_name,department_code,batch_name,batch_desc,start_year,end_year,no_of_semister";
                 $tableHeading = array(
-                    'category_name' => 'category_name',
-                    'category_code' => 'category_code',
-                    'category_desc' => 'category_desc',
-                    'department_name' => 'department_name',
-                    'department_code' => 'department_code',
-                    'batch_name' => 'batch_name',
-                    'batch_desc' => 'batch_desc',
-                    'start_year' => 'start_year',
-                    'end_year' => 'end_year',
-                    'no_of_semister' => 'no_of_semister',
-                    'record_no' => 'record_no'
+                    'record_no' => 'record_no',
+                    'book_name' => 'book_name',
+                    'book_category_name' => 'book_category_name',
+                    'author_name' => 'author_name',
+                    'isbn' => 'isbn',
+                    'pages' => 'pages',
+                    'mrp' => 'mrp',
+                    'edition' => 'edition',
+                    'book_location' => 'book_location'
                 );
+                $tableHeading=  array_merge($remarks,$tableHeading);
                 $data = $this->Book_ledger_upload_utility->get_temp_table_data_dt($columns, $temp_table_name, null, $condition, true);
                 $head_cols = $body_col_map = array();
                 $date = array(
@@ -426,7 +432,7 @@ class Book_ledger_upload_utilities extends CI_Controller {
                 }
                 $header = array($date, $head_cols);
                 $worksheet_name = $type . '_records';
-                $file_name = 'course_aca_batch_upload_' . $type . date('d_m_Y_H_i_s') . '.' . $export_type;
+                $file_name = 'book_ledg_batch_upload_' . $type . date('d_m_Y_H_i_s') . '.' . $export_type;
                 $config = array(
                     'db_data' => $data['aaData'],
                     'header_rows' => $header,

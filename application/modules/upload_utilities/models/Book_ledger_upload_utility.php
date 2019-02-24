@@ -63,7 +63,9 @@ class Book_ledger_upload_utility extends CI_Model {
         if ($condition && is_string($condition)) {
             $this->datatables->where(null, null, false, $condition);
         }
-        $this->datatables->unset_column("record_no");
+        if (!$export) {
+            $this->datatables->unset_column("record_no");
+        }
         if (isset($data['button_set'])):
             $this->datatables->add_column("Action", $data['button_set'], 'c_encode(record_no)', 1, 1);
         endif;
@@ -113,25 +115,26 @@ class Book_ledger_upload_utility extends CI_Model {
         $this->db->trans_begin();
         $this->db->query("call upload_book_ledger('" . $temp_table_name . "',$user_id)");
         //app_log('CUSTOM', 'APP', $this->db->trans_status());
-        if ($this->db->trans_status() === FALSE) {            
+        if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
             return FALSE;
-        } else {            
+        } else {
             $this->db->trans_commit();
             return TRUE;
         }
     }
 
-    public function get_book_location_xls_validation(){
-        $query="SELECT upper(concat(floor,'-',block,'-',rack_no,'-',self_no)) location FROM book_location_masters";
-        $result=$this->db->query($query)->result_array();
-        $flatten_data='Please add new book locations';
-        if($result){
-            $flatten_data=  flattenArray($result);            
-            $flatten_data=  implode(",", $flatten_data);            
+    public function get_book_location_xls_validation() {
+        $query = "SELECT upper(concat(floor,'-',block,'-',rack_no,'-',self_no)) location FROM book_location_masters";
+        $result = $this->db->query($query)->result_array();
+        $flatten_data = 'Please add new book locations';
+        if ($result) {
+            $flatten_data = flattenArray($result);
+            $flatten_data = implode(",", $flatten_data);
         }
         return $flatten_data;
     }
+
 }
 
 ?>

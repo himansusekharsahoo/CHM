@@ -25,10 +25,10 @@
                 <ul class="list-unstyled list-inline pull-right">
                     <?php
                     if($this->rbac->is_login()){
-                        echo '<li><a href="'.base_url('/users/sign_in').'">'.$this->lang->line('HEADER_LOGOUT').'</a></li>';
+                        echo '<li><a href="'.base_url('user-logout').'">'.$this->lang->line('HEADER_LOGOUT').'</a></li>';
                     }else{
-                        echo '<li><a href="'.base_url('/users/sign_in').'">'.$this->lang->line('HEADER_LOGIN').'</a></li>';
-                        echo '<li><a href="'.base_url('/users/sign_up').'">'.$this->lang->line('HEADER_REGI').'</a></li>';
+                        echo '<li><a href="'.base_url('user-login').'">'.$this->lang->line('HEADER_LOGIN').'</a></li>';
+                        //echo '<li><a href="'.base_url('/users/sign_up').'">'.$this->lang->line('HEADER_REGI').'</a></li>';
                     }?>                   
                     
                 </ul>

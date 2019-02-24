@@ -14,7 +14,6 @@ class Rbac_actions extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-
         $this->load->model('rbac_action');
         $this->load->library('form_validation');
         $this->layout->layout = 'admin_layout';
@@ -33,7 +32,7 @@ class Rbac_actions extends CI_Controller {
      */
     public function index() {
         if ($this->rbac->has_permission('MANAGE_ACTIONS', 'LIST')) {
-            $this->breadcrumbs->push('index', '/rbac/rbac_actions/index');
+            $this->breadcrumbs->push('index', base_url('rbac-actions-list'));
             $this->scripts_include->includePlugins(array('datatable'), 'css');
             $this->scripts_include->includePlugins(array('datatable'), 'js');
             $this->layout->navTitle = 'Rbac action list';
@@ -62,7 +61,7 @@ class Rbac_actions extends CI_Controller {
             if ($this->rbac->has_permission('MANAGE_ACTIONS', 'VIEW')) {
                 $grid_buttons[] = array(
                     'btn_class' => 'btn-info',
-                    'btn_href' => base_url('rbac/rbac_actions/view'),
+                    'btn_href' => base_url('view-rbac-action'),
                     'btn_icon' => 'fa-eye',
                     'btn_title' => 'view record',
                     'btn_separator' => ' ',
@@ -74,7 +73,7 @@ class Rbac_actions extends CI_Controller {
             if ($this->rbac->has_permission('MANAGE_ACTIONS', 'EDIT')) {
                 $grid_buttons[] = array(
                     'btn_class' => 'btn-primary',
-                    'btn_href' => base_url('rbac/rbac_actions/edit'),
+                    'btn_href' => base_url('edit-rbac-action'),
                     'btn_icon' => 'fa-pencil',
                     'btn_title' => 'edit record',
                     'btn_separator' => ' ',
@@ -122,7 +121,7 @@ class Rbac_actions extends CI_Controller {
             if ($this->rbac->has_permission('MANAGE_ACTIONS', 'CREATE')) {
                 $dt_tool_btn[] = array(
                     'btn_class' => 'btn-primary',
-                    'btn_href' => base_url('rbac/rbac_actions/create'),
+                    'btn_href' => base_url('create-rbac-action'),
                     'btn_icon' => '',
                     'btn_title' => 'Create',
                     'btn_text' => 'Create',
@@ -164,7 +163,7 @@ class Rbac_actions extends CI_Controller {
                 'dt_id' => 'raw_cert_data_dt_table',
                 'dt_header' => $header,
                 'dt_ajax' => array(
-                    'dt_url' => base_url('rbac/rbac_actions/index'),
+                    'dt_url' => base_url('rbac-actions-list'),
                 ),
                 'custom_lengh_change' => false,
                 'dt_dom' => array(
@@ -251,7 +250,7 @@ class Rbac_actions extends CI_Controller {
      */
     public function create() {
         if ($this->rbac->has_permission('MANAGE_ACTIONS', 'CREATE')) {
-            $this->breadcrumbs->push('create', '/rbac/rbac_actions/create');
+            $this->breadcrumbs->push('create', base_url('create-rbac-action'));
 
             $this->layout->navTitle = 'Rbac action create';
             $data = array();
@@ -277,7 +276,7 @@ class Rbac_actions extends CI_Controller {
 
                     if ($result >= 1) :
                         $this->session->set_flashdata('success', 'Record successfully saved!');
-                        redirect('/rbac/rbac_actions');
+                        redirect('rbac-actions-list');
                     else:
                         $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
                     endif;
@@ -299,7 +298,7 @@ class Rbac_actions extends CI_Controller {
      */
     public function edit($action_id = null) {
         if ($this->rbac->has_permission('MANAGE_ACTIONS', 'EDIT')) {
-            $this->breadcrumbs->push('edit', '/rbac/rbac_actions/edit');
+            $this->breadcrumbs->push('edit', base_url('edit-rbac-action'));
 
             $this->layout->navTitle = 'Rbac action edit';
             $data = array();
@@ -323,7 +322,7 @@ class Rbac_actions extends CI_Controller {
                     $result = $this->rbac_action->update($data['data']);
                     if ($result >= 1) :
                         $this->session->set_flashdata('success', 'Record successfully updated!');
-                        redirect('/rbac/rbac_actions');
+                        redirect('rbac-actions-list');
                     else:
                         $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
                     endif;
@@ -352,7 +351,7 @@ class Rbac_actions extends CI_Controller {
      */
     public function view($action_id) {
         if ($this->rbac->has_permission('MANAGE_ACTIONS', 'VIEW')) {
-            $this->breadcrumbs->push('view', '/rbac/rbac_actions/view');
+            $this->breadcrumbs->push('view', base_url('view-rbac-action'));
             $data = array();
             if ($action_id) :
                 $action_id = c_decode($action_id);

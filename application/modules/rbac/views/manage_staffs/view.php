@@ -63,7 +63,7 @@
     <div class="row-fluid">
         <div class = 'form-group row'>  
             <div class="col-sm-12">
-                <a class="text-right btn btn-default" href="<?=base_url('staff-list')?>">
+                <a class="text-right btn btn-default" href="<?=base_url('employee-list')?>">
                     <span class="glyphicon glyphicon-th-list"></span> Back
                 </a>
             </div>

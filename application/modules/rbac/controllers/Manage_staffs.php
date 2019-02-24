@@ -24,28 +24,28 @@ class Manage_staffs extends CI_Controller {
     }
     /**
      * @param  : 
-     * @desc   : redirect to staff list page
+     * @desc   : redirect to employee list page
      * @return :
      * @author : HimansuS
      * @created:
      */
     public function index(){
-        redirect(base_url('staff-list'));
+        redirect(base_url('employee-list'));
     }
     /**
      * @param  : 
-     * @desc   : fetch staff list
+     * @desc   : fetch employee list
      * @return :
      * @author : HimansuS
      * @created:
      */
     public function staff_list() {
         if ($this->rbac->has_permission('STAFF_USERS', 'LIST')) {
-            $this->breadcrumbs->push('index', base_url('staff-list'));
+            $this->breadcrumbs->push('index', base_url('employee-list'));
             $this->scripts_include->includePlugins(array('datatable'), 'css');
             $this->scripts_include->includePlugins(array('datatable'), 'js');
-            $this->layout->navTitle = 'Staff list';
-            $this->layout->title = 'Staff list';
+            $this->layout->navTitle = 'Employee list';
+            $this->layout->title = 'Employee list';
             $header = array(
                 array(
                     'db_column' => 'first_name',
@@ -133,7 +133,7 @@ class Manage_staffs extends CI_Controller {
             if ($this->rbac->has_permission('STAFF_USERS', 'VIEW')) {
                 $grid_buttons[] = array(
                     'btn_class' => 'btn-info',
-                    'btn_href' => base_url('view-staff-profile'),
+                    'btn_href' => base_url('view-employee-profile'),
                     'btn_icon' => 'fa-eye',
                     'btn_title' => 'view record',
                     'btn_separator' => ' ',
@@ -144,7 +144,7 @@ class Manage_staffs extends CI_Controller {
             if ($this->rbac->has_permission('STAFF_USERS', 'EDIT')) {
                 $grid_buttons[] = array(
                     'btn_class' => 'btn-primary',
-                    'btn_href' => base_url('edit-staff-profile'),
+                    'btn_href' => base_url('edit-employee-profile'),
                     'btn_icon' => 'fa-pencil',
                     'btn_title' => 'edit record',
                     'btn_separator' => ' ',
@@ -177,7 +177,7 @@ class Manage_staffs extends CI_Controller {
             if ($this->rbac->has_permission('STAFF_USERS', 'CREATE')) {
                 $dt_tool_btn[] = array(
                     'btn_class' => 'btn-primary',
-                    'btn_href' => base_url('create-staff-profile'),
+                    'btn_href' => base_url('create-employee-profile'),
                     'btn_icon' => '',
                     'btn_title' => 'Create',
                     'btn_text' => 'Create',
@@ -214,7 +214,7 @@ class Manage_staffs extends CI_Controller {
                 'dt_id' => 'raw_cert_data_dt_table',
                 'dt_header' => $header,
                 'dt_ajax' => array(
-                    'dt_url' => base_url('staff-list'),
+                    'dt_url' => base_url('employee-list'),
                 ),
                 'custom_lengh_change' => false,
                 'dt_dom' => array(
@@ -267,8 +267,8 @@ class Manage_staffs extends CI_Controller {
                     $body_col_map[] = array('db_column' => $db_col);
                 }
                 $header = array($date, $head_cols);
-                $worksheet_name = 'staff profiles';
-                $file_name = 'staff_profiles' . date('d_m_Y_H_i_s') . '.' . $export_type;
+                $worksheet_name = 'employee profiles';
+                $file_name = 'employee_profiles' . date('d_m_Y_H_i_s') . '.' . $export_type;
                 $config = array(
                     'db_data' => $data['aaData'],
                     'header_rows' => $header,
@@ -300,9 +300,9 @@ class Manage_staffs extends CI_Controller {
      */
     public function create() {
         if ($this->rbac->has_permission('STAFF_USERS', 'CREATE')) {
-            $this->breadcrumbs->push('create', base_url('create-staff-profile'));
-            $this->layout->navTitle = 'Add new staff';
-            $this->layout->title = 'Add new staff';
+            $this->breadcrumbs->push('create', base_url('create-employee-profile'));
+            $this->layout->navTitle = 'Add new employee';
+            $this->layout->title = 'Add new employee';
             $this->scripts_include->includePlugins(array('jq_validation'), 'js');
             $user_id=  $this->rbac->get_user_id();
             $data = array();
@@ -319,11 +319,11 @@ class Manage_staffs extends CI_Controller {
                         'label' => 'last_name',
                         'rules' => 'required'
                     ),
-                    array(
-                        'field' => 'login_id',
-                        'label' => 'login_id',
-                        'rules' => 'required'
-                    ),
+//                    array(
+//                        'field' => 'login_id',
+//                        'label' => 'login_id',
+//                        'rules' => 'required'
+//                    ),
                     array(
                         'field' => 'email',
                         'label' => 'email',
@@ -347,7 +347,7 @@ class Manage_staffs extends CI_Controller {
                     $result = $this->manage_staff->save($post_data);                    
                     if ($result):
                         $this->session->set_flashdata('success', 'Record successfully saved!');
-                        redirect(base_url('staff-list'));
+                        redirect(base_url('employee-list'));
                     else:
                         $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
                     endif;
@@ -362,17 +362,17 @@ class Manage_staffs extends CI_Controller {
     
      /**
      * @param              : $user_id=null
-     * @desc               : edit staff profile
+     * @desc               : edit employee profile
      * @return             :
      * @author             :
      * @created:10/08/2018
      */
     public function edit($user_id = null) {
         if ($this->rbac->has_permission('STAFF_USERS', 'EDIT')) {
-            $this->breadcrumbs->push('edit', base_url('edit-staff-profile'));
+            $this->breadcrumbs->push('edit', base_url('edit-employee-profile'));
             $this->scripts_include->includePlugins(array('jq_validation'), 'js');
-            $this->layout->navTitle = 'Edit staff profile';
-            $this->layout->title = 'Edit staff profile';
+            $this->layout->navTitle = 'Edit employee profile';
+            $this->layout->title = 'Edit employee profile';
             $data = array();
             if ($this->input->post()) :
                 $data['data'] = $post_data=$this->input->post();
@@ -406,7 +406,7 @@ class Manage_staffs extends CI_Controller {
                         $result = $this->manage_staff->update($data['data']);
                         if ($result >= 1):
                             $this->session->set_flashdata('success', 'Record successfully updated!');
-                            redirect('staff-list');
+                            redirect('employee-list');
                         else:
                             $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
                         endif;
@@ -431,16 +431,16 @@ class Manage_staffs extends CI_Controller {
     }
     /**
      * @param              : $user_id
-     * @desc               : view staff profile
+     * @desc               : view employee profile
      * @return             :
      * @author             :
      * @created:10/08/2018
      */
     public function view($user_id) {
         if ($this->rbac->has_permission('STAFF_USERS', 'VIEW')) {
-            $this->breadcrumbs->push('view', base_url('view-staff-profile'));
-            $this->layout->navTitle = 'Staff profile view';
-            $this->layout->title = 'Staff profile view';
+            $this->breadcrumbs->push('view', base_url('view-employee-profile'));
+            $this->layout->navTitle = 'Employee profile view';
+            $this->layout->title = 'Employee profile view';
             $data = array();
             if ($user_id) :
                 $user_id = c_decode($user_id);                
@@ -461,7 +461,7 @@ class Manage_staffs extends CI_Controller {
     }
     /**
      * @param              : 
-     * @desc               : delete a staff
+     * @desc               : delete a employee
      * @return             :
      * @author             :
      * @created:10/08/2018

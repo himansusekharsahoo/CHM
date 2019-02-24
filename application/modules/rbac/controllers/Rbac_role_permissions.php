@@ -32,7 +32,7 @@ class Rbac_role_permissions extends CI_Controller {
      * @created:09/29/2018
      */
     public function index() {
-        redirect('/rbac/rbac_role_permissions/role_permissions');
+        redirect(base_url('rbac-role-permissions'));
     }
 
     /**
@@ -94,10 +94,10 @@ class Rbac_role_permissions extends CI_Controller {
                         }
                     }
                 }
-                //pma($perms, 1);
+                
                 if ($this->rbac_role_permission->save_role_permissions($perms)) {
                     $this->session->set_flashdata('success', 'Record successfully saved!');
-                    redirect('/rbac/rbac_role_permissions/role_permissions');
+                    redirect(base_url('rbac-role-permissions'));
                 } else {
                     $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
                 }

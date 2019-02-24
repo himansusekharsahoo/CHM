@@ -1,60 +1,46 @@
 <?php
 
-//if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'COURSE_ACADEMIC_BATCH_MASTERS')) {
-//    
-//} else {
-//    $this->layout->render(array('error' => '401'));
-//}
-//
-//if ($this->input->is_ajax_request()) {
-//    
-//} else {
-//    $this->layout->data = array('status_code' => '403', 'message' => 'Request Forbidden.');
-//    $this->layout->render(array('error' => 'general'));
-//}
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 /**
- * Book_assign_logs Class File
+ * Emp_upload_utilities Class File
  * PHP Version 7.1.1
  * 
  * @category   Upload Utility
  * @package    Upload Utility
- * @subpackage course academic batch upload utility
- * @class      Course_academic_batch_utilities
+ * @subpackage employee upload utility
+ * @class      Emp_upload_utilities
  * @desc    
  * @author     HimansuS <himansu.php@gmail.com>                
  * @license    
  * @link       
  * @since   11/01/2018
  */
-class Course_academic_batch_utilities extends CI_Controller {
+class Emp_upload_utilities extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-
-        $this->load->library('form_validation');
         $this->layout->layout = 'admin_layout';
         $this->layout->layoutsFolder = 'layouts/admin';
         $this->layout->lMmenuFlag = 1;
         $this->layout->rightControlFlag = 1;
         $this->layout->navTitleFlag = 1;
         $this->layout->breadcrumbsFlag = false;
-        $this->load->model('Course_academic_batch_utility');
+        $this->load->model('Emp_upload_utility');
     }
 
     /**
      * @param  : 
-     * @desc   :
+     * @desc   : load book ledger uplod utility page
      * @return :
      * @author : HimansuS
      * @created:
      */
     public function index() {
-        $this->layout->navTitle = 'Course academic upload utility';
-        $this->layout->title = 'Course academic upload utility';
-        if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'COURSE_ACADEMIC_BATCH_MASTERS')) {
+        $this->layout->navTitle = 'Employee upload utility';
+        $this->layout->title = 'Employee upload utility';
+        if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'EMPLOYEE_UPLOAD_UTILTIY')) {
             $this->scripts_include->includePlugins(array('jq_validation'), 'js');
             $this->layout->render();
         } else {
@@ -64,76 +50,99 @@ class Course_academic_batch_utilities extends CI_Controller {
 
     /**
      * @param  : 
-     * @desc   :
+     * @desc   : process the excel file and display valid and invalid record grid
      * @return :
      * @author : HimansuS
      * @created:
      */
     public function upload_file() {
-        $this->layout->navTitle = 'Course academic upload utility';
-        $this->layout->title = 'Course academic upload utility';
-        if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'COURSE_ACADEMIC_BATCH_MASTERS')) {
+        $this->layout->navTitle = 'Employee upload utility';
+        $this->layout->title = 'Employee upload utility';
+        if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'EMPLOYEE_UPLOAD_UTILTIY')) {
 
             $this->scripts_include->includePlugins(array('datatable', 'jq_validation'), 'js');
             $this->scripts_include->includePlugins(array('datatable'), 'css');
             $config = array();
             $user_id = $this->rbac->get_user_id();
-            $temp_table_name = 'temp_course_a_b_m_' . $user_id;
-            $config['upload_path'] = './uploads/course_aca_batch_master';
+            $temp_table_name = 'temp_employee_' . $user_id;
+            $config['upload_path'] = './uploads/employee';
             $config['allowed_types'] = array('xls', 'xlsx', 'csv');
             $config['file_element'] = 'upload_file';
-            $config['on_failure_redirect'] = 'course-academic-batch-upload';
+            $config['on_failure_redirect'] = 'employee-upload';
             $config['file'] = $_FILES;
-            $config['temp_table_name'] = 'temp_course_a_b_m_';
+            $config['temp_table_name'] = 'temp_employee_';
             $config['seek_line'] = 1;
             $config['temp_table_heading'] = array(
-                'CATEGORY_NAME',
-                'CATEGORY_CODE',
-                'CATEGORY_DESC',
-                'DEPARTMENT_NAME',
-                'DEPARTMENT_CODE',
-                'BATCH_NAME',
-                'BATCH_DESC',
-                'START_YEAR',
-                'END_YEAR',
-                'NO_OF_SEMISTER'
+                'EMPLOYEE_ID',
+                'FIRST_NAME',
+                'LAST_NAME',
+                'EMAIL_ID',
+                'MOBILE_NO',
+                'STATUS'
             );
             $config['uploaded_file_heading'] = array(
-                'CATEGORY_NAME',
-                'CATEGORY_CODE',
-                'CATEGORY_DESC',
-                'DEPARTMENT_NAME',
-                'DEPARTMENT_CODE',
-                'BATCH_NAME',
-                'BATCH_DESC',
-                'START_YEAR',
-                'END_YEAR',
-                'NO_OF_SEMISTER'
+                'EMPLOYEE_ID',
+                'FIRST_NAME',
+                'LAST_NAME',
+                'EMAIL_ID',
+                'MOBILE_NO',
+                'STATUS'
             );
 
             $config['validation_rules'] = array(
                 //Blank validation
-                array('message' => "''CATEGORY_NAME'' can not be blank."
-                    , 'condition' => "CATEGORY_NAME IS NULL OR CATEGORY_NAME=''"
+                array('message' => "''FIRST_NAME'' can not be blank."
+                    , 'condition' => "FIRST_NAME IS NULL OR FIRST_NAME=''"
                 ),
-                array('message' => "''CATEGORY_CODE'' can not be blank."
-                    , 'condition' => "CATEGORY_CODE IS NULL OR CATEGORY_CODE=''"
+                array('message' => "''LAST_NAME'' can not be blank."
+                    , 'condition' => "LAST_NAME IS NULL OR LAST_NAME=''"
                 ),
-                array('message' => "''DEPARTMENT_NAME'' can not be blank."
-                    , 'condition' => "DEPARTMENT_NAME IS NULL OR DEPARTMENT_NAME=''"
+                array('message' => "''EMAIL_ID'' can not be blank."
+                    , 'condition' => "EMAIL_ID IS NULL OR EMAIL_ID=''"
                 ),
-                array('message' => "''BATCH_NAME'' can not be blank."
-                    , 'condition' => "BATCH_NAME IS NULL OR BATCH_NAME=''"
-                ),
-                array('message' => "''START_YEAR'' can not be blank."
-                    , 'condition' => "START_YEAR IS NULL OR START_YEAR=''"
-                ),
-                array('message' => "''END_YEAR'' can not be blank."
-                    , 'condition' => "END_YEAR IS NULL OR END_YEAR=''"
-                ),
-                array('message' => "''NO_OF_SEMISTER'' can not be blank."
-                    , 'condition' => "NO_OF_SEMISTER IS NULL OR NO_OF_SEMISTER=''"
+                array('message' => "''MOBILE_NO'' can not be blank."
+                    , 'condition' => "MOBILE_NO IS NULL OR MOBILE_NO=''"
                 )
+                    /*
+                      //duplicate record validation
+                      //book name,category,publication,author,edition
+                      array('message' => "Duplicate record."
+                      , 'condition' => "RECORD_NO IN(
+                      SELECT D.record_no
+                      FROM(
+                      SELECT main.record_no
+                      FROM $temp_table_name main
+                      INNER JOIN (
+                      SELECT book_name,book_category_name,book_publication,author_name,edition,COUNT(book_name),record_no
+                      FROM $temp_table_name t
+                      GROUP BY book_name,book_category_name,book_publication,author_name,edition
+                      HAVING COUNT(book_name) > 1
+                      ) dup ON
+                      main.book_name=dup.book_name
+                      AND main.book_category_name=dup.book_category_name
+                      AND main.book_publication=dup.book_publication
+                      AND main.author_name=dup.author_name
+                      AND main.edition=dup.edition
+                      ) D
+                      )"
+                      ),
+                      //duplicate isbn validation
+                      array('message' => "Duplicate \'ISBN\'"
+                      , 'condition' => "RECORD_NO IN(
+                      SELECT record_no
+                      FROM(
+                      SELECT main.record_no
+                      FROM $temp_table_name main
+                      INNER JOIN (
+                      SELECT isbn,COUNT(isbn),record_no
+                      FROM $temp_table_name t
+                      GROUP BY isbn
+                      HAVING COUNT(isbn) > 1
+                      ) dup ON
+                      main.isbn=dup.isbn
+                      ) D
+                      )"
+                      ), */
             );
             $this->load->library('upload_utility', $config);
             $temp_table_name = $this->upload_utility->upload_file();
@@ -141,12 +150,12 @@ class Course_academic_batch_utilities extends CI_Controller {
             if ($temp_table_name) {
                 $data = array();
                 $data['temp_table'] = $temp_table_name;
-                $data['valid_table_config'] = $this->_get_grid_config($config['uploaded_file_heading'], 'course-academic-batch-upload-valid', 'valid_rec_dt');
-                $data['invalid_table_config'] = $this->_get_grid_config($config['uploaded_file_heading'], 'course-academic-batch-upload-invalid', 'invalid_rec_dt', 'invalid');
+                $data['valid_table_config'] = $this->_get_grid_config($config['uploaded_file_heading'], 'employee-upload-valid', 'valid_rec_dt');
+                $data['invalid_table_config'] = $this->_get_grid_config($config['uploaded_file_heading'], 'employee-upload-invalid', 'invalid_rec_dt', 'invalid');
                 $this->layout->data = $data;
-                $this->layout->render(array('view' => 'upload_utilities/course_academic_batch_utilities/upload_file'));
+                $this->layout->render(array('view' => 'upload_utilities/emp_upload_utilities/upload_file'));
             } else {
-                redirect('course-academic-batch-upload');
+                redirect('employee-upload');
             }
         } else {
             $this->layout->render(array('error' => '401'));
@@ -237,7 +246,7 @@ class Course_academic_batch_utilities extends CI_Controller {
                 'buttom_pagination' => true
             ),
             'options' => array(
-                'iDisplayLength' => 15
+                'iDisplayLength' => 15,
             )
         );
         if ($type == 'valid') {
@@ -255,11 +264,11 @@ class Course_academic_batch_utilities extends CI_Controller {
      */
     public function get_temp_table_data_grid() {
 
-        if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'COURSE_ACADEMIC_BATCH_MASTERS')) {
+        if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'EMPLOYEE_UPLOAD_UTILTIY')) {
             if ($this->input->is_ajax_request()) {
                 $columns = "";
                 $user_id = $this->rbac->get_user_id();
-                $temp_table_name = 'temp_course_a_b_m_' . $user_id;
+                $temp_table_name = 'temp_employee_' . $user_id;
                 $type = $this->input->post('type');
                 if ($type == 'invalid') {
                     $condition = "LENGTH(TRIM(REMARKS))>0";
@@ -267,7 +276,7 @@ class Course_academic_batch_utilities extends CI_Controller {
                 } else {
                     $condition = "REMARKS IS NULL OR REMARKS=''";
                 }
-                $columns.= "category_name,category_code,category_desc,department_name,department_code,batch_name,batch_desc,start_year,end_year,no_of_semister,record_no";
+                $columns.= "employee_id,first_name,last_name,email_id,mobile_no,status";
 
                 $data = array();
                 $grid_buttons = array(
@@ -285,7 +294,7 @@ class Course_academic_batch_utilities extends CI_Controller {
 
                 $button_set = get_link_buttons($grid_buttons);
                 $data['button_set'] = $button_set;
-                $returned_list = $this->Course_academic_batch_utility->get_temp_table_data_dt($columns, $temp_table_name, $data, $condition);
+                $returned_list = $this->Emp_upload_utility->get_temp_table_data_dt($columns, $temp_table_name, $data, $condition);
                 echo $returned_list;
                 exit();
             } else {
@@ -305,16 +314,16 @@ class Course_academic_batch_utilities extends CI_Controller {
      * @created:
      */
     public function delete_temp_record() {
-        if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'COURSE_ACADEMIC_BATCH_MASTERS')) {
+        if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'EMPLOYEE_UPLOAD_UTILTIY')) {
 
             if ($this->input->is_ajax_request()):
                 $row_id = $this->input->post('record_no');
                 $user_id = $this->rbac->get_user_id();
-                $temp_table_name = 'temp_course_a_b_m_' . $user_id;
+                $temp_table_name = 'temp_employee_' . $user_id;
 
                 if ($row_id):
                     $row_id = c_decode($row_id);
-                    $result = $this->Course_academic_batch_utility->delete_temp_row($row_id, $temp_table_name);
+                    $result = $this->Emp_upload_utility->delete_temp_row($row_id, $temp_table_name);
                     if ($result):
                         echo 1;
                         exit();
@@ -343,29 +352,22 @@ class Course_academic_batch_utilities extends CI_Controller {
      */
     public function export_grid_data() {
 
-        if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'COURSE_ACADEMIC_BATCH_MASTERS')) {
+        if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'EMPLOYEE_UPLOAD_UTILTIY')) {
             if ($this->input->is_ajax_request()):
-                
-                $export_type = $this->input->post('export_type');
-                $type = $this->input->post('data');
-                
-                $columns="";
-                $remarks=array();
 
+                $export_type = $this->input->post('export_type');
+                $data_type = $this->input->post('data');
+
+                $columns.= "first_name,last_name,email_id,mobile_no,status";
                 $user_id = $this->rbac->get_user_id();
-                $temp_table_name = 'temp_course_a_b_m_' . $user_id;
-                
+                $temp_table_name = 'temp_employee_' . $user_id;
                 if ($type == 'invalid') {
                     $condition = "LENGTH(TRIM(REMARKS))>0";
-                    $columns="remarks,";
-                    $remarks=array('remarks'=>'remarks');
                 } else {
                     $condition = "REMARKS IS NULL OR REMARKS=''";
                 }
-                $columns .= "record_no,category_name,category_code,category_desc,department_name,department_code,batch_name,batch_desc,start_year,end_year,no_of_semister";
 
                 $tableHeading = array(
-                    'record_no' => 'record_no',
                     'category_name' => 'category_name',
                     'category_code' => 'category_code',
                     'category_desc' => 'category_desc',
@@ -375,10 +377,10 @@ class Course_academic_batch_utilities extends CI_Controller {
                     'batch_desc' => 'batch_desc',
                     'start_year' => 'start_year',
                     'end_year' => 'end_year',
-                    'no_of_semister' => 'no_of_semister'                    
+                    'no_of_semister' => 'no_of_semister',
+                    'record_no' => 'record_no'
                 );
-                $tableHeading=  array_merge($remarks,$tableHeading);
-                $data = $this->Course_academic_batch_utility->get_temp_table_data_dt($columns, $temp_table_name, null, $condition, true);
+                $data = $this->Emp_upload_utility->get_temp_table_data_dt($columns, $temp_table_name, null, $condition, true);
                 $head_cols = $body_col_map = array();
                 $date = array(
                     array(
@@ -404,7 +406,7 @@ class Course_academic_batch_utilities extends CI_Controller {
                 }
                 $header = array($date, $head_cols);
                 $worksheet_name = $type . '_records';
-                $file_name = 'course_aca_batch_upload_' . $type . date('d_m_Y_H_i_s') . '.' . $export_type;
+                $file_name = 'employee_upload_' . $type . date('d_m_Y_H_i_s') . '.' . $export_type;
                 $config = array(
                     'db_data' => $data['aaData'],
                     'header_rows' => $header,
@@ -436,7 +438,7 @@ class Course_academic_batch_utilities extends CI_Controller {
      * @created:
      */
     public function save_import_data() {
-        if ($this->Course_academic_batch_utility->save_import_data_db()) {
+        if ($this->Emp_upload_utility->save_import_data_db()) {
             echo json_encode(array('type' => 'success', 'message' => 'Data uploaded successfully.'));
             exit();
         } else {

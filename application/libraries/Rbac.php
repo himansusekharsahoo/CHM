@@ -9,6 +9,7 @@ class Rbac {
         $this->_ci = & get_instance();
         $this->_session = $this->_ci->session->all_userdata();
         //pma($this->_ci->session->all_userdata());
+        //pma($this->_session['user_data']['app_configs']);       
     }
 
     /**
@@ -18,11 +19,15 @@ class Rbac {
      * @author : HimansuS
      * @created:
      */
-    public function is_login() {
+    public function is_login($return_flag = false) {
         if (isset($this->_session['user_data']['user_id'])) {
             return $this->_session['user_data']['user_id'];
         } else {
-            redirect('admin-login');
+            if ($this->_ci->layout->layout == 'admin_layout') {
+                redirect('employee-login');
+            } else if(!strpos(current_url(), 'user-login')){                
+                redirect('user-login');
+            }
         }
     }
 
@@ -372,6 +377,23 @@ class Rbac {
             }
         }
         return false;
+    }
+
+    /**
+     * @param  : 
+     * @desc   : used to fetch app config item using xpath
+     * @return :
+     * @author : HimansuS
+     * @created:
+     */
+    public function get_app_config_item($xpath) {
+        $app_configs = $this->_session['user_data']['app_configs'];
+
+        // creating object of SimpleXMLElement
+        $xml_data = new SimpleXMLElement('<?xml version="1.0"?><data></data>');
+        //call by reference
+        array_to_xml($app_configs, $xml_data);
+        return $xml_data->xpath($xpath);
     }
 
 }

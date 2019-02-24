@@ -21,13 +21,15 @@ class User extends CI_Model {
         }
         $this->db->select($column)->from('rbac_users ru');
 
-        if ($condition) {
+        if (is_array($condition)) {
             foreach ($condition as $col => $val) {
                 $this->db->where($col, "$val");
             }
+        }else if(is_string($condition)){
+            $this->db->where($condition);
         }
         $result = $this->db->get()->result_array();
-        //echo $this->db->last_query();
+        //echo $this->db->last_query();exit;
         if ($result) {
 			
             //get user roles
@@ -72,6 +74,25 @@ class User extends CI_Model {
             return $result;
         }
         return 0;
+    }
+    /**
+     * @param  : 
+     * @desc   :fetch app configs
+     * @return :
+     * @author : HimansuS
+     * @created:
+     */
+    public function get_app_configs(){
+        $query="select * from app_configs order by category asc";
+        $result=$this->db->query($query)->result_array(0);
+        $app_config=array();
+        if($result){
+            foreach($result as $rec){
+                $conf=json_decode($rec['configs'],true);                
+                $app_config=  array_merge($app_config,$conf)  ;
+            }            
+        }
+        return $app_config;
     }
 
 }

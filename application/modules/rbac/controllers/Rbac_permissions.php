@@ -30,7 +30,7 @@ class Rbac_permissions extends CI_Controller {
      * @author
      */
     public function index() {
-        redirect('/rbac/rbac_permissions/module_permissions');
+        redirect(base_url('rbac-module-permissions'));
     }
 
     /**
@@ -83,7 +83,7 @@ class Rbac_permissions extends CI_Controller {
 
                 if ($this->rbac_permission->save_module_permissions($perms)) {
                     $this->session->set_flashdata('success', 'Record successfully saved!');
-                    redirect('/rbac/rbac_permissions/module_permissions');
+                    redirect('rbac-module-permissions');
                 } else {
                     $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
                 }

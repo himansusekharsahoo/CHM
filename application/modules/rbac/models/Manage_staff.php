@@ -31,7 +31,7 @@ class Manage_staff extends CI_Model {
         }
         $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, false, false)
                 ->from('rbac_users t1')
-                ->where('user_type', 'staff');
+                ->where('user_type', 'employee');
 
         $this->datatables->unset_column("user_id");
         if (isset($data['button_set'])) :
@@ -57,11 +57,11 @@ class Manage_staff extends CI_Model {
             $staff_user_data = array(
                 'first_name' => $data['first_name'],
                 'last_name' => $data['last_name'],
-                'login_id' => $data['login_id'],
+                //'login_id' => $data['login_id'],
                 'email' => $data['email'],
                 'password' => c_encode($data['password']),
                 'mobile' => $data['mobile'],
-                'user_type' => 'staff',
+                'user_type' => 'employee',
                 'created_by' => $data['created_by'],
                 'status' => 'active'
             );
@@ -114,7 +114,7 @@ class Manage_staff extends CI_Model {
             $columns = 'user_id,first_name,last_name,login_id,email,password,login_status,mobile,mobile_verified,email_verified,created,modified,created_by,modified_by,status';
         }
         $this->db->select($columns)->from('rbac_users t1')
-                ->where('user_type', 'staff');
+                ->where('user_type', 'employee');
 
         if ($conditions && is_array($conditions)) :
             foreach ($conditions as $col => $val):

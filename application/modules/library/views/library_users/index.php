@@ -1,5 +1,5 @@
 <?php ?> <div class="row-fluid">
-    <div class="col-sm-12 no_pad">
+    <div class="col-sm-12 no_pad table-responsive">
         <?php
         $this->load->library('c_datatable');
         $dt_data = $this->c_datatable->generate_grid($config);
@@ -10,9 +10,48 @@
     $(function ($) {
 //delete record
 
+        $(document).on('click', '.renew_member_card', function (e) {
+            e.preventDefault();
+            var data = {'member_id': $(this).data('member_id')}
+            var row = $(this).closest('tr');
+            BootstrapDialog.show({
+                title: 'Alert',
+                message: 'Do you want to renew the library card?',
+                buttons: [{
+                        label: 'Cancel',
+                        action: function (dialog) {
+                            dialog.close();
+                        }
+                    }, {
+                        label: 'Renew',
+                        action: function (dialog) {
+                            $.ajax({
+                                url: '<?= base_url('renew-library-user') ?>',
+                                method: 'POST',
+                                data: data,
+                                success: function (result) {                                    
+                                    result=JSON.parse(result);
+                                    if (result.status == 'success') {
+                                        dialog.close();                                        
+                                        BootstrapDialog.alert(result.message);
+                                    } else {
+                                        dialog.close();
+                                        BootstrapDialog.alert(result.message);
+                                    }
+                                },
+                                error: function (error) {
+                                    dialog.close();
+                                    BootstrapDialog.alert('Error:' + error);
+                                }
+                            });
+                        }
+                    }]
+            });
+
+        });
         $(document).on('click', '.delete-record', function (e) {
             e.preventDefault();
-            var data = {'role_id': $(this).data('role_id')}
+            var data = {'member_id': $(this).data('member_id')}
             var row = $(this).closest('tr');
             BootstrapDialog.show({
                 title: 'Alert',
@@ -26,7 +65,7 @@
                         label: 'Delete',
                         action: function (dialog) {
                             $.ajax({
-                                url: '<?=base_url('delete-rbac-role')?>',
+                                url: '<?= base_url('delete-library-user') ?>',
                                 method: 'POST',
                                 data: data,
                                 success: function (result) {
@@ -59,7 +98,7 @@
             };
             $.ajax({
                 type: 'POST',
-                url: "<?=base_url('export-rbac-role')?>",
+                url: "<?= base_url('export-library-user') ?>",
                 data: param,
                 dataType: 'json'
             }).done(function (data) {
@@ -67,7 +106,7 @@
                 $('#loading').css('display', 'none');
             });
         });
-        //export raw data as csv 
+//export raw data as csv 
 
         $(document).on('click', '#export_table_csv', function (e) {
             e.preventDefault();
@@ -77,7 +116,7 @@
             };
             $.ajax({
                 type: 'POST',
-                url: "<?=base_url('export-rbac-role')?>",
+                url: "<?= base_url('export-library-user') ?>",
                 data: param,
                 dataType: 'json'
             }).done(function (data) {

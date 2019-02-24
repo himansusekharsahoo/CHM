@@ -54,3 +54,4 @@ label.error,div.error{color:red;font-weight: normal;}
 .chm_link:visited{color:#3c8dbc;}
 .col_centered{float: none;margin: 0 auto;}
 .custom_file {visibility: hidden;position: absolute;}  
+.action_td{padding:2px !important;}

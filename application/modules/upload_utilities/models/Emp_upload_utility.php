@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Book_assign_log Class File
+ * Book_ledger_upload_utility Class File
  * PHP Version 7.1.1
  * 
  * @category   Library
  * @package    Library
- * @subpackage Book_assign_log
- * @class      Book_assign_log
+ * @subpackage Book_ledger_upload_utility
+ * @class      Book_ledger_upload_utility
  * @desc    
  * @author     HimansuS <himansu.php@gmail.com>                
  * @license    
@@ -18,16 +18,16 @@ if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 /**
- * Book_assign_log Class
+ * Emp_upload_utility Class
  * 
  * @category   Library
  * @package    Library
- * @class      Book_assign_log
+ * @class      Emp_upload_utility
  * @desc    
  * @author     HimansuS                  
  * @since   10/28/2018
  */
-class Course_academic_batch_utility extends CI_Model {
+class Emp_upload_utility extends CI_Model {
 
     /**
      * __construct Method
@@ -63,14 +63,12 @@ class Course_academic_batch_utility extends CI_Model {
         if ($condition && is_string($condition)) {
             $this->datatables->where(null, null, false, $condition);
         }
-        if (!$export) {
-            $this->datatables->unset_column("record_no");
-        }
+        $this->datatables->unset_column("record_no");
         if (isset($data['button_set'])):
             $this->datatables->add_column("Action", $data['button_set'], 'c_encode(record_no)', 1, 1);
         endif;
         if ($export):
-            $data = $this->datatables->generate_export($export);            
+            $data = $this->datatables->generate_export($export);
             return $data;
         endif;
         return $this->datatables->generate();
@@ -110,20 +108,19 @@ class Course_academic_batch_utility extends CI_Model {
      */
     public function save_import_data_db() {
         $user_id = $this->rbac->get_user_id();
-        $temp_table_name = 'temp_course_a_b_m_' . $user_id;
+        $temp_table_name = 'temp_employee_' . $user_id;
 
         $this->db->trans_begin();
-        $this->db->query("call upload_course_aca_batch('" . $temp_table_name . "',$user_id)");
-
-        if ($this->db->trans_status() === FALSE) {
+        $this->db->query("call upload_employee('" . $temp_table_name . "',$user_id)");
+        //app_log('CUSTOM', 'APP', $this->db->trans_status());
+        if ($this->db->trans_status() === FALSE) {            
             $this->db->trans_rollback();
             return FALSE;
-        } else {
+        } else {            
             $this->db->trans_commit();
             return TRUE;
         }
-    }
-
+    }    
 }
 
 ?>

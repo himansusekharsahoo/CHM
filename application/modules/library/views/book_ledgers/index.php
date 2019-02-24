@@ -1,4 +1,7 @@
 <?php ?> 
+<style>
+    .action_td{padding:2px !important;}
+</style>
 <div class="row-fluid">
     <div class="col-sm-12 no_pad table-responsive">
         <?php
@@ -88,5 +91,9 @@
             });
         });
 
+        $(document).on('click','#show_qrcode_popup',function(e){
+            e.preventDefault();
+            alert('show QR CODE');
+        });
     });
 </script>

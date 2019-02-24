@@ -1,4 +1,7 @@
 <?php
+$lang["HEADER_LOGIN"] = "Log In";
+$lang["HEADER_REGI"] = "Registration";
+$lang["HEADER_LOGOUT"] = "Log out";
 
 //DATATABLE
 $lang["DT_SHOW"] = "Show";

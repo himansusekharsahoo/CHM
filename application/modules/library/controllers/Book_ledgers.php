@@ -198,6 +198,18 @@ class Book_ledgers extends CI_Controller {
                 );
                 $button_flag = TRUE;
             }
+            if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'QRCODE')) {
+                $grid_buttons[] = array(
+                    'btn_class' => 'btn-primary',
+                    'btn_href' => base_url('print-library-card'),
+                    'btn_icon' => 'fa-qrcode',
+                    'btn_title' => 'show QR code',
+                    'btn_separator' => ' ',
+                    'param' => array('$1'),
+                    'style' => 'margin-top:1px;margin-left:2px;',
+                    'attr' => 'id="show_qrcode_popup"'
+                );
+            }
             if ($button_flag) {
                 $button_set = get_link_buttons($grid_buttons);
                 $data['button_set'] = $button_set;
@@ -205,7 +217,7 @@ class Book_ledgers extends CI_Controller {
                     'db_column' => 'Action',
                     'name' => 'Action',
                     'title' => 'Action',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'dt_name action_td',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'false'

@@ -7,7 +7,7 @@
             "method" => "POST",
             "autocomplete" => "off"
         );
-        $form_action = base_url('create-staff-profile');
+        $form_action = base_url('create-employee-profile');
         echo form_open($form_action, $form_attribute);
         ?>
         <div class="col-sm-6">
@@ -43,7 +43,7 @@
                     ?>
                 </div>
             </div>            
-            <div class = 'form-group row'>
+<!--            <div class = 'form-group row'>
                 <label for = 'login_id' class = 'col-sm-5 col-form-label ele_required'>Employee id</label>
                 <div class = 'col-sm-7'>
                     <?php
@@ -58,7 +58,7 @@
                     echo form_input($attribute);
                     ?>
                 </div>
-            </div>
+            </div>-->
             <div class = 'form-group row'>
                 <label for = 'email' class = 'col-sm-5 col-form-label ele_required'>Email</label>
                 <div class = 'col-sm-7'>
@@ -133,7 +133,7 @@
     <div class="row-fluid">
         <div class = 'form-group row'>  
             <div class="col-sm-12">
-                <a class="text-right btn btn-default" href="<?=base_url('staff-list')?>">
+                <a class="text-right btn btn-default" href="<?=base_url('employee-list')?>">
                     <span class="glyphicon glyphicon-th-list"></span> Cancel
                 </a>
                 <input type="submit" id="submit" value="Save" class="btn btn-primary">

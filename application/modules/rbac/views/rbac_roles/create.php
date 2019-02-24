@@ -5,7 +5,7 @@
         "id" => "rbac_roles",
         "method" => "POST"
     );
-    $form_action = "/rbac/rbac_roles/create";
+    $form_action = base_url('create-rbac-role');
     echo form_open($form_action, $form_attribute);
     ?>
     <div class = 'form-group row'>
@@ -47,7 +47,7 @@
 
     <div class = 'form-group row'>
         <div class = 'col-sm-1'>
-            <a class="text-right btn btn-default" href="<?php echo APP_BASE ?>rbac/rbac_roles/index">
+            <a class="text-right btn btn-default" href="<?=base_url('rbac-roles-list')?>">
                 <span class="glyphicon glyphicon-th-list"></span> Cancel
             </a>
         </div>

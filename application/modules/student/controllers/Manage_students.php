@@ -31,17 +31,6 @@ class Manage_students extends CI_Controller {
      * @created:
      */
     public function index() {
-        redirect(base_url('student-list'));
-    }
-
-    /**
-     * @param  : 
-     * @desc   : fetch student list
-     * @return :
-     * @author : HimansuS
-     * @created:
-     */
-    public function student_list() {
         if ($this->rbac->has_permission('STUDENT_USERS', 'LIST')) {
             $this->breadcrumbs->push('index', base_url('student-list'));
             $this->scripts_include->includePlugins(array('datatable'), 'css');
@@ -239,7 +228,6 @@ class Manage_students extends CI_Controller {
             $this->layout->render(array('error' => '401'));
         }
     }
-
     /**
      * @param              : 
      * @desc               :used to export grid data
@@ -306,7 +294,7 @@ class Manage_students extends CI_Controller {
             $this->layout->navTitle = 'Add new student';
             $this->layout->title = 'Add new student';
             $this->scripts_include->includePlugins(array('jq_validation'), 'js');
-            $user_id=  $this->rbac->get_user_id();
+            $user_id = $this->rbac->get_user_id();
             $data = array();
             if ($this->input->post()) :
                 $data['data'] = $post_data = $this->input->post();
@@ -344,9 +332,9 @@ class Manage_students extends CI_Controller {
                 );
                 $this->form_validation->set_rules($config);
                 if ($this->form_validation->run()) :
-                    $post_data['created_by'] = $user_id;                                  
-                    unset($data['data']['re_password'],$post_data['submit']);
-                    $result = $this->manage_student->save($post_data);                    
+                    $post_data['created_by'] = $user_id;
+                    unset($data['data']['re_password'], $post_data['submit']);
+                    $result = $this->manage_student->save($post_data);
                     if ($result):
                         $this->session->set_flashdata('success', 'Record successfully saved!');
                         redirect(base_url('student-list'));
@@ -361,7 +349,7 @@ class Manage_students extends CI_Controller {
             $this->layout->render(array('error' => '401'));
         }
     }
-    
+
     /**
      * @param              : $user_id=null
      * @desc               : edit student profile
@@ -377,7 +365,7 @@ class Manage_students extends CI_Controller {
             $this->layout->title = 'Edit student profile';
             $data = array();
             if ($this->input->post()) :
-                $data['data'] = $post_data=$this->input->post();
+                $data['data'] = $post_data = $this->input->post();
                 $config = array(
                     array(
                         'field' => 'first_name',
@@ -414,8 +402,8 @@ class Manage_students extends CI_Controller {
                         endif;
                     else:
                         $this->session->set_flashdata('error', 'Email id is already exists, Please try another!');
-                    endif;                    
-                    
+                    endif;
+
                 endif;
             else:
                 $user_id = c_decode($user_id);
@@ -431,7 +419,7 @@ class Manage_students extends CI_Controller {
             $this->layout->render(array('error' => '401'));
         }
     }
-    
+
     /**
      * @param              : $user_id
      * @desc               : view student profile
@@ -446,7 +434,7 @@ class Manage_students extends CI_Controller {
             $this->layout->title = 'Student profile view';
             $data = array();
             if ($user_id) :
-                $user_id = c_decode($user_id);                
+                $user_id = c_decode($user_id);
                 $result = $this->manage_student->get_student_data(null, array('user_id' => $user_id), 1);
                 if ($result) :
                     $result = current($result);
@@ -462,7 +450,7 @@ class Manage_students extends CI_Controller {
             $this->layout->render(array('error' => '401'));
         }
     }
-    
+
     /**
      * @param              : 
      * @desc               : delete a student
@@ -496,4 +484,5 @@ class Manage_students extends CI_Controller {
         }
         return 'Invalid request type.';
     }
+
 }

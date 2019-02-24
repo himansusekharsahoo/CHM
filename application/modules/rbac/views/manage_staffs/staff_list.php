@@ -26,7 +26,7 @@
                         label: 'Delete',
                         action: function (dialog) {
                             $.ajax({
-                                url: '<?=base_url('delete-staff-profile')?>',
+                                url: '<?=base_url('delete-employee-profile')?>',
                                 method: 'POST',
                                 data: data,
                                 success: function (result) {
@@ -59,7 +59,7 @@
             };
             $.ajax({
                 type: 'POST',
-                url: "<?php echo base_url('export-staff-profile') ?>",
+                url: "<?php echo base_url('export-employee-profile') ?>",
                 data: param,
                 dataType: 'json'
             }).done(function (data) {
@@ -77,7 +77,7 @@
             };
             $.ajax({
                 type: 'POST',
-                url: "<?php echo base_url('export-staff-profile') ?>",
+                url: "<?php echo base_url('export-employee-profile') ?>",
                 data: param,
                 dataType: 'json'
             }).done(function (data) {

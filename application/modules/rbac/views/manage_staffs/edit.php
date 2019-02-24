@@ -5,7 +5,7 @@
         "id" => "staff_users",
         "method" => "POST"
     );
-    $form_action = base_url('edit-staff-profile-save');
+    $form_action = base_url('edit-employee-profile-save');
     echo form_open($form_action, $form_attribute);
     ?>
     <?php
@@ -94,7 +94,7 @@
     </div>
     <div class = 'form-group row'>
         <div class = 'col-sm-1'>
-            <a class="text-right btn btn-default" href="<?=base_url('staff-list')?>">
+            <a class="text-right btn btn-default" href="<?=base_url('employee-list')?>">
                 <span class="glyphicon glyphicon-th-list"></span> Cancel
             </a>
         </div>
