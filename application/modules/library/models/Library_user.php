@@ -147,7 +147,7 @@ class Library_user extends CI_Model {
     public function save_new_lib_member($data) {
 
         $new_lib_card_no = $this->populate_new_lib_card_no();
-
+        
         $login_userid = $this->rbac->get_user_id();
         $user_data = array(
             'first_name' => $data['first_name'],
@@ -263,10 +263,12 @@ class Library_user extends CI_Model {
         if ($card_prefix_config) {
             $card_zero_prefix = trim($card_prefix_config[0]);
         }
+        
         $today = date('Ym');
-        $prefix_length = strlen($card_prefix) + 6; //6 for YYYYMM
+        $prefix_length = strlen($card_prefix) + 7; //6+1 for YYYYMM
         $query = "SELECT MAX(card_no) max_card_no from (SELECT (CAST(substring(card_no,$prefix_length) AS CHAR)+0) card_no FROM library_members)a";
         $result = $this->db->query($query)->row();
+        
         if ($result->max_card_no) {
             return $card_prefix . $today . str_pad(($result->max_card_no + 1), $card_zero_prefix, '0', STR_PAD_LEFT);
         }

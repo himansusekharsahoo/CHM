@@ -133,4 +133,25 @@ List example:
 $pdf->writeHTML($html, true, false, true, false, '');
 $pdf->Output('example_006.pdf', 'I');
     }
+    
+    public function qrcode_test(){
+        $this->layout->layout = 'admin_layout';
+        $this->layout->layoutsFolder = 'layouts/admin';        
+        $this->layout->navTitle = 'Navigator title';
+        
+        $this->load->library('chm_qrcode');
+        $qrcode_details=  $this->chm_qrcode->generate_qrcode('Himansu Sekhar Sahoo');
+       //pma($qrcode_details,1);
+        $data=array(
+            'qrcode'=>$qrcode_details
+        );
+        include APPPATH . 'libraries/Chm_barcode.php';
+        $config=array(
+            'text'=>"LIB2019022200003"
+        );
+        $barcode=new Chm_barcode();
+        $data['barcode']=$barcode->generate_barcode($config);
+        $this->layout->data=$data;
+        $this->layout->render();
+    }
 }

@@ -383,10 +383,7 @@ class Library_users extends CI_Controller {
                     endif;
 
                 endif;
-            endif;
-            $data['user_list'] = $this->library_user->get_user_list('email', 'user_id', array('status' => 'active'));
-            $data['user_list'][''] = "Select user email";
-            $data['user_type_list'] = $this->config->item('LIB_USER_TYPE');
+            endif;           
 
             $this->layout->data = $data;
             $this->layout->render();
@@ -584,11 +581,7 @@ class Library_users extends CI_Controller {
                 endif;
 
                 $data['data'] = $result;
-            endif;
-
-            $data['user_list'] = $this->library_user->get_user_list('email', 'user_id', array('status' => 'active'));
-            $data['user_list'][''] = "Select user email";
-            $data['user_type_list'] = array('2' => 'Student', '1' => 'Staff');
+            endif;            
             $this->layout->data = $data;
             $this->layout->render();
         }else {
