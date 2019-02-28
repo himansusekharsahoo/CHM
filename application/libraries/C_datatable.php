@@ -286,6 +286,10 @@ class C_datatable {
                 $columns.='orderable:' . $orderable . ',';
                 $columns.='targets:"' . $targets . '",';
                 $columns.='searchable:' . $searchable . ',';
+                
+                if(isset($cols['render'])){
+                    $columns.='render:' . $cols['render'] . ',';
+                }
 
                 if (isset($cols['data'])) {
                     $columns.='data:' . $cols['data'] . '';

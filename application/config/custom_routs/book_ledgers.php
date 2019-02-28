@@ -6,6 +6,7 @@ $route['edit-book-ledger-save'] = 'library/book_ledgers/edit';
 $route['view-book-ledger/(:any)'] = 'library/book_ledgers/view/$1';
 $route['delete-book-ledger'] = 'library/book_ledgers/delete';
 $route['export-book-ledger'] = 'library/book_ledgers/export_grid_data';
+$route['popup-qr-code'] = 'library/book_ledgers/get_bar_qr_code';
 //Manage book category
 $route['manage-book-category'] = 'library/book_category_masters/index';
 $route['create-book-category'] = 'library/book_category_masters/create';

@@ -65,10 +65,22 @@ class Book_ledgers extends CI_Controller {
         if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'LIST')) {
             $this->breadcrumbs->push('index', '/library/book_ledgers/index');
             $this->scripts_include->includePlugins(array('datatable'), 'css');
-            $this->scripts_include->includePlugins(array('datatable', 'jq_validation'), 'js');
+            $this->scripts_include->includePlugins(array('datatable', 'jq_validation', 'promise'), 'js');
             $this->layout->navTitle = 'Book ledger list';
             $this->layout->title = 'Book ledger list';
             $header = array(
+                array(
+                    'db_column' => 'bledger_id',
+                    'name' => 'bledger_id',
+                    'title' => '<input type=\'checkbox\' name=\'id\' value=\'\'>',
+                    'class_name' => 'text-center',
+                    'orderable' => 'false',
+                    'visible' => 'true',
+                    'searchable' => 'false',
+                    'render' => 'function (data, type, full, meta){'
+                    . 'return \'<input type="checkbox" name="check_all" class="book_ledger_chk" value="\' + data + \'">\';'
+                    . '}',
+                ),
                 array(
                     'db_column' => 'book_name',
                     'name' => 'book_name',
@@ -201,13 +213,12 @@ class Book_ledgers extends CI_Controller {
             if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'QRCODE')) {
                 $grid_buttons[] = array(
                     'btn_class' => 'btn-primary',
-                    'btn_href' => base_url('print-library-card'),
+                    'btn_href' => '#',
                     'btn_icon' => 'fa-qrcode',
                     'btn_title' => 'show QR code',
                     'btn_separator' => ' ',
-                    'param' => array('$1'),
                     'style' => 'margin-top:1px;margin-left:2px;',
-                    'attr' => 'id="show_qrcode_popup"'
+                    'attr' => 'id="show_qrcode_popup" data-ledger-id="$1"'
                 );
             }
             if ($button_flag) {
@@ -269,6 +280,18 @@ class Book_ledgers extends CI_Controller {
                 );
                 $dt_button_flag = true;
             }
+            if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'PRINT')) {
+                $dt_tool_btn[] = array(
+                    'btn_class' => 'no_pad',
+                    'btn_href' => '#',
+                    'btn_icon' => 'fa-qrcode fa-lg',
+                    'btn_title' => 'show QR code',
+                    'btn_text' => '',
+                    'btn_separator' => ' ',
+                    'attr' => 'id="show_qrcode_batch"'
+                );
+                $dt_button_flag = true;
+            }
             if ($dt_button_flag) {
                 $dt_tool_btn = get_link_buttons($dt_tool_btn);
             }
@@ -292,7 +315,13 @@ class Book_ledgers extends CI_Controller {
                     'buttom_pagination' => true
                 ),
                 'options' => array(
-                    'iDisplayLength' => 15
+                    'iDisplayLength' => 15,
+                    'order' => array(
+                        array(
+                            'column' => 2,
+                            'order' => 'asc'
+                        )
+                    )
                 )
             );
             $data['data'] = array('config' => $config);
@@ -686,6 +715,94 @@ class Book_ledgers extends CI_Controller {
             $this->layout->render(array('error' => 'general'));
         endif;
         return 'Invalid request type.';
+    }
+
+    /**
+     * @param  : 
+     * @desc   : used to generate barcode and qrcode
+     * @return :
+     * @author : HimansuS
+     * @created:
+     */
+    public function get_bar_qr_code() {
+        if ($this->input->is_ajax_request()) {
+            $ledger_ids = $this->input->post('ledger_id');
+            $encoded = $this->input->post('enc');
+            if ($ledger_ids) {
+                $markup = "";
+                require_once APPPATH . 'libraries/Chm_qrcode.php';
+                require_once APPPATH . 'libraries/Chm_barcode.php';
+                $qrcode = new Chm_qrcode();
+                $barcode = new Chm_barcode();
+                $bar_code_details = $msg = array();
+                $exp_ids = explode(",", $ledger_ids);
+
+                foreach ($exp_ids as $ledger_id) {
+
+                    if ($ledger_id) {
+                        if ($encoded) {
+                            $ledger_id = c_decode($ledger_id);
+                        }
+                        $conditions = array('t1.bledger_id' => $ledger_id);
+                        $ledger_detail = $this->book_ledger->get_book_ledger(null, $conditions);
+
+                        if ($ledger_detail) {
+                            $ledger_detail = $ledger_detail[0];
+                            $ledger_id = c_decode($ledger_id);
+                            $qr_config = array(
+                                'text' => "Name:".$ledger_detail['book_name']." ISBN:".$ledger_detail['isbn_no'].""
+                                . " Loc:".$ledger_detail['location']
+                                    
+                            );
+                            $bar_config = array(
+                                'text' => ($ledger_detail['isbn_no'])?$ledger_detail['isbn_no']:$ledger_id
+                            );
+                            $qrcode_details = $qrcode->generate_qrcode($qr_config);
+                            $barcode_details = $barcode->generate_barcode($bar_config);
+                            $bar_code_details[] = array(
+                                'qrcode_image' => base_url($qrcode_details['qrcode_image']),
+                                'barcode_image' => base_url($barcode_details['barcode_image']),
+                                'book_name' => $ledger_detail['book_name'],
+                                'isbn_no' => $ledger_detail['isbn_no']
+                            );
+                        }
+                    }
+                }//end loop
+
+                if ($bar_code_details) {
+                    $chunk = array_chunk($bar_code_details, 2);
+                    foreach ($chunk as $rows) {
+                        $markup.="<div class='row'>";
+                        $markup.="<div class='col-sm-12'>";
+                        foreach ($rows as $rec) {
+                            $markup.="<div class='col-sm-6'>";
+                            $markup.="<div>Name: " . $rec['book_name'] . "</div>";
+                            $markup.="<div>ISBN: " . $rec['isbn_no'] . "</div><br>";
+                            $markup.="<div><image src='" . $rec['qrcode_image'] . "' alter='No QR code found'></div><br>";
+                            $markup.="<div><image src='" . $rec['barcode_image'] . "' alter='No QR code found'></div>";
+                            $markup.="</div>";
+                        }
+                        $markup.="</div>";
+                        $markup.="</div>";
+                    }
+                }
+                $msg = array(
+                    'status' => 'success',
+                    'title' => 'Book QR & Bar code',
+                    'message' => $markup
+                );
+            } else {
+                $msg = array(
+                    'status' => 'error',
+                    'title' => 'Book QR & Bar code',
+                    'message' => 'There are some error, please refresh the page and try again!'
+                );
+            }
+            echo json_encode($msg);
+            exit;
+        } else {
+            $this->layout->render(array('error' => '401'));
+        }
     }
 
 }

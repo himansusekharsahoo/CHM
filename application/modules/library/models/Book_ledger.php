@@ -91,7 +91,7 @@ class Book_ledger extends CI_Model {
         $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, FALSE, FALSE)
                 ->from('book_ledger_list_view');
 
-        $this->datatables->unset_column("bledger_id");
+        //$this->datatables->unset_column("bledger_id");
         if (isset($data['button_set'])):
             $this->datatables->add_column("Action", $data['button_set'], 'c_encode(bledger_id)', 1, 1);
         endif;
@@ -151,7 +151,7 @@ class Book_ledger extends CI_Model {
 
         endif;
         $result = $this->db->get()->result_array();
-
+        //echo $this->db->last_query();
         return $result;
     }
 

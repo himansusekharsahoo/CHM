@@ -39,8 +39,8 @@ class Chm_qrcode {
      * @author  HimansuS                  
      * @since   24/02/2019
      */
-    public function __construct($config = array()) {
-        $this->_initialize($config);
+    public function __construct() {
+        //$this->_initialize($config);
     }
 
     private $_error_correction_level = array('L', 'M', 'Q', 'H');
@@ -57,14 +57,15 @@ class Chm_qrcode {
         $default = array(
             'error_correction_level' => 'H',
             'size' => 4,
-            'temp_dir_access' => '..',
+            'temp_dir_access' => '..',//no use
             'temp_dir' => 'qrcodes',
             'file_name' => 'qrcode_' . rand(1, 999999),
             'file_name_random' => true,
             'file_path' => '',
             'margin' => 2,
             'save_and_print' => false,
-            'dir_separator' => '/'
+            'dir_separator' => '/',
+            'text'=>''
         );
         $this->_config = array_merge($default, $config);
         if (isset($this->_config['file_path']) && $this->_config['file_path'] == '') {
@@ -101,17 +102,18 @@ class Chm_qrcode {
      * @author : HimansuS
      * @created:
      */
-    public function generate_qrcode($data) {
-
+    public function generate_qrcode($config) {
+        $this->_initialize($config);
+        
         if ($this->_config['file_name_random']) {
-            $filename = $this->_config['file_name'] . md5($data . '|' . $this->_config['error_correction_level'] . '|' . $this->_config['size']) . '.png';
+            $filename = $this->_config['file_name'] . md5($this->_config['text'] . '|' . $this->_config['error_correction_level'] . '|' . $this->_config['size']) . '.png';
         } else {
             $filename = $this->_config['file_name'] . '.png';
         }
         $full_file_name = $this->_config['file_path'] . $this->_config['dir_separator'] . $this->_config['temp_dir'] . $this->_config['dir_separator'] . $filename;
-        QRcode::png($data, $full_file_name, $this->_config['error_correction_level'], $this->_config['size'], $this->_config['margin'], $this->_config['save_and_print']);
+        QRcode::png($this->_config['text'], $full_file_name, $this->_config['error_correction_level'], $this->_config['size'], $this->_config['margin'], $this->_config['save_and_print']);
 
-        $qrcode_relative_path = $this->_config['temp_dir_access'] . $this->_config['dir_separator'] . $this->_config['temp_dir'] . $this->_config['dir_separator'];
+        $qrcode_relative_path = $this->_config['dir_separator'] . $this->_config['temp_dir'] . $this->_config['dir_separator'];
         $return_filename = $qrcode_relative_path . $filename;
         $this->_config['qrcode_image'] = $return_filename;
         return $this->_config;

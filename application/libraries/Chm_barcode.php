@@ -61,9 +61,9 @@ class Chm_barcode {
             'codetype' => "code128",
             'print' => true,//print text below bars
             'print_text_left_margin' => 0.25,//text left margin i.e showing below bars
-            'sizefactor' => "2", //bar size
-            'temp_dir_access' => '..',
-            'temp_dir' => 'bar_codes',
+            'sizefactor' => "1.5", //bar size
+            'temp_dir_access' => '..',//no use
+            'temp_dir' => 'barcodes',
             'file_name' => 'barcode_' . rand(1, 999999),
             'file_name_random' => true,
             'file_path' => '',
@@ -232,7 +232,7 @@ class Chm_barcode {
             } else {
                 $filename = $this->_config['file_name'] . '.png';
             }
-            $barcode_relative_path = $this->_config['temp_dir_access'] . $this->_config['dir_separator'] . $this->_config['temp_dir'] . $this->_config['dir_separator'];
+            $barcode_relative_path = $this->_config['dir_separator'] . $this->_config['temp_dir'] . $this->_config['dir_separator'];
             $return_filename = $barcode_relative_path . $filename;
             $this->_config['barcode_image'] = $return_filename;
 
