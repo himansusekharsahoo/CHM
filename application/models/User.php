@@ -25,25 +25,25 @@ class User extends CI_Model {
             foreach ($condition as $col => $val) {
                 $this->db->where($col, "$val");
             }
-        }else if(is_string($condition)){
+        } else if (is_string($condition)) {
             $this->db->where($condition);
         }
         $result = $this->db->get()->result_array();
         //echo $this->db->last_query();exit;
         if ($result) {
-			
+
             //get user roles
             $result = $result[0];
             $condition = array('ur.user_id' => $result['user_id']);
             $role_detail = $this->_get_user_roles(null, $condition);
-			$result['roles']=array();
-			$result['role_codes']=array();
-			if($role_detail){
-				$result['roles'] = $role_detail;
-				$role_code = array_column($role_detail, 'code');
-				$result['role_codes'] = $role_code;
-			}
-            
+            $result['roles'] = array();
+            $result['role_codes'] = array();
+            if ($role_detail) {
+                $result['roles'] = $role_detail;
+                $role_code = array_column($role_detail, 'code');
+                $result['role_codes'] = $role_code;
+            }
+
             return $result;
         }
         return 0;
@@ -75,6 +75,7 @@ class User extends CI_Model {
         }
         return 0;
     }
+
     /**
      * @param  : 
      * @desc   :fetch app configs
@@ -82,16 +83,19 @@ class User extends CI_Model {
      * @author : HimansuS
      * @created:
      */
-    public function get_app_configs(){
-        $query="select * from app_configs order by category asc";
-        $result=$this->db->query($query)->result_array(0);
-        $app_config=array();
-        if($result){
-            foreach($result as $rec){
-                $conf=json_decode($rec['configs'],true);                
-                $app_config=  array_merge($app_config,$conf)  ;
-            }            
+    public function get_app_configs() {
+        $query = "select * from app_configs order by category asc";
+        $result = $this->db->query($query)->result_array();        
+        $configs = $app_config = array();
+        if ($result) {
+            foreach ($result as $rec) {
+                $configs[$rec['category']] = $rec;
+            }
+            foreach ($configs as $cat=>$rec) {
+                $app_config[strtolower($cat)]=json_decode($rec['configs'],true);                
+            }
         }
+        //pma($app_config, 1);
         return $app_config;
     }
 

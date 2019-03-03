@@ -25,7 +25,7 @@ class Rbac {
         } else {
             if ($this->_ci->layout->layout == 'admin_layout') {
                 redirect('employee-login');
-            } else if(!strpos(current_url(), 'user-login')){                
+            } else if (!strpos(current_url(), 'user-login')) {
                 redirect('user-login');
             }
         }
@@ -387,8 +387,7 @@ class Rbac {
      * @created:
      */
     public function get_app_config_item($xpath) {
-        $app_configs = $this->_session['user_data']['app_configs'];
-
+        $app_configs = $this->_session['user_data']['app_configs'];        
         // creating object of SimpleXMLElement
         $xml_data = new SimpleXMLElement('<?xml version="1.0"?><data></data>');
         //call by reference
@@ -396,4 +395,34 @@ class Rbac {
         return $xml_data->xpath($xpath);
     }
 
+    public function get_highest_role($role_code_array) {
+        $role_priority = $this->get_app_config_item('chm_app/role_priority');
+        if (isset($role_priority[0])) {
+            $priority = array();
+            foreach ($role_priority[0] as $key => $ele) {
+                $priority[] = (string) $ele;
+            }
+            $highest_role='';
+            $index=0;
+            $swap='';
+            foreach($role_code_array as $role){
+                $index=array_search($role, $priority);                
+                if($swap==''){
+                    $swap=$index;                    
+                }
+                if($index==0){
+                    $highest_role=$role;
+                    break;
+                }else if($swap>$index){
+                    $swap=$index;
+                    $highest_role=$priority[$index];
+                }elseif($swap<$index){
+                    $highest_role=$priority[$swap];
+                }else{
+                    $highest_role=$priority[$swap];
+                }
+            }
+            return $highest_role;
+        }
+    }
 }

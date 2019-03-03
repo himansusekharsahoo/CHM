@@ -55,3 +55,16 @@ label.error,div.error{color:red;font-weight: normal;}
 .col_centered{float: none;margin: 0 auto;}
 .custom_file {visibility: hidden;position: absolute;}  
 .action_td{padding:2px !important;}
+.list-type1{margin:0 auto;}
+.list-type1 ol{counter-reset: li;list-style: none;*list-style: decimal;
+    font-size: 12px;padding: 0;margin-bottom: 4em;}
+.list-type1 ol ol{margin: 0 0 0 2em;}
+.list-type1 a{position: relative;display: block;padding: .4em .4em .4em 2em;*padding: .4em;
+    margin: .5em 0;background: #d2d6de;color: #000;text-decoration: none;-moz-border-radius: .3em;
+    -webkit-border-radius: .3em;border-radius: 10em;transition: all .2s ease-in-out;}
+.list-type1 a:hover{background: #f39c12;text-decoration:none;transform: scale(1.05);}
+.list-type1 a:before{content: counter(li);counter-increment: li;position: absolute;
+    left: -0.3em;top: 50%;margin-top: -1em;background: #f39c12;height: 2em;
+    width: 2em;line-height: 1.3em;border: .3em solid #fff;text-align: center;
+    vertical-align: middle;font-weight: bold;-moz-border-radius: 2em;-webkit-border-radius: 2em;
+    border-radius: 2em;color: #FFF;}

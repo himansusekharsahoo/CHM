@@ -154,4 +154,12 @@ $pdf->Output('example_006.pdf', 'I');
         $this->layout->data=$data;
         $this->layout->render();
     }
+    
+    public function drag_drop_list(){
+         $this->layout->layout = 'admin_layout';
+        $this->layout->layoutsFolder = 'layouts/admin';
+        $this->breadcrumbs->push('admin_layout', '/');
+        $this->layout->navTitle = 'Navigator title';
+        $this->layout->render();
+    }
 }

@@ -49,15 +49,15 @@ class App_config extends CI_Model {
             if (isset($data['app_configs_category'])) {
                 $category = $data['app_configs_category'];
                 $query = "SELECT config_id FROM app_configs WHERE lower(category)=lower('$category')";
-                $result = $this->db->query($query)->row();                
+                $result = $this->db->query($query)->row();
                 if ($result) {
                     //update config
-                    $record = array(                        
+                    $record = array(
                         'configs' => json_encode($data['app_configs']),
                         'modified' => date('Y-m-d H:i:s'),
                         'modified_by' => $this->rbac->get_user_id()
                     );
-                    $this->db->where('config_id',$result->config_id);
+                    $this->db->where('config_id', $result->config_id);
                     $this->db->update("app_configs", $record);
                 } else {
                     //create config
@@ -86,9 +86,21 @@ class App_config extends CI_Model {
 
     /**
      * @param  : 
-     * @desc   :
+     * @desc   : fetched role list excluding DEVELOPER & ADMIN
      * @return :
      * @author : HimansuS
      * @created:
      */
+    public function get_role_code_list() {
+        $query = "SELECT CODE FROM rbac_roles where 
+               created_by in (
+                select user_id from rbac_user_roles rur
+                left join rbac_roles rr on rr.role_id=rur.role_id
+                where rr.code in('ADMIN','DEVELOPER')
+               )
+               and code not in('ADMIN','DEVELOPER')";
+        $result = $this->db->query($query)->result_array();
+        return $result;
+    }
+
 }
