@@ -56,12 +56,12 @@ class Chm_barcode {
 
         $default = array(
             'text' => "",
-            'size' => "40",//image size
+            'size' => "30",//image size
             'orientation' => "horizontal",
             'codetype' => "code128",
             'print' => true,//print text below bars
-            'print_text_left_margin' => 0.25,//text left margin i.e showing below bars
-            'sizefactor' => "1.5", //bar size
+            'print_text_left_margin' => 0.28,//text left margin i.e showing below bars
+            'sizefactor' => "1.3", //bar size
             'temp_dir_access' => '..',//no use
             'temp_dir' => 'barcodes',
             'file_name' => 'barcode_' . rand(1, 999999),

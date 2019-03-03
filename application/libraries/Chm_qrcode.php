@@ -56,7 +56,7 @@ class Chm_qrcode {
     private function _initialize($config) {
         $default = array(
             'error_correction_level' => 'H',
-            'size' => 4,
+            'size' => 2,
             'temp_dir_access' => '..',//no use
             'temp_dir' => 'qrcodes',
             'file_name' => 'qrcode_' . rand(1, 999999),

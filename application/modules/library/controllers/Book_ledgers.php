@@ -749,13 +749,25 @@ class Book_ledgers extends CI_Controller {
                         if ($ledger_detail) {
                             $ledger_detail = $ledger_detail[0];
                             $ledger_id = c_decode($ledger_id);
+                            $qr_columns = $this->rbac->get_app_config_item('library/book_qrcode_columns');
+                            $qr_col_text = '';
+                            if (isset($qr_columns)) {
+                                $qr_columns = (string) $qr_columns[0];
+                                $extract = explode(',', $qr_columns);
+                                foreach ($extract as $col) {
+                                    $lebel = str_replace("_", " ", $col);
+                                    $lebel = ucfirst(strtolower($lebel));
+                                    if (isset($ledger_detail[$col])) {
+                                        $qr_col_text.=$lebel.": ".$ledger_detail[$col]." ";
+                                    }
+                                }
+                            }
+                            
                             $qr_config = array(
-                                'text' => "Name:".$ledger_detail['book_name']." ISBN:".$ledger_detail['isbn_no'].""
-                                . " Loc:".$ledger_detail['location']
-                                    
+                                'text' => $qr_col_text
                             );
                             $bar_config = array(
-                                'text' => ($ledger_detail['isbn_no'])?$ledger_detail['isbn_no']:$ledger_id
+                                'text' => ($ledger_detail['isbn_no']) ? $ledger_detail['isbn_no'] : $ledger_id
                             );
                             $qrcode_details = $qrcode->generate_qrcode($qr_config);
                             $barcode_details = $barcode->generate_barcode($bar_config);
@@ -770,12 +782,12 @@ class Book_ledgers extends CI_Controller {
                 }//end loop
 
                 if ($bar_code_details) {
-                    $chunk = array_chunk($bar_code_details, 2);
+                    $chunk = array_chunk($bar_code_details, 4);
                     foreach ($chunk as $rows) {
                         $markup.="<div class='row'>";
                         $markup.="<div class='col-sm-12'>";
                         foreach ($rows as $rec) {
-                            $markup.="<div class='col-sm-6'>";
+                            $markup.="<div class='col-sm-3'>";
                             $markup.="<div>Name: " . $rec['book_name'] . "</div>";
                             $markup.="<div>ISBN: " . $rec['isbn_no'] . "</div><br>";
                             $markup.="<div><image src='" . $rec['qrcode_image'] . "' alter='No QR code found'></div><br>";

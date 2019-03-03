@@ -394,7 +394,13 @@ class Rbac {
         array_to_xml($app_configs, $xml_data);
         return $xml_data->xpath($xpath);
     }
-
+    /**
+     * @param  : 
+     * @desc   : used to fetch heighest role from role code list based on role priority set in app config page
+     * @return :
+     * @author : HimansuS
+     * @created:
+     */
     public function get_highest_role($role_code_array) {
         $role_priority = $this->get_app_config_item('chm_app/role_priority');
         if (isset($role_priority[0])) {
