@@ -262,4 +262,17 @@ class Book_assignments extends CI_Model {
         return $query->num_rows();
     }
 
+    public function get_book_details($key = '') {
+        $columns = array(
+            'b.book_id', 'b.name', 'bl.isbn_no', 'bl.edition', 'bam.author_name', 'bpm.name as publication'
+        );
+        $query = "SELECT " . implode(',', $columns) . " FROM books b 
+            JOIN book_ledgers bl ON b.book_id=bl.book_id 
+            JOIN book_author_masters bam ON bl.bauthor_id=bam.bauthor_id
+            JOIN book_publication_masters bpm ON bl.bpublication_id=bpm.publication_id
+            WHERE b.status='active' AND (
+            b.name like '%$key%' OR bl.isbn_no like '%$key%') order by b.name";
+        return $this->db->query($query)->result_array();
+    }
+
 }

@@ -25,7 +25,7 @@ class Book_assignment extends CI_Controller {
     public function __construct() {
         parent::__construct();
 
-        $this->load->model('book_assign');
+        $this->load->model('book_assignments');
         $this->load->model('library_user');
         $this->load->library('pagination');
         $this->load->library('form_validation');
@@ -47,7 +47,7 @@ class Book_assignment extends CI_Controller {
      */
     public function index() {
         if ($this->rbac->has_permission('MANAGE_BOOK_ASSIGNS', 'LIST')) {
-            $this->breadcrumbs->push('index', '/library/book_assigns/index');
+            $this->breadcrumbs->push('index', '/library/book_assignment/index');
             $this->scripts_include->includePlugins(array('datatable'), 'css');
             $this->scripts_include->includePlugins(array('datatable'), 'js');
             $this->layout->navTitle = 'Book assign list';
@@ -170,7 +170,7 @@ class Book_assignment extends CI_Controller {
             $data['button_set'] = $button_set;
 
             if ($this->input->is_ajax_request()) {
-                $returned_list = $this->book_assign->get_book_assign_datatable($data);
+                $returned_list = $this->book_assignments->get_book_assign_datatable($data);
                 echo $returned_list;
                 exit();
             }
@@ -210,7 +210,7 @@ class Book_assignment extends CI_Controller {
                 'dt_id' => 'raw_cert_data_dt_table',
                 'dt_header' => $header,
                 'dt_ajax' => array(
-                    'dt_url' => base_url('library/book_assigns/index'),
+                    'dt_url' => base_url('library/book_assignment/index'),
                 ),
                 'custom_lengh_change' => false,
                 'dt_dom' => array(
@@ -249,7 +249,7 @@ class Book_assignment extends CI_Controller {
                 $export_type = $this->input->post('export_type');
                 $tableHeading = array('bledger_id' => 'bledger_id', 'member_id' => 'member_id', 'issue_date' => 'issue_date', 'due_date' => 'due_date', 'return_date' => 'return_date', 'return_delay_fine' => 'return_delay_fine', 'book_return_condition' => 'book_return_condition', 'book_lost_fine' => 'book_lost_fine', 'remarks' => 'remarks', 'created' => 'created', 'created_by' => 'created_by', 'user_type' => 'user_type',);
                 $cols = 'bledger_id,member_id,issue_date,due_date,return_date,return_delay_fine,book_return_condition,book_lost_fine,remarks,created,created_by,user_type';
-                $data = $this->book_assign->get_book_assign_datatable(null, true, $tableHeading);
+                $data = $this->book_assignments->get_book_assign_datatable(null, true, $tableHeading);
                 $head_cols = $body_col_map = array();
                 $date = array(
                     array(
@@ -304,7 +304,7 @@ class Book_assignment extends CI_Controller {
         if ($this->rbac->has_permission('MANAGE_BOOK_ASSIGNS', 'CREATE')) {
             $this->scripts_include->includePlugins(array('jq_validation', 'bs_datepicker', 'jq_typehead'), 'js');
             $this->scripts_include->includePlugins(array('bs_datepicker', 'jq_typehead'), 'css');
-            $this->breadcrumbs->push('create', '/library/book_assigns/create');
+            $this->breadcrumbs->push('create', '/library/book_assignment/create');
 
             $this->layout->navTitle = 'Book assignment:';
             $data = array();
@@ -359,7 +359,7 @@ class Book_assignment extends CI_Controller {
                 if ($this->form_validation->run()):
 
                     $data['data'] = $this->input->post();
-                    $result = $this->book_assign->save($data['data']);
+                    $result = $this->book_assignments->save($data['data']);
 
                     if ($result >= 1):
                         $this->session->set_flashdata('success', 'Record successfully saved!');
@@ -369,8 +369,8 @@ class Book_assignment extends CI_Controller {
                     endif;
                 endif;
             endif;
-            $data['bledger_id_list'] = $this->book_assign->get_book_ledgers_options('isbn_no', 'bledger_id');
-            $data['member_id_list'] = $this->book_assign->get_library_members_options('card_no', 'member_id');
+            $data['bledger_id_list'] = $this->book_assignments->get_book_ledgers_options('isbn_no', 'bledger_id');
+            $data['member_id_list'] = $this->book_assignments->get_library_members_options('card_no', 'member_id');
             $data['member_id_list'][''] = "Select Card Number";
             /*
              * @TODO : Fetch list from the database column comments. For book_return_condition_list and user_type_list.
@@ -399,7 +399,7 @@ class Book_assignment extends CI_Controller {
         if ($this->rbac->has_permission('MANAGE_BOOK_ASSIGNS', 'EDIT')) {
             $this->scripts_include->includePlugins(array('jq_validation', 'bs_datepicker'), 'js');
             $this->scripts_include->includePlugins(array('bs_datepicker'), 'css');
-            $this->breadcrumbs->push('edit', '/library/book_assigns/edit');
+            $this->breadcrumbs->push('edit', '/library/book_assignment/edit');
 
             $this->layout->navTitle = 'Book assign edit';
             $data = array();
@@ -455,24 +455,24 @@ class Book_assignment extends CI_Controller {
                 $this->form_validation->set_rules($config);
 
                 if ($this->form_validation->run()):
-                    $result = $this->book_assign->update($data['data']);
+                    $result = $this->book_assignments->update($data['data']);
                     if ($result >= 1):
                         $this->session->set_flashdata('success', 'Record successfully updated!');
-                        redirect('/library/book_assigns');
+                        redirect('/library/book_assignment');
                     else:
                         $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
                     endif;
                 endif;
             else:
                 $bassign_id = c_decode($bassign_id);
-                $result = $this->book_assign->get_book_assign(null, array('bassign_id' => $bassign_id));
+                $result = $this->book_assignments->get_book_assign(null, array('bassign_id' => $bassign_id));
                 if ($result):
                     $result = current($result);
                 endif;
                 $data['data'] = $result;
             endif;
-            $data['bledger_id_list'] = $this->book_assign->get_book_ledgers_options('isbn_no', 'bledger_id');
-            $data['member_id_list'] = $this->book_assign->get_library_members_options('card_no', 'member_id');
+            $data['bledger_id_list'] = $this->book_assignments->get_book_ledgers_options('isbn_no', 'bledger_id');
+            $data['member_id_list'] = $this->book_assignments->get_library_members_options('card_no', 'member_id');
             /*
              * @TODO : Fetch list from the database column comments. For book_return_condition_list and user_type_list.
              */
@@ -498,14 +498,14 @@ class Book_assignment extends CI_Controller {
      */
     public function view($bassign_id) {
         if ($this->rbac->has_permission('MANAGE_BOOK_ASSIGNS', 'VIEW')) {
-            $this->breadcrumbs->push('view', '/library/book_assigns/view');
+            $this->breadcrumbs->push('view', '/library/book_assignment/view');
 
             $data = array();
             if ($bassign_id):
                 $bassign_id = c_decode($bassign_id);
 
                 $this->layout->navTitle = 'Book assign view';
-                $result = $this->book_assign->get_book_assign(null, array('bassign_id' => $bassign_id), 1);
+                $result = $this->book_assignments->get_book_assign(null, array('bassign_id' => $bassign_id), 1);
                 if ($result):
                     $result = current($result);
                 endif;
@@ -537,7 +537,7 @@ class Book_assignment extends CI_Controller {
                 if ($bassign_id):
                     $bassign_id = c_decode($bassign_id);
 
-                    $result = $this->book_assign->delete($bassign_id);
+                    $result = $this->book_assignments->delete($bassign_id);
                     if ($result):
                         echo 1;
                         exit();
@@ -566,13 +566,13 @@ class Book_assignment extends CI_Controller {
             'expiry_date' => $this->input->post('expiry_date'),
             'date_issue' => date('Y-m-d')
         );
-        $result = $this->book_assign->enroll_member($data['data']);
+        $result = $this->book_assignments->enroll_member($data['data']);
         echo $result;
     }
 
     public function isbn_status() {
         $bledger_id = $this->input->post('bledger_id');
-        $count = $this->book_assign->isbn_status($bledger_id);
+        $count = $this->book_assignments->isbn_status($bledger_id);
         if ($count > 0) {
             echo 'false';
         } else {
@@ -677,6 +677,21 @@ class Book_assignment extends CI_Controller {
                             </div>";
             }
             echo $markup;
+            exit;
+        } else {
+            $this->layout->render(array('error' => '401'));
+        }
+    }
+
+    function search_book_details() {
+        if ($this->input->is_ajax_request()) {
+            $search_text = $this->input->post('search_text');
+            $result = $this->book_assignments->get_book_details($search_text);
+            echo json_encode(array(
+                "status" => true,
+                "error" => null,
+                "data" => $result
+            ));
             exit;
         } else {
             $this->layout->render(array('error' => '401'));
