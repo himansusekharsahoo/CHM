@@ -383,7 +383,7 @@ class Library_users extends CI_Controller {
                     endif;
 
                 endif;
-            endif;           
+            endif;
 
             $this->layout->data = $data;
             $this->layout->render();
@@ -581,7 +581,7 @@ class Library_users extends CI_Controller {
                 endif;
 
                 $data['data'] = $result;
-            endif;            
+            endif;
             $this->layout->data = $data;
             $this->layout->render();
         }else {

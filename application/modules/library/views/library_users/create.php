@@ -287,8 +287,8 @@
                 onNavigateAfter: function (node, lis, a, item, query, event) {
                     if (~[38, 40].indexOf(event.keyCode)) {
                         var resultList = node.closest("form").find("ul.typeahead__list"),
-                                activeLi = lis.filter("li.active"),
-                                offsetTop = activeLi[0] && activeLi[0].offsetTop - (resultList.height() / 2) || 0;
+                        activeLi = lis.filter("li.active"),
+                        offsetTop = activeLi[0] && activeLi[0].offsetTop - (resultList.height() / 2) || 0;
 
                         resultList.scrollTop(offsetTop);
                     }
@@ -329,14 +329,15 @@
             $('#user_details_container').html('');
         });
     });
+    
     function fetch_user_data(user_id) {
         //console.log('user_id',user_id);
         const user_promise = new Promise(function (resolve, reject) {
-        var form_data = {
-            user_id: user_id
-        };
-        $.ajax({
-        url: "<?= base_url('show-library-user-data') ?>",
+            var form_data = {
+                user_id: user_id
+            };
+            $.ajax({
+                url: "<?= base_url('show-library-user-data') ?>",
                 type: 'POST',
                 dataType: 'html',
                 data: form_data,
@@ -346,17 +347,18 @@
                 error: function (result) {
                     reject(result);
                 }
+            });
         });
+        user_promise.then(function (resolve) {
+            $('#user_details_container').html(resolve);
+        }, function (reject) {
+            show_message(reject);
         });
-                user_promise.then(function (resolve) {
-                    $('#user_details_container').html(resolve);
-                }, function (reject) {
-                    show_message(reject);
-                });
-        }
-        function create_lib_user(user_id) {
-            //console.log('user_id',user_id);
-            const create_user_promise = new Promise(function (resolve, reject) {
+    }
+    
+    function create_lib_user(user_id) {
+        //console.log('user_id',user_id);
+        const create_user_promise = new Promise(function (resolve, reject) {
             var form_data = {
                 user_id: user_id,
                 tab_user_type: 'old_user'
@@ -374,13 +376,13 @@
                 }
             });
         }
-        );
-                create_user_promise.then(function (resolve) {
-                    resolve = JSON.parse(resolve);
-                    show_message(resolve);
-                }, function (reject) {
-                    show_message(reject);
-                });
+    );
+        create_user_promise.then(function (resolve) {
+            resolve = JSON.parse(resolve);
+            show_message(resolve);
+        }, function (reject) {
+            show_message(reject);
+        });
     }
     function show_message(reject) {
         console.log('show message', reject);
