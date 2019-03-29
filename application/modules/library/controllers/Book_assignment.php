@@ -663,12 +663,6 @@ class Book_assignment extends CI_Controller {
                 $markup .= "</ul>
                                         <br>
                                         <div class='col-sm-12'>";
-                if ($save_butn == 1) {
-                    $markup .= "<input type='button' id='create_lib_member' value='Save' class='btn btn-primary btn-xs pull-right marginB5'>";
-                    $markup .= "<a href='#' id='cancel_old_user' class='btn btn-default btn-xs pull-right marginB5 marginR5'>Cancel</a>";
-                } else {
-                    $markup .= "<a href='#' id='cancel_old_user' class='btn btn-default btn-xs pull-right marginB5 marginR5'>Close</a>";
-                }
                 $markup .= "
                                         </div>
 

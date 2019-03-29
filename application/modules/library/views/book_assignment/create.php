@@ -225,7 +225,7 @@
 
             book_info_html = '<div class="col-md-12"><div class="box box-primary">' +
                     '<div class="box-body box-profile">' +
-                    '<h3 class="profile-username text-center">Book name: ' + book_item.name + '</h3>' +
+                    '<h3 class="profile-username text-center">Book title: ' + book_item.name + '</h3>' +
                     '<p class="text-muted text-center">Edition: ' + book_item.edition + '</p>' +
                     '<ul class="list-group list-group-unbordered">' +
                     '<li class="list-group-item">' +
@@ -239,7 +239,7 @@
                     '</li>' +
                     '</ul>' +
                     '<a href="#" class="btn btn-primary btn-block"><b>Assign</b></a>' +
-                    '</div></div>';
+                    '</div></div><br/>';
 
             $('#book_details_container').html(book_info_html);
         }
