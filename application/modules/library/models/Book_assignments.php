@@ -264,7 +264,7 @@ class Book_assignments extends CI_Model {
 
     public function get_book_details($key = '') {
         $columns = array(
-            'b.book_id', 'b.name', 'bl.isbn_no', 'bl.edition', 'bam.author_name', 'bpm.name as publication'
+            'b.book_id', 'b.name', 'bl.isbn_no', 'bl.edition', 'bam.author_name', 'bpm.name as publication', 'bl.bledger_id'
         );
         $query = "SELECT " . implode(',', $columns) . " FROM books b 
             JOIN book_ledgers bl ON b.book_id=bl.book_id 
@@ -273,6 +273,20 @@ class Book_assignments extends CI_Model {
             WHERE b.status='active' AND (
             b.name like '%$key%' OR bl.isbn_no like '%$key%') order by b.name";
         return $this->db->query($query)->result_array();
+    }
+
+    function store_book_assignment_info($form_data) {
+        return $this->db->insert('book_assigns', $form_data);
+    }
+
+    function get_member_id_user($user_id) {
+        $this->db->select('member_id');
+        $member_id = $this->db->get_where('library_members', array('user_id' => $user_id))->row_array();
+        if (!empty($member_id)) {
+            return $member_id['member_id'];
+        } else {
+            return null;
+        }
     }
 
 }

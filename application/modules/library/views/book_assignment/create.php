@@ -94,7 +94,7 @@
             clearBtn: true,
             endDate: '0d'
         }).on('change', function () {
-            $(this).valid();  // triggers the validation test
+            $(this).valid(); // triggers the validation test
             // '$(this)' refers to '$("#datepicker")'
         });
         $('.focus_date').on('click', function () {
@@ -105,7 +105,7 @@
             autoclose: true,
             clearBtn: true
         }).on('change', function () {
-            $(this).valid();  // triggers the validation test
+            $(this).valid(); // triggers the validation test
             // '$(this)' refers to '$("#datepicker")'
         });
         $('.focus_date').on('click', function () {
@@ -117,13 +117,12 @@
             clearBtn: true,
             endDate: '0d'
         }).on('change', function () {
-            $(this).valid();  // triggers the validation test
+            $(this).valid(); // triggers the validation test
             // '$(this)' refers to '$("#datepicker")'
         });
         $('.focus_date').on('click', function () {
             $(this).parent('div').find('input').focus();
         });
-
         $('#book_assigns').validate({
             rules: {
                 bledger_id: {
@@ -161,14 +160,12 @@
                 return false; // prevent normal form posting
             }
         });
-
         $('#book_assigns').on('click', '#submit', function (e) {
             if ($('#book_assigns').valid()) {
                 $('#book_assigns').submit();
             }
             e.preventDefault();
         });
-
         $('#member_id').change(function () {
             var data = {'member_id': $(this).val()};
             $.ajax({
@@ -182,7 +179,6 @@
                 }
             });
         });
-
         $('#user_details_container').on('click', '#print_library_card', function (e) {
             e.preventDefault(e);
             var card_no = $(this).data('id');
@@ -193,7 +189,6 @@
                 alert('Select Card Number to print');
             }
         });
-
         function fetch_user_data(user_id) {
             //console.log('user_id',user_id);
             const user_promise = new Promise(function (resolve, reject) {
@@ -222,7 +217,6 @@
 
         function fetch_book_data(book_item) {
             var book_info_html = '';
-
             book_info_html = '<div class="col-md-12"><div class="box box-primary">' +
                     '<div class="box-body box-profile">' +
                     '<h3 class="profile-username text-center">Book title: ' + book_item.name + '</h3>' +
@@ -238,12 +232,35 @@
                     '<b>Publication</b> <a class="pull-right">' + book_item.publication + '</a>' +
                     '</li>' +
                     '</ul>' +
-                    '<a href="#" class="btn btn-primary btn-block"><b>Assign</b></a>' +
+                    '<a href="#" class="btn btn-primary btn-block" id="assign_book"><b>Assign</b></a>' +
                     '</div></div><br/>';
-
             $('#book_details_container').html(book_info_html);
         }
 
+        $('#book_details_container').on('click', '#assign_book', function () {
+            var search_txt = $('#search_txt').val();
+            if (!search_txt) {
+                alert('please select member for assignment');
+            } else {
+                $.ajax({
+                    url: base_url + 'assign-book',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {'ledger_id': fetched_book_ledger_id, 'user_id': fetched_user_id},
+                    success: function (res) {
+                        if (res.status) {
+                            alert('added successfully');
+                        } else {
+                            alert('Failed to add');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        var err = xhr.responseText;
+                        console.log(err);
+                    }
+                });
+            }
+        });
         var user_type_radio = 'employee';
         $('.user_type_radio').on('change', function () {
             //console.log('checked', $("input[name=user_type_radio]").filter(":checked").val());
@@ -256,8 +273,8 @@
                 user_type_radio = 'employee';
             }
         });
-
         var fetched_user_id = '';
+        var fetched_book_ledger_id = '';
         function _get_radio_value() {
             return user_type_radio;
         }
@@ -290,7 +307,6 @@
                         var resultList = node.closest("form").find("ul.typeahead__list"),
                                 activeLi = lis.filter("li.active"),
                                 offsetTop = activeLi[0] && activeLi[0].offsetTop - (resultList.height() / 2) || 0;
-
                         resultList.scrollTop(offsetTop);
                     }
 
@@ -316,11 +332,9 @@
                         text = 'No results matching "' + query + '"';
                     }
                     $('#result-container').html(text);
-
                 }
             }
         });
-
         //type head for book search
         $.typeahead({
             input: '#book_kw',
@@ -349,7 +363,6 @@
                         var resultList = node.closest("form").find("ul.typeahead__list"),
                                 activeLi = lis.filter("li.active"),
                                 offsetTop = activeLi[0] && activeLi[0].offsetTop - (resultList.height() / 2) || 0;
-
                         resultList.scrollTop(offsetTop);
                     }
 
@@ -358,7 +371,7 @@
 
                     event.preventDefault();
                     $('#book_details_container').text('');
-                    fetched_user_id = item.id;
+                    fetched_book_ledger_id = item.bledger_id;
                     fetch_book_data(item);
                     //console.log(node, a, item, event);
                     console.log('item', item);
@@ -375,7 +388,6 @@
                         text = 'No results matching "' + query + '"';
                     }
                     $('#book-result-container').html(text);
-
                 }
             }
         });

@@ -11,3 +11,4 @@ $route['add-library-member'] = 'library/book_assignment/add_member';
 $route['isbn-status'] = 'library/book_assignment/isbn_status';
 $route['show-user-data'] = 'library/book_assignment/show_search_user_details';
 $route['search-book-data'] = 'library/book_assignment/search_book_details';
+$route['assign-book'] = 'library/book_assignment/assign_book';

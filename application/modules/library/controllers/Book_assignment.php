@@ -692,4 +692,29 @@ class Book_assignment extends CI_Controller {
         }
     }
 
+    function assign_book() {
+        $days = 5;
+        $book_ledger_id = $this->input->post('ledger_id');
+        $user_id = $this->input->post('user_id');
+        $issue_date = date('Y-m-d h:m:s');
+        $due_date = date('Y-m-d H:i:s', strtotime("+$days day", time()));
+        $member_id = $this->book_assignments->get_member_id_user($user_id);
+        if (empty($member_id)) {
+            echo json_encode(array('status' => false));
+            exit;
+        }
+        $book_data = array(
+            'bledger_id' => $book_ledger_id,
+            'member_id' => $member_id,
+            'issue_date' => $issue_date,
+            'due_date' => $due_date
+        );
+        $is_inserted = $this->book_assignments->store_book_assignment_info($book_data);
+        if ($is_inserted) {
+            echo json_encode(array('status' => true));
+        } else {
+            echo json_encode(array('status' => false));
+        }
+    }
+
 }
