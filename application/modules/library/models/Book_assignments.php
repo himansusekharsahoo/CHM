@@ -289,4 +289,25 @@ class Book_assignments extends CI_Model {
         }
     }
 
+    function check_if_same_book_assigned($ledger_id, $member_id) {
+        $where = array(
+            'bledger_id' => $ledger_id,
+            'member_id' => $member_id
+        );
+        $this->db->where($where);
+        $this->db->where('return_date IS NULL', NULL, FALSE);
+        return $this->db->get('book_assigns')->num_rows();
+    }
+
+    function get_total_assign_books_data_by_member($member_id, $count = true) {
+        $this->db->where('member_id', $member_id);
+        $this->db->where('return_date IS NULL', NULL, FALSE);
+        $return = $this->db->get('book_assigns');
+        if ($count) {
+            return $return->num_rows();
+        } else {
+            return $return->result_array();
+        }
+    }
+
 }

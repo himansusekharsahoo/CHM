@@ -240,7 +240,9 @@
         $('#book_details_container').on('click', '#assign_book', function () {
             var search_txt = $('#search_txt').val();
             if (!search_txt) {
-                alert('please select member for assignment');
+                $('#default_modal_box .modal-title').html('Warning');
+                $('#default_modal_box .modal-body').html('please select member for assignment');
+                $('#default_modal_box').modal('show');
             } else {
                 $.ajax({
                     url: base_url + 'assign-book',
@@ -249,9 +251,13 @@
                     data: {'ledger_id': fetched_book_ledger_id, 'user_id': fetched_user_id},
                     success: function (res) {
                         if (res.status) {
-                            alert('added successfully');
+                            $('#primary_modal_box .modal-title').html('Success');
+                            $('#primary_modal_box .modal-body').html(res.msg);
+                            $('#primary_modal_box').modal('show');
                         } else {
-                            alert('Failed to add');
+                            $('#default_modal_box .modal-title').html('Error in assignment');
+                            $('#default_modal_box .modal-body').html(res.msg);
+                            $('#default_modal_box').modal('show');
                         }
                     },
                     error: function (xhr, status, error) {
@@ -261,6 +267,10 @@
                 });
             }
         });
+        $('#primary_modal_box').on('click', '#primary_modal_box_btn', function () {
+            location.reload();
+        });
+
         var user_type_radio = 'employee';
         $('.user_type_radio').on('change', function () {
             //console.log('checked', $("input[name=user_type_radio]").filter(":checked").val());
@@ -318,7 +328,7 @@
                     fetched_user_id = item.id;
                     fetch_user_data(item.id);
                     //console.log(node, a, item, event);
-                    //console.log('item', item);
+                    console.log('item', item);
                 },
                 onResult: function (node, query, result, resultCount) {
                     if (query === "")
@@ -368,7 +378,6 @@
 
                 },
                 onClickAfter: function (node, a, item, event) {
-
                     event.preventDefault();
                     $('#book_details_container').text('');
                     fetched_book_ledger_id = item.bledger_id;

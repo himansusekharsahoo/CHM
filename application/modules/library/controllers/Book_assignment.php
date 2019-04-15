@@ -584,10 +584,98 @@ class Book_assignment extends CI_Controller {
      * @param  : 
      * @desc   : display library user details after typehead dropdown selections
      * @return :
+     * @author : Shiv
+     * @created: 14-April-2019
+     */
+    public function show_search_user_details() {
+        if ($this->input->is_ajax_request()) {
+            $search_user_id = $this->input->post('user_id');
+            $show_columns = array(
+                'name' => 'Name',
+                'email' => 'Email',
+                'mobile' => 'Mobile',
+                'card_no' => 'Card Number',
+                'user_status' => 'Status'
+            );
+            $condition = " and user_id=$search_user_id";
+            $user_details = $this->library_user->searched_user_details($condition);
+            foreach ($user_details as $key => $rec) {
+                $assigned_book_info = $this->book_assignments->get_total_assign_books_data_by_member($rec['member_id']);
+                $markup = "<div class='col-sm-12'>
+                                <div class='box box-widget widget-user-2 box-border'>
+                                    <!-- Add the bg color to the header using any of the bg-* classes -->
+                                    <div class='widget-user-header bg-green'>
+                                        <div class='widget-user-image'>";
+                $photo = '';
+                if ($rec['student_photo']) {
+                    $photo = $rec['student_photo'];
+                }
+                if ($photo) {
+                    $markup .= "<img class='img-circle' src='$photo'>";
+                } else {
+                    $markup .= "<span class='img-circle fa fa-user fa-3x' style='float:left;'></span>";
+                }
+                $markup .= "</div>
+                          <!-- /.widget-user-image -->
+                          <h3 class='widget-user-username'>" . $rec['first_name'] . " " . $rec['last_name'] . "</h3>
+                           </div>
+                                    <div class='box-footer no-padding'>
+                                        <table class='table table-bordered'>";
+                $markup .= '<tr><td><i class="fa fa-envelope-o"></i> <a  href="mailto:' . $rec['email'] . '">' . $rec['email'] . '</a></td><td><i class="fa fa-mobile-phone"></i> ' . $rec['mobile'] . '</td></tr>';
+                if ($key == 'card_no') {
+                    if ($rec['card_no'] == '' || strlen(trim($rec['card_no'])) == 0) {
+                        $markup .= "<tr>
+                                        <td colspan=2>
+                                            <i class='fa fa-credit-card'></i> Card No: <a href='create-library-user' class='btn btn-xs btn-primary'>Generate Card</a>
+                                            </div>
+                                        </td>
+                                    </tr> ";
+                    } else {
+                        $markup .= "<tr>
+                                        <td colspan=2>
+                                            <i class='fa fa-credit-card'></i> Card No: " . $rec['card_no'] . "
+                                                    <a href='#' id='print_library_card' data-id='" . c_encode($rec['member_id']) . "'>
+                                                        <i class='glyphicon glyphicon-print text-primary'></i></a>
+                                            </div>
+                                        </td>
+                                    </tr> ";
+                    }
+                }
+                if ($key == 'user_status' && $rec['user_status'] == 'inactive') {
+                    $markup .= "<tr class='nav_search_user_li'>
+                                    <td colspan=2>
+                                        <div class='col-sm-12 no_pad'>
+                                            <span class='col-sm-8'> User is " . $rec['user_status'] . " <span class='text-danger'>[Please contact Site Admin]</span></span>
+                                        </div>
+                                    </td>
+                                </tr> ";
+                }
+                $markup .= "<tr><td>Total no.of books issues:</td><td>$assigned_book_info</td></tr>";
+                $markup .= "</table>
+                                        <br>
+                                        <div class='col-sm-12'>";
+                $markup .= "
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>";
+            }
+            echo $markup;
+            exit;
+        } else {
+            $this->layout->render(array('error' => '401'));
+        }
+    }
+
+    /**
+     * @param  : 
+     * @desc   : display library user details after typehead dropdown selections
+     * @return :
      * @author : HimansuS
      * @created:
      */
-    public function show_search_user_details() {
+    public function show_search_user_details_old() {
         if ($this->input->is_ajax_request()) {
             $search_user_id = $this->input->post('user_id');
             $show_columns = array(
@@ -703,6 +791,11 @@ class Book_assignment extends CI_Controller {
             echo json_encode(array('status' => false));
             exit;
         }
+        $count = $this->book_assignments->check_if_same_book_assigned($book_ledger_id, $member_id);
+        if ($count > 0) {
+            echo json_encode(array('status' => false, 'msg' => 'Same book is assigned for the member.'));
+            exit;
+        }
         $book_data = array(
             'bledger_id' => $book_ledger_id,
             'member_id' => $member_id,
@@ -711,9 +804,9 @@ class Book_assignment extends CI_Controller {
         );
         $is_inserted = $this->book_assignments->store_book_assignment_info($book_data);
         if ($is_inserted) {
-            echo json_encode(array('status' => true));
+            echo json_encode(array('status' => true, 'msg' => 'Book is assigned successfully'));
         } else {
-            echo json_encode(array('status' => false));
+            echo json_encode(array('status' => false, 'msg' => 'Error occurred please try again'));
         }
     }
 
