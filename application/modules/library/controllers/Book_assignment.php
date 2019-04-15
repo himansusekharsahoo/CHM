@@ -781,7 +781,12 @@ class Book_assignment extends CI_Controller {
     }
 
     function assign_book() {
-        $days = 5;
+        $return_book_after_days = $this->rbac->get_app_config_item('library/library/role_config/default/return_book_after_days');
+        $return_book_after_days = (string) $return_book_after_days[0];
+        $return_book_after_days = explode(',', $return_book_after_days);
+
+        $days = (isset($return_book_after_days[0])) ? $return_book_after_days[0] : 5; //return days
+
         $book_ledger_id = $this->input->post('ledger_id');
         $user_id = $this->input->post('user_id');
         $issue_date = date('Y-m-d h:m:s');

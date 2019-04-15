@@ -9,7 +9,7 @@ class Rbac {
         $this->_ci = & get_instance();
         $this->_session = $this->_ci->session->all_userdata();
         //pma($this->_ci->session->all_userdata());
-        //pma($this->_session['user_data']['app_configs']);       
+        //pma($this->_session['user_data']['role_codes'],1);       
     }
 
     /**
