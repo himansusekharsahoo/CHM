@@ -10,7 +10,8 @@
                 <p>One fine body…</p>
             </div>
             <div class="modal-footer">
-                <button data-dismiss="modal" class="btn btn-default pull-right" type="button">Close</button>                    
+                <button data-dismiss="modal" class="btn btn-success" id="default_modal_box_btn" type="button">Ok</button>
+                <button data-dismiss="modal" class="btn btn-danger" id="" type="button">Cancel</button>
             </div>
         </div>
         <!-- /.modal-content -->
