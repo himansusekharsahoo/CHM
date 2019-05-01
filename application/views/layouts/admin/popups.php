@@ -32,7 +32,7 @@
                 <p>One fine body…</p>
             </div>
             <div class="modal-footer">
-                <button data-dismiss="modal" class="btn btn-outline pull-right" type="button">Close</button>                    
+                <button data-dismiss="modal" class="btn btn-outline pull-right" id="primary_modal_box_btn" type="button">Close</button>                    
             </div>
         </div>
         <!-- /.modal-content -->
