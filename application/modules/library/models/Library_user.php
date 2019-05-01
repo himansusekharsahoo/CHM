@@ -61,13 +61,12 @@ class Library_user extends CI_Model {
     public function get_library_member_datatable($data = null, $export = null, $tableHeading = null, $columns = null) {
         $this->load->library('datatables');
         if (!$columns) {
-            $columns = 'member_id,card_no,date_issue,expiry_date,rbac_users.email,IF(user_role_id=1,"Staff","Student"),t1.status';
+            //$columns = 'member_id,card_no,date_issue,expiry_date,rbac_users.email,IF(user_role_id=1,"Staff","Student"),t1.status';
+            $columns ='member_id,user_name,card_no,date_issue,expiry_date,email,status,created,created_by_name,mobile,user_type,code_list';
         }
 
-        /*
-         */
-        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, FALSE, FALSE)->from('library_members t1');
-        $this->datatables->join('rbac_users', 'rbac_users.user_id=t1.user_id');
+        
+        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, FALSE, FALSE)->from('library_members_view t1');
         $this->datatables->unset_column("member_id");
         if (isset($data['button_set'])):
             $this->datatables->add_column("Action", $data['button_set'], 'c_encode(member_id)', 1, 1);
@@ -90,13 +89,11 @@ class Library_user extends CI_Model {
      */
     public function get_library_member($columns = null, $conditions = null, $limit = null, $offset = null) {
         if (!$columns) {
-            $columns = 'member_id,card_no,date_issue,expiry_date,concat(u.first_name," ",u.last_name) as user_id,user_role_id,t1.created,t1.created_by,t1.status';
+            $columns = 'member_id,card_no,date_issue,expiry_date,user_id,user_role_id,created,created_by,status
+                        ,first_name,last_name,user_name,email,mobile,user_type
+                        ,code_list,created_by_name';
         }
-
-        /*
-         */
-        $this->db->select($columns)->from('library_members t1');
-        $this->db->join('rbac_users u', 't1.user_id=u.user_id');
+        $this->db->select($columns)->from('library_members_view t1');
 
         if ($conditions && is_array($conditions)):
             foreach ($conditions as $col => $val):
@@ -147,7 +144,7 @@ class Library_user extends CI_Model {
     public function save_new_lib_member($data) {
 
         $new_lib_card_no = $this->populate_new_lib_card_no();
-        
+
         $login_userid = $this->rbac->get_user_id();
         $user_data = array(
             'first_name' => $data['first_name'],
@@ -263,12 +260,12 @@ class Library_user extends CI_Model {
         if ($card_prefix_config) {
             $card_zero_prefix = trim($card_prefix_config[0]);
         }
-        
+
         $today = date('Ym');
         $prefix_length = strlen($card_prefix) + 7; //6+1 for YYYYMM
         $query = "SELECT MAX(card_no) max_card_no from (SELECT (CAST(substring(card_no,$prefix_length) AS CHAR)+0) card_no FROM library_members)a";
         $result = $this->db->query($query)->row();
-        
+
         if ($result->max_card_no) {
             return $card_prefix . $today . str_pad(($result->max_card_no + 1), $card_zero_prefix, '0', STR_PAD_LEFT);
         }
@@ -407,6 +404,26 @@ class Library_user extends CI_Model {
             $this->db->trans_commit();
             return true;
         }
+    }
+
+    /**
+     * @param  : 
+     * @desc   :
+     * @return :
+     * @author : HimansuS
+     * @created:
+     */
+    public function get_user_roles($condition1 = '',$condition2 = '') {
+        $query = "select rr.name role_name from rbac_user_roles rur
+                left join rbac_roles rr on rr.role_id=rur.role_id
+                where 1=1 $condition1
+                union all
+                select rr.name role_name from library_members lm
+                left join rbac_roles rr on rr.role_id=lm.user_role_id
+                where 1=1 $condition2
+                ";        
+        $result = $this->db->query($query)->result_array();
+        return $result;
     }
 
 }

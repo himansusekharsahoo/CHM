@@ -68,3 +68,6 @@ label.error,div.error{color:red;font-weight: normal;}
     width: 2em;line-height: 1.3em;border: .3em solid #fff;text-align: center;
     vertical-align: middle;font-weight: bold;-moz-border-radius: 2em;-webkit-border-radius: 2em;
     border-radius: 2em;color: #FFF;}
+.set_rbac_select_menu{
+	white-space: normal !important;
+}

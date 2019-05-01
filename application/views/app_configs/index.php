@@ -105,6 +105,84 @@ echo form_open($form_action, $form_attribute);
 <?= form_close() ?>
 <?php
 $form_attribute = array(
+    "name" => "app_employee_config",
+    "id" => "app_employee_config",
+    "method" => "POST"
+);
+$form_action = base_url('save-app-configs');
+echo form_open($form_action, $form_attribute);
+?>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="box box-default  collapsed-box col-sm-10">
+            <div class="box-header with-border" data-widget="collapse">
+                <h3 class="box-title">Employee Configurations</h3>                    
+                <div class="box-tools pull-right">                        
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>                        
+                </div>
+                <!-- /.box-tools -->
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body no_pad" style="display: none;">
+                <?php
+                $attribute = array(
+                    "name" => "app_configs_category",
+                    "id" => "app_configs_category",
+                    "class" => "form-control",
+                    "type" => "hidden",
+                    "value" => 'EMPLOYEE'
+                );
+                echo form_input($attribute);
+                ?>
+                <div class = 'form-group row'>
+                    <div class="col-sm-3 no_rpad">
+                        <label class = 'col-sm-7 col-form-label no_pad'>Employee id prefix</label>
+                        <div class = 'col-sm-5 no_pad'>
+                            <?php
+                            $attribute = array(
+                                "name" => "app_configs[employee_id_prefix]",
+                                "id" => "employee_id_prefix",
+                                "class" => "form-control",
+                                "title" => "Employee id pre-fix",
+                                "type" => "text",
+                                "placeholder" => "Employee id pre-fix",
+                                "value" => (isset($data['employee']['employee_id_prefix'])) ? $data['employee']['employee_id_prefix'] : 'EMP'
+                            );
+                            echo form_input($attribute);
+                            ?>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 no_rpad">
+                        <label class = 'col-sm-7 col-form-label no_pad'>Employee id zero prefix</label>
+                        <div class = 'col-sm-5 no_pad'>
+                            <?php
+                            $attribute = array(
+                                "name" => "app_configs[employee_id_zero_prefix]",
+                                "id" => "employee_id_zero_prefix",
+                                "class" => "form-control",
+                                "title" => "Employee id zero prefix",
+                                "type" => "text",
+                                "placeholder" => "Employee id zero prefix",
+                                "value" => (isset($data['employee']['employee_id_zero_prefix'])) ? $data['employee']['employee_id_zero_prefix'] : 5
+                            );
+                            echo form_input($attribute);
+                            ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <span class="pull-right marginB10">
+                        <button type="submit" id="app_submit" class="btn btn-primary btn-small"><i class="fa fa-save"></i> Save</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?= form_close() ?>
+
+<?php
+$form_attribute = array(
     "name" => "lib_app_config",
     "id" => "lib_app_config",
     "method" => "POST"
@@ -263,14 +341,14 @@ echo form_open($form_action, $form_attribute);
                                                     "title" => "Library card no pre-fix",
                                                     "type" => "text",
                                                     "placeholder" => "Library card no pre-fix",
-                                                    "value" => (isset($data['library']['lib_card_num_prefix'])) ? $data['library']['lib_card_num_prefix'] : 'USR'
+                                                    "value" => (isset($data['library']['lib_card_num_prefix'])) ? $data['library']['lib_card_num_prefix'] : 'LIB'
                                                 );
                                                 echo form_input($attribute);
                                                 ?>
                                             </div>
                                         </div>
                                         <div class="col-sm-3 no_rpad">
-                                            <label class = 'col-sm-7 col-form-label no_pad'>Registration No. Zero Prefix</label>
+                                            <label class = 'col-sm-7 col-form-label no_pad'>Library card no. zero prefix</label>
                                             <div class = 'col-sm-5 no_pad'>
                                                 <?php
                                                 $attribute = array(

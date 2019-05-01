@@ -24,9 +24,9 @@
         </div>
     </div>
     <div class = 'form-group row'>
-        <label for = 'user_role_id' class = 'col-sm-2 col-form-label'>User role id</label>
+        <label for = 'role_name' class = 'col-sm-2 col-form-label'>User role</label>
         <div class = 'col-sm-3'>
-            <?= (isset($data["user_role_id"])) ? $data["user_role_id"] : "" ?>
+            <?= (isset($data["role_name"])) ? $data["role_name"] : "" ?>
         </div>
     </div>
 

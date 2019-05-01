@@ -69,9 +69,26 @@ class Library_users extends CI_Controller {
             $this->layout->title = 'Library user list';
             $header = array(
                 array(
+                    'db_column' => 'user_name',
+                    'name' => 'Name',
+                    'title' => 'Name',
+                    'class_name' => 'dt_name',
+                    'orderable' => 'true',
+                    'visible' => 'true',
+                    'searchable' => 'true'
+                ),
+                array(
                     'db_column' => 'card_no',
                     'name' => 'Card Number',
                     'title' => 'Card Number',
+                    'class_name' => 'dt_name',
+                    'orderable' => 'true',
+                    'visible' => 'true',
+                    'searchable' => 'true'
+                ), array(
+                    'db_column' => 'email',
+                    'name' => 'User Email',
+                    'title' => 'User Email',
                     'class_name' => 'dt_name',
                     'orderable' => 'true',
                     'visible' => 'true',
@@ -88,22 +105,6 @@ class Library_users extends CI_Controller {
                     'db_column' => 'expiry_date',
                     'name' => 'Expiry Date',
                     'title' => 'Expiry Date',
-                    'class_name' => 'dt_name',
-                    'orderable' => 'true',
-                    'visible' => 'true',
-                    'searchable' => 'true'
-                ), array(
-                    'db_column' => 'email',
-                    'name' => 'User Email',
-                    'title' => 'User Email',
-                    'class_name' => 'dt_name',
-                    'orderable' => 'true',
-                    'visible' => 'true',
-                    'searchable' => 'true'
-                ), array(
-                    'db_column' => 'user_role_id',
-                    'name' => 'User Role',
-                    'title' => 'User Role',
                     'class_name' => 'dt_name',
                     'orderable' => 'true',
                     'visible' => 'true',
@@ -180,7 +181,8 @@ class Library_users extends CI_Controller {
             $data['button_set'] = $button_set;
 
             if ($this->input->is_ajax_request()) {
-                $returned_list = $this->library_user->get_library_member_datatable($data);
+                $columns = 'member_id,user_name,card_no,email,date_issue,expiry_date,status';
+                $returned_list = $this->library_user->get_library_member_datatable($data, null, null, $columns);
                 echo $returned_list;
                 exit();
             }
@@ -257,8 +259,19 @@ class Library_users extends CI_Controller {
         if ($this->input->is_ajax_request()):
             if ($this->rbac->has_permission('MANAGE_LIBRARY_MEMBERS', 'XLS_EXPORT') || $this->rbac->has_permission('MANAGE_LIBRARY_MEMBERS', 'CSV_EXPORT')) {
                 $export_type = $this->input->post('export_type');
-                $tableHeading = array('card_no' => 'card_no', 'date_issue' => 'date_issue', 'expiry_date' => 'expiry_date', 'user_id' => 'user_id', 'user_role_id' => 'user_role_id', 'created' => 'created', 'created_by' => 'created_by', 'status' => 'status',);
-                $cols = 'card_no,date_issue,expiry_date,user_id,user_role_id,created,created_by,status';
+                $tableHeading = array(
+                    'user_name' => 'user_name',
+                    'card_no' => 'card_no',
+                    'date_issue' => 'date_issue',
+                    'expiry_date' => 'expiry_date',
+                    'email' => 'email',
+                    'mobile' => 'mobile',
+                    'user_type' => 'user_type',
+                    'code_list' => 'code_list',
+                    'created' => 'created',
+                    'created_by_name' => 'created_by_name',
+                    'status' => 'status'
+                );
                 $data = $this->library_user->get_library_member_datatable(null, true, $tableHeading);
                 $head_cols = $body_col_map = array();
                 $date = array(
@@ -383,7 +396,7 @@ class Library_users extends CI_Controller {
                     endif;
 
                 endif;
-            endif;           
+            endif;
 
             $this->layout->data = $data;
             $this->layout->render();
@@ -581,7 +594,7 @@ class Library_users extends CI_Controller {
                 endif;
 
                 $data['data'] = $result;
-            endif;            
+            endif;
             $this->layout->data = $data;
             $this->layout->render();
         }else {
@@ -611,7 +624,6 @@ class Library_users extends CI_Controller {
                 if ($result):
                     $result = current($result);
                 endif;
-
                 $data['data'] = $result;
                 $this->layout->data = $data;
                 $this->layout->render();
