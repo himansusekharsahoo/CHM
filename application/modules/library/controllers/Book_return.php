@@ -22,13 +22,14 @@ class Book_return extends CI_Controller {
         $this->layout->lMmenuFlag = 1;
         $this->layout->rightControlFlag = 1;
         $this->layout->navTitleFlag = 1;
+        $this->layout->breadcrumbsFlag = 0;
 
         $this->load->model('library/book_returns');
     }
 
     function index() {
-        $this->scripts_include->includePlugins(array('jq_validation', 'bs_datepicker', 'jq_typehead'), 'js');
-        $this->scripts_include->includePlugins(array('bs_datepicker', 'jq_typehead'), 'css');
+        $this->scripts_include->includePlugins(array('jq_validation', 'bs_datepicker', 'jq_typehead', 'datatable'), 'js');
+        $this->scripts_include->includePlugins(array('bs_datepicker', 'jq_typehead', 'datatable'), 'css');
         $data = array();
         $this->layout->render($data);
     }
@@ -49,21 +50,35 @@ class Book_return extends CI_Controller {
     }
 
     function get_book_assigns() {
+        $input_array = array();
+        $input_array['card_no'] = $this->input->post('card_no');
+        $input_array['start'] = $this->input->post('start');
+        $input_array['length'] = $this->input->post('length');
+        $input_array['order'] = $this->input->post('order');
+        $data = $this->book_returns->get_book_details($input_array);
+        $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data']);
+        echo json_encode($response);
+    }
+
+    function get_book_assigns_old() {
         if ($this->input->is_ajax_request()) {
-            $assigned_books = $this->book_returns->get_book_details($this->input->post('card_no'));
-            $mark_up = '<div class="col-md-12"><h4>Card number: ' . $this->input->post('card_no') . '</h4>';
+            $assigned_books = $this->book_returns->get_book_details();
+            $mark_up = '<div class="col-md-12">'
+                    . '<div class="row"><div class="col-md-6"><h4>Card number: ' . $this->input->post('card_no') . '</h4></div><div class="col-md-6">' .
+                    '<button class="btn btn-primary pull-right btn_return_book" style="margin-right:2% !important;">Return books</button></div></div>';
             if (!empty($assigned_books)) {
                 $mark_up .= '<table class="table table-bordered">';
-                $mark_up .= '<thead><tr><th>Book Name</th><th>Author</th><th>Edition</th><th>Issued on</th><th>Due date</th><th>Return</th></tr></thead>';
+                $mark_up .= '<thead><tr><th>#</th><th>Book Name</th><th>Author</th><th>Edition</th><th>Issued on</th><th>Due date</th></tr></thead>';
                 $mark_up .= '<tbody>';
                 foreach ($assigned_books as $books) {
                     $mark_up .= '<tr>';
+                    $mark_up .= '<td><center><input type="checkbox" name="chkbooks[]" id="chkbooks" class="chkbooks" value="' . $books['bassign_id'] . '"/>'
+                            . '<input type="hidden" name="bassign_id[]" id="bassign_id" value="' . $books['bassign_id'] . '"/></center></td>';
                     $mark_up .= '<td>' . $books['name'] . '</td>';
                     $mark_up .= '<td>' . $books['author_name'] . '</td>';
                     $mark_up .= '<td>' . $books['edition'] . '</td>';
                     $mark_up .= '<td>' . $books['date_issue'] . '</td>';
                     $mark_up .= '<td>' . $books['due_date'] . '</td>';
-                    $mark_up .= '<td><button class="btn btn-primary btn_return_book" data-assign_id="' . $books['bassign_id'] . '">Return book</button></td>';
                     $mark_up .= '</tr>';
                 }
                 $mark_up .= '</tbody>';
@@ -80,6 +95,20 @@ class Book_return extends CI_Controller {
         } else {
             $this->layout->render(array('error' => '401'));
         }
+    }
+
+    function return_borrowed_books() {
+        $is_updated = $this->book_returns->return_borrowed_book($this->input->post('book_assign_id'));
+        if ($is_updated) {
+            echo json_encode(array('status' => true));
+        } else {
+            echo json_encode(array('status' => FALSE));
+        }
+    }
+
+    function get_delayed_fine() {
+        $data = $this->book_returns->calculate_return_delay_fine($this->input->post('book_assign_id'));
+        echo json_encode(array('status' => true, 'data' => $data));
     }
 
 }

@@ -2,6 +2,12 @@
     .typeahead__query{
         font-size: 12px;
     }
+    .ui-select-choices {
+        position: fixed;
+        top: auto;
+        left: auto;
+        width: inherit;
+    }
 </style>
 <div class="row no_pad">
     <div class="col-md-12">
@@ -10,75 +16,95 @@
                 <i class="fa fa-search"></i>
                 <h3 class="box-title">Book return:</h3>
             </div>
-            <div class="box-body col-md-6">
-                <var id="book-result-container" class="book-result-container"></var>
-                <div class="typeahead__container">
-                    <div class="typeahead__field">
-                        <div class="typeahead__query">
-                            <input type="text" name="book_kw" id="book_kw" class="form-control book_kw" placeholder="Enter library card number" autocomplete="off"/>
-                            <small class="help-block">Note:Search by entering text / Scan barcode</small>
-                        </div>                                                    
+            <div class="box-body">
+                <div class="col-md-6">
+                    <var id="book-result-container" class="book-result-container"></var>
+                    <div class="typeahead__container">
+                        <div class="typeahead__field">
+                            <div class="typeahead__query">
+                                <input type="text" name="book_kw" id="book_kw" class="form-control book_kw" placeholder="Enter library card number" autocomplete="off"/>
+                                <small class="help-block">Note:Search by entering text / Scan barcode</small>
+                            </div>                                                    
+                        </div>
                     </div>
                 </div>
+                <div class="clearfix"></div>
+                <table id="books_table" class="table table-bordered table-hover" width="100%"></table>
             </div>
-            <div id='book_details_container' class="row"></div>
         </div>
     </div>
 </div>
+<div class="modal fade" id="return_modal_box" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-label="Close" data-dismiss="modal" class="close" type="button">
+                    <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Confirmation</h4>
+            </div>
+            <div class="modal-body">
+                <form name="form_return_books" id="form_return_books" method="POST">
+                    <div id="fine_details" class="text-bold"></div><br/>
+                    <p>Are you sure you want return this book ?</p>
+                    <input type="hidden" name="book_assign_id" id="book_assign_id"/>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" id="return_modal_box_btn" type="button">Ok</button>
+                <button data-dismiss="modal" class="btn btn-danger" id="return_modal_box_btn_cancel" type="button">Cancel</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
 <script type="text/javascript">
     $(document).ready(function () {
-
-        $('#book_details_container').on('click', '.btn_return_book', function () {
-            var assign_id = $(this).data('assign_id');
-            $('#default_modal_box .modal-header .modal-title').html('Confirmation');
-            $('#default_modal_box .modal-body').html('Are you sure you want to return this book?');
-            $('#default_modal_box').modal('show');
-        });
-
-        function fetch_book_data(book_item) {
-            var book_info_html = '';
-            book_info_html = '<div class="col-md-12"><div class="box box-primary">' +
-                    '<div class="box-body box-profile">' +
-                    '<h3 class="profile-username text-center">Card number: ' + book_item.card_no + '</h3>' +
-                    /*'<p class="text-muted text-center">Edition: ' + book_item.edition + '</p>' +
-                     '<ul class="list-group list-group-unbordered">' +
-                     '<li class="list-group-item">' +
-                     '<b>ISBN:</b> <a class="pull-right"> ' + book_item.isbn_no + '</a>' +
-                     '</li>' +
-                     '<li class="list-group-item">' +
-                     '<b>Author:</b> <a class="pull-right">' + book_item.author_name + '</a>' +
-                     '</li>' +
-                     '<li class="list-group-item">' +
-                     '<b>Publication</b> <a class="pull-right">' + book_item.publication + '</a>' +
-                     '</li>' +
-                     '</ul>' +
-                     '<a href="#" class="btn btn-primary btn-block" id="assign_book"><b>Assign</b></a>' +*/
-                    '</div></div><br/>';
-            const user_promise = new Promise(function (resolve, reject) {
-                var form_data = {
-                    card_no: book_item.card_no
-                };
-                $.ajax({
-                    url: "<?= base_url('get-assignment-details') ?>",
-                    type: 'POST',
-                    dataType: 'json',
-                    data: form_data,
-                    success: function (result) {
-                        resolve(result.data);
-                    },
-                    error: function (result) {
-                        reject(result);
+        $('#books_table').on('click', '.btn_return_book', function (e) {
+            $('#fine_details').html('');
+            e.preventDefault();
+            var id = $(this).data('id');
+            var fine_amt = 0;
+            $.ajax({
+                url: "<?= base_url('get-delayed-fine') ?>",
+                type: 'POST',
+                dataType: 'json',
+                data: {book_assign_id: id},
+                success: function (result) {
+                    var days = result.data.date_diff;
+                    fine_amt = result.data.fine_amount;
+                    if (fine_amt > 0) {
+                        $('#fine_details').html('As the book return is delayed by ' + days + ' days there will be fine of Rs. <span class="label label-danger">' + fine_amt + ' INR</span>');
                     }
-                });
+                },
+                error: function (result) {
+                    console.log(result);
+                }
             });
-            user_promise.then(function (resolve) {
-                $('#book_details_container').html(resolve);
-            }, function (reject) {
-                show_message(reject);
-            });
-            //$('#book_details_container').html(book_info_html);
-        }
 
+            $('#return_modal_box #book_assign_id').val(id);
+            $('#form_return_books #book_name').html();
+            $('#return_modal_box').modal('show');
+        });
+        $('#return_modal_box').on('click', '#return_modal_box_btn', function () {
+            var form_data = $('#form_return_books').serializeArray();
+            $.ajax({
+                url: "<?= base_url('return-borrowed-books') ?>",
+                type: 'POST',
+                dataType: 'json',
+                data: form_data,
+                success: function (result) {
+                    populate_table(user_data);
+                    $('#return_modal_box').modal('hide');
+                },
+                error: function (result) {
+                    console.log(result);
+                }
+            });
+        });
+        var user_data = '';
         //type head for book search
         $.typeahead({
             input: '#book_kw',
@@ -113,11 +139,10 @@
                 },
                 onClickAfter: function (node, a, item, event) {
                     event.preventDefault();
-                    $('#book_details_container').text('');
-                    //fetched_book_ledger_id = item.bledger_id;
-                    fetch_book_data(item);
-                    //console.log(node, a, item, event);
-                    console.log('item', item);
+                    //$('#book_details_container').text('');
+                    //fetch_book_data(item);
+                    user_data = item;
+                    populate_table(item);
                 },
                 onResult: function (node, query, result, resultCount) {
                     if (query === "")
@@ -134,5 +159,96 @@
                 }
             }
         });
+
+        var columns = [
+            {
+                title: "Book name",
+                class: "",
+                data: function (item) {
+                    return item.name;
+                }
+            },
+            {
+                title: "Author",
+                class: "",
+                data: function (item) {
+                    return item.author_name;
+                }
+            },
+            {
+                title: "Edition",
+                class: "",
+                data: function (item) {
+                    return item.edition;
+                }
+            },
+            {
+                title: "Borrowed on",
+                class: "",
+                data: function (item) {
+                    return item.date_issue;
+                }
+            },
+            {
+                title: "Due date",
+                class: "",
+                data: function (item) {
+                    return item.due_date;
+                }
+            },
+            {
+                title: "Return",
+                class: "",
+                data: function (item) {
+                    return '<button class="btn btn-primary btn_return_book" data-id="' + item.bassign_id + '">Return book</button>';
+                }
+            },
+            {
+                title: "Lost",
+                class: "",
+                data: function (item) {
+                    return '<button class="btn btn-info btn_lost_book" data-id="' + item.bassign_id + '">Lost</button>';
+                }
+            }
+        ];
+        function populate_table(card_data) {
+            var books_table = $('#books_table').dataTable({
+                "initComplete": function (settings, json) {
+                },
+                'columns': columns,
+                'columnDefs': [
+                    {className: "", "targets": [5]}
+                ],
+                "bDestroy": true,
+                language: {
+                    sZeroRecords: "<div class='no_records'>No data found</div>",
+                    sEmptyTable: "<div class='no_records'>No data found</div>",
+                    sProcessing: "<div class='no_records'>Loading</div>",
+                },
+                'searching': true,
+                'paging': true,
+                'pageLength': 25,
+                'lengthChange': true,
+                'aLengthMenu': [25, 50, 100],
+                'processing': true,
+                'serverSide': true,
+                'ajax': {
+                    'url': '<?= base_url('get-assignment-details'); ?>',
+                    'type': 'POST',
+                    'dataType': 'json',
+                    'data': card_data
+                },
+                order: [[0, 'desc']],
+                info: true,
+                sScrollX: true,
+                ordering: false,
+                drawCallback: function () {
+                },
+                rowCallback: function (row, data, index) {
+
+                }
+            });
+
+        }
     });
 </script>

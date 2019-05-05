@@ -11,7 +11,7 @@
             </div>
             <div class="modal-footer">
                 <button data-dismiss="modal" class="btn btn-success" id="default_modal_box_btn" type="button">Ok</button>
-                <button data-dismiss="modal" class="btn btn-danger" id="" type="button">Cancel</button>
+                <button data-dismiss="modal" class="btn btn-danger" id="default_modal_box_btn_cancel" type="button">Cancel</button>
             </div>
         </div>
         <!-- /.modal-content -->
