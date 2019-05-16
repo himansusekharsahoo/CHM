@@ -12,20 +12,20 @@
                             echo $this->session->flashdata('error');
                         }else{
                             echo validation_errors();    
-                        };
+                        }
                         ?>
                     </div>
                 </div>
                 <form class="form-horizontal form-without-legend" role="form" action="<?= base_url('users/sign_in'); ?>" method="post" id="sign_in" name="sign_in">
                     <div class="form-group">
-                        <label for="email" class="col-lg-4 control-label">Email <span class="require">*</span></label>
-                        <div class="col-lg-8">
+                        <label for="email" class="col-lg-5 control-label">Email/Library Card No. <span class="require">*</span></label>
+                        <div class="col-lg-7">
                             <input type="text" class="form-control" id="user_email" name="user_email" value="<?=set_value('user_email')?>">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="password" class="col-lg-4 control-label">Password <span class="require">*</span></label>
-                        <div class="col-lg-8">
+                        <label for="password" class="col-lg-5 control-label">Password <span class="require">*</span></label>
+                        <div class="col-lg-7">
                             <input type="password" class="form-control" id="password" name="user_pass">
                         </div>
                     </div>

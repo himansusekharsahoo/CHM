@@ -52,7 +52,10 @@ class Users extends CI_Controller {
                 array(
                     'field' => 'user_email',
                     'label' => 'Email',
-                    'rules' => 'required|valid_email'
+                    'rules' => 'required',
+                    'errors' => array(
+                        'required' => 'Please login with Email/Library Card Number'                        
+                    ),
                 ),
                 array(
                     'field' => 'user_pass',
@@ -61,13 +64,14 @@ class Users extends CI_Controller {
                 )
             );
             $this->form_validation->set_rules($rules);
-
+            
             if ($this->form_validation->run() == TRUE) {
 
                 $email = $this->input->post('user_email');
                 $pass = $this->input->post('user_pass');
-                $condition = array('email' => $email, 'password' => c_encode($pass),'user_type'=>'student');
-                $user_detail = $this->user->get_user_detail(null, $condition);
+                //$condition = array('email' => $email, 'password' => c_encode($pass),'user_type'=>'student','library_member');
+                $condition =" (email='$email' OR login_id='$email') AND  password='".c_encode($pass)."' AND user_type IN('student','library_member')";
+                $user_detail = $this->user->get_user_detail(null, $condition);                
                 if ($user_detail) {
                     if (isset($user_detail['status']) && $user_detail['status'] == 'active') {
                         $menus = $permissions = array();
@@ -95,8 +99,6 @@ class Users extends CI_Controller {
                     }else {
                         $this->session->set_flashdata('error', 'You are not authorised to access the application.');
                     }
-//                    $this->session->set_userdata('user_data', $user_detail);
-//                    redirect(base_url('user-dashboard'));
                 } else {
                     $this->session->set_flashdata('error', 'Invalid login credentials.');
                 }
