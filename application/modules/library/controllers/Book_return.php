@@ -22,7 +22,8 @@ class Book_return extends CI_Controller {
         $this->layout->lMmenuFlag = 1;
         $this->layout->rightControlFlag = 1;
         $this->layout->navTitleFlag = 1;
-        $this->layout->breadcrumbsFlag = 0;
+        $this->layout->breadcrumbsFlag = 1;
+        $this->layout->navTitle = 'Book return <small>Return borrowed books</small>';
 
         $this->load->model('library/book_returns');
     }

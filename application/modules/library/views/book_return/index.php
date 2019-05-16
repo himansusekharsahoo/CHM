@@ -14,7 +14,7 @@
         <div class="box box-default">
             <div class="box-header with-border">
                 <i class="fa fa-search"></i>
-                <h3 class="box-title">Book return:</h3>
+                <h3 class="box-title">Search card number:</h3>
             </div>
             <div class="box-body">
                 <div class="col-md-6">
@@ -29,7 +29,8 @@
                     </div>
                 </div>
                 <div class="clearfix"></div>
-                <table id="books_table" class="table table-bordered table-hover" width="100%"></table>
+                <hr/>
+                <table id="books_table" class="table table-bordered table-striped table-hover" width="100%"></table>
             </div>
         </div>
     </div>

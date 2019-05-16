@@ -87,7 +87,7 @@ class Scripts_include {
         'js_validation' => array(COMPONENT_PATH . 'jquery-validation/jquery.validate.js'),
         'jq_typehead' => array(COMPONENT_PATH . 'jquery-typeahead/dist/jquery.typeahead.min.js'),
         'jq_multitag_select' => array(
-            COMPONENT_PATH . 'Multi-Select-Checkbox-Tree-treeSelector/jquery.treeSelector.js'            
+            COMPONENT_PATH . 'Multi-Select-Checkbox-Tree-treeSelector/jquery.treeSelector.js'
         ),
     );
     private $__cssFiles = array(
@@ -143,7 +143,7 @@ class Scripts_include {
         'jstree' => array(COMPONENT_PATH . 'jstree/dist/themes/default/style.min.css'),
         'jq_typehead' => array(COMPONENT_PATH . 'jquery-typeahead/dist/jquery.typeahead.min.css'),
         'jq_multitag_select' => array(
-            COMPONENT_PATH . 'Multi-Select-Checkbox-Tree-treeSelector/jquery.treeSelector.css'         
+            COMPONENT_PATH . 'Multi-Select-Checkbox-Tree-treeSelector/jquery.treeSelector.css'
         )
     );
 
