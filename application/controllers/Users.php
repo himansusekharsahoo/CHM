@@ -20,13 +20,8 @@ class Users extends CI_Controller {
      * @return : NA
      * @author : himansus
      */
-    public function index() {
-        if (!$this->rbac->is_login()) {
-            redirect(base_url('user-login'));
-        } else {
-            redirect(base_url('user-dashboard'));
-        }
-        $this->layout->render();
+    public function index() {  
+        $this->layout->render(array('error' => 'under_construction'));
     }
 
     /**

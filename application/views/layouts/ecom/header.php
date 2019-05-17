@@ -1,42 +1,42 @@
 <?php ?>
 <style>
     .header-navigation .dropdown-menu{
-        
+
     }
     .manage3_menu{
         right: 0px !important;
         left:auto !important;
     }
+    .header-navigation > ul > li > a{
+        padding: 20px 10px 20px !important;
+    }
+    .site-logo {padding-top: 12px !important;padding-bottom: 12px !important; margin-right: 10px !important; }
+    .header-navigation > ul > li > .dropdown-menu{margin-top: -2px !important;}
+    .login-text{color:#E02222 !important;}
 </style>
 <!-- BEGIN TOP BAR -->
-<div class="pre-header">
+<!--<div class="pre-header">
     <div class="container">
         <div class="row">
-            <!-- BEGIN TOP BAR LEFT PART -->
+             BEGIN TOP BAR LEFT PART 
             <div class="col-md-6 col-sm-6 additional-shop-info">
                 <ul class="list-unstyled list-inline">
                     <li><i class="fa fa-phone"></i><span><?= $this->lang->line('COMPANY_CONTACT_NO') ?></span></li>
                     <li><i class="fa fa-envelope-o"></i><span><?= $this->lang->line('COMPANY_INFO_EMAIL') ?></span></li>
                 </ul>
             </div>
-            <!-- END TOP BAR LEFT PART -->
-            <!-- BEGIN TOP BAR MENU -->
+             END TOP BAR LEFT PART 
+             BEGIN TOP BAR MENU 
             <div class="col-md-6 col-sm-6 additional-nav">
                 <ul class="list-unstyled list-inline pull-right">
-                    <?php
-                    if($this->rbac->is_login()){
-                        echo '<li><a href="'.base_url('user-logout').'">'.$this->lang->line('HEADER_LOGOUT').'</a></li>';
-                    }else{
-                        echo '<li><a href="'.base_url('user-login').'">'.$this->lang->line('HEADER_LOGIN').'</a></li>';
-                        //echo '<li><a href="'.base_url('/users/sign_up').'">'.$this->lang->line('HEADER_REGI').'</a></li>';
-                    }?>                   
+                                 
                     
                 </ul>
             </div>
-            <!-- END TOP BAR MENU -->
+             END TOP BAR MENU 
         </div>
     </div>        
-</div>
+</div>-->
 <!-- END TOP BAR -->
 
 <!-- BEGIN HEADER -->
@@ -99,47 +99,47 @@
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <div class="col-md-4 header-navigation-col">
-                                        <h4>PHP</h4>
-                                        <ul>
-                                            <li><a href="index.html">Astro Trainers</a></li>
-                                            <li><a href="index.html">Basketball Shoes</a></li>
-                                            <li><a href="index.html">Boots</a></li>
-                                            <li><a href="index.html">Canvas Shoes</a></li>
-                                            <li><a href="index.html">Football Boots</a></li>
-                                            <li><a href="index.html">Golf Shoes</a></li>
-                                            <li><a href="index.html">Hi Tops</a></li>
-                                            <li><a href="index.html">Indoor Trainers</a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-md-4 header-navigation-col">
-                                        <h4>Java</h4>
-                                        <ul>
-                                            <li><a href="index.html">Base Layer</a></li>
-                                            <li><a href="index.html">Character</a></li>
-                                            <li><a href="index.html">Chinos</a></li>
-                                            <li><a href="index.html">Combats</a></li>
-                                            <li><a href="index.html">Cricket Clothing</a></li>
-                                            <li><a href="index.html">Fleeces</a></li>
-                                            <li><a href="index.html">Gilets</a></li>
-                                            <li><a href="index.html">Golf Tops</a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-md-4 header-navigation-col">
-                                        <h4>.Net</h4>
-                                        <ul>
-                                            <li><a href="index.html">Belts</a></li>
-                                            <li><a href="index.html">Caps</a></li>
-                                            <li><a href="index.html">Gloves</a></li>
-                                        </ul>
+                                            <h4>PHP</h4>
+                                            <ul>
+                                                <li><a href="index.html">Astro Trainers</a></li>
+                                                <li><a href="index.html">Basketball Shoes</a></li>
+                                                <li><a href="index.html">Boots</a></li>
+                                                <li><a href="index.html">Canvas Shoes</a></li>
+                                                <li><a href="index.html">Football Boots</a></li>
+                                                <li><a href="index.html">Golf Shoes</a></li>
+                                                <li><a href="index.html">Hi Tops</a></li>
+                                                <li><a href="index.html">Indoor Trainers</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-4 header-navigation-col">
+                                            <h4>Java</h4>
+                                            <ul>
+                                                <li><a href="index.html">Base Layer</a></li>
+                                                <li><a href="index.html">Character</a></li>
+                                                <li><a href="index.html">Chinos</a></li>
+                                                <li><a href="index.html">Combats</a></li>
+                                                <li><a href="index.html">Cricket Clothing</a></li>
+                                                <li><a href="index.html">Fleeces</a></li>
+                                                <li><a href="index.html">Gilets</a></li>
+                                                <li><a href="index.html">Golf Tops</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-4 header-navigation-col">
+                                            <h4>.Net</h4>
+                                            <ul>
+                                                <li><a href="index.html">Belts</a></li>
+                                                <li><a href="index.html">Caps</a></li>
+                                                <li><a href="index.html">Gloves</a></li>
+                                            </ul>
 
-                                        <h4>Clearance</h4>
-                                        <ul>
-                                            <li><a href="index.html">Jackets</a></li>
-                                            <li><a href="index.html">Bottoms</a></li>
-                                        </ul>
+                                            <h4>Clearance</h4>
+                                            <ul>
+                                                <li><a href="index.html">Jackets</a></li>
+                                                <li><a href="index.html">Bottoms</a></li>
+                                            </ul>
+                                        </div>
                                     </div>
-                                    </div>
-                                         
+
                                 </div>
                             </div>
                         </li>
@@ -166,24 +166,18 @@
                         <li><a href="blog.html">Blog Page</a></li>
                         <li><a href="blog-item.html">Blog Item</a></li>
                     </ul>
+                </li>                
+                <li class="">
+                    <?php
+                    if ($this->rbac->is_login(TRUE))
+                    {
+                        echo '<li><a class="login-text" href="' . base_url('user-logout') . '">' . $this->lang->line('HEADER_LOGOUT') . '</a></li>';
+                    } else
+                    {
+                        echo '<li><a class="login-text" href="' . base_url('user-login') . '">' . $this->lang->line('HEADER_LOGIN') . '</a></li>';                        
+                    }
+                    ?>                    
                 </li>
-
-                <!-- BEGIN TOP SEARCH -->
-                <li class="menu-search">
-                    <span class="sep"></span>
-                    <i class="fa fa-search search-btn"></i>
-                    <div class="search-box">
-                        <form action="#">
-                            <div class="input-group">
-                                <input type="text" placeholder="Search" class="form-control">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-primary" type="submit">Search</button>
-                                </span>
-                            </div>
-                        </form>
-                    </div> 
-                </li>
-                <!-- END TOP SEARCH -->
             </ul>
         </div>
         <!-- END NAVIGATION -->

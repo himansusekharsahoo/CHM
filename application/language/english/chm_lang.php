@@ -1,4 +1,5 @@
 <?php
+$lang["COMPANY_NAME"] = "Sharada Ayurvedic Medical College & Hospital";
 $lang["HEADER_LOGIN"] = "Log In";
 $lang["HEADER_REGI"] = "Registration";
 $lang["HEADER_LOGOUT"] = "Log out";

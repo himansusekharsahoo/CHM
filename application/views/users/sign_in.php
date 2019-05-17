@@ -30,29 +30,15 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-8 col-md-offset-4 padding-left-0">
+                        <div class="col-lg-5 col-md-offset-5 padding-left-0">
                             <a href="page-forgotton-password.html">Forget Password?</a>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-8 col-md-offset-4 padding-left-0 padding-top-20">
+                        <div class="col-lg-2 padding-top-20 pull-right" style="margin-right:27px;">
                             <button type="submit" class="btn btn-primary">Login</button>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-8 col-md-offset-4 padding-left-0 padding-top-10 padding-right-30">
-                            <hr>
-                            <div class="login-socio">
-                                <p class="text-muted">or login using:</p>
-                                <ul class="social-icons">
-                                    <li><a href="javascript:;" data-original-title="facebook" class="facebook" title="facebook"></a></li>
-                                    <li><a href="javascript:;" data-original-title="Twitter" class="twitter" title="Twitter"></a></li>
-                                    <li><a href="javascript:;" data-original-title="Google Plus" class="googleplus" title="Google Plus"></a></li>
-                                    <li><a href="javascript:;" data-original-title="Linkedin" class="linkedin" title="LinkedIn"></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+                    </div>                    
                 </form>
             </div>
             <div class="col-md-4 col-sm-4 pull-right">
