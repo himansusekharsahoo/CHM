@@ -30,7 +30,7 @@
                 </div>
                 <div class="clearfix"></div>
                 <hr/>
-                <table id="books_table" class="table table-bordered table-striped table-hover" width="100%"></table>
+                <table id="raw_cert_data_dt_table" style="width:100% !important" class="table table-sm table-bordered table-striped table-hover" width="100%" cellpadding="0" cellpadding="0"></table>
             </div>
         </div>
     </div>
@@ -45,9 +45,15 @@
             </div>
             <div class="modal-body">
                 <form name="form_return_books" id="form_return_books" method="POST">
+                    <input type="checkbox" name="book_lost" id="book_lost" value="1"/> Mark book as lost.
                     <div id="fine_details" class="text-bold"></div><br/>
-                    <p>Are you sure you want return this book ?</p>
+                    <div id="lost_fine_details" class="text-bold"></div><br/>
                     <input type="hidden" name="book_assign_id" id="book_assign_id"/>
+                    <div class="form-group">
+                        <label for="book_condition">Book return condition:</label>
+                        <input type="text" name="book_condition" id="book_condition" placeholder="Book condition" class="form-control required" required="required"/>
+                    </div>
+                    <p id="confim_msg">Are you sure you want return this book ?</p>
                 </form>
             </div>
             <div class="modal-footer">
@@ -63,7 +69,7 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#books_table').on('click', '.btn_return_book', function (e) {
+        $('#raw_cert_data_dt_table').on('click', '.btn_return_book', function (e) {
             $('#fine_details').html('');
             e.preventDefault();
             var id = $(this).data('id');
@@ -89,22 +95,55 @@
             $('#form_return_books #book_name').html();
             $('#return_modal_box').modal('show');
         });
+
+        $('#form_return_books').validate();
         $('#return_modal_box').on('click', '#return_modal_box_btn', function () {
             var form_data = $('#form_return_books').serializeArray();
-            $.ajax({
-                url: "<?= base_url('return-borrowed-books') ?>",
-                type: 'POST',
-                dataType: 'json',
-                data: form_data,
-                success: function (result) {
-                    populate_table(user_data);
-                    $('#return_modal_box').modal('hide');
-                },
-                error: function (result) {
-                    console.log(result);
-                }
-            });
+            if ($('#form_return_books').valid()) {
+                $.ajax({
+                    url: "<?= base_url('return-borrowed-books') ?>",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: form_data,
+                    success: function (result) {
+                        populate_table(user_data);
+                        $('#return_modal_box').modal('hide');
+                    },
+                    error: function (result) {
+                        console.log(result);
+                    }
+                });
+            }
         });
+
+        $('#return_modal_box').on('click', '#book_lost', function () {
+            if ($('#book_lost').is(":checked")) {
+                $.ajax({
+                    url: "<?= base_url('get-lost-fine') ?>",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: '',
+                    success: function (result) {
+                        var amt = 0;
+                        amt = result.book_lost_fine;
+                        $('#fine_details').hide();
+                        $('#lost_fine_details').html('As the book is lost there will be fine of Rs. <input type="text" name="book_lost_fine" id="book_lost_fine class="form-control" value="' + amt + '"/>');
+                        $('#lost_fine_details').show();
+                        $('#book_condition').val('LOST');
+                        $('#confim_msg').html('Are you sure you want to mark this book as lost?');
+                    },
+                    error: function (result) {
+                        console.log(result);
+                    }
+                });
+            } else {
+                $('#fine_details').show();
+                $('#lost_fine_details').hide();
+                $('#book_condition').val('');
+                $('#confim_msg').html('Are you sure you want to return this book?');
+            }
+        });
+
         var user_data = '';
         //type head for book search
         $.typeahead({
@@ -203,17 +242,10 @@
                 data: function (item) {
                     return '<button class="btn btn-primary btn_return_book" data-id="' + item.bassign_id + '">Return book</button>';
                 }
-            },
-            {
-                title: "Lost",
-                class: "",
-                data: function (item) {
-                    return '<button class="btn btn-info btn_lost_book" data-id="' + item.bassign_id + '">Lost</button>';
-                }
             }
         ];
         function populate_table(card_data) {
-            var books_table = $('#books_table').dataTable({
+            var raw_cert_data_dt_table = $('#raw_cert_data_dt_table').dataTable({
                 "initComplete": function (settings, json) {
                 },
                 'columns': columns,
@@ -229,7 +261,7 @@
                 'searching': true,
                 'paging': true,
                 'pageLength': 25,
-                'lengthChange': true,
+                'lengthChange': false,
                 'aLengthMenu': [25, 50, 100],
                 'processing': true,
                 'serverSide': true,
@@ -239,6 +271,7 @@
                     'dataType': 'json',
                     'data': card_data
                 },
+                bSort: true,
                 order: [[0, 'desc']],
                 info: true,
                 sScrollX: true,

@@ -29,7 +29,7 @@ class book_returns extends CI_Model {
             unset($conditions['start'], $conditions['length'], $conditions['order']);
         }
 
-        $where = "WHERE TRIM(LOWER(lm.card_no))=TRIM(LOWER('" . $conditions['card_no'] . "')) AND return_date is null ";
+        $where = "WHERE TRIM(LOWER(lm.card_no))=TRIM(LOWER('" . $conditions['card_no'] . "')) AND return_date is null AND is_book_lost <> 1 ";
 
         $query = "SELECT " . implode(',', $columns) . " FROM book_assigns ba 
             JOIN library_members lm ON ba.member_id=lm.member_id 
@@ -45,26 +45,35 @@ class book_returns extends CI_Model {
         return $return;
     }
 
-    function return_borrowed_book($assigned_id = '') {
-        $return_delay_fine = $this->rbac->get_app_config_item('library/library/role_config/default/return_delay_fine');
-        $return_delay_fine = (string) $return_delay_fine[0];
-        $return_delay_fine = explode(',', $return_delay_fine);
-        $fine = (isset($return_delay_fine[0])) ? $return_delay_fine[0] : 1; //return days
-        $cur_date = date('Y-m-d h:m:s');
+    function return_borrowed_book($post_values = null) {
+        $update_data = array();
+        if (isset($post_values['book_lost']) && $post_values['book_lost'] == '1') {
+            $update_data = array(
+                'is_book_lost' => 1,
+                'book_lost_fine' => $post_values['book_lost_fine'],
+                'book_return_condition' => $post_values['book_condition']
+            );
+        } else {
+            $return_delay_fine = $this->rbac->get_app_config_item('library/library/role_config/default/return_delay_fine');
+            $return_delay_fine = (string) $return_delay_fine[0];
+            $return_delay_fine = explode(',', $return_delay_fine);
+            $fine = (isset($return_delay_fine[0])) ? $return_delay_fine[0] : 1; //return days
+            $cur_date = date('Y-m-d h:m:s');
 
-        $query = "SELECT DATEDIFF(CURDATE(),due_date) as date_different FROM book_assigns where bassign_id='" . $assigned_id . "'";
-        $date_diff = $this->db->query($query)->row()->date_different;
-        $return_delay_fine = NULL;
+            $query = "SELECT DATEDIFF(CURDATE(),due_date) as date_different FROM book_assigns where bassign_id='" . $post_values['book_assign_id'] . "'";
+            $date_diff = $this->db->query($query)->row()->date_different;
+            $return_delay_fine = NULL;
 
-        if ($date_diff > 0) {
-            $return_delay_fine = $date_diff * $fine;
+            if ($date_diff > 0) {
+                $return_delay_fine = $date_diff * $fine;
+            }
+            $update_data = array(
+                'return_date' => $cur_date,
+                'return_delay_fine' => $return_delay_fine,
+                'book_return_condition' => $post_values['book_condition']
+            );
         }
-        $update_data = array(
-            'return_date' => $cur_date,
-            'return_delay_fine' => $return_delay_fine
-        );
-        exit;
-        $this->db->where('bassign_id', $assigned_id);
+        $this->db->where('bassign_id', $post_values['book_assign_id']);
         return $this->db->update('book_assigns', $update_data);
     }
 
