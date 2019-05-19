@@ -79,7 +79,7 @@ class Scripts_include {
             COMPONENT_PATH . 'datatables-scroller/js/dataTables.scroller.js',
             COMPONENT_PATH . 'dataTables.treeGrid.js/dataTables.treeGrid.js',
         ),
-        'chosen' => array('/assets/bootstrap-chosen/chosen.jquery.js'),
+        'chosen' => array(COMPONENT_PATH.'chosen/chosen.jquery.js'),
         'tree' => array('/js/tree.js'),
         'jstree' => array(COMPONENT_PATH . 'jstree/dist/jstree.min.js'),
         'promise' => array(COMPONENT_PATH . 'bluebird/js/browser/bluebird.min.js'),
@@ -139,7 +139,7 @@ class Scripts_include {
         'datatable' => array(
             COMPONENT_PATH . 'datatables/media/css/jquery.dataTables.min.css',
         ),
-        'chosen' => array('/assets/bootstrap-chosen/bootstrap-chosen.css'),
+        'chosen' => array(COMPONENT_PATH.'chosen/chosen.css'),
         'jstree' => array(COMPONENT_PATH . 'jstree/dist/themes/default/style.min.css'),
         'jq_typehead' => array(COMPONENT_PATH . 'jquery-typeahead/dist/jquery.typeahead.min.css'),
         'jq_multitag_select' => array(

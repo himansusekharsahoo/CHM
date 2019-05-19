@@ -33,8 +33,8 @@ class Manage_students extends CI_Controller {
     public function index() {
         if ($this->rbac->has_permission('STUDENT_USERS', 'LIST')) {
             $this->breadcrumbs->push('index', base_url('student-list'));
-            $this->scripts_include->includePlugins(array('datatable'), 'css');
-            $this->scripts_include->includePlugins(array('datatable'), 'js');
+            $this->scripts_include->includePlugins(array('datatable','chosen'), 'css');
+            $this->scripts_include->includePlugins(array('datatable','chosen'), 'js');
             $this->layout->navTitle = 'Student list';
             $this->layout->title = 'Student list';
             $header = array(
