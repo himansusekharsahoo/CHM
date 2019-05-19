@@ -89,6 +89,7 @@ class Scripts_include {
         'jq_multitag_select' => array(
             COMPONENT_PATH . 'Multi-Select-Checkbox-Tree-treeSelector/jquery.treeSelector.js'
         ),
+        'print_element'=>array(COMPONENT_PATH.'print-elements/print_elements.js')
     );
     private $__cssFiles = array(
         'admin_layout' => array(
@@ -144,7 +145,8 @@ class Scripts_include {
         'jq_typehead' => array(COMPONENT_PATH . 'jquery-typeahead/dist/jquery.typeahead.min.css'),
         'jq_multitag_select' => array(
             COMPONENT_PATH . 'Multi-Select-Checkbox-Tree-treeSelector/jquery.treeSelector.css'
-        )
+        ),
+        'print_element'=>array(COMPONENT_PATH.'print-elements/print.css')
     );
 
     function __construct() {

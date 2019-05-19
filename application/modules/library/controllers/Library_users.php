@@ -27,7 +27,8 @@ if (!defined('BASEPATH'))
  * @author     HimansuS                  
  * @since   11/08/2018
  */
-class Library_users extends CI_Controller {
+class Library_users extends CI_Controller
+{
 
     /**
      * __construct Method
@@ -38,7 +39,8 @@ class Library_users extends CI_Controller {
      * @author  HimansuS                  
      * @since   11/08/2018
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
 
         $this->load->model('library_user');
@@ -60,11 +62,13 @@ class Library_users extends CI_Controller {
      * @author  HimansuS                  
      * @since   11/08/2018
      */
-    public function index() {
-        if ($this->rbac->has_permission('MANAGE_LIBRARY_MEMBERS', 'LIST')) {
+    public function index()
+    {
+        if ($this->rbac->has_permission('MANAGE_LIBRARY_MEMBERS', 'LIST'))
+        {
             $this->breadcrumbs->push('index', base_url('library-users'));
-            $this->scripts_include->includePlugins(array('datatable','chosen'), 'css');
-            $this->scripts_include->includePlugins(array('datatable','chosen'), 'js');
+            $this->scripts_include->includePlugins(array('datatable', 'chosen', 'print_element'), 'css');
+            $this->scripts_include->includePlugins(array('datatable', 'chosen', 'print_element'), 'js');
             $this->layout->navTitle = 'Library user list';
             $this->layout->title = 'Library user list';
             $header = array(
@@ -128,7 +132,8 @@ class Library_users extends CI_Controller {
                 )
             );
             $data = $grid_buttons = array();
-            if ($this->rbac->has_permission('MANAGE_LIBRARY_MEMBERS', 'VIEW')) {
+            if ($this->rbac->has_permission('MANAGE_LIBRARY_MEMBERS', 'VIEW'))
+            {
                 $grid_buttons[] = array(
                     'btn_class' => 'btn-info',
                     'btn_href' => base_url('view-library-user'),
@@ -139,7 +144,8 @@ class Library_users extends CI_Controller {
                     'style' => ''
                 );
             }
-            if ($this->rbac->has_permission('MANAGE_LIBRARY_MEMBERS', 'EDIT')) {
+            if ($this->rbac->has_permission('MANAGE_LIBRARY_MEMBERS', 'EDIT'))
+            {
                 $grid_buttons[] = array(
                     'btn_class' => 'btn-primary renew_member_card',
                     'btn_href' => '#',
@@ -152,7 +158,8 @@ class Library_users extends CI_Controller {
                 );
             }
 
-            if ($this->rbac->has_permission('MANAGE_LIBRARY_MEMBERS', 'DELETE')) {
+            if ($this->rbac->has_permission('MANAGE_LIBRARY_MEMBERS', 'DELETE'))
+            {
                 $grid_buttons[] = array(
                     'btn_class' => 'btn-danger delete-record',
                     'btn_href' => '#',
@@ -164,23 +171,24 @@ class Library_users extends CI_Controller {
                     'attr' => 'data-member_id="$1"'
                 );
             }
-            if ($this->rbac->has_permission('MANAGE_LIBRARY_MEMBERS', 'PRINT')) {
+            if ($this->rbac->has_permission('MANAGE_LIBRARY_MEMBERS', 'PRINT'))
+            {
                 $grid_buttons[] = array(
-                    'btn_class' => 'btn-primary',
-                    'btn_href' => base_url('print-library-card'),
+                    'btn_class' => 'btn-primary show_icard_modal',
+                    'btn_href' => '#', //base_url('print-library-card'),
                     'btn_icon' => 'fa-print',
                     'btn_title' => 'print library card',
                     'btn_separator' => ' ',
-                    'param' => array('$1'),
                     'style' => 'margin-left:5px;',
-                    'attr' => 'target="_blank"'
+                    'attr' => 'data-member_id="$1"'
                 );
             }
 
             $button_set = get_link_buttons($grid_buttons);
             $data['button_set'] = $button_set;
 
-            if ($this->input->is_ajax_request()) {
+            if ($this->input->is_ajax_request())
+            {
                 $columns = 'member_id,user_name,card_no,email,date_issue,expiry_date,status';
                 $returned_list = $this->library_user->get_library_member_datatable($data, null, null, $columns);
                 echo $returned_list;
@@ -241,7 +249,8 @@ class Library_users extends CI_Controller {
             );
             $data['data'] = array('config' => $config);
             $this->layout->render($data);
-        } else {
+        } else
+        {
             $this->layout->render(array('error' => '401'));
         }
     }
@@ -255,9 +264,11 @@ class Library_users extends CI_Controller {
      * @author  HimansuS                  
      * @since   11/08/2018
      */
-    public function export_grid_data() {
+    public function export_grid_data()
+    {
         if ($this->input->is_ajax_request()):
-            if ($this->rbac->has_permission('MANAGE_LIBRARY_MEMBERS', 'XLS_EXPORT') || $this->rbac->has_permission('MANAGE_LIBRARY_MEMBERS', 'CSV_EXPORT')) {
+            if ($this->rbac->has_permission('MANAGE_LIBRARY_MEMBERS', 'XLS_EXPORT') || $this->rbac->has_permission('MANAGE_LIBRARY_MEMBERS', 'CSV_EXPORT'))
+            {
                 $export_type = $this->input->post('export_type');
                 $tableHeading = array(
                     'user_name' => 'user_name',
@@ -280,7 +291,8 @@ class Library_users extends CI_Controller {
                         'value' => date('d-m-Y')
                     )
                 );
-                foreach ($tableHeading as $db_col => $col) {
+                foreach ($tableHeading as $db_col => $col)
+                {
                     $head_cols[] = array(
                         'title' => ucfirst($col),
                         'track_auto_filter' => 1
@@ -303,7 +315,8 @@ class Library_users extends CI_Controller {
                 $this->excel_utility->download_excel($config, $export_type);
                 ob_end_flush();
                 exit;
-            } else {
+            } else
+            {
                 $this->layout->data = array('status_code' => '403', 'message' => 'Request Forbidden.');
                 $this->layout->render(array('error' => 'general'));
             }
@@ -323,15 +336,18 @@ class Library_users extends CI_Controller {
      * @author  HimansuS                  
      * @since   11/08/2018
      */
-    public function create() {
-        if ($this->rbac->has_permission('MANAGE_LIBRARY_MEMBERS', 'CREATE')) {
+    public function create()
+    {
+        if ($this->rbac->has_permission('MANAGE_LIBRARY_MEMBERS', 'CREATE'))
+        {
             $this->scripts_include->includePlugins(array('jq_validation', 'jq_typehead', 'promise'), 'js');
             $this->scripts_include->includePlugins(array('bs_datepicker', 'jq_typehead'), 'css');
             $this->breadcrumbs->push('create', base_url('create-library-users'));
 
             $this->layout->navTitle = 'Library user create';
             $data = array();
-            if ($this->input->is_ajax_request()) {
+            if ($this->input->is_ajax_request())
+            {
                 $post_data = array('user_id' => $this->input->post('user_id'));
                 $user_type = 'old_user';
                 $result = $this->library_user->save($post_data, $user_type);
@@ -400,7 +416,8 @@ class Library_users extends CI_Controller {
 
             $this->layout->data = $data;
             $this->layout->render();
-        }else {
+        }else
+        {
             $this->layout->render(array('error' => '401'));
         }
     }
@@ -412,8 +429,10 @@ class Library_users extends CI_Controller {
      * @author : HimansuS
      * @created:
      */
-    public function search_user() {
-        if ($this->input->is_ajax_request()) {
+    public function search_user()
+    {
+        if ($this->input->is_ajax_request())
+        {
             $search_text = $this->input->post('search_text');
             $user_type = $this->input->post('user_type');
             $result = $this->library_user->search_lib_user($user_type, $search_text);
@@ -423,7 +442,8 @@ class Library_users extends CI_Controller {
                 "data" => $result
             ));
             exit;
-        } else {
+        } else
+        {
             $this->layout->render(array('error' => '401'));
         }
     }
@@ -435,8 +455,10 @@ class Library_users extends CI_Controller {
      * @author : HimansuS
      * @created:
      */
-    public function show_search_user_details() {
-        if ($this->input->is_ajax_request()) {
+    public function show_search_user_details()
+    {
+        if ($this->input->is_ajax_request())
+        {
             $search_user_id = $this->input->post('user_id');
             $show_columns = array(
                 'name' => 'Name',
@@ -447,7 +469,8 @@ class Library_users extends CI_Controller {
             $condition = " and user_id=$search_user_id";
             $user_details = $this->library_user->searched_user_details($condition);
             //pma($user_details, 1);
-            foreach ($user_details as $rec) {
+            foreach ($user_details as $rec)
+            {
                 $markup = "<div class='col-sm-12 no_pad'>
                             <div class='col-sm-4'>
                                 <div class='box box-widget widget-user-2 box-border'>
@@ -456,33 +479,40 @@ class Library_users extends CI_Controller {
                                         <div class='widget-user-image'>";
 
                 $photo = '';
-                if ($rec['student_photo']) {
+                if ($rec['student_photo'])
+                {
                     $photo = $rec['student_photo'];
                 }
-                if ($photo) {
-                    $markup.="<img class='img-circle' src='$photo'>";
-                } else {
-                    $markup.="<span class='img-circle fa fa-user fa-3x' style='float:left;'></span>";
+                if ($photo)
+                {
+                    $markup .= "<img class='img-circle' src='$photo'>";
+                } else
+                {
+                    $markup .= "<span class='img-circle fa fa-user fa-3x' style='float:left;'></span>";
                 }
-                $markup.="</div>
+                $markup .= "</div>
                                         <!-- /.widget-user-image -->
                                         <h3 class='widget-user-username'>" . $rec['first_name'] . " " . $rec['last_name'] . "</h3>                                        
                                     </div>
                                     <div class='box-footer no-padding'>
                                         <ul class='nav nav-stacked'>";
                 $save_butn = 1;
-                foreach ($show_columns as $db_column => $alias) {
-                    if (array_key_exists($db_column, $rec)) {
-                        if ($db_column == 'user_status' && $rec[$db_column] == 'inactive') {
+                foreach ($show_columns as $db_column => $alias)
+                {
+                    if (array_key_exists($db_column, $rec))
+                    {
+                        if ($db_column == 'user_status' && $rec[$db_column] == 'inactive')
+                        {
                             $save_butn = 0;
-                            $markup.="<li class='nav_search_user_li'>
+                            $markup .= "<li class='nav_search_user_li'>
                                                 <div class='col-sm-12 no_pad'>
                                                     <span class='col-sm-4'>$alias</span>
                                                     <span class='col-sm-8'>" . $rec[$db_column] . " <span class='text-danger'>[Please contact Site Admin]</span></span>
                                                 </div>
                                             </li> ";
-                        } else {
-                            $markup.="<li class='nav_search_user_li'>
+                        } else
+                        {
+                            $markup .= "<li class='nav_search_user_li'>
                                                 <div class='col-sm-12 no_pad'>
                                                     <span class='col-sm-4'>$alias</span>
                                                     <span class='col-sm-8'>" . $rec[$db_column] . "</span>
@@ -492,16 +522,18 @@ class Library_users extends CI_Controller {
                     }
                 }
 
-                $markup.="</ul>
+                $markup .= "</ul>
                                         <br>
                                         <div class='col-sm-12'>";
-                if ($save_butn == 1) {
-                    $markup.="<input type='button' id='create_lib_member' value='Save' class='btn btn-primary btn-xs pull-right marginB5'>";
-                    $markup.="<a href='#' id='cancel_old_user' class='btn btn-default btn-xs pull-right marginB5 marginR5'>Cancel</a>";
-                } else {
-                    $markup.="<a href='#' id='cancel_old_user' class='btn btn-default btn-xs pull-right marginB5 marginR5'>Close</a>";
+                if ($save_butn == 1)
+                {
+                    $markup .= "<input type='button' id='create_lib_member' value='Save' class='btn btn-primary btn-xs pull-right marginB5'>";
+                    $markup .= "<a href='#' id='cancel_old_user' class='btn btn-default btn-xs pull-right marginB5 marginR5'>Cancel</a>";
+                } else
+                {
+                    $markup .= "<a href='#' id='cancel_old_user' class='btn btn-default btn-xs pull-right marginB5 marginR5'>Close</a>";
                 }
-                $markup.="
+                $markup .= "
                                         </div>
 
                                     </div>
@@ -511,7 +543,8 @@ class Library_users extends CI_Controller {
             }
             echo $markup;
             exit;
-        } else {
+        } else
+        {
             $this->layout->render(array('error' => '401'));
         }
     }
@@ -525,9 +558,11 @@ class Library_users extends CI_Controller {
      * @author  HimansuS                  
      * @since   11/08/2018
      */
-    public function renew_icard() {
+    public function renew_icard()
+    {
         if ($this->input->is_ajax_request()):
-            if ($this->rbac->has_permission('MANAGE_LIBRARY_MEMBERS', 'EDIT')) {
+            if ($this->rbac->has_permission('MANAGE_LIBRARY_MEMBERS', 'EDIT'))
+            {
                 $member_id = $this->input->post('member_id');
                 if ($member_id):
                     $member_id = c_decode($member_id);
@@ -541,7 +576,8 @@ class Library_users extends CI_Controller {
                 endif;
                 echo json_encode(array('status' => 'error', 'title' => 'Renew library card', 'message' => 'Library card renew error, Please try again.'));
                 exit();
-            }else {
+            }else
+            {
                 $this->layout->render(array('error' => '401'));
             }
         else:
@@ -559,8 +595,10 @@ class Library_users extends CI_Controller {
      * @author  HimansuS                  
      * @since   11/08/2018
      */
-    public function edit($member_id = null) {
-        if ($this->rbac->has_permission('MANAGE_LIBRARY_MEMBERS', 'EDIT')) {
+    public function edit($member_id = null)
+    {
+        if ($this->rbac->has_permission('MANAGE_LIBRARY_MEMBERS', 'EDIT'))
+        {
             $this->scripts_include->includePlugins(array('jq_validation', 'bs_datepicker'), 'js');
             $this->scripts_include->includePlugins(array('bs_datepicker'), 'css');
             $this->breadcrumbs->push('edit', '/library/library_members/edit');
@@ -597,7 +635,8 @@ class Library_users extends CI_Controller {
             endif;
             $this->layout->data = $data;
             $this->layout->render();
-        }else {
+        }else
+        {
             $this->layout->render(array('error' => '401'));
         }
     }
@@ -611,8 +650,10 @@ class Library_users extends CI_Controller {
      * @author  HimansuS                  
      * @since   11/08/2018
      */
-    public function view($member_id) {
-        if ($this->rbac->has_permission('MANAGE_LIBRARY_MEMBERS', 'VIEW')) {
+    public function view($member_id)
+    {
+        if ($this->rbac->has_permission('MANAGE_LIBRARY_MEMBERS', 'VIEW'))
+        {
             $this->breadcrumbs->push('view', '/library/library_members/view');
 
             $data = array();
@@ -630,7 +671,8 @@ class Library_users extends CI_Controller {
 
             endif;
             return 0;
-        }else {
+        }else
+        {
             $this->layout->render(array('error' => '401'));
         }
     }
@@ -644,9 +686,11 @@ class Library_users extends CI_Controller {
      * @author  HimansuS                  
      * @since   11/08/2018
      */
-    public function delete() {
+    public function delete()
+    {
         if ($this->input->is_ajax_request()):
-            if ($this->rbac->has_permission('MANAGE_LIBRARY_MEMBERS', 'DELETE')) {
+            if ($this->rbac->has_permission('MANAGE_LIBRARY_MEMBERS', 'DELETE'))
+            {
                 $member_id = $this->input->post('member_id');
                 if ($member_id):
                     $member_id = c_decode($member_id);
@@ -662,7 +706,8 @@ class Library_users extends CI_Controller {
                 endif;
                 echo 'No data found to delete';
                 exit();
-            }else {
+            }else
+            {
                 $this->layout->render(array('error' => '401'));
             }
         else:
@@ -672,7 +717,17 @@ class Library_users extends CI_Controller {
         return 'Invalid request type.';
     }
 
-    public function print_library_card($id) {
+    /**
+     * 
+     * @method
+     * @param   
+     * @desc    
+     * @return 
+     * @author  HimansuS                  
+     * @since   
+     */
+    public function print_library_card($id)
+    {
         if ($id):
             $member_id = c_decode($id);
             $result = $this->library_user->get_library_member(null, array('member_id' => $member_id), 1);
@@ -707,7 +762,7 @@ class Library_users extends CI_Controller {
             $pdf->AddPage();
             $pdf->SetLineStyle(array('width' => 1, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(255, 0, 0)));
             $html = '<center><h1>Card Number: ' . $result[0]['card_no'] . '</h1>'
-                    . '<b>Name: </b>' . $result[0]['user_name'] . '<br />'
+                    . '<b>Name: </b>' . $result[0]['user_id'] . '<br />'
                     . '<b>Date of Issue: </b>' . $result[0]['date_issue'] . '<br />'
                     . 'Expiry Date: ' . $result[0]['expiry_date'] . '<br />'
                     . '' . $pdf->write1DBarcode($result[0]['card_no'], 'C39E+', '', '', '120', 15, 0.4, $style, 'N') . '</center>';
@@ -719,7 +774,61 @@ class Library_users extends CI_Controller {
         return 0;
     }
 
-    public function encode_id() {
+    /**
+     * 
+     * @method generate_library_card
+     * @param   NA
+     * @desc    Used to generate barcode and qrcode and serve in ajax request to populate library card
+     * @return JSON
+     * @author  HimansuS                  
+     * @since   
+     */
+    public function generate_library_card()
+    {
+        if ($this->input->is_ajax_request())
+        {
+            $member_id = $this->input->post('member_id');
+            $result = $this->library_user->get_library_member(null, array('member_id' => c_decode($member_id)), 1);
+            if (isset($result[0]))
+            {
+                $result = $result[0];
+                //generate QR Code
+                //generate Bar Code
+                require_once APPPATH . 'libraries/Chm_qrcode.php';
+                require_once APPPATH . 'libraries/Chm_barcode.php';
+                $qrcode = new Chm_qrcode();
+                $barcode = new Chm_barcode();
+                $bar_code_details=array();
+                
+                $qr_data="Name:".ucfirst($result['first_name'].' '.$result['last_name']);
+                $qr_data.="Card no".$result['card_no'];
+                $qr_data.="Issue date".$result['date_issue'];
+                $qr_data.="Expiry date".$result['expiry_date'];
+                
+                $qr_config = array(
+                    'text' => $qr_data,
+                    'size' => 3,
+                );
+                $qrcode_details = $qrcode->generate_qrcode($qr_config);
+                $bar_code_details['qrcode_image']=base_url($qrcode_details['qrcode_image']);
+                
+                $bar_config = array(
+                    'text' => ($result['card_no']) ? $result['card_no'] : $result['user_id']
+                );                
+                $barcode_details = $barcode->generate_barcode($bar_config);
+                $bar_code_details['barcode_image'] = base_url($barcode_details['barcode_image']);
+                $bar_code_details['user_name']=ucfirst($result['first_name'].' '.$result['last_name']);
+                echo json_encode(array('status' => 'success', 'title' => 'Success', 'message' => '', 'data' => $bar_code_details));
+            } else
+            {
+                echo json_encode(array('status' => 'error', 'title' => 'Print Library Card'));
+            }
+            exit;
+        }
+    }
+
+    public function encode_id()
+    {
         if ($this->input->is_ajax_request()):
             $id = $this->input->post('member_id');
             echo c_encode($id);
@@ -729,22 +838,28 @@ class Library_users extends CI_Controller {
         endif;
     }
 
-    public function unique_card_number() {
+    public function unique_card_number()
+    {
         $card_no = $this->input->post('card_no');
         $count = $this->library_user->unique_card_number($card_no);
-        if ($count > 0) {
+        if ($count > 0)
+        {
             echo 'false';
-        } else {
+        } else
+        {
             echo 'true';
         }
     }
 
-    public function unique_user() {
+    public function unique_user()
+    {
         $user_id = $this->input->post('user_id');
         $count = $this->library_user->unique_user($user_id);
-        if ($count > 0) {
+        if ($count > 0)
+        {
             echo 'false';
-        } else {
+        } else
+        {
             echo 'true';
         }
     }
