@@ -44,7 +44,6 @@ label.error,div.error{color:red;font-weight: normal;}
     z-index: 1050;
     background: rgba(0, 0, 0, 0.3) none repeat scroll 0 0;   
 }
-.pagination{margin: 5px;}
 .width99{width: 99% !important;}
 .dataTables_scrollBody{margin-left: -3px !important;}
 .table.dataTable.no-footer{border-bottom: 1px solid #00c0ef;}

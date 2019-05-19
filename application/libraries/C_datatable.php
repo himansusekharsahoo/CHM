@@ -331,12 +331,12 @@ class C_datatable {
                 }
                 //set top filter
                 if (isset($dt_dom['top_filter']) && $dt_dom['top_filter']) {
-                    $dom .= ' <"pull-right" f>';
+                    $dom .= ' <"pull-left" f>';
                 }
 
                 //set top buttons
                 if (isset($dt_dom['top_buttons']) && $dt_dom['top_buttons']) {
-                    $dom .= ' <"' . $this->_dt_id . '_dt_button pull-right marginR5 marginT5">';
+                    $dom .= ' <"' . $this->_dt_id . '_dt_button pull-right marginR5">';
                     $this->_dom_buttons = $dt_dom['top_buttons'];
                 }
 
