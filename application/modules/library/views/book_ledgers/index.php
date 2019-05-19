@@ -35,7 +35,14 @@
     $(function ($) {
         myApp.CommonMethod.checkAll($('#raw_cert_data_dt_table th:first').find("input:checkbox"), 'book_ledger_chk');
 //delete record
-
+        function show_message(reject) {            
+            var errMsg = {
+                'type': 'default',
+                title: (typeof reject.title != 'undefined' && reject.title != '') ? reject.title : 'Book Ledger List',
+                message: (reject.message != '') ? reject.message : 'There are some error, please try again!'
+            }
+            myApp.modal.alert(errMsg);
+        }
         $(document).on('click', '.delete-record', function (e) {
             e.preventDefault();
             var data = {'bledger_id': $(this).data('bledger_id')}
@@ -118,7 +125,7 @@
             $('#loading').css('display', 'block');
             var param = {
                 "ledger_id": $(this).attr('data-ledger-id'),
-                "enc":1
+                "enc": 1
             };
 
             const qr_promise = new Promise(function (resolve, reject) {
@@ -136,8 +143,8 @@
                 });
             });
             qr_promise.then(function (resolve) {
-                resolve = JSON.parse(resolve);                
-                var modal_box=$('#qrcode_modal_box');
+                resolve = JSON.parse(resolve);
+                var modal_box = $('#qrcode_modal_box');
                 modal_box.find('.modal-dialog').removeClass('modal-lg');
                 modal_box.find('.modal-title').html(resolve.title);
                 modal_box.find('.modal-body').html(resolve.message);
@@ -151,50 +158,55 @@
         $('#print_one_barcode').on('click', function () {
             printDiv('qrcode_modal_body')
         });
-        
+
         $(document).on('click', '#show_qrcode_batch', function (e) {
             e.preventDefault();
             // alert('qrcode');
             $('#loading').css('display', 'block');
-            var ledger_ids='';
+            var ledger_ids = '';
             $('input:checkbox.book_ledger_chk').each(function () {
-                if(ledger_ids!=''){
-                    ledger_ids+=(this.checked ? ','+$(this).val() : "");
-                }else{
-                    ledger_ids=(this.checked ? $(this).val() : "");
+                if (ledger_ids != '') {
+                    ledger_ids += (this.checked ? ',' + $(this).val() : "");
+                } else {
+                    ledger_ids = (this.checked ? $(this).val() : "");
                 }
-                
-            });
-  
-            var param = {
-                "ledger_id": ledger_ids
-            };
 
-            const qr_promise = new Promise(function (resolve, reject) {
-                $.ajax({
-                    url: "<?= base_url('popup-qr-code') ?>",
-                    type: 'POST',
-                    dataType: 'html',
-                    data: param,
-                    success: function (result) {
-                        resolve(result);
-                    },
-                    error: function (result) {
-                        reject(result);
-                    }
+            });
+            if (ledger_ids.length > 0) {
+                var param = {
+                    "ledger_id": ledger_ids
+                };
+
+                const qr_promise = new Promise(function (resolve, reject) {
+                    $.ajax({
+                        url: "<?= base_url('popup-qr-code') ?>",
+                        type: 'POST',
+                        dataType: 'html',
+                        data: param,
+                        success: function (result) {
+                            resolve(result);
+                        },
+                        error: function (result) {
+                            reject(result);
+                        }
+                    });
                 });
-            });
-            qr_promise.then(function (resolve) {
-                resolve = JSON.parse(resolve);                
-                var modal_box=$('#qrcode_modal_box');
-                modal_box.find('.modal-dialog').addClass('modal-lg');
-                modal_box.find('.modal-title').html(resolve.title);
-                modal_box.find('.modal-body').html(resolve.message);
-                modal_box.modal('show');
-            }, function (reject) {
-                show_message(reject);
-            });
-
+                qr_promise.then(function (resolve) {
+                    resolve = JSON.parse(resolve);
+                    var modal_box = $('#qrcode_modal_box');
+                    modal_box.find('.modal-dialog').addClass('modal-lg');
+                    modal_box.find('.modal-title').html(resolve.title);
+                    modal_box.find('.modal-body').html(resolve.message);
+                    modal_box.modal('show');
+                }, function (reject) {
+                    show_message(reject);
+                });
+            } else {
+                var errMsg = {
+                    message:'Please select record to generate QR code.'
+                };            
+                show_message(errMsg);
+            }
         });
     });
 </script>

@@ -61,8 +61,8 @@ class Book_publication_masters extends CI_Controller {
     public function index() {
         if ($this->rbac->has_permission('MANAGE_BOOK_PUBLICATION', 'LIST')) {
             $this->breadcrumbs->push('index', '/library/book_publication_masters/index');
-            $this->scripts_include->includePlugins(array('datatable'), 'css');
-            $this->scripts_include->includePlugins(array('datatable'), 'js');
+            $this->scripts_include->includePlugins(array('datatable','chosen'), 'css');
+            $this->scripts_include->includePlugins(array('datatable','chosen'), 'js');
             $this->layout->navTitle = 'Book publication list';
             $this->layout->title = 'Book publication list';
             $header = array(
@@ -192,11 +192,11 @@ class Book_publication_masters extends CI_Controller {
             }
             if ($this->rbac->has_permission('MANAGE_BOOK_PUBLICATION', 'XLS_EXPORT')) {
                 $dt_tool_btn[] = array(
-                    'btn_class' => 'no_pad',
+                    'btn_class' => 'btn-warning',
                     'btn_href' => '#',
                     'btn_icon' => '',
                     'btn_title' => 'XLS',
-                    'btn_text' => ' <img src="' . base_url("images/excel_icon.png") . '" alt="XLS">',
+                    'btn_text' => '<span class="fa fa-file-excel-o"></span> Excel',
                     'btn_separator' => ' ',
                     'attr' => 'id="export_table_xls"'
                 );
@@ -204,11 +204,11 @@ class Book_publication_masters extends CI_Controller {
             }
             if ($this->rbac->has_permission('MANAGE_BOOK_PUBLICATION', 'CSV_EXPORT')) {
                 $dt_tool_btn[] = array(
-                    'btn_class' => 'no_pad',
+                    'btn_class' => 'btn-info',
                     'btn_href' => '#',
                     'btn_icon' => '',
                     'btn_title' => 'CSV',
-                    'btn_text' => ' <img src="' . base_url("images/csv_icon_sm.gif") . '" alt="CSV">',
+                    'btn_text' => '<span class="fa fa-file-text-o"></span> CSV',
                     'btn_separator' => ' ',
                     'attr' => 'id="export_table_csv"'
                 );
@@ -234,7 +234,7 @@ class Book_publication_masters extends CI_Controller {
                     'top_buttons' => $dt_tool_btn,
                     'top_pagination' => true,
                     'buttom_dom' => true,
-                    'buttom_length_change' => true,
+                    'buttom_length_change' => FALSE,
                     'buttom_pagination' => true
                 ),
                 'options' => array(

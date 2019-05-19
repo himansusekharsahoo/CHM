@@ -64,8 +64,8 @@ class Book_ledgers extends CI_Controller {
 
         if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'LIST')) {
             $this->breadcrumbs->push('index', '/library/book_ledgers/index');
-            $this->scripts_include->includePlugins(array('datatable'), 'css');
-            $this->scripts_include->includePlugins(array('datatable', 'jq_validation', 'promise'), 'js');
+            $this->scripts_include->includePlugins(array('datatable','chosen'), 'css');
+            $this->scripts_include->includePlugins(array('datatable','chosen', 'jq_validation', 'promise'), 'js');
             $this->layout->navTitle = 'Book ledger list';
             $this->layout->title = 'Book ledger list';
             $header = array(
@@ -257,11 +257,11 @@ class Book_ledgers extends CI_Controller {
 
             if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'XLS_EXPORT')) {
                 $dt_tool_btn[] = array(
-                    'btn_class' => 'no_pad',
+                    'btn_class' => 'btn-warning',
                     'btn_href' => '#',
                     'btn_icon' => '',
                     'btn_title' => 'XLS',
-                    'btn_text' => ' <img src="' . base_url("images/excel_icon.png") . '" alt="XLS">',
+                    'btn_text' => '<span class="fa fa-file-excel-o"></span> Excel',
                     'btn_separator' => ' ',
                     'attr' => 'id="export_table_xls"'
                 );
@@ -270,11 +270,11 @@ class Book_ledgers extends CI_Controller {
 
             if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'CSV_EXPORT')) {
                 $dt_tool_btn[] = array(
-                    'btn_class' => 'no_pad',
+                    'btn_class' => 'btn-info',
                     'btn_href' => '#',
                     'btn_icon' => '',
                     'btn_title' => 'CSV',
-                    'btn_text' => ' <img src="' . base_url("images/csv_icon_sm.gif") . '" alt="CSV">',
+                    'btn_text' => '<span class="fa fa-file-text-o"></span> CSV',
                     'btn_separator' => ' ',
                     'attr' => 'id="export_table_csv"'
                 );
@@ -282,11 +282,11 @@ class Book_ledgers extends CI_Controller {
             }
             if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'PRINT')) {
                 $dt_tool_btn[] = array(
-                    'btn_class' => 'no_pad',
+                    'btn_class' => 'btn-default',
                     'btn_href' => '#',
                     'btn_icon' => 'fa-qrcode fa-lg',
                     'btn_title' => 'show QR code',
-                    'btn_text' => '',
+                    'btn_text' => ' QR Code',
                     'btn_separator' => ' ',
                     'attr' => 'id="show_qrcode_batch"'
                 );
@@ -311,7 +311,7 @@ class Book_ledgers extends CI_Controller {
                     'top_buttons' => $dt_tool_btn,
                     'top_pagination' => true,
                     'buttom_dom' => true,
-                    'buttom_length_change' => true,
+                    'buttom_length_change' => FALSE,
                     'buttom_pagination' => true
                 ),
                 'options' => array(

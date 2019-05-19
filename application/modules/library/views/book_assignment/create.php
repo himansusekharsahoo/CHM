@@ -88,6 +88,14 @@
 </div>
 <script type="text/javascript">
     $(function ($) {
+        function show_message(reject) {            
+            var errMsg = {
+                'type': 'default',
+                title: (typeof reject.title != 'undefined' && reject.title != '') ? reject.title : 'Book assignment',
+                message: (reject.message != '') ? reject.message : 'There are some error, please try again!'
+            }
+            myApp.modal.alert(errMsg);
+        }
         $('#issue_date').datepicker({
             format: 'yyyy-mm-dd',
             autoclose: true,

@@ -215,7 +215,7 @@ class Manage_students extends CI_Controller {
                     'top_buttons' => $dt_tool_btn,
                     'top_pagination' => true,
                     'buttom_dom' => true,
-                    'buttom_length_change' => true,
+                    'buttom_length_change' => FALSE,
                     'buttom_pagination' => true
                 ),
                 'options' => array(

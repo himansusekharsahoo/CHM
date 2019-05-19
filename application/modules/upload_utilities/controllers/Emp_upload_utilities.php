@@ -60,8 +60,8 @@ class Emp_upload_utilities extends CI_Controller {
         $this->layout->title = 'Employee upload utility';
         if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'EMPLOYEE_UPLOAD_UTILTIY')) {
 
-            $this->scripts_include->includePlugins(array('datatable', 'jq_validation'), 'js');
-            $this->scripts_include->includePlugins(array('datatable'), 'css');
+            $this->scripts_include->includePlugins(array('datatable','chosen', 'jq_validation'), 'js');
+            $this->scripts_include->includePlugins(array('datatable','chosen'), 'css');
             $config = array();
             $user_id = $this->rbac->get_user_id();
             $temp_table_name = 'temp_employee_' . $user_id;
@@ -206,20 +206,20 @@ class Emp_upload_utilities extends CI_Controller {
 
         $dt_tool_btn = array(
             array(
-                'btn_class' => 'no_pad',
+                'btn_class' => 'btn-warning',
                 'btn_href' => '#',
                 'btn_icon' => '',
                 'btn_title' => 'XLS',
-                'btn_text' => ' <img src="' . base_url("images/excel_icon.png") . '" alt="XLS">',
+                'btn_text' => '<span class="fa fa-file-excel-o"></span> Excel',
                 'btn_separator' => ' ',
                 'attr' => ($type == 'valid') ? 'id="export_valid_xls"' : 'id="export_invalid_xls"'
             ),
             array(
-                'btn_class' => 'no_pad',
+                'btn_class' => 'btn-info',
                 'btn_href' => '#',
                 'btn_icon' => '',
                 'btn_title' => 'CSV',
-                'btn_text' => ' <img src="' . base_url("images/csv_icon_sm.gif") . '" alt="CSV">',
+                'btn_text' => '<span class="fa fa-file-text-o"></span> CSV',
                 'btn_separator' => ' ',
                 'attr' => ($type == 'valid') ? 'id="export_valid_csv"' : 'id="export_invalid_csv"'
             )
@@ -242,7 +242,7 @@ class Emp_upload_utilities extends CI_Controller {
                 'top_buttons' => $dt_tool_btn,
                 'top_pagination' => true,
                 'buttom_dom' => true,
-                'buttom_length_change' => true,
+                'buttom_length_change' => FALSE,
                 'buttom_pagination' => true
             ),
             'options' => array(

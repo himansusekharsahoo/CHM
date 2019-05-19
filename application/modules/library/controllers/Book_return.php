@@ -29,7 +29,7 @@ class Book_return extends CI_Controller {
     }
 
     function index() {
-        $this->scripts_include->includePlugins(array('jq_validation', 'bs_datepicker', 'jq_typehead', 'datatable'), 'js');
+        $this->scripts_include->includePlugins(array('jq_validation', 'bs_datepicker', 'jq_typehead', 'datatable','chosen'), 'js');
         $this->scripts_include->includePlugins(array('bs_datepicker', 'jq_typehead', 'datatable'), 'css');
         $data = array();
         $this->layout->render($data);

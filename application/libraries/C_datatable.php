@@ -372,12 +372,12 @@ class C_datatable
                 $dom .= '>><t>';
             }
 
-            if (isset($dt_dom['buttom_dom']) && $dt_dom['buttom_dom'])
+            if (isset($dt_dom['buttom_dom']) && ($dt_dom['buttom_dom']===true || $dt_dom['buttom_dom']===TRUE))
             {
                 //set buttom options
                 $dom .= ' <"row-fluid no-pad marginT10"';
                 //set length change
-                if (isset($dt_dom['buttom_length_change']))
+                if (isset($dt_dom['buttom_length_change']) && ($dt_dom['buttom_length_change']===true || $dt_dom['buttom_length_change']===TRUE))
                 {
                     $dom .= ' <"col-md-2 no-pad" l>';
                 } else
@@ -387,12 +387,12 @@ class C_datatable
                 $dom .= ' <"col-md-10 no-pad" <"col-md-12 no-pad"';
 
                 //set top filter
-                if (isset($dt_dom['buttom_pagination']))
+                if (isset($dt_dom['buttom_pagination']) && ($dt_dom['buttom_pagination']===true || $dt_dom['buttom_pagination']===TRUE))
                 {
                     $dom .= ' <"pull-right" p>';
                 }
                 //set top filter
-                if (isset($dt_dom['buttom_filter']))
+                if (isset($dt_dom['buttom_filter']) && ($dt_dom['buttom_filter']===true || $dt_dom['buttom_filter']===TRUE))
                 {
                     $dom .= ' <"pull-right" f>';
                 }

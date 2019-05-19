@@ -48,8 +48,8 @@ class Book_assignment extends CI_Controller {
     public function index() {
         if ($this->rbac->has_permission('MANAGE_BOOK_ASSIGNS', 'LIST')) {
             $this->breadcrumbs->push('index', '/library/book_assignment/index');
-            $this->scripts_include->includePlugins(array('datatable'), 'css');
-            $this->scripts_include->includePlugins(array('datatable'), 'js');
+            $this->scripts_include->includePlugins(array('datatable','chosen'), 'css');
+            $this->scripts_include->includePlugins(array('datatable','chosen'), 'js');
             $this->layout->navTitle = 'Book assign list';
             $this->layout->title = 'Book assign list';
             $header = array(
@@ -185,20 +185,20 @@ class Book_assignment extends CI_Controller {
                     'btn_separator' => ' '
                 ),
                 array(
-                    'btn_class' => 'no_pad',
+                    'btn_class' => 'btn-warning',
                     'btn_href' => '#',
                     'btn_icon' => '',
                     'btn_title' => 'XLS',
-                    'btn_text' => ' <img src="' . base_url("images/excel_icon.png") . '" alt="XLS">',
+                    'btn_text' => '<span class="fa fa-file-excel-o"></span> Excel',
                     'btn_separator' => ' ',
                     'attr' => 'id="export_table_xls"'
                 ),
                 array(
-                    'btn_class' => 'no_pad',
+                    'btn_class' => 'btn-info',
                     'btn_href' => '#',
                     'btn_icon' => '',
                     'btn_title' => 'CSV',
-                    'btn_text' => ' <img src="' . base_url("images/csv_icon_sm.gif") . '" alt="CSV">',
+                    'btn_text' => '<span class="fa fa-file-text-o"></span> CSV',
                     'btn_separator' => ' ',
                     'attr' => 'id="export_table_csv"'
                 )
@@ -220,7 +220,7 @@ class Book_assignment extends CI_Controller {
                     'top_buttons' => $dt_tool_btn,
                     'top_pagination' => true,
                     'buttom_dom' => true,
-                    'buttom_length_change' => true,
+                    'buttom_length_change' => FALSE,
                     'buttom_pagination' => true
                 ),
                 'options' => array(
@@ -306,7 +306,7 @@ class Book_assignment extends CI_Controller {
             $this->scripts_include->includePlugins(array('bs_datepicker', 'jq_typehead'), 'css');
             $this->breadcrumbs->push('create', '/library/book_assignment/create');
 
-            $this->layout->navTitle = 'Book assignment:';
+            $this->layout->navTitle = 'Book assignment';
             $data = array();
             if ($this->input->post()):
                 $config = array(
