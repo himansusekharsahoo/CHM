@@ -73,7 +73,7 @@ class Book_ledgers extends CI_Controller {
                     'db_column' => 'bledger_id',
                     'name' => 'bledger_id',
                     'title' => '<input type=\'checkbox\' name=\'id\' value=\'\'>',
-                    'class_name' => 'text-center',
+                    'class_name' => 'text-center qr_check_box',
                     'orderable' => 'false',
                     'visible' => 'true',
                     'searchable' => 'false',
@@ -93,7 +93,7 @@ class Book_ledgers extends CI_Controller {
                     'db_column' => 'bcategory_name',
                     'name' => 'Bcategory_id',
                     'title' => 'Book category',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'book_category_name',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
@@ -101,7 +101,7 @@ class Book_ledgers extends CI_Controller {
                     'db_column' => 'publicatoin_name',
                     'name' => 'Bpublication_id',
                     'title' => 'Publication',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'book_publication',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
@@ -109,7 +109,7 @@ class Book_ledgers extends CI_Controller {
                     'db_column' => 'author_name',
                     'name' => 'Bauthor_id',
                     'title' => 'Author',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'author_name',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
@@ -117,7 +117,7 @@ class Book_ledgers extends CI_Controller {
                     'db_column' => 'location',
                     'name' => 'Blocation_id',
                     'title' => 'Location',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'location',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
@@ -125,7 +125,7 @@ class Book_ledgers extends CI_Controller {
                     'db_column' => 'page',
                     'name' => 'Page',
                     'title' => 'Page',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'book_page',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
@@ -133,7 +133,7 @@ class Book_ledgers extends CI_Controller {
                     'db_column' => 'mrp',
                     'name' => 'Mrp',
                     'title' => 'Mrp',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'book_mrp',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
@@ -141,7 +141,7 @@ class Book_ledgers extends CI_Controller {
                     'db_column' => 'isbn_no',
                     'name' => 'Isbn_no',
                     'title' => 'Isbn_no',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'isbn_no',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
@@ -149,7 +149,7 @@ class Book_ledgers extends CI_Controller {
                     'db_column' => 'edition',
                     'name' => 'Edition',
                     'title' => 'Edition',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'edition',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
@@ -157,7 +157,7 @@ class Book_ledgers extends CI_Controller {
                     'db_column' => 'created',
                     'name' => 'Created',
                     'title' => 'Created',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'created',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
@@ -165,7 +165,7 @@ class Book_ledgers extends CI_Controller {
                     'db_column' => 'created_by',
                     'name' => 'Created_by',
                     'title' => 'Created_by',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'created_by',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'

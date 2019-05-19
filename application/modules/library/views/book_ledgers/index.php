@@ -1,6 +1,19 @@
 <?php ?> 
 <style>
-    .action_td{padding:2px !important;}
+    table{table-layout: fixed;}
+    .qr_check_box{width:20px !important;}
+    .book_name{width:150px !important;}
+    .book_category_name{width:120px !important;}
+    .book_publication{width:100px !important;}
+    .author_name{width:100px !important;}
+    .location{width:80px !important;}
+    .book_page{width:80px !important;}
+    .book_mrp{width:80px !important;}
+    .isbn_no{width:80px !important;}
+    .edition{width:80px !important;}
+    .created{width:90px !important;}
+    .created_by{width:100px !important;}
+    .action_td{width:100px !important; vertical-align: middle !important;}
 </style>
 <div class="row-fluid">
     <div class="col-sm-12 no_pad table-responsive">
