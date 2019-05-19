@@ -29,7 +29,7 @@
     echo form_error("user_id");
     echo form_input($attribute);
     ?><div class = 'form-group row'>
-        <label for = 'first_name' class = 'col-sm-2 col-form-label'>First name</label>
+        <label for = 'first_name' class = 'col-sm-2 col-form-label ele_required'>First name</label>
         <div class = 'col-sm-3'>
             <?php
             $attribute = array(
@@ -47,7 +47,7 @@
         </div>
     </div>
     <div class = 'form-group row'>
-        <label for = 'last_name' class = 'col-sm-2 col-form-label'>Last name</label>
+        <label for = 'last_name' class = 'col-sm-2 col-form-label ele_required'>Last name</label>
         <div class = 'col-sm-3'>
             <?php
             $attribute = array(
@@ -65,7 +65,7 @@
         </div>
     </div>    
     <div class = 'form-group row'>
-        <label for = 'email' class = 'col-sm-2 col-form-label'>Email</label>
+        <label for = 'email' class = 'col-sm-2 col-form-label ele_required'>Email</label>
         <div class = 'col-sm-3'>
             <?php
             $attribute = array(
@@ -83,7 +83,7 @@
         </div>
     </div> 
     <div class = 'form-group row'>
-        <label for = 'mobile' class = 'col-sm-2 col-form-label'>Mobile</label>
+        <label for = 'mobile' class = 'col-sm-2 col-form-label ele_required'>Mobile</label>
         <div class = 'col-sm-3'>
             <?php
             $attribute = array(
@@ -101,7 +101,7 @@
         </div>
     </div>
     <div class = 'form-group row'>
-        <label for = 'mobile' class = 'col-sm-2 col-form-label'>Status</label>
+        <label for = 'mobile' class = 'col-sm-2 col-form-label ele_required'>Status</label>
         <div class = 'col-sm-3'>
             <?php
             $attribute = array(
@@ -117,7 +117,7 @@
         </div>
     </div>
     <div class = 'form-group row'>
-        <label for = 'user_roles' class = 'col-sm-2 col-form-label'>Employee Roles</label>
+        <label for = 'user_roles' class = 'col-sm-2 col-form-label ele_required'>Employee Roles</label>
         <div class = 'col-sm-3'> 
             <?php
             $attribute = array(

@@ -121,8 +121,8 @@ class Manage_employee extends CI_Model {
                 ,concat(t3.first_name,t3.last_name) modified_by_name';
         }
         $this->db->select($columns)->from('rbac_users t1')
-                ->join('rbac_users t2','t2.user_id=t1.created_by')
-                ->join('rbac_users t3','t3.user_id=t1.modified_by')
+                ->join('rbac_users t2','t2.user_id=t1.created_by','LEFT')
+                ->join('rbac_users t3','t3.user_id=t1.modified_by','LEFT')
                 ->where('t1.user_type', 'employee');
 
         if ($conditions && is_array($conditions)) :
@@ -135,7 +135,7 @@ class Manage_employee extends CI_Model {
 
         endif;
         $result = $this->db->get()->result_array();
-
+        
         return $result;
     }
 

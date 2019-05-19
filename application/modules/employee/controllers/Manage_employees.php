@@ -470,6 +470,7 @@ class Manage_employees extends CI_Controller {
             if ($user_id) :
                 $user_id = c_decode($user_id);
                 $result = $this->manage_employee->get_staff_data(null, array('t1.user_id' => $user_id), 1);
+                
                 if ($result) :
                     $result = current($result);
                 endif;

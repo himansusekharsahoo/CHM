@@ -4,13 +4,13 @@
             <div class = 'form-group row'>
                 <label for = 'first_name' class = 'col-sm-5 col-form-label '>First name</label>
                 <div class = 'col-sm-7'>
-                    <?php echo (isset($data["first_name"])) ? $data["first_name"] : "" ?>
+                    <?php echo (isset($data["first_name"])) ? ucfirst($data["first_name"]) : "" ?>
                 </div>
             </div>
             <div class = 'form-group row'>
                 <label for = 'last_name' class = 'col-sm-5 col-form-label '>Last name</label>
                 <div class = 'col-sm-7'>
-                    <?php echo (isset($data["last_name"])) ? $data["last_name"] : "" ?>
+                    <?php echo (isset($data["last_name"])) ? ucfirst($data["last_name"]) : "" ?>
                 </div>
             </div>            
             <div class = 'form-group row'>
@@ -28,7 +28,7 @@
             <div class = 'form-group row'>
                 <label for = 'email_verified' class = 'col-sm-5 col-form-label '>Email Verified</label>
                 <div class = 'col-sm-7'>
-                    <?php echo (isset($data["email_verified"])) ? $data["email_verified"] : "" ?>
+                    <?php echo (isset($data["email_verified"])) ? ucfirst($data["email_verified"]) : "" ?>
                 </div>
             </div>
         </div>
@@ -43,19 +43,19 @@
             <div class = 'form-group row'>
                 <label for = 'mobile_verified' class = 'col-sm-5 col-form-label '>Mobile Verified</label>
                 <div class = 'col-sm-7'>
-                    <?php echo (isset($data["mobile_verified"])) ? $data["mobile_verified"] : "" ?>
+                    <?php echo (isset($data["mobile_verified"])) ? ucfirst($data["mobile_verified"]) : "" ?>
                 </div>
             </div>
             <div class = 'form-group row'>
                 <label for = 'login_status' class = 'col-sm-5 col-form-label '>Login Status</label>
                 <div class = 'col-sm-7'>
-                    <?php echo (isset($data["login_status"])) ? $data["login_status"] : "" ?>
+                    <?php echo (isset($data["login_status"])) ? ucfirst($data["login_status"]) : "" ?>
                 </div>
             </div>
             <div class = 'form-group row'>
                 <label for = 'status' class = 'col-sm-5 col-form-label '>Status</label>
                 <div class = 'col-sm-7'>
-                    <?php echo (isset($data["status"])) ? $data["status"] : "" ?>
+                    <?php echo (isset($data["status"])) ? ucfirst($data["status"]) : "" ?>
                 </div>
             </div>
         </div>

@@ -162,4 +162,12 @@ $pdf->Output('example_006.pdf', 'I');
         $this->layout->navTitle = 'Navigator title';
         $this->layout->render();
     }
+    
+    public function lcard(){
+        $this->layout->layout = 'admin_layout';
+        $this->layout->layoutsFolder = 'layouts/admin';
+        $this->breadcrumbs->push('admin_layout', '/');
+        $this->layout->navTitle = 'Navigator title';
+        $this->layout->render();
+    }
 }

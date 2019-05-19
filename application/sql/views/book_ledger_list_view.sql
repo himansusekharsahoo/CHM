@@ -1,8 +1,8 @@
 create or replace view book_ledger_list_view as
 SELECT DISTINCT bledger_id,t2.name as book_name,t3.name as bcategory_name,t4.name as publicatoin_name
 ,author_name,concat(floor," ",block," ",rack_no," ",self_no) as location,page,mrp,isbn_no,edition,bar_code
-,qr_code,t1.created,concat(u.first_name,' ',u.last_name) created_by
-,t1.modified,concat(u2.first_name,' ',u2.last_name) midified_by
+,qr_code,DATE_FORMAT(t1.created, "%d-%m-%Y %l:%i %p") created,concat(u.first_name,' ',u.last_name) created_by
+,DATE_FORMAT(t1.modified, "%d-%m-%Y %l:%i %p") modified,concat(u2.first_name,' ',u2.last_name) midified_by
 ,t1.book_id,t1.bcategory_id,t1.bpublication_id,t1.bauthor_id,t1.blocation_id
 FROM book_ledgers t1
 LEFT JOIN books t2 ON t1.book_id=t2.book_id

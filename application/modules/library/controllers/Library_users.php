@@ -707,7 +707,7 @@ class Library_users extends CI_Controller {
             $pdf->AddPage();
             $pdf->SetLineStyle(array('width' => 1, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(255, 0, 0)));
             $html = '<center><h1>Card Number: ' . $result[0]['card_no'] . '</h1>'
-                    . '<b>Name: </b>' . $result[0]['user_id'] . '<br />'
+                    . '<b>Name: </b>' . $result[0]['user_name'] . '<br />'
                     . '<b>Date of Issue: </b>' . $result[0]['date_issue'] . '<br />'
                     . 'Expiry Date: ' . $result[0]['expiry_date'] . '<br />'
                     . '' . $pdf->write1DBarcode($result[0]['card_no'], 'C39E+', '', '', '120', 15, 0.4, $style, 'N') . '</center>';

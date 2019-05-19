@@ -3,7 +3,7 @@
         <div class="col-sm-6">
             <label for = 'user_name' class = 'col-sm-4 col-form-label'>Name</label>
             <div class = 'col-sm-8'>
-                <?= (isset($data["user_name"])) ? $data["user_name"] : "" ?>
+                <?= (isset($data["user_name"])) ? ucfirst($data["user_name"]) : "" ?>
             </div>
         </div>
         <div class="col-sm-6">
@@ -59,13 +59,13 @@
         <div class="col-sm-6">
             <label for = 'created_by_name' class = 'col-sm-4 col-form-label'>Created by</label>
             <div class = 'col-sm-8'>
-                <?= (isset($data["created_by_name"])) ? $data["created_by_name"] : "" ?>
+                <?= (isset($data["created_by_name"])) ? ucfirst($data["created_by_name"]) : "" ?>
             </div>
         </div>
         <div class="col-sm-6">
             <label for = 'status' class = 'col-sm-4 col-form-label'>Status</label>
             <div class = 'col-sm-8'>
-                <?= (isset($data["status"])) ? rtrim($data["status"],',') : "" ?>
+                <?= (isset($data["status"])) ? ucfirst(rtrim($data["status"],',')) : "" ?>
             </div>
         </div>
     </div>

@@ -132,7 +132,7 @@ class Book_ledgers extends CI_Controller {
                 ), array(
                     'db_column' => 'mrp',
                     'name' => 'Mrp',
-                    'title' => 'Mrp',
+                    'title' => 'MRP',
                     'class_name' => 'book_mrp',
                     'orderable' => 'true',
                     'visible' => 'true',
@@ -140,7 +140,7 @@ class Book_ledgers extends CI_Controller {
                 ), array(
                     'db_column' => 'isbn_no',
                     'name' => 'Isbn_no',
-                    'title' => 'Isbn_no',
+                    'title' => 'ISBN',
                     'class_name' => 'isbn_no',
                     'orderable' => 'true',
                     'visible' => 'true',
@@ -164,7 +164,7 @@ class Book_ledgers extends CI_Controller {
                 ), array(
                     'db_column' => 'created_by',
                     'name' => 'Created_by',
-                    'title' => 'Created_by',
+                    'title' => 'Created by',
                     'class_name' => 'created_by',
                     'orderable' => 'true',
                     'visible' => 'true',
