@@ -99,9 +99,9 @@ class Book_return extends CI_Controller {
     }
 
     function return_borrowed_books() {
-        $is_updated = $this->book_returns->return_borrowed_book($this->input->post('book_assign_id'));
+        $is_updated = $this->book_returns->return_borrowed_book($this->input->post());
         if ($is_updated) {
-            echo json_encode(array('status' => true));
+            echo json_encode(array('status' => TRUE));
         } else {
             echo json_encode(array('status' => FALSE));
         }
@@ -110,6 +110,14 @@ class Book_return extends CI_Controller {
     function get_delayed_fine() {
         $data = $this->book_returns->calculate_return_delay_fine($this->input->post('book_assign_id'));
         echo json_encode(array('status' => true, 'data' => $data));
+    }
+
+    function get_book_lost_fine() {
+        $book_lost_fine = $this->rbac->get_app_config_item('library/library/role_config/default/book_lost_fine');
+        $book_lost_fine = (string) $book_lost_fine[0];
+        $book_lost_fine = explode(',', $book_lost_fine);
+        $fine = (isset($book_lost_fine[0])) ? $book_lost_fine[0] : 0; //return book lost fine
+        echo json_encode(array('status' => true, 'book_lost_fine' => $fine));
     }
 
 }
