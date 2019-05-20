@@ -430,8 +430,8 @@ class Manage_students extends CI_Controller {
     public function view($user_id) {
         if ($this->rbac->has_permission('STUDENT_USERS', 'VIEW')) {
             $this->breadcrumbs->push('view', base_url('view-student-profile'));
-            $this->layout->navTitle = 'Student profile view';
-            $this->layout->title = 'Student profile view';
+            $this->layout->navTitle = 'Student profile';
+            $this->layout->title = 'Student profile';
             $data = array();
             if ($user_id) :
                 $user_id = c_decode($user_id);
