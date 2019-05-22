@@ -184,7 +184,8 @@ class Book_ledger extends CI_Model
                 'mrp' => $data['mrp'],
                 'isbn_no' => $data['isbn_no'],
                 'edition' => $data['edition'],
-                'created_by' => $data['created_by'],
+                'total_copies' => $data['total_copies'],
+                'created_by' => $data['created_by']
             );
             $this->db->insert("book_ledgers", $ledger_data);
             $bledger_id_inserted_id = $this->db->insert_id();
@@ -447,13 +448,13 @@ class Book_ledger extends CI_Model
     {
         if ($post_data):
             //pma($post_data,1);
-            $db_data=array(
-                'bledger_id'=> c_decode($post_data['book_ledger_id']),
-                'bill_number'=>$post_data['bill_number'],
-                'purchase_date'=>date('Y-m-d', strtotime($post_data['purchase_date'])),
-                'price'=>$post_data['price'],
-                'vendor_name'=>$post_data['vendor_name'],
-                'remarks'=>$post_data['remarks']
+            $db_data = array(
+                'bledger_id' => c_decode($post_data['book_ledger_id']),
+                'bill_number' => $post_data['bill_number'],
+                'purchase_date' => date('Y-m-d', strtotime($post_data['purchase_date'])),
+                'price' => $post_data['price'],
+                'vendor_name' => $post_data['vendor_name'],
+                'remarks' => $post_data['remarks']
             );
             $this->db->insert("book_purchage_detail_logs", $db_data);
             $bpurchase_id_inserted_id = $this->db->insert_id();
@@ -463,6 +464,20 @@ class Book_ledger extends CI_Model
             endif;
             return 0;
         endif;
+    }
+
+    /**
+     * @param  : string $condition
+     * @desc   : used to check duplicacy of book author name
+     * @return : number 0/count value
+     * @author : HimansuS
+     * @created:
+     */
+    public function check_duplicate($condition)
+    {
+        $query = "select count(*) count_rec from book_ledgers where 1=1 $condition";        
+        $result = $this->db->query($query)->row();
+        return $result->count_rec;
     }
 
 }

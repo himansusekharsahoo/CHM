@@ -68,8 +68,8 @@ class Book_ledgers extends CI_Controller
         if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'LIST'))
         {
             $this->breadcrumbs->push('index', '/library/book_ledgers/index');
-            $this->scripts_include->includePlugins(array('datatable', 'chosen','print_element'), 'css');
-            $this->scripts_include->includePlugins(array('datatable', 'chosen', 'jq_validation', 'promise','print_element'), 'js');
+            $this->scripts_include->includePlugins(array('datatable', 'chosen', 'print_element'), 'css');
+            $this->scripts_include->includePlugins(array('datatable', 'chosen', 'jq_validation', 'promise', 'print_element'), 'js');
             $this->layout->navTitle = 'Book ledger list';
             $this->layout->title = 'Book ledger list';
             $header = array(
@@ -510,6 +510,15 @@ class Book_ledgers extends CI_Controller
                             'required' => 'Price is required',
                         ),
                     );
+                    $config[] = array(
+                        'field' => 'total_copies',
+                        'label' => 'total_copies',
+                        'rules' => "required",
+                        'errors' => array(
+                            'required' => 'Total copies is required',
+                        //'number' => 'Please enter valid number',
+                        ),
+                    );
                 }
                 $this->form_validation->set_rules($config);
 
@@ -517,12 +526,20 @@ class Book_ledgers extends CI_Controller
                     $post_data['created_by'] = $user_id;
                     //pma($post_data, 1);
                     unset($post_data['submit']);
-                    $result = $this->book_ledger->save($post_data);
-                    if ($result):
-                        $this->session->set_flashdata('success', 'Record successfully saved!');
-                        redirect(base_url('manage-book-ledger'));
+
+                    $condition = " AND book_id='" . $post_data['book_id'] . "' AND bcategory_id='" . $post_data['bcategory_id'] . "' AND "
+                            . "bpublication_id='" . $post_data['bpublication_id'] . "' AND bauthor_id='" . $post_data['bauthor_id'] . "' AND "
+                            . "isbn_no='" . $post_data['isbn_no'] . "'";
+                    if (!$this->book_ledger->check_duplicate($condition)) :
+                        $result = $this->book_ledger->save($post_data);
+                        if ($result):
+                            $this->session->set_flashdata('success', 'Record successfully saved!');
+                            redirect(base_url('manage-book-ledger'));
+                        else:
+                            $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
+                        endif;
                     else:
-                        $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
+                        $this->session->set_flashdata('error', 'Book ledger is already exists, Please try another!');
                     endif;
                 endif;
             endif;
@@ -562,6 +579,10 @@ class Book_ledgers extends CI_Controller
                 $user_id = $this->rbac->get_user_id();
                 $data['data'] = $post_data = $this->input->post();
                 $data['purchase_details_flag'] = $post_data['purchase_details_flag'];
+                
+                $condition = " AND book_id='" . $post_data['book_id'] . "' AND bcategory_id='" . $post_data['bcategory_id'] . "' AND "
+                            . "bpublication_id='" . $post_data['bpublication_id'] . "' AND bauthor_id='" . $post_data['bauthor_id'] . "' AND "
+                            . "isbn_no='" . $post_data['isbn_no'] . "' AND bledger_id!='" . c_decode($post_data['bledger_id']) . "'";
                 $config = array(
                     array(
                         'field' => 'blocation_id',
@@ -613,50 +634,34 @@ class Book_ledgers extends CI_Controller
                         'errors' => array(
                             'required' => 'Book author is required',
                         )
-                    );
+                    );                   
                 }
-                /*
-                  if (isset($post_data['purchase_det_flag']) && $post_data['purchase_det_flag'])
-                  {
-                  $config[] = array(
-                  'field' => 'bill_number',
-                  'label' => 'bill_number',
-                  'rules' => 'required',
-                  'errors' => array(
-                  'required' => 'Bill number is required',
-                  ),
-                  );
-                  $config[] = array(
-                  'field' => 'purchase_date',
-                  'label' => 'purchase_date',
-                  'rules' => 'required',
-                  'errors' => array(
-                  'required' => 'Purchase date is required',
-                  ),
-                  );
-                  $config[] = array(
-                  'field' => 'price',
-                  'label' => 'price',
-                  'rules' => 'required',
-                  'errors' => array(
-                  'required' => 'Price is required',
-                  ),
-                  );
-                  }
-                 */
+                
                 $this->form_validation->set_rules($config);
 
                 if ($this->form_validation->run()):
                     $post_data['modified'] = date("Y-m-d H:i:s");
                     $post_data['modified_by'] = $user_id;
                     unset($post_data['submit']);
-                    $result = $this->book_ledger->update($post_data);
-                    if ($result >= 1):
-                        $this->session->set_flashdata('success', 'Record successfully updated!');
-                        redirect('manage-book-ledger');
+                   
+                    $condition = " AND book_id='" . $post_data['book_id'] . "' AND bcategory_id='" . $post_data['bcategory_id'] . "' AND "
+                            . "bpublication_id='" . $post_data['bpublication_id'] . "' AND bauthor_id='" . $post_data['bauthor_id'] . "' AND "
+                            . "isbn_no='" . $post_data['isbn_no'] . "' AND bledger_id!='" . c_decode($post_data['bledger_id']) . "'";
+                    
+                    if (!$this->book_ledger->check_duplicate($condition)) :
+                        $result = $this->book_ledger->update($post_data);
+                        if ($result >= 1):
+                            $this->session->set_flashdata('success', 'Record successfully updated!');
+                            redirect('manage-book-ledger');
+                        else:
+                            $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
+                        endif;
                     else:
-                        $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
+                        $this->session->set_flashdata('error', 'Book ledger is already exists, Please try another!');
                     endif;
+
+
+
                 endif;
             else:
                 $data = $grid_buttons = array();

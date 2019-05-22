@@ -168,6 +168,7 @@
                             ?>
                         </div>
                     </div>
+
                 </div>
             </div>
             <div class="row-fluid">
@@ -220,6 +221,22 @@
                                                 "class" => "form-control",
                                                 "type" => "text",
                                                 "value" => (isset($data["price"])) ? $data["price"] : ""
+                                            );
+                                            echo form_input($attribute);
+                                            ?>
+                                        </div>
+                                    </div>
+                                    <div class = 'form-group row'>
+                                        <label for = 'edition' class = 'col-sm-4 col-form-label ele_required'>Total Copies </label>
+                                        <div class = 'col-sm-7'>
+                                            <?php
+                                            $attribute = array(
+                                                "name" => "total_copies",
+                                                "id" => "total_copies",
+                                                "class" => "form-control",
+                                                "title" => "",
+                                                "type" => "number",
+                                                "value" => (isset($data["total_copies"])) ? $data["total_copies"] : ""
                                             );
                                             echo form_input($attribute);
                                             ?>
@@ -291,7 +308,10 @@
                 bpublication_id: "required",
                 bauthor_id: "required",
                 blocation_id: "required",
-                page: "required"
+                page: {
+                    required: true,
+                    number: true
+                }
             },
             messages: {
                 book_id: 'Book name is required',
@@ -299,7 +319,10 @@
                 bpublication_id: 'Book publication is required',
                 bauthor_id: 'Book author is required',
                 blocation_id: 'Books location is required',
-                page: 'Number of pages in books is required'
+                page: {
+                    'required': 'Number of pages in books is required',
+                    'number': 'Please enter valid number.'
+                }
             },
             errorPlacement: function (error, element) {
                 if (element.attr("name") == "purchase_date") {
@@ -337,12 +360,20 @@
                     rules: {
                         bill_number: "required",
                         purchase_date: "required",
-                        price: "required"
+                        price: "required",
+                        total_copies: {
+                            required: true,
+                            number: true
+                        }
                     },
                     messages: {
                         bill_number: 'Bill number is required',
                         purchase_date: 'Purchase date is required',
-                        price: 'Price is required'
+                        price: 'Price is required',
+                        total_copies: {
+                            'required': 'Total copies of books is required',
+                            'number': 'Please enter valid number.'
+                        }
                     }
                 });
             } else {

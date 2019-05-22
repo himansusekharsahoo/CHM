@@ -52,13 +52,14 @@
                         "value" => (isset($purchase_details_flag)) ? $purchase_details_flag : 0
                     );
                     echo form_input($attribute);
-
+                    $bledger_id = (isset($data["bledger_id"])) ? c_encode($data["bledger_id"]) : "";
+                    //echo c_decode($bledger_id);
                     $attribute = array(
                         "name" => "bledger_id",
                         "id" => "bledger_id",
                         "class" => "form-control required",
                         "type" => "hidden",
-                        "value" => (isset($data["bledger_id"])) ? c_encode($data["bledger_id"]) : ""
+                        "value" => $bledger_id
                     );
                     echo form_input($attribute);
                     $attribute = array(
@@ -79,12 +80,23 @@
                                 "id" => "book_id",
                                 "class" => "form-control chosen-select"
                             );
+                            $book_id = (isset($data['book_id'])) ? $data['book_id'] : '';
                             if ($purchase_details_flag === TRUE)
                             {
+                                $attributeH = array(
+                                    "name" => "book_id",
+                                    "id" => "book_id",
+                                    "class" => "form-control required",
+                                    "type" => "hidden",
+                                    "value" => $book_id
+                                );
+                                echo form_input($attributeH);
                                 $attribute['disabled'] = "true";
+                                echo form_dropdown($attribute, $book_id_list, $book_id);
+                            } else
+                            {
+                                echo form_dropdown($attribute, $book_id_list, $book_id);
                             }
-                            $book_id = (isset($data['book_id'])) ? $data['book_id'] : '';
-                            echo form_dropdown($attribute, $book_id_list, $book_id);
                             ?>
                         </div>
                     </div>
@@ -97,12 +109,23 @@
                                 "id" => "bcategory_id",
                                 "class" => "form-control chosen-select"
                             );
+                            $bcategory_id = (isset($data['bcategory_id'])) ? $data['bcategory_id'] : '';
                             if ($purchase_details_flag === TRUE)
                             {
+                                $attributeH = array(
+                                    "name" => "bcategory_id",
+                                    "id" => "bcategory_id",
+                                    "class" => "form-control required",
+                                    "type" => "hidden",
+                                    "value" => $bcategory_id
+                                );
+                                echo form_input($attributeH);
                                 $attribute['disabled'] = "true";
+                                echo form_dropdown($attribute, $bcategory_id_list, $bcategory_id);
+                            } else
+                            {
+                                echo form_dropdown($attribute, $bcategory_id_list, $bcategory_id);
                             }
-                            $bcategory_id = (isset($data['bcategory_id'])) ? $data['bcategory_id'] : '';
-                            echo form_dropdown($attribute, $bcategory_id_list, $bcategory_id);
                             ?>
                         </div>
                     </div>
@@ -115,12 +138,23 @@
                                 "id" => "bpublication_id",
                                 "class" => "form-control chosen-select",
                             );
+                            $bpublication_id = (isset($data['bpublication_id'])) ? $data['bpublication_id'] : '';
                             if ($purchase_details_flag === TRUE)
                             {
+                                $attributeH = array(
+                                    "name" => "bpublication_id",
+                                    "id" => "bpublication_id",
+                                    "class" => "form-control required",
+                                    "type" => "hidden",
+                                    "value" => $bpublication_id
+                                );
+                                echo form_input($attributeH);
                                 $attribute['disabled'] = "true";
+                                echo form_dropdown($attribute, $bpublication_id_list, $bpublication_id);
+                            } else
+                            {
+                                echo form_dropdown($attribute, $bpublication_id_list, $bpublication_id);
                             }
-                            $bpublication_id = (isset($data['bpublication_id'])) ? $data['bpublication_id'] : '';
-                            echo form_dropdown($attribute, $bpublication_id_list, $bpublication_id);
                             ?>
                         </div>
                     </div>
@@ -133,12 +167,23 @@
                                 "id" => "bauthor_id",
                                 "class" => "form-control chosen-select",
                             );
+                            $bauthor_id = (isset($data['bauthor_id'])) ? $data['bauthor_id'] : '';
                             if ($purchase_details_flag === TRUE)
                             {
+                                $attributeH = array(
+                                    "name" => "bauthor_id",
+                                    "id" => "bauthor_id",
+                                    "class" => "form-control required",
+                                    "type" => "hidden",
+                                    "value" => $bauthor_id
+                                );
+                                echo form_input($attributeH);
                                 $attribute['disabled'] = "true";
+                                echo form_dropdown($attribute, $bauthor_id_list, $bauthor_id);
+                            } else
+                            {
+                                echo form_dropdown($attribute, $bauthor_id_list, $bauthor_id);
                             }
-                            $bauthor_id = (isset($data['bauthor_id'])) ? $data['bauthor_id'] : '';
-                            echo form_dropdown($attribute, $bauthor_id_list, $bauthor_id);
                             ?>
                         </div>
                     </div>
@@ -404,7 +449,10 @@
                                 success: function (result) {
                                     if (result == 1) {
                                         dialog.close();
-                                        row.hide();
+                                        row.remove();
+                                        if($('#book_purchase_details_dt_table tr').length==1){
+                                            window.location.reload(true);
+                                        }
                                         BootstrapDialog.alert('Record successfully deleted!');
                                     } else {
                                         dialog.close();
@@ -488,6 +536,11 @@
                         error.insertAfter(element);
                     }
                 }
+            },
+            submitHandler: function (form) {
+                if ($(form).valid())
+                    form.submit();
+                return false; // prevent normal form posting
             }
         });
 
