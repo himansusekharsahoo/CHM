@@ -44,8 +44,8 @@ RIGHT JOIN (
 	SELECT
 	T.book_name,T.book_category_name,T.book_publication,T.author_name,T.isbn,T.pages,T.mrp,T.edition,
 	B.book_id,BC.bcategory_id,BA.bauthor_id,BP.publication_id,BL.location_id";
-SET @QRY=CONCAT(@QRY," FROM ",table_name," T");
-SET @QRY=CONCAT(@QRY," LEFT JOIN books B ON replace(lower(B.name),' ','')=replace(lower(T.book_name),' ','')
+        SET @QRY=CONCAT(@QRY," FROM ",table_name," T");
+        SET @QRY=CONCAT(@QRY," LEFT JOIN books B ON replace(lower(B.name),' ','')=replace(lower(T.book_name),' ','')
 	LEFT JOIN book_category_masters BC ON replace(lower(BC.name),' ','')=replace(lower(T.book_category_name),' ','')
 	LEFT JOIN book_author_masters BA ON replace(lower(BA.author_name),' ','')=replace(lower(T.author_name),' ','')
 	LEFT JOIN book_publication_masters BP ON replace(lower(BP.name),' ','')=replace(lower(T.book_publication),' ','')
@@ -63,21 +63,21 @@ SET BLEDG.page=TMP.pages
 ,BLEDG.edition=TMP.edition
 ,BLEDG.isbn_no=TMP.isbn
 ,BLEDG.midified_by=",user_id,
-",BLEDG.modified=CURRENT_TIMESTAMP" 	
+",BLEDG.modified=CURRENT_TIMESTAMP,BLEDG.no_of_books=T.number_of_books" 	
 );
 PREPARE stmt FROM @QRY;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
 
 -- Insert new ledger
-SET @QRY="INSERT INTO book_ledgers (book_id,bcategory_id,bpublication_id,bauthor_id,blocation_id,page,mrp,isbn_no,edition,created_by)
+SET @QRY="INSERT INTO book_ledgers (book_id,bcategory_id,bpublication_id,bauthor_id,blocation_id,page,mrp,isbn_no,edition,no_of_books,created_by)
 SELECT DISTINCT
-book_id,bcategory_id,publication_id,bauthor_id,location_id,pages,mrp,isbn,edition,";
+book_id,bcategory_id,publication_id,bauthor_id,location_id,pages,mrp,isbn,edition,number_of_books,";
 SET @QRY=CONCAT(@QRY,user_id);
 SET @QRY=CONCAT(@QRY,"
 FROM(
     SELECT DISTINCT	
-    B.book_id,BC.bcategory_id,BA.bauthor_id,BP.publication_id,BL.location_id,T.pages,T.mrp,T.isbn,T.edition,
+    B.book_id,BC.bcategory_id,BA.bauthor_id,BP.publication_id,BL.location_id,T.pages,T.mrp,T.isbn,T.edition,T.number_of_books,
     T.record_no
     FROM ",table_name," T
     LEFT JOIN books B ON replace(lower(B.name),' ','')=replace(lower(T.book_name),' ','')

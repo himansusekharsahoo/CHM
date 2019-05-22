@@ -7,6 +7,11 @@ $route['view-book-ledger/(:any)'] = 'library/book_ledgers/view/$1';
 $route['delete-book-ledger'] = 'library/book_ledgers/delete';
 $route['export-book-ledger'] = 'library/book_ledgers/export_grid_data';
 $route['popup-qr-code'] = 'library/book_ledgers/get_bar_qr_code';
+$route['book-ledger-purchase-details'] = 'library/book_ledgers/get_purchage_details_grid';
+$route['export-book-ledger-purchase-details'] = 'library/book_purchage_detail_logs/export_grid_data';
+$route['delete-book-ledger-purchase-details'] = 'library/book_purchage_detail_logs/delete';
+$route['book-ledger-purchase-details-save'] = 'library/book_ledgers/save_book_purchase_details';
+
 //Manage book category
 $route['manage-book-category'] = 'library/book_category_masters/index';
 $route['create-book-category'] = 'library/book_category_masters/create';

@@ -3,7 +3,7 @@
         width: 200px !important;
     }
 </style>
-<div class="col-sm-10">
+<div class="col-sm-11">
     <div class="box box-primary">
         <div class="box-header with-border">
         </div>
@@ -20,9 +20,11 @@
             <div class = 'form-group row'>                
                 <div class = 'col-sm-6 text-danger'>
                     <?php
-                    if ($this->session->flashdata('ledger_error')) {
+                    if ($this->session->flashdata('ledger_error'))
+                    {
                         echo $this->session->flashdata('ledger_error');
-                    } else {
+                    } else
+                    {
                         echo validation_errors();
                     }
                     ?>
@@ -38,7 +40,7 @@
                             $attribute = array(
                                 "name" => "book_id",
                                 "id" => "book_id",
-                                "class" => "form-control",
+                                "class" => "form-control chosen-select",
                             );
                             $book_id = (isset($data['book_id'])) ? $data['book_id'] : '';
                             echo form_dropdown($attribute, $book_id_list, $book_id);
@@ -52,7 +54,7 @@
                             $attribute = array(
                                 "name" => "bcategory_id",
                                 "id" => "bcategory_id",
-                                "class" => "form-control",
+                                "class" => "form-control chosen-select",
                             );
                             $bcategory_id = (isset($data['bcategory_id'])) ? $data['bcategory_id'] : '';
                             echo form_dropdown($attribute, $bcategory_id_list, $bcategory_id);
@@ -66,7 +68,7 @@
                             $attribute = array(
                                 "name" => "bpublication_id",
                                 "id" => "bpublication_id",
-                                "class" => "form-control",
+                                "class" => "form-control chosen-select",
                             );
                             $bpublication_id = (isset($data['bpublication_id'])) ? $data['bpublication_id'] : '';
                             echo form_dropdown($attribute, $bpublication_id_list, $bpublication_id);
@@ -80,7 +82,7 @@
                             $attribute = array(
                                 "name" => "bauthor_id",
                                 "id" => "bauthor_id",
-                                "class" => "form-control",
+                                "class" => "form-control chosen-select",
                             );
                             $bauthor_id = (isset($data['bauthor_id'])) ? $data['bauthor_id'] : '';
                             echo form_dropdown($attribute, $bauthor_id_list, $bauthor_id);
@@ -94,7 +96,7 @@
                             $attribute = array(
                                 "name" => "blocation_id",
                                 "id" => "blocation_id",
-                                "class" => "form-control",
+                                "class" => "form-control chosen-select",
                             );
                             $blocation_id = (isset($data['blocation_id'])) ? $data['blocation_id'] : '';
                             echo form_dropdown($attribute, $blocation_id_list, $blocation_id);
@@ -281,6 +283,7 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
+        $.validator.setDefaults({ignore: ":hidden:not(.chosen-select)"})
         $('#book_ledgers').validate({
             rules: {
                 book_id: "required",
@@ -298,11 +301,17 @@
                 blocation_id: 'Books location is required',
                 page: 'Number of pages in books is required'
             },
-            errorPlacement: function (error, element) {                
+            errorPlacement: function (error, element) {
                 if (element.attr("name") == "purchase_date") {
                     error.appendTo(element.parent("div").next("span"));
                 } else {
-                    error.insertAfter(element);
+
+                    if (element.hasClass('chosen-select')) {
+                        //console.log(element);
+                        error.appendTo(element.parent("div"));
+                    } else {
+                        error.insertAfter(element);
+                    }
                 }
             },
             submitHandler: function (form) {
@@ -352,7 +361,7 @@
             format: 'd-m-yyyy',
             autoclose: true,
             clearBtn: true,
-            endDate:'0d'
+            endDate: '0d'
         }).on('change', function () {
             $(this).valid();  // triggers the validation test
             // '$(this)' refers to '$("#datepicker")'
@@ -360,5 +369,6 @@
         $('.focus_date').on('click', function () {
             $(this).parent('div').find('input').focus();
         });
+        $('.chosen-select').chosen({allow_single_deselect: true});
     });
 </script>

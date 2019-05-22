@@ -27,7 +27,8 @@ if (!defined('BASEPATH'))
  * @author     HimansuS                  
  * @since   10/28/2018
  */
-class Book_purchage_detail_log extends CI_Model {
+class Book_purchage_detail_log extends CI_Model
+{
 
     /**
      * __construct Method
@@ -38,7 +39,8 @@ class Book_purchage_detail_log extends CI_Model {
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
 
         $this->load->model('book_ledger');
@@ -58,10 +60,12 @@ class Book_purchage_detail_log extends CI_Model {
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function get_book_purchage_detail_log_datatable($data = null, $export = null, $tableHeading = null, $columns = null) {
+    public function get_book_purchage_detail_log_datatable($data = null, $export = null, $condition = null, $columns = null)
+    {
         $this->load->library('datatables');
-        if (!$columns) {
-            $columns = 'bpurchase_id,bledger_id,bill_number,purchase_date,price,vendor_name,remarks';
+        if (!$columns)
+        {
+            $columns = 'bpurchase_id,bledger_id,bill_number,DATE_FORMAT(purchase_date, "%d-%m-%Y") purchase_date,price,vendor_name,remarks';
         }
 
         /*
@@ -69,9 +73,17 @@ class Book_purchage_detail_log extends CI_Model {
           Columns:-	bledger_id,book_id,bcategory_id,bpublication_id,bauthor_id,blocation_id,page,mrp,isbn_no,edition,bar_code,qr_code,created,created_by,modified,midified_by
 
          */
-        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, FALSE, FALSE)->from('book_purchage_detail_logs t1');
-
+        
+        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, FALSE, FALSE)
+                ->from('book_purchage_detail_logs t1');
+        
+        if(is_array($condition)){
+            foreach($condition as $col=>$val){
+                $this->datatables->where($col,$val);
+            }
+        }
         $this->datatables->unset_column("bpurchase_id");
+        $this->datatables->unset_column("bledger_id");
         if (isset($data['button_set'])):
             $this->datatables->add_column("Action", $data['button_set'], 'c_encode(bpurchase_id)', 1, 1);
         endif;
@@ -91,8 +103,10 @@ class Book_purchage_detail_log extends CI_Model {
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function get_book_purchage_detail_log($columns = null, $conditions = null, $limit = null, $offset = null) {
-        if (!$columns) {
+    public function get_book_purchage_detail_log($columns = null, $conditions = null, $limit = null, $offset = null)
+    {
+        if (!$columns)
+        {
             $columns = 'bpurchase_id,bledger_id,bill_number,purchase_date,price,vendor_name,remarks';
         }
 
@@ -126,7 +140,8 @@ class Book_purchage_detail_log extends CI_Model {
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function save($data) {
+    public function save($data)
+    {
         if ($data):
             $this->db->insert("book_purchage_detail_logs", $data);
             $bpurchase_id_inserted_id = $this->db->insert_id();
@@ -148,7 +163,8 @@ class Book_purchage_detail_log extends CI_Model {
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function update($data) {
+    public function update($data)
+    {
         if ($data):
             $this->db->where("bpurchase_id", $data['bpurchase_id']);
             return $this->db->update('book_purchage_detail_logs', $data);
@@ -165,15 +181,18 @@ class Book_purchage_detail_log extends CI_Model {
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function delete($bpurchase_id) {
+    public function delete($bpurchase_id)
+    {
         if ($bpurchase_id):
             $this->db->trans_begin();
             $result = 0;
             $this->db->delete('book_purchage_detail_logs', array('bpurchase_id' => $bpurchase_id));
-            if ($this->db->trans_status() === FALSE) {
+            if ($this->db->trans_status() === FALSE)
+            {
                 $this->db->trans_rollback();
                 return false;
-            } else {
+            } else
+            {
                 $this->db->trans_commit();
                 return true;
             }
@@ -191,11 +210,14 @@ class Book_purchage_detail_log extends CI_Model {
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function get_options($columns, $index = null, $conditions = null) {
-        if (!$columns) {
+    public function get_options($columns, $index = null, $conditions = null)
+    {
+        if (!$columns)
+        {
             $columns = 'bpurchase_id';
         }
-        if (!$index) {
+        if (!$index)
+        {
             $index = 'bpurchase_id';
         }
         $this->db->select("$columns,$index")->from('book_purchage_detail_logs t1');
@@ -225,11 +247,13 @@ class Book_purchage_detail_log extends CI_Model {
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function get_book_ledgers_options($columns, $index = null, $conditions = null) {
+    public function get_book_ledgers_options($columns, $index = null, $conditions = null)
+    {
         return $this->book_ledger->get_options($columns, $index, $conditions);
     }
 
-    public function record_count() {
+    public function record_count()
+    {
         return $this->db->count_all('book_purchage_detail_logs');
     }
 

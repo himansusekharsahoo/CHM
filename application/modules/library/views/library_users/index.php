@@ -35,6 +35,7 @@
         border-radius: 10px;
         text-align: center;
         box-shadow: 0 0 1.5px 0px #b9b9b9;
+        border:1px solid gray;
     }    
     .library_header{font-family: Georgia;font-weight: bold;font-style: italic; font-size: 20px;}
     .id-card hr{margin: 3px 0px 3px 0px !important;}

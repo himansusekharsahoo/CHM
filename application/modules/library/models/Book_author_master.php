@@ -183,7 +183,7 @@ class Book_author_master extends CI_Model {
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function get_options($columns, $index = null, $conditions = null) {
+    public function get_options($columns, $index = null, $conditions = null,$chosen_flag=false) {
         if (!$columns) {
             $columns = 'bauthor_id';
         }
@@ -201,7 +201,11 @@ class Book_author_master extends CI_Model {
         $result = $this->db->get()->result_array();
 
         $list = array();
-        $list[''] = 'Select book author masters';
+        if($chosen_flag){
+            $list[''] = '';
+        }else{
+             $list[''] = 'Select book author masters';
+        }
         foreach ($result as $key => $val):
             $list[$val[$index]] = $val[$columns];
         endforeach;

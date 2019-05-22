@@ -168,8 +168,8 @@
 
         });
 
-        $('#print_one_barcode').on('click', function () {
-            printDiv('qrcode_modal_body')
+        $('#print_one_barcode').on('click', function () {            
+            printDiv(document.getElementsByClassName('qrcode_modal_body'));
         });
 
         $(document).on('click', '#show_qrcode_batch', function (e) {
@@ -221,5 +221,8 @@
                 show_message(errMsg);
             }
         });
+        function printDiv(element_obj) {
+            PrintElements.print(element_obj);
+        }
     });
 </script>

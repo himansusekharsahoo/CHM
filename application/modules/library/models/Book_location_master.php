@@ -27,7 +27,8 @@ if (!defined('BASEPATH'))
  * @author     HimansuS                  
  * @since   10/28/2018
  */
-class Book_location_master extends CI_Model {
+class Book_location_master extends CI_Model
+{
 
     /**
      * __construct Method
@@ -38,7 +39,8 @@ class Book_location_master extends CI_Model {
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
 
 
@@ -58,9 +60,11 @@ class Book_location_master extends CI_Model {
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function get_book_location_master_datatable($data = null, $export = null, $tableHeading = null, $columns = null) {
+    public function get_book_location_master_datatable($data = null, $export = null, $tableHeading = null, $columns = null)
+    {
         $this->load->library('datatables');
-        if (!$columns) {
+        if (!$columns)
+        {
             $columns = 'blocation_id,floor,block,rack_no,self_no,remarks';
         }
 
@@ -88,8 +92,10 @@ class Book_location_master extends CI_Model {
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function get_book_location_master($columns = null, $conditions = null, $limit = null, $offset = null) {
-        if (!$columns) {
+    public function get_book_location_master($columns = null, $conditions = null, $limit = null, $offset = null)
+    {
+        if (!$columns)
+        {
             $columns = 'blocation_id,floor,block,rack_no,self_no,remarks';
         }
 
@@ -120,7 +126,8 @@ class Book_location_master extends CI_Model {
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function save($data) {
+    public function save($data)
+    {
         if ($data):
             $this->db->insert("book_location_masters", $data);
             $blocation_id_inserted_id = $this->db->insert_id();
@@ -142,7 +149,8 @@ class Book_location_master extends CI_Model {
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function update($data) {
+    public function update($data)
+    {
         if ($data):
             $this->db->where("blocation_id", $data['blocation_id']);
             return $this->db->update('book_location_masters', $data);
@@ -159,15 +167,18 @@ class Book_location_master extends CI_Model {
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function delete($blocation_id) {
+    public function delete($blocation_id)
+    {
         if ($blocation_id):
             $this->db->trans_begin();
             $result = 0;
             $this->db->delete('book_location_masters', array('blocation_id' => $blocation_id));
-            if ($this->db->trans_status() === FALSE) {
+            if ($this->db->trans_status() === FALSE)
+            {
                 $this->db->trans_rollback();
                 return false;
-            } else {
+            } else
+            {
                 $this->db->trans_commit();
                 return true;
             }
@@ -185,15 +196,18 @@ class Book_location_master extends CI_Model {
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function get_options($columns, $index = null, $conditions = null) {
-        if (!$columns) {
+    public function get_options($columns, $index = null, $conditions = null, $chosen_flag = false)
+    {
+        if (!$columns)
+        {
             $columns = 'blocation_id';
         }
-        if (!$index) {
+        if (!$index)
+        {
             $index = 'blocation_id';
         }
-        $this->db->select("$columns,$index",false)->from('book_location_masters t1');
-        
+        $this->db->select("$columns,$index", false)->from('book_location_masters t1');
+
         if ($conditions && is_array($conditions)):
             foreach ($conditions as $col => $val):
                 $this->db->where("$col", $val);
@@ -201,14 +215,22 @@ class Book_location_master extends CI_Model {
         endif;
         $result = $this->db->get()->result_array();
         $list = array();
-        $list[''] = 'Select book location masters';
+        if ($chosen_flag)
+        {
+            $list[''] = '';
+        } else
+        {
+            $list[''] = 'Select book location masters';
+        }
+
         foreach ($result as $key => $val):
             $list[$val[$index]] = $val[$columns];
         endforeach;
         return $list;
     }
 
-    public function record_count() {
+    public function record_count()
+    {
         return $this->db->count_all('book_location_masters');
     }
 

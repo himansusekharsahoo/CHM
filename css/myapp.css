@@ -70,3 +70,15 @@ label.error,div.error{color:red;font-weight: normal;}
 .set_rbac_select_menu{
 	white-space: normal !important;
 }
+.qr_code_box{
+    border:1px solid black !important; 
+    margin-right:2px !important;
+    border-radius: 4px !important;
+    min-height:240px !important;
+    padding-left: 10px;
+}
+
+/*chosen dropdwon wrappers*/
+.chosen-container-single .chosen-single{height:33px !important;line-height: 32px !important;}
+.chosen-container-single .chosen-single div{top: 5px !important;}
+.chosen-container-single .chosen-single abbr{top: 10px !important;}

@@ -69,14 +69,6 @@ class Book_purchage_detail_logs extends CI_Controller {
         $this->layout->title = 'Book purchage detail log list';
         $header = array(
             array(
-                'db_column' => 'bledger_id',
-                'name' => 'Bledger_id',
-                'title' => 'Bledger_id',
-                'class_name' => 'dt_name',
-                'orderable' => 'true',
-                'visible' => 'true',
-                'searchable' => 'true'
-            ), array(
                 'db_column' => 'bill_number',
                 'name' => 'Bill_number',
                 'title' => 'Bill_number',
@@ -234,9 +226,14 @@ class Book_purchage_detail_logs extends CI_Controller {
     public function export_grid_data() {
         if ($this->input->is_ajax_request()):
             $export_type = $this->input->post('export_type');
-            $tableHeading = array('bledger_id' => 'bledger_id', 'bill_number' => 'bill_number', 'purchase_date' => 'purchase_date', 'price' => 'price', 'vendor_name' => 'vendor_name', 'remarks' => 'remarks',);
-            $cols = 'bledger_id,bill_number,purchase_date,price,vendor_name,remarks';
-            $data = $this->book_purchage_detail_log->get_book_purchage_detail_log_datatable(null, true, $tableHeading);
+            $book_ledger_id = $this->input->post('book_ledger_id');            
+            $condition='';
+            if($book_ledger_id){
+                $book_ledger_id= c_decode($book_ledger_id);
+                $condition=array('bledger_id'=>$book_ledger_id);
+            }
+           
+            $data = $this->book_purchage_detail_log->get_book_purchage_detail_log_datatable(null, true, $condition);
             $head_cols = $body_col_map = array();
             $date = array(
                 array(
@@ -244,6 +241,7 @@ class Book_purchage_detail_logs extends CI_Controller {
                     'value' => date('d-m-Y')
                 )
             );
+            $tableHeading = array('bill_number' => 'bill number', 'purchase_date' => 'purchase date', 'price' => 'price', 'vendor_name' => 'vendor name', 'remarks' => 'remarks',);
             foreach ($tableHeading as $db_col => $col) {
                 $head_cols[] = array(
                     'title' => ucfirst($col),
