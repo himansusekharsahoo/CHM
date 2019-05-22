@@ -84,7 +84,7 @@ class Book_ledger_upload_utilities extends CI_Controller {
                 'MRP',
                 'EDITION',
                 'BOOK_LOCATION',
-                'NUMBER_OF_BOOKS'
+                //'NUMBER_OF_BOOKS'
                 //'BILL_NUMBER',
                 //'PURCHASE_DATE',
                 //'PRICE',
@@ -101,7 +101,7 @@ class Book_ledger_upload_utilities extends CI_Controller {
                 'MRP',
                 'EDITION',
                 'BOOK_LOCATION',
-                'NUMBER_OF_BOOKS'
+                //'NUMBER_OF_BOOKS'
                 //'BILL_NUMBER',
                 //'PURCHASE_DATE',
                 //'PRICE',
@@ -129,9 +129,9 @@ class Book_ledger_upload_utilities extends CI_Controller {
                 array('message' => "''MRP'' can not be blank."
                     , 'condition' => "MRP IS NULL OR MRP=''"
                 ),
-                array('message' => "''NUMBER_OF_BOOKS'' can not be blank."
-                    , 'condition' => "NUMBER_OF_BOOKS IS NULL OR NUMBER_OF_BOOKS=''"
-                ),
+//                array('message' => "''NUMBER_OF_BOOKS'' can not be blank."
+//                    , 'condition' => "NUMBER_OF_BOOKS IS NULL OR NUMBER_OF_BOOKS=''"
+//                ),
                 //duplicate record validation                
                 //book name,category,publication,author,edition
                 array('message' => "Duplicate record."
@@ -409,7 +409,7 @@ class Book_ledger_upload_utilities extends CI_Controller {
                     'mrp' => 'mrp',
                     'edition' => 'edition',
                     'book_location' => 'book_location',
-                    'number_of_books' => 'number_of_books'
+                    //'number_of_books' => 'number_of_books'
                 );
                 $tableHeading=  array_merge($remarks,$tableHeading);
                 $data = $this->Book_ledger_upload_utility->get_temp_table_data_dt($columns, $temp_table_name, null, $condition, true);
@@ -503,7 +503,7 @@ class Book_ledger_upload_utilities extends CI_Controller {
                     'mrp' => 'mrp',
                     'edition' => 'edition',
                     'book_location' => 'book_location',
-                    'no_of_books' => 'number_of_books'
+                    //'no_of_books' => 'number_of_books'
                 );
                 $head_cols = $body_col_map = array();
                 $date = array(

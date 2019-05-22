@@ -44,7 +44,7 @@
                     <i class="fa fa-chevron-right font_12"></i>
                 </div>
                 <div class="col-sm-10 text-center text-danger no_lpad">
-                    Only xls/xlsx/csv files are allowed.
+                    Only xls/xlsx files are allowed.
                 </div>
                 <div class="col-sm-1 text-danger no_pad text-bold">
                     <i class="fa fa-chevron-left font_12"></i>
