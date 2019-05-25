@@ -264,7 +264,7 @@ class Book_assignments extends CI_Model {
 
     public function get_book_details($key = '') {
         $columns = array(
-            'b.book_id', 'b.name', 'bl.isbn_no', 'bl.edition', 'bam.author_name', 'bpm.name as publication', 'bl.bledger_id'
+            'b.book_id', 'b.name', 'bl.isbn_no', 'bl.edition', 'bam.author_name', 'bpm.name as publication', 'bl.bledger_id', 'bl.total_copies', 'bl.lost_copies', 'bl.copies_instock'
         );
         $query = "SELECT " . implode(',', $columns) . " FROM books b 
             JOIN book_ledgers bl ON b.book_id=bl.book_id 
@@ -308,6 +308,11 @@ class Book_assignments extends CI_Model {
         } else {
             return $return->result_array();
         }
+    }
+
+    function update_current_copies($book_lid) {
+        $query = "UPDATE book_ledgers SET copies_instock=(copies_instock-1) WHERE bledger_id='$book_lid'";
+        return $this->db->query($query);
     }
 
 }

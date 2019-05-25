@@ -48,8 +48,8 @@ class Book_assignment extends CI_Controller {
     public function index() {
         if ($this->rbac->has_permission('MANAGE_BOOK_ASSIGNS', 'LIST')) {
             $this->breadcrumbs->push('index', '/library/book_assignment/index');
-            $this->scripts_include->includePlugins(array('datatable','chosen'), 'css');
-            $this->scripts_include->includePlugins(array('datatable','chosen'), 'js');
+            $this->scripts_include->includePlugins(array('datatable', 'chosen'), 'css');
+            $this->scripts_include->includePlugins(array('datatable', 'chosen'), 'js');
             $this->layout->navTitle = 'Book assign list';
             $this->layout->title = 'Book assign list';
             $header = array(
@@ -781,7 +781,7 @@ class Book_assignment extends CI_Controller {
     }
 
     function assign_book() {
-        $return_book_after_days = $this->rbac->get_app_config_item('library/library/role_config/default/return_book_after_days');
+        $return_book_after_days = $this->rbac->get_app_config_item('library/role_config/default/return_book_after_days');
         $return_book_after_days = (string) $return_book_after_days[0];
         $return_book_after_days = explode(',', $return_book_after_days);
 
@@ -796,6 +796,7 @@ class Book_assignment extends CI_Controller {
             echo json_encode(array('status' => false));
             exit;
         }
+
         $count = $this->book_assignments->check_if_same_book_assigned($book_ledger_id, $member_id);
         if ($count > 0) {
             echo json_encode(array('status' => false, 'msg' => 'Same book is assigned for the member.'));
@@ -809,6 +810,7 @@ class Book_assignment extends CI_Controller {
         );
         $is_inserted = $this->book_assignments->store_book_assignment_info($book_data);
         if ($is_inserted) {
+            $this->book_assignments->update_current_copies($book_ledger_id);
             echo json_encode(array('status' => true, 'msg' => 'Book is assigned successfully'));
         } else {
             echo json_encode(array('status' => false, 'msg' => 'Error occurred please try again'));

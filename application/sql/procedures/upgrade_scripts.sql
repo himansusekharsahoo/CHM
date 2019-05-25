@@ -12,3 +12,7 @@ ALTER TABLE `book_assigns` CHANGE `return_date` `return_date` DATETIME NULL DEFA
 UPDATE rbac_menu SET url='create-book-assign' WHERE menu_id=21;
 ALTER TABLE `book_assigns` ADD `is_book_lost` INT(1) NULL DEFAULT NULL AFTER `book_return_condition`;
 ALTER TABLE `book_ledgers` ADD `no_of_books` INT UNSIGNED NOT NULL DEFAULT '0' AFTER `edition`;
+ALTER TABLE `book_ledgers` ADD COLUMN `total_copies` INTEGER DEFAULT 0 AFTER `midified_by`,
+ ADD COLUMN `lost_copies` INTEGER DEFAULT 0 AFTER `total_copies`,
+ ADD COLUMN `copies_instock` INTEGER DEFAULT 0 AFTER `lost_copies`;
+

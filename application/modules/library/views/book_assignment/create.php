@@ -88,7 +88,7 @@
 </div>
 <script type="text/javascript">
     $(function ($) {
-        function show_message(reject) {            
+        function show_message(reject) {
             var errMsg = {
                 'type': 'default',
                 title: (typeof reject.title != 'undefined' && reject.title != '') ? reject.title : 'Book assignment',
@@ -238,6 +238,15 @@
                     '</li>' +
                     '<li class="list-group-item">' +
                     '<b>Publication</b> <a class="pull-right">' + book_item.publication + '</a>' +
+                    '</li>' +
+                    '<li class="list-group-item">' +
+                    '<b>Total copies: </b> <a class="pull-right">' + book_item.total_copies + '</a>' +
+                    '</li>' +
+                    '<li class="list-group-item">' +
+                    '<b>Lost copies: </b> <a class="pull-right">' + book_item.lost_copies + '</a>' +
+                    '</li>' +
+                    '<li class="list-group-item">' +
+                    '<b>Currently available copies: </b> <a class="pull-right">' + book_item.copies_instock + '</a>' +
                     '</li>' +
                     '</ul>' +
                     '<a href="#" class="btn btn-primary btn-block" id="assign_book"><b>Assign</b></a>' +
