@@ -480,6 +480,76 @@ class Book_ledger extends CI_Model
         return $result->count_rec;
     }
 
+    /**
+     * Get_book_purchage_detail_log_datatable Method
+     * 
+     * @param   $data=null,$export=null,$tableHeading=null,$columns=null
+     * @desc    
+     * @return 
+     * @author  HimansuS                  
+     * @since   10/28/2018
+     */
+    public function get_book_purchage_detail_log_datatable($data = null, $export = null, $condition = null, $columns = null)
+    {
+        $this->load->library('datatables');
+        if (!$columns)
+        {
+            $columns = 'bpurchase_id,bledger_id,bill_number,DATE_FORMAT(purchase_date, "%d-%m-%Y") purchase_date,price,vendor_name,remarks';
+        }
+
+        /*
+          Table:-	book_ledgers
+          Columns:-	bledger_id,book_id,bcategory_id,bpublication_id,bauthor_id,blocation_id,page,mrp,isbn_no,edition,bar_code,qr_code,created,created_by,modified,midified_by
+
+         */
+        
+        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, FALSE, FALSE)
+                ->from('book_purchage_detail_logs t1');
+        
+        if(is_array($condition)){
+            foreach($condition as $col=>$val){
+                $this->datatables->where($col,$val);
+            }
+        }
+        $this->datatables->unset_column("bpurchase_id");
+        $this->datatables->unset_column("bledger_id");
+        if (isset($data['button_set'])):
+            $this->datatables->add_column("Action", $data['button_set'], 'c_encode(bpurchase_id)', 1, 1);
+        endif;
+        if ($export):
+            $data = $this->datatables->generate_export($export);
+            return $data;
+        endif;
+        return $this->datatables->generate();
+    }
+    /**
+     * Delete Method
+     * 
+     * @param   $bpurchase_id
+     * @desc    
+     * @return 
+     * @author  HimansuS                  
+     * @since   10/28/2018
+     */
+    public function delete_purchase_detail($bpurchase_id)
+    {
+        if ($bpurchase_id):
+            $this->db->trans_begin();
+            $result = 0;
+            $this->db->delete('book_purchage_detail_logs', array('bpurchase_id' => $bpurchase_id));
+            if ($this->db->trans_status() === FALSE)
+            {
+                $this->db->trans_rollback();
+                return false;
+            } else
+            {
+                $this->db->trans_commit();
+                return true;
+            }
+
+        endif;
+        return 'No data found to delete!';
+    }
 }
 
 ?>

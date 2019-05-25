@@ -1,4 +1,4 @@
-<div class="col-sm-10">
+<div class="col-sm-12 no_lpad">
     <div class="box box-primary">
         <div class="box-header with-border">
         </div>
@@ -98,39 +98,12 @@
                         </div>
                         <div class="panel-body no_pad collapse" id="purchase_detail_panel" aria-expanded="true">
                             <div class="row-fluid marginT10">
-                                <div class="col-sm-6">
-                                    <div class = 'form-group row'>
-                                        <label for = 'bill_number' class = 'col-sm-4 col-form-label '>Bill number</label>
-                                        <div class = 'col-sm-7'>
-                                            <?= (isset($data["bill_number"])) ? $data["bill_number"] : "" ?>                                            
-                                        </div>
-                                    </div>
-                                    <div class = 'form-group row'>
-                                        <label for = 'purchase_date' class = 'col-sm-4 col-form-label '>Purchase date</label>
-                                        <div class = 'col-sm-7'>
-                                            <?= (isset($data["purchase_date"])) ? $data["purchase_date"] : "" ?>                                            
-                                        </div>
-                                    </div>
-                                    <div class = 'form-group row'>
-                                        <label for = 'price' class = 'col-sm-4 col-form-label '>Price</label>
-                                        <div class = 'col-sm-7'>
-                                            <?= (isset($data["price"])) ? $data["price"] : "" ?>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class = 'form-group row'>
-                                        <label for = 'vendor_name' class = 'col-sm-4 col-form-label'>Vendor name</label>
-                                        <div class = 'col-sm-7'>
-                                            <?= (isset($data["vendor_name"])) ? $data["vendor_name"] : "" ?>
-                                        </div>
-                                    </div>
-                                    <div class = 'form-group row'>
-                                        <label for = 'remarks' class = 'col-sm-4 col-form-label'>Remarks</label>
-                                        <div class = 'col-sm-7'>
-                                            <?= (isset($data["remarks"])) ? $data["remarks"] : "" ?>
-                                        </div>
-                                    </div>
+                                <div class="col-sm-12 table-responsive">
+                                    <?php
+                                    $this->load->library('c_datatable');
+                                    $dt_data = $this->c_datatable->generate_grid($config);
+                                    echo $dt_data;
+                                    ?>
                                 </div>
                             </div>
                         </div>
@@ -152,3 +125,46 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+//export raw data as excel 
+
+        $(document).on('click', '#export_table_xls', function (e) {
+            e.preventDefault();
+            $('#loading').css('display', 'block');
+            var param = {
+                "export_type": 'xlsx',
+                "book_ledger_id": $('#bledger_id').val()
+            };
+            $.ajax({
+                type: 'POST',
+                url: "<?= base_url('export-book-ledger-purchase-details') ?>",
+                data: param,
+                dataType: 'json'
+            }).done(function (data) {
+                download(data.file, data.file_name, 'application/octet-stream');
+                $('#loading').css('display', 'none');
+            });
+        });
+//export raw data as csv 
+
+        $(document).on('click', '#export_table_csv', function (e) {
+            e.preventDefault();
+            $('#loading').css('display', 'block');
+            var param = {
+                "export_type": 'csv',
+                "book_ledger_id": $('#bledger_id').val()
+            };
+            $.ajax({
+                type: 'POST',
+                url: "<?= base_url('export-book-ledger-purchase-details') ?>",
+                data: param,
+                dataType: 'json'
+            }).done(function (data) {
+                download(data.file, data.file_name, 'application/octet-stream');
+                $('#loading').css('display', 'none');
+            });
+        });
+
+    });
+</script>

@@ -834,19 +834,126 @@ class Book_ledgers extends CI_Controller
         if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'VIEW'))
         {
             $this->breadcrumbs->push('view', '/library/book_ledgers/view');
-
+            $this->scripts_include->includePlugins(array('datatable', 'promise'), 'js');
+            $this->scripts_include->includePlugins(array('datatable'), 'css');
+            
             $data = array();
             if ($bledger_id):
-                $bledger_id = c_decode($bledger_id);
+                $ledger_id = c_decode($bledger_id);
 
                 $this->layout->navTitle = 'Book ledger view';
-                $result = $this->book_ledger->get_book_ledger(null, array('t1.bledger_id' => $bledger_id), 1);
+                $result = $this->book_ledger->get_book_ledger(null, array('t1.bledger_id' => $ledger_id), 1);
                 //pma($result,1);
                 if ($result):
                     $result = current($result);
                 endif;
+                 //purchage details grid
+                $header = array(
+                    array(
+                        'db_column' => 'bill_number',
+                        'name' => 'Bill_number',
+                        'title' => 'Bill number',
+                        'class_name' => 'dt_name',
+                        'orderable' => 'true',
+                        'visible' => 'true',
+                        'searchable' => 'true'
+                    ), array(
+                        'db_column' => 'purchase_date',
+                        'name' => 'Purchase_date',
+                        'title' => 'Purchase date',
+                        'class_name' => 'dt_name',
+                        'orderable' => 'true',
+                        'visible' => 'true',
+                        'searchable' => 'true'
+                    ), array(
+                        'db_column' => 'price',
+                        'name' => 'Price',
+                        'title' => 'Price',
+                        'class_name' => 'dt_name',
+                        'orderable' => 'true',
+                        'visible' => 'true',
+                        'searchable' => 'true'
+                    ), array(
+                        'db_column' => 'vendor_name',
+                        'name' => 'Vendor_name',
+                        'title' => 'Vendor name',
+                        'class_name' => 'dt_name',
+                        'orderable' => 'true',
+                        'visible' => 'true',
+                        'searchable' => 'true'
+                    ), array(
+                        'db_column' => 'remarks',
+                        'name' => 'Remarks',
+                        'title' => 'Remarks',
+                        'class_name' => 'dt_name',
+                        'orderable' => 'true',
+                        'visible' => 'true',
+                        'searchable' => 'true'
+                    )
+                );
 
+                $dt_button_flag = false;
+                $dt_tool_btn = array();                
+
+                if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'XLS_EXPORT'))
+                {
+                    $dt_tool_btn[] = array(
+                        'btn_class' => 'btn-warning',
+                        'btn_href' => '#',
+                        'btn_icon' => '',
+                        'btn_title' => 'XLS',
+                        'btn_text' => '<span class="fa fa-file-excel-o"></span> Excel',
+                        'btn_separator' => ' ',
+                        'attr' => 'id="export_table_xls"'
+                    );
+                    $dt_button_flag = true;
+                }
+
+                if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'CSV_EXPORT'))
+                {
+                    $dt_tool_btn[] = array(
+                        'btn_class' => 'btn-info',
+                        'btn_href' => '#',
+                        'btn_icon' => '',
+                        'btn_title' => 'CSV',
+                        'btn_text' => '<span class="fa fa-file-text-o"></span> CSV',
+                        'btn_separator' => ' ',
+                        'attr' => 'id="export_table_csv"'
+                    );
+                    $dt_button_flag = true;
+                }
+
+                if ($dt_button_flag)
+                {
+                    $dt_tool_btn = get_link_buttons($dt_tool_btn);
+                }
+
+                $config = array(
+                    'dt_markup' => TRUE,
+                    'dt_id' => 'book_purchase_details_dt_table',
+                    'dt_header' => $header,
+                    'dt_ajax' => array(
+                        'dt_url' => base_url('book-ledger-purchase-details'),
+                        'dt_param' => "{ledger_id:'$bledger_id'}"
+                    ),
+                    'custom_lengh_change' => false,
+                    'dt_dom' => array(
+                        'top_dom' => true,
+                        'top_length_change' => true,
+                        'top_filter' => true,
+                        'top_buttons' => $dt_tool_btn,
+                        'top_pagination' => true,
+                        'buttom_dom' => true,
+                        'buttom_length_change' => FALSE,
+                        'buttom_pagination' => true
+                    ),
+                    'options' => array(
+                        'iDisplayLength' => 15
+                    )
+                );
+                
                 $data['data'] = $result;
+                $data['config'] = $config;
                 $this->layout->data = $data;
                 $this->layout->render();
 
@@ -1045,8 +1152,7 @@ class Book_ledgers extends CI_Controller
     {
         if ($this->input->is_ajax_request())
         {
-            //pma($this->input->post(),1);
-            $this->load->model('book_purchage_detail_log');
+            
             $ledger_id = $this->input->post('ledger_id');
             $button_flag = FALSE;
             $data = array();
@@ -1082,7 +1188,7 @@ class Book_ledgers extends CI_Controller
                 //array_push($header, $action_column);
             }
             $condition = array('bledger_id' => c_decode($ledger_id));
-            $returned_list = $this->book_purchage_detail_log->get_book_purchage_detail_log_datatable($data, false, $condition);
+            $returned_list = $this->book_ledger->get_book_purchage_detail_log_datatable($data, false, $condition);
             echo $returned_list;
             exit();
         } else
@@ -1131,7 +1237,96 @@ class Book_ledgers extends CI_Controller
             $this->layout->render(array('error' => 'general'));
         }
     }
+    /**
+     * export_purchase_details_grid_data Method
+     * 
+     * @param   
+     * @desc    used to export book purchase details
+     * @return 
+     * @author  HimansuS                  
+     * @since   10/28/2018
+     */
+    public function export_purchase_details_grid_data() {
+        if ($this->input->is_ajax_request()):
+            $export_type = $this->input->post('export_type');
+            $book_ledger_id = $this->input->post('book_ledger_id');            
+            $condition='';
+            if($book_ledger_id){
+                $book_ledger_id= c_decode($book_ledger_id);
+                $condition=array('bledger_id'=>$book_ledger_id);
+            }
+           
+            $data = $this->book_ledger->get_book_purchage_detail_log_datatable(null, true, $condition);
+            $head_cols = $body_col_map = array();
+            $date = array(
+                array(
+                    'title' => 'Date of Export Report',
+                    'value' => date('d-m-Y')
+                )
+            );
+            $tableHeading = array('bill_number' => 'bill number', 'purchase_date' => 'purchase date', 'price' => 'price', 'vendor_name' => 'vendor name', 'remarks' => 'remarks',);
+            foreach ($tableHeading as $db_col => $col) {
+                $head_cols[] = array(
+                    'title' => ucfirst($col),
+                    'track_auto_filter' => 1
+                );
+                $body_col_map[] = array('db_column' => $db_col);
+            }
+            $header = array($date, $head_cols);
+            $worksheet_name = 'book_purchage_detail_logs';
+            $file_name = 'book_purchage_detail_logs' . date('d_m_Y_H_i_s') . '.' . $export_type;
+            $config = array(
+                'db_data' => $data['aaData'],
+                'header_rows' => $header,
+                'body_column' => $body_col_map,
+                'worksheet_name' => $worksheet_name,
+                'file_name' => $file_name,
+                'download' => true
+            );
 
+            $this->load->library('excel_utility');
+            $this->excel_utility->download_excel($config, $export_type);
+            ob_end_flush();
+            exit;
+
+        else:
+            $this->layout->data = array('status_code' => '403', 'message' => 'Request Forbidden.');
+            $this->layout->render(array('error' => 'general'));
+        endif;
+    }
+
+     /**
+     * delete_purchase_details Method
+     * 
+     * @param   
+     * @desc    used to delete book purchase details 
+     * @return 
+     * @author  HimansuS                  
+     * @since   10/28/2018
+     */
+    public function delete_purchase_details() {
+        if ($this->input->is_ajax_request()):
+            $bpurchase_id = $this->input->post('bpurchase_id');
+            if ($bpurchase_id):
+                $bpurchase_id = c_decode($bpurchase_id);
+
+                $result = $this->book_ledger->delete_purchase_detail($bpurchase_id);
+                if ($result):
+                    echo 1;
+                    exit();
+                else:
+                    echo 'Data deletion error !';
+                    exit();
+                endif;
+            endif;
+            echo 'No data found to delete';
+            exit();
+        else:
+            $this->layout->data = array('status_code' => '403', 'message' => 'Request Forbidden.');
+            $this->layout->render(array('error' => 'general'));
+        endif;
+        return 'Invalid request type.';
+    }
 }
 
 ?>

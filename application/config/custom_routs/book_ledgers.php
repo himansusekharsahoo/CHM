@@ -8,8 +8,8 @@ $route['delete-book-ledger'] = 'library/book_ledgers/delete';
 $route['export-book-ledger'] = 'library/book_ledgers/export_grid_data';
 $route['popup-qr-code'] = 'library/book_ledgers/get_bar_qr_code';
 $route['book-ledger-purchase-details'] = 'library/book_ledgers/get_purchage_details_grid';
-$route['export-book-ledger-purchase-details'] = 'library/book_purchage_detail_logs/export_grid_data';
-$route['delete-book-ledger-purchase-details'] = 'library/book_purchage_detail_logs/delete';
+$route['export-book-ledger-purchase-details'] = 'library/book_ledgers/export_purchase_details_grid_data';
+$route['delete-book-ledger-purchase-details'] = 'library/book_ledgers/delete_purchase_details';
 $route['book-ledger-purchase-details-save'] = 'library/book_ledgers/save_book_purchase_details';
 
 //Manage book category
