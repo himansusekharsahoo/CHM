@@ -24,6 +24,8 @@
         height: 35px;
         padding-top: 1.2%;
     }
+    
+
 </style>
 <div class="row no_pad">
     <div class="col-md-6">
@@ -87,6 +89,7 @@
     </div>
 </div>
 <script type="text/javascript">
+    var current_avail_copies = '';
     $(function ($) {
         function show_message(reject) {
             var errMsg = {
@@ -251,15 +254,25 @@
                     '</ul>' +
                     '<a href="#" class="btn btn-primary btn-block" id="assign_book"><b>Assign</b></a>' +
                     '</div></div><br/>';
+            current_avail_copies = book_item.copies_instock;
             $('#book_details_container').html(book_info_html);
         }
 
         $('#book_details_container').on('click', '#assign_book', function () {
             var search_txt = $('#search_txt').val();
+            if (current_avail_copies == 0 || current_avail_copies === '') {
+                $('#default_modal_box .modal-title').html('Warning');
+                $('#default_modal_box .modal-body').html('Book copy is not available for assignment.');
+                $('#default_modal_box #default_modal_box_btn_cancel').hide();
+                $('#default_modal_box').modal('show');
+                return;
+            }
             if (!search_txt) {
                 $('#default_modal_box .modal-title').html('Warning');
                 $('#default_modal_box .modal-body').html('please select member for assignment');
+                $('#default_modal_box #default_modal_box_btn_cancel').hide();
                 $('#default_modal_box').modal('show');
+                return;
             } else {
                 $.ajax({
                     url: base_url + 'assign-book',
@@ -274,6 +287,7 @@
                         } else {
                             $('#default_modal_box .modal-title').html('Error in assignment');
                             $('#default_modal_box .modal-body').html(res.msg);
+                            $('#default_modal_box #default_modal_box_btn_cancel').hide();
                             $('#default_modal_box').modal('show');
                         }
                     },
@@ -284,6 +298,7 @@
                 });
             }
         });
+
         $('#primary_modal_box').on('click', '#primary_modal_box_btn', function () {
             location.reload();
         });

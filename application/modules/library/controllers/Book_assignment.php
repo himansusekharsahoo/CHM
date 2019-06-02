@@ -57,7 +57,7 @@ class Book_assignment extends CI_Controller {
                     'db_column' => 'isbn_no',
                     'name' => 'Ledger ID',
                     'title' => 'Ledger ID',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'ledger_id',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
@@ -65,7 +65,7 @@ class Book_assignment extends CI_Controller {
                     'db_column' => 'card_no',
                     'name' => 'Card Number',
                     'title' => 'Card Number',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'card_no',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
@@ -73,7 +73,7 @@ class Book_assignment extends CI_Controller {
                     'db_column' => 'issue_date',
                     'name' => 'Issue Date',
                     'title' => 'Issue Date',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'issue_date',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
@@ -81,7 +81,7 @@ class Book_assignment extends CI_Controller {
                     'db_column' => 'due_date',
                     'name' => 'Due Date',
                     'title' => 'Due Date',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'due_date',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
@@ -89,7 +89,7 @@ class Book_assignment extends CI_Controller {
                     'db_column' => 'return_date',
                     'name' => 'Return Date',
                     'title' => 'Return Date',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'return_date',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
@@ -97,7 +97,7 @@ class Book_assignment extends CI_Controller {
                     'db_column' => 'return_delay_fine',
                     'name' => 'Delay Fine',
                     'title' => 'Delay Fine',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'return_delay_fine',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
@@ -105,7 +105,7 @@ class Book_assignment extends CI_Controller {
                     'db_column' => 'book_return_condition',
                     'name' => 'Book Condition',
                     'title' => 'Book Condition',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'book_return_condition',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
@@ -113,7 +113,7 @@ class Book_assignment extends CI_Controller {
                     'db_column' => 'remarks',
                     'name' => 'Remarks',
                     'title' => 'Remarks',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'remarks',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
@@ -121,7 +121,7 @@ class Book_assignment extends CI_Controller {
                     'db_column' => 'user_type',
                     'name' => 'User Type',
                     'title' => 'User Type',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'user_type',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
@@ -129,7 +129,7 @@ class Book_assignment extends CI_Controller {
                     'db_column' => 'Action',
                     'name' => 'Action',
                     'title' => 'Action',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'action',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'false'
@@ -802,11 +802,17 @@ class Book_assignment extends CI_Controller {
             echo json_encode(array('status' => false, 'msg' => 'Same book is assigned for the member.'));
             exit;
         }
+        $current_coppies_count = $this->book_assignments->check_currently_available_books($book_ledger_id);
+        if ($current_coppies_count == 0) {
+            echo json_encode(array('status' => false, 'msg' => 'Book is not available in stock.'));
+            exit;
+        }
         $book_data = array(
             'bledger_id' => $book_ledger_id,
             'member_id' => $member_id,
             'issue_date' => $issue_date,
-            'due_date' => $due_date
+            'due_date' => $due_date,
+            'return_date' => NULL
         );
         $is_inserted = $this->book_assignments->store_book_assignment_info($book_data);
         if ($is_inserted) {

@@ -8,6 +8,7 @@
         left: auto;
         width: inherit;
     }
+    table{table-layout: fixed;}
 </style>
 <div class="row no_pad">
     <div class="col-md-12">
@@ -30,7 +31,7 @@
                 </div>
                 <div class="clearfix"></div>
                 <hr/>
-                <table id="raw_cert_data_dt_table" style="width:100% !important" class="table table-sm table-bordered table-striped table-hover" width="100%" cellpadding="0" cellpadding="0"></table>
+                <table id="raw_cert_data_dt_table" class="table dataTable table-sm table-bordered table-striped table-hover" width="100%" cellpadding="0" cellpadding="0"></table>
             </div>
         </div>
     </div>
@@ -116,7 +117,7 @@
             }
         });
 
-        $('#return_modal_box').on('click', '#book_lost', function () {
+        $('#return_modal_box').on('change', '#book_lost', function () {
             if ($('#book_lost').is(":checked")) {
                 $.ajax({
                     url: "<?= base_url('get-lost-fine') ?>",

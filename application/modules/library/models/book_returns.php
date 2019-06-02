@@ -29,7 +29,7 @@ class book_returns extends CI_Model {
             unset($conditions['start'], $conditions['length'], $conditions['order']);
         }
 
-        $where = "WHERE TRIM(LOWER(lm.card_no))=TRIM(LOWER('" . $conditions['card_no'] . "')) AND return_date is null AND is_book_lost <> 1 ";
+        $where = "WHERE TRIM(LOWER(lm.card_no))=TRIM(LOWER('" . $conditions['card_no'] . "')) AND (return_date is null AND is_book_lost <> 1)";
 
         $query = "SELECT " . implode(',', $columns) . " FROM book_assigns ba 
             JOIN library_members lm ON ba.member_id=lm.member_id 
@@ -53,8 +53,9 @@ class book_returns extends CI_Model {
                 'book_lost_fine' => $post_values['book_lost_fine'],
                 'book_return_condition' => $post_values['book_condition']
             );
+            return $this->mark_book_as_lost($post_values['book_assign_id'], $update_data);
         } else {
-            $return_delay_fine = $this->rbac->get_app_config_item('library/library/role_config/default/return_delay_fine');
+            $return_delay_fine = $this->rbac->get_app_config_item('library/role_config/default/return_delay_fine');
             $return_delay_fine = (string) $return_delay_fine[0];
             $return_delay_fine = explode(',', $return_delay_fine);
             $fine = (isset($return_delay_fine[0])) ? $return_delay_fine[0] : 1; //return days
@@ -72,9 +73,27 @@ class book_returns extends CI_Model {
                 'return_delay_fine' => $return_delay_fine,
                 'book_return_condition' => $post_values['book_condition']
             );
+
+            $this->db->where('bassign_id', $post_values['book_assign_id']);
+            $is_updated = $this->db->update('book_assigns', $update_data);
+            if ($is_updated) {
+                $query = "update book_ledgers set copies_instock = (copies_instock+1) where bledger_id = (SELECT bledger_id FROM book_assigns where bassign_id='" . $post_values['book_assign_id'] . "')";
+                return $this->db->query($query);
+            } else {
+                return false;
+            }
         }
-        $this->db->where('bassign_id', $post_values['book_assign_id']);
-        return $this->db->update('book_assigns', $update_data);
+    }
+
+    function mark_book_as_lost($book_assign_id, $update_data) {
+        $this->db->where('bassign_id', $book_assign_id);
+        $is_updated = $this->db->update('book_assigns', $update_data);
+        if ($is_updated) {
+            $query = "UPDATE book_ledgers SET lost_copies=(lost_copies+1) WHERE bledger_id = (SELECT bledger_id FROM book_assigns WHERE bassign_id='" . $book_assign_id . "')";
+            return $this->db->query($query);
+        } else {
+            return false;
+        }
     }
 
     function calculate_return_delay_fine($assigned_id = '') {

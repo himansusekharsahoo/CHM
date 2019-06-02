@@ -299,6 +299,15 @@ class Book_assignments extends CI_Model {
         return $this->db->get('book_assigns')->num_rows();
     }
 
+    function check_currently_available_books($ledger_id) {
+        $this->db->select('copies_instock');
+        $where = array(
+            'bledger_id' => $ledger_id
+        );
+        $this->db->where($where);
+        return $this->db->get('book_ledgers')->row()->copies_instock;
+    }
+
     function get_total_assign_books_data_by_member($member_id, $count = true) {
         $this->db->where('member_id', $member_id);
         $this->db->where('return_date IS NULL', NULL, FALSE);

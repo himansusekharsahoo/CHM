@@ -1,4 +1,17 @@
-<?php ?> <div class="row-fluid">
+<style>
+    table{table-layout: fixed;}
+    .ledger_id { width:80px !important;}
+    .card_no { width:120px !important;}
+    .issue_date { width:120px !important;}
+    .due_date { width:120px !important;}
+    .return_date { width:120px !important;}
+    .return_delay_fine { width:120px !important;}
+    .book_return_condition { width:120px !important;}
+    .remarks { width:120px !important;}
+    .user_type { width:120px !important;}
+    .action { width:100px !important;}
+</style>
+<div class="row-fluid">
     <div class="col-sm-12 no_pad table-responsive">
         <?php
         $this->load->library('c_datatable');
@@ -9,7 +22,6 @@
 </div><script type="text/javascript">
     $(function ($) {
 //delete record
-
         $(document).on('click', '.delete-record', function (e) {
             e.preventDefault();
             var data = {'bassign_id': $(this).data('bassign_id')}
