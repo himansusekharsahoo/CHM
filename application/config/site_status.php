@@ -34,12 +34,12 @@ switch (APP_ENV) {
         defined('GLOBAL_NOTICE') OR define('GLOBAL_NOTICE', '');
 
         defined('APP_HOST') OR define('APP_HOST', $_SERVER['HTTP_HOST']);
-        defined('APP_DOC_ROOT') OR define('APP_DOC_ROOT', 'projects/chm');
+        defined('APP_DOC_ROOT') OR define('APP_DOC_ROOT', 'chm');
         defined('APP_REQEST_TYPE') OR define('APP_REQEST_TYPE', $_SERVER['REQUEST_SCHEME']); //http/https
         defined('APP_BASE') OR define('APP_BASE', APP_REQEST_TYPE . '://' . APP_HOST . '/' . APP_DOC_ROOT . '/');
 
         defined('DB_HOST') OR define('DB_HOST', 'localhost');
-        defined('DB_NAME') OR define('DB_NAME', 'chm8nov');
+        defined('DB_NAME') OR define('DB_NAME', 'chm_may');
         //defined('DB_NAME') OR define('DB_NAME', 'netizensoft');
         defined('DB_USER') OR define('DB_USER', 'root');
         defined('DB_PASS') OR define('DB_PASS', '');
