@@ -227,7 +227,7 @@
                                         </div>
                                     </div>
                                     <div class = 'form-group row'>
-                                        <label for = 'edition' class = 'col-sm-4 col-form-label ele_required'>Total Copies </label>
+                                        <label for = 'edition' class = 'col-sm-4 col-form-label ele_required'>Total copies </label>
                                         <div class = 'col-sm-7'>
                                             <?php
                                             $attribute = array(

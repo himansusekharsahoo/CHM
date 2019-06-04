@@ -198,6 +198,7 @@ class Book_ledger extends CI_Model
                     'purchase_date' => date('Y-m-d', strtotime($data['purchase_date'])),
                     'price' => $data['price'],
                     'vendor_name' => $data['vendor_name'],
+                    'total_copies' => $data['total_copies'],
                     'remarks' => $data['remarks']
                 );
                 $this->db->insert("book_purchage_detail_logs", $purchase_data);
@@ -448,24 +449,55 @@ class Book_ledger extends CI_Model
     {
         if ($post_data):
             //pma($post_data,1);
+            $bledger_id = c_decode($post_data['book_ledger_id']);           
+            
             $db_data = array(
-                'bledger_id' => c_decode($post_data['book_ledger_id']),
+                'bledger_id' => $bledger_id,
                 'bill_number' => $post_data['bill_number'],
                 'purchase_date' => date('Y-m-d', strtotime($post_data['purchase_date'])),
                 'price' => $post_data['price'],
+                'total_copies' => $post_data['total_copies'],
                 'vendor_name' => $post_data['vendor_name'],
                 'remarks' => $post_data['remarks']
             );
+            $this->db->trans_begin();
             $this->db->insert("book_purchage_detail_logs", $db_data);
             $bpurchase_id_inserted_id = $this->db->insert_id();
-
-            if ($bpurchase_id_inserted_id):
+            //get book ledger details
+            $this->_update_ledger_book_copies($bledger_id,$post_data['total_copies']);
+            
+            if ($this->db->trans_status() === FALSE)
+            {
+                $this->db->trans_rollback();
+                return 0;
+            } else
+            {
+                $this->db->trans_commit();                
                 return $bpurchase_id_inserted_id;
-            endif;
-            return 0;
+            }            
         endif;
     }
-
+    /**
+     * 
+     * @method
+     * @param   
+     * @desc    
+     * @return 
+     * @author  HimansuS                  
+     * @since   
+     */
+    private function _update_ledger_book_copies($bledger_id,$no_of_copy,$delete_flag=false){
+        $query="SELECT total_copies from book_ledgers where bledger_id=$bledger_id";
+        $result=$this->db->query($query)->row();
+        if($delete_flag===TRUE){
+            $total_copies=$result->total_copies-$no_of_copy;        
+        }else{
+            $total_copies=$result->total_copies+$no_of_copy;
+        }       
+        
+        $query="UPDATE book_ledgers SET total_copies=$total_copies where bledger_id=$bledger_id";
+        $this->db->query($query);
+    }
     /**
      * @param  : string $condition
      * @desc   : used to check duplicacy of book author name
@@ -536,7 +568,12 @@ class Book_ledger extends CI_Model
         if ($bpurchase_id):
             $this->db->trans_begin();
             $result = 0;
+            //fetch existing data
+            $query="select bledger_id,total_copies from book_purchage_detail_logs where bpurchase_id=$bpurchase_id";
+            $result=$this->db->query($query)->row();
             $this->db->delete('book_purchage_detail_logs', array('bpurchase_id' => $bpurchase_id));
+            $this->_update_ledger_book_copies($result->bledger_id, $result->total_copies, TRUE);
+            
             if ($this->db->trans_status() === FALSE)
             {
                 $this->db->trans_rollback();

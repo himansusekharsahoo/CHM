@@ -31,11 +31,9 @@
             <div class = 'form-group row'>                
                 <div class = 'col-sm-6 text-danger'>
                     <?php
-                    if ($this->session->flashdata('ledger_error'))
-                    {
+                    if ($this->session->flashdata('ledger_error')) {
                         echo $this->session->flashdata('ledger_error');
-                    } else
-                    {
+                    } else {
                         echo validation_errors();
                     }
                     ?>
@@ -53,7 +51,7 @@
                     );
                     echo form_input($attribute);
                     $bledger_id = (isset($data["bledger_id"])) ? c_encode($data["bledger_id"]) : "";
-                    //echo c_decode($bledger_id);
+//echo c_decode($bledger_id);
                     $attribute = array(
                         "name" => "bledger_id",
                         "id" => "bledger_id",
@@ -62,17 +60,9 @@
                         "value" => $bledger_id
                     );
                     echo form_input($attribute);
-                    $attribute = array(
-                        "name" => "bpurchase_id",
-                        "id" => "bpurchase_id",
-                        "class" => "form-control required",
-                        "type" => "hidden",
-                        "value" => (isset($data["bpurchase_id"])) ? $data["bpurchase_id"] : ""
-                    );
-                    echo form_input($attribute);
                     ?>
                     <div class = 'form-group row'>
-                        <label for = 'book_id' class = 'col-sm-4 col-form-label ele_required'>Book name</label>
+                        <label for = 'book_id' class = 'col-sm-4 col-form-label'>Book name</label>
                         <div class = 'col-sm-7'>
                             <?php
                             $attribute = array(
@@ -81,8 +71,7 @@
                                 "class" => "form-control chosen-select"
                             );
                             $book_id = (isset($data['book_id'])) ? $data['book_id'] : '';
-                            if ($purchase_details_flag === TRUE)
-                            {
+                            if ($purchase_details_flag === TRUE) {
                                 $attributeH = array(
                                     "name" => "book_id",
                                     "id" => "book_id",
@@ -93,15 +82,14 @@
                                 echo form_input($attributeH);
                                 $attribute['disabled'] = "true";
                                 echo form_dropdown($attribute, $book_id_list, $book_id);
-                            } else
-                            {
+                            } else {
                                 echo form_dropdown($attribute, $book_id_list, $book_id);
                             }
                             ?>
                         </div>
                     </div>
                     <div class = 'form-group row'>
-                        <label for = 'bcategory_id' class = 'col-sm-4 col-form-label ele_required'>Book category</label>
+                        <label for = 'bcategory_id' class = 'col-sm-4 col-form-label'>Book category</label>
                         <div class = 'col-sm-7'>
                             <?php
                             $attribute = array(
@@ -110,8 +98,7 @@
                                 "class" => "form-control chosen-select"
                             );
                             $bcategory_id = (isset($data['bcategory_id'])) ? $data['bcategory_id'] : '';
-                            if ($purchase_details_flag === TRUE)
-                            {
+                            if ($purchase_details_flag === TRUE) {
                                 $attributeH = array(
                                     "name" => "bcategory_id",
                                     "id" => "bcategory_id",
@@ -122,15 +109,14 @@
                                 echo form_input($attributeH);
                                 $attribute['disabled'] = "true";
                                 echo form_dropdown($attribute, $bcategory_id_list, $bcategory_id);
-                            } else
-                            {
+                            } else {
                                 echo form_dropdown($attribute, $bcategory_id_list, $bcategory_id);
                             }
                             ?>
                         </div>
                     </div>
                     <div class = 'form-group row'>
-                        <label for = 'bpublication_id' class = 'col-sm-4 col-form-label ele_required'>Book publication</label>
+                        <label for = 'bpublication_id' class = 'col-sm-4 col-form-label'>Book publication</label>
                         <div class = 'col-sm-7'>
                             <?php
                             $attribute = array(
@@ -139,8 +125,7 @@
                                 "class" => "form-control chosen-select",
                             );
                             $bpublication_id = (isset($data['bpublication_id'])) ? $data['bpublication_id'] : '';
-                            if ($purchase_details_flag === TRUE)
-                            {
+                            if ($purchase_details_flag === TRUE) {
                                 $attributeH = array(
                                     "name" => "bpublication_id",
                                     "id" => "bpublication_id",
@@ -151,15 +136,14 @@
                                 echo form_input($attributeH);
                                 $attribute['disabled'] = "true";
                                 echo form_dropdown($attribute, $bpublication_id_list, $bpublication_id);
-                            } else
-                            {
+                            } else {
                                 echo form_dropdown($attribute, $bpublication_id_list, $bpublication_id);
                             }
                             ?>
                         </div>
                     </div>
                     <div class = 'form-group row'>
-                        <label for = 'bauthor_id' class = 'col-sm-4 col-form-label ele_required'>Book author</label>
+                        <label for = 'bauthor_id' class = 'col-sm-4 col-form-label'>Book author</label>
                         <div class = 'col-sm-7'>
                             <?php
                             $attribute = array(
@@ -168,8 +152,7 @@
                                 "class" => "form-control chosen-select",
                             );
                             $bauthor_id = (isset($data['bauthor_id'])) ? $data['bauthor_id'] : '';
-                            if ($purchase_details_flag === TRUE)
-                            {
+                            if ($purchase_details_flag === TRUE) {
                                 $attributeH = array(
                                     "name" => "bauthor_id",
                                     "id" => "bauthor_id",
@@ -180,8 +163,7 @@
                                 echo form_input($attributeH);
                                 $attribute['disabled'] = "true";
                                 echo form_dropdown($attribute, $bauthor_id_list, $bauthor_id);
-                            } else
-                            {
+                            } else {
                                 echo form_dropdown($attribute, $bauthor_id_list, $bauthor_id);
                             }
                             ?>
@@ -376,6 +358,25 @@
                         </div>
                     </div>
                     <div class = 'form-group row'>
+                        <label for = 'price' class = 'col-sm-3 col-form-label ele_required'>Total copies</label>
+                        <div class = 'col-sm-5'>
+                            <?php
+                            $attribute = array(
+                                "name" => "total_copies",
+                                "id" => "total_copies",
+                                "class" => "form-control",
+                                "title" => "",
+                                "required" => "",
+                                "type" => "number",
+                                "min" => "1",
+                                "value" => ""
+                            );
+                            echo form_error("price");
+                            echo form_input($attribute);
+                            ?>
+                        </div>
+                    </div>
+                    <div class = 'form-group row'>
                         <label for = 'vendor_name' class = 'col-sm-3 col-form-label ele_required'>Vendor name</label>
                         <div class = 'col-sm-5'>
                             <?php
@@ -450,7 +451,7 @@
                                     if (result == 1) {
                                         dialog.close();
                                         row.remove();
-                                        if($('#book_purchase_details_dt_table tr').length==1){
+                                        if ($('#book_purchase_details_dt_table tr').length == 1) {
                                             window.location.reload(true);
                                         }
                                         BootstrapDialog.alert('Record successfully deleted!');
@@ -560,12 +561,20 @@
                     rules: {
                         bill_number: "required",
                         purchase_date: "required",
-                        price: "required"
+                        price: "required",
+                        total_copies: {
+                            required: true,
+                            number: true
+                        }
                     },
                     messages: {
                         bill_number: 'Bill number is required',
                         purchase_date: 'Purchase date is required',
-                        price: 'Price is required'
+                        price: 'Price is required',
+                        total_copies: {
+                            'required': 'Total copies of books is required',
+                            'number': 'Please enter valid number.'
+                        }
                     }
                 });
             } else {
@@ -597,12 +606,20 @@
             rules: {
                 bill_number: "required",
                 purchase_date: "required",
-                price: "required"
+                price: "required",
+                total_copies: {
+                    required: true,
+                    number: true
+                }
             },
             messages: {
                 bill_number: 'Bill number is required',
                 purchase_date: 'Purchase date is required',
-                price: 'Price is required'
+                price: 'Price is required',
+                total_copies: {
+                    'required': 'Total copies of books is required',
+                    'number': 'Please enter valid number.'
+                }
             },
             errorPlacement: function (error, element) {
                 if (element.attr("name") == "purchase_date") {
@@ -628,6 +645,7 @@
                         "purchase_date": $('#purchase_date').val(),
                         "price": $('#price').val(),
                         "vendor_name": $('#vendor_name').val(),
+                        "total_copies": $('#total_copies').val(),
                         "remarks": $('#remarks').val(),
                     };
                     $.ajax({
@@ -651,8 +669,7 @@
                     }
                     resolve = JSON.parse(resolve);
                     show_message(resolve);
-                    //reset form fields
-                    $('#bledger_id').val('');
+                    //reset form fields                    
                     $('#bill_number').val('');
                     $('#purchase_date').val('');
                     $('#price').val('');
