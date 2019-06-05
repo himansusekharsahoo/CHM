@@ -73,7 +73,13 @@
                         <div class = 'col-sm-5'>
                             <?= (isset($data["edition"])) ? $data["edition"] : "" ?>
                         </div>
-                    </div>                    
+                    </div> 
+                    <div class = 'form-group row'>
+                        <label for = 'total_copies' class = 'col-sm-4 col-form-label'>Total copies</label>
+                        <div class = 'col-sm-5'>
+                            <?= (isset($data["ledger_total_copies"])) ? $data["ledger_total_copies"] : "" ?>
+                        </div>
+                    </div> 
                     <div class = 'form-group row'>
                         <label for = 'modified' class = 'col-sm-4 col-form-label'>Modified</label>
                         <div class = 'col-sm-5'>

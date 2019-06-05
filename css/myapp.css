@@ -82,3 +82,4 @@ label.error,div.error{color:red;font-weight: normal;}
 .chosen-container-single .chosen-single{height:33px !important;line-height: 32px !important;}
 .chosen-container-single .chosen-single div{top: 5px !important;}
 .chosen-container-single .chosen-single abbr{top: 10px !important;}
+.disabled{background:linear-gradient(#fff 20%, #f6f6f6 50%, #eee 52%, #f4f4f4 100%);}

@@ -89,7 +89,8 @@ class Scripts_include {
         'jq_multitag_select' => array(
             COMPONENT_PATH . 'Multi-Select-Checkbox-Tree-treeSelector/jquery.treeSelector.js'
         ),
-        'print_element'=>array(COMPONENT_PATH.'print-elements/print_elements.js')
+        'print_element'=>array(COMPONENT_PATH.'print-elements/print_elements.js'),
+        'd3'=>array('/assets/d3/d3.min.js')
     );
     private $__cssFiles = array(
         'admin_layout' => array(

@@ -158,6 +158,14 @@ class Book_ledgers extends CI_Controller
                     'visible' => 'true',
                     'searchable' => 'true'
                 ), array(
+                    'db_column' => 'ledger_total_copies',
+                    'name' => 'total_copies',
+                    'title' => 'Total copies',
+                    'class_name' => 'total_copies',
+                    'orderable' => 'true',
+                    'visible' => 'true',
+                    'searchable' => 'true'
+                ), array(
                     'db_column' => 'created',
                     'name' => 'Created',
                     'title' => 'Created',
@@ -366,7 +374,7 @@ class Book_ledgers extends CI_Controller
                     'book_name' => 'book_name', 'bcategory_name' => 'category_name'
                     , 'publicatoin_name' => 'ublicatoin_name', 'author_name' => 'author_name'
                     , 'location' => 'location', 'page' => 'page', 'mrp' => 'mrp'
-                    , 'isbn_no' => 'isbn_no', 'edition' => 'edition', 'created' => 'created', 'created_by' => 'created_by'
+                    , 'isbn_no' => 'isbn_no', 'edition' => 'edition','ledger_total_copies'=>'total_copies', 'created' => 'created', 'created_by' => 'created_by'
                     , 'modified' => 'modified', 'midified_by' => 'midified_by'
                 );
 
@@ -667,6 +675,7 @@ class Book_ledgers extends CI_Controller
                 $data = $grid_buttons = array();
                 $dbledger_id = c_decode($bledger_id);
                 $result = $this->book_ledger->get_book_ledger(null, array('t1.bledger_id' => $dbledger_id));
+                
                 //end purchage details gird
                 $data['purchase_details_flag'] = FALSE;
                 if ($result):
@@ -700,6 +709,14 @@ class Book_ledgers extends CI_Controller
                         'db_column' => 'price',
                         'name' => 'Price',
                         'title' => 'Price',
+                        'class_name' => 'dt_name',
+                        'orderable' => 'true',
+                        'visible' => 'true',
+                        'searchable' => 'true'
+                    ), array(
+                        'db_column' => 'ledger_total_copies',
+                        'name' => 'total_copies',
+                        'title' => 'Total copies',
                         'class_name' => 'dt_name',
                         'orderable' => 'true',
                         'visible' => 'true',
@@ -869,6 +886,14 @@ class Book_ledgers extends CI_Controller
                         'db_column' => 'price',
                         'name' => 'Price',
                         'title' => 'Price',
+                        'class_name' => 'dt_name',
+                        'orderable' => 'true',
+                        'visible' => 'true',
+                        'searchable' => 'true'
+                    ), array(
+                        'db_column' => 'total_copies',
+                        'name' => 'total_copies',
+                        'title' => 'Total copies',
                         'class_name' => 'dt_name',
                         'orderable' => 'true',
                         'visible' => 'true',
@@ -1167,7 +1192,7 @@ class Book_ledgers extends CI_Controller
                     'btn_separator' => '',
                     'param' => array('$1'),
                     'style' => '',
-                    'attr' => 'data-bpurchase_id="$1"'
+                    'attr' => 'data-bpurchase_id="$1" data-purchase-books="$2"'
                 );
                 $button_flag = TRUE;
             }
@@ -1264,7 +1289,7 @@ class Book_ledgers extends CI_Controller
                     'value' => date('d-m-Y')
                 )
             );
-            $tableHeading = array('bill_number' => 'bill number', 'purchase_date' => 'purchase date', 'price' => 'price', 'vendor_name' => 'vendor name', 'remarks' => 'remarks',);
+            $tableHeading = array('bill_number' => 'bill number', 'purchase_date' => 'purchase date', 'price' => 'price','total_copies' => 'total copies', 'vendor_name' => 'vendor name', 'remarks' => 'remarks',);
             foreach ($tableHeading as $db_col => $col) {
                 $head_cols[] = array(
                     'title' => ucfirst($col),
