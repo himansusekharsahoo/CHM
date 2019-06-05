@@ -545,5 +545,45 @@ class Manage_employees extends CI_Controller {
 
         return json_encode($roles_arr);
     }
+    
+    /**
+     * 
+     * @method employee_profile
+     * @param   
+     * @desc  used to display employee profile  
+     * @return 
+     * @author  HimansuS                  
+     * @since   05/06/2019
+     */
+    public function employee_profile(){
+        if ($this->rbac->has_permission('STAFF_USERS', 'MY_PROFILE')) {
+            $this->breadcrumbs->push('view', base_url('view-employee-profile'));
+            $this->layout->navTitle = 'My profile';
+            $this->layout->title = 'My profile';
+            $data = array();
+            $user_id = $this->rbac->get_user_id();
+            
+            if ($user_id) :                
+                $result = $this->manage_employee->get_staff_data(null, array('t1.user_id' => $user_id), 1);                
+                if ($result) :
+                    $result = current($result);
+                endif;
+                
+                $data['data'] = $result;
+                $users_assigned_roles=$this->manage_employee->get_user_roles($user_id,'name'); 
+                $users_assigned_roles=flattenArray($users_assigned_roles);
+                $users_assigned_roles=  implode(',',$users_assigned_roles);
+                $data['data']['employee_roles']=$users_assigned_roles;                
+                $this->layout->data = $data;
+                //pma($data,1);
+                $this->layout->render();
+
+            endif;
+            return 0;
+        }else {
+            $this->layout->render(array('error' => '401'));
+        }
+    }
 
 }
+
