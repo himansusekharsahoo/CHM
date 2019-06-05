@@ -40,7 +40,7 @@ $route['edit-employee-profile-save'] = 'employee/manage_employees/edit';
 $route['view-employee-profile/(:any)'] = 'employee/manage_employees/view/$1';
 $route['delete-employee-profile'] = 'employee/manage_employees/delete';
 $route['export-employee-profile'] = 'employee/manage_employees/export_grid_data';
-
+$route['my-profile'] = 'employee/manage_employees/employee_profile';
 //student profile pages
 $route['student-list'] = 'student/manage_students/index';
 $route['create-student-profile'] = 'student/manage_students/create';
