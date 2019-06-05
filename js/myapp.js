@@ -162,4 +162,12 @@
         }
         myApp.modal.alert(params);
     });
+    $(document).on('click','.todo_dev',function(){
+        var params = {
+            'type': 'default',
+            'title': 'Comming Soon <span class="fa fa-smile-o"></span> !',
+            'message': 'Feature will be available very soon!'
+        }
+        myApp.modal.alert(params);
+    });
 })(jQuery);
