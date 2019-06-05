@@ -24,6 +24,66 @@
         margin-bottom: 3px;
         height: 25px;
     }
+
+    /* input [type = file]
+    ----------------------------------------------- */
+
+    input[type=file] {
+        display: block;
+        right: 1px;
+        top: 1px;
+        height: 34px;
+        opacity: 0;
+        width: 100%;
+        background: none;
+        position: absolute;
+        overflow: hidden;
+        z-index: 2;
+    }
+
+    .control-fileupload {
+        display: block !important;
+        border: 1px solid #d6d7d6 !important;
+        background: #FFF !important;
+        border-radius: 4px !important;
+        width: 100% !important;
+        height: 36px !important;
+        line-height: 36px !important;
+        padding: 0px 10px 2px 10px !important;
+        overflow: hidden !important;
+        position: relative !important;          
+    }
+    .control-fileupload:before {
+        /* inherit from boostrap btn styles */
+        padding: 4px 12px;
+        margin-bottom: 0;
+        font-size: 14px;
+        line-height: 20px;
+        color: #333333;
+        text-align: center;
+        text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+        vertical-align: middle;
+        cursor: pointer;
+        background-color: #f5f5f5;
+        background-image: linear-gradient(to bottom, #ffffff, #e6e6e6);
+        background-repeat: repeat-x;
+        border: 1px solid #cccccc;
+        border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+        border-bottom-color: #b3b3b3;
+        border-radius: 0px;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+        transition: color 0.2s ease;
+
+        /* add more custom styles*/
+        content: 'Browse';
+        display: block;
+        position: absolute;
+        z-index: 1;
+        top: 2px;
+        right: 1px;
+        line-height: 20px;
+        text-align: center;       
+  }
 </style>
 <div class="row">
     <div class="col-sm-12">
@@ -118,6 +178,16 @@
                                     ?>
                                 </div>
                             </div>
+                            <div class = 'form-group row'>
+                                <label for = 'mobile' class = 'col-sm-5 col-form-label ele_required'>Mobile</label>
+                                <div class = 'col-sm-7'>
+                                    <span class="control-fileupload"> 
+                                        <label for="file">Choose a file :</label>
+                                        <input type="file" id="file">
+                                    </span>
+                                </div>
+
+                            </div>
                         </div>
                     </div>
                     <div class = 'form-group row'>
@@ -196,6 +266,12 @@
 
 <script type="text/javascript">
     $(function ($) {
+        $('input[type=file]').change(function () {
+            var t = $(this).val();
+            console.log('t',t);
+            var labelText =  t.substr(12, t.length);
+            $(this).prev('label').text(labelText);
+        })
         $('#library_new_users').validate({
             rules: {
                 first_name: {
@@ -287,8 +363,8 @@
                 onNavigateAfter: function (node, lis, a, item, query, event) {
                     if (~[38, 40].indexOf(event.keyCode)) {
                         var resultList = node.closest("form").find("ul.typeahead__list"),
-                        activeLi = lis.filter("li.active"),
-                        offsetTop = activeLi[0] && activeLi[0].offsetTop - (resultList.height() / 2) || 0;
+                                activeLi = lis.filter("li.active"),
+                                offsetTop = activeLi[0] && activeLi[0].offsetTop - (resultList.height() / 2) || 0;
 
                         resultList.scrollTop(offsetTop);
                     }
@@ -329,7 +405,7 @@
             $('#user_details_container').html('');
         });
     });
-    
+
     function fetch_user_data(user_id) {
         //console.log('user_id',user_id);
         const user_promise = new Promise(function (resolve, reject) {
@@ -355,7 +431,7 @@
             show_message(reject);
         });
     }
-    
+
     function create_lib_user(user_id) {
         //console.log('user_id',user_id);
         const create_user_promise = new Promise(function (resolve, reject) {
@@ -376,7 +452,7 @@
                 }
             });
         }
-    );
+        );
         create_user_promise.then(function (resolve) {
             resolve = JSON.parse(resolve);
             show_message(resolve);
