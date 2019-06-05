@@ -11,6 +11,7 @@
     .book_mrp{width:80px !important;}
     .isbn_no{width:80px !important;}
     .edition{width:80px !important;}
+    .total_copies{width:100px !important;}
     .created{width:90px !important;}
     .created_by{width:100px !important;}
     .action_td{width:100px !important; vertical-align: middle !important;}

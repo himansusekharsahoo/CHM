@@ -70,7 +70,7 @@ class Book_ledger extends CI_Model
         if (!$columns)
         {
             $columns = 'bledger_id,book_name,bcategory_name,publicatoin_name
-                ,author_name,location,page,mrp,isbn_no,edition,created,created_by';
+                ,author_name,location,page,mrp,isbn_no,edition,ledger_total_copies,created,created_by';
         }
 
         /*
@@ -122,7 +122,7 @@ class Book_ledger extends CI_Model
             $columns = 'book_name,bcategory_name,publicatoin_name
                 ,author_name,location,page,mrp,isbn_no,edition,created,created_by,modified,midified_by
                 ,bill_number,purchase_date,price,vendor_name,remarks,t1.bledger_id,book_id,bcategory_id
-                ,bpublication_id,bauthor_id,blocation_id,bpurchase_id';
+                ,bpublication_id,bauthor_id,blocation_id,bpurchase_id,ledger_total_copies';
         }
 
         /*
@@ -526,7 +526,7 @@ class Book_ledger extends CI_Model
         $this->load->library('datatables');
         if (!$columns)
         {
-            $columns = 'bpurchase_id,bledger_id,bill_number,DATE_FORMAT(purchase_date, "%d-%m-%Y") purchase_date,price,vendor_name,remarks';
+            $columns = 'bpurchase_id,bledger_id,bill_number,DATE_FORMAT(purchase_date, "%d-%m-%Y") purchase_date,price,total_copies,vendor_name,remarks';
         }
 
         /*
@@ -546,7 +546,7 @@ class Book_ledger extends CI_Model
         $this->datatables->unset_column("bpurchase_id");
         $this->datatables->unset_column("bledger_id");
         if (isset($data['button_set'])):
-            $this->datatables->add_column("Action", $data['button_set'], 'c_encode(bpurchase_id)', 1, 1);
+            $this->datatables->add_column("Action", $data['button_set'], 'c_encode(bpurchase_id),total_copies', 1, 1);
         endif;
         if ($export):
             $data = $this->datatables->generate_export($export);

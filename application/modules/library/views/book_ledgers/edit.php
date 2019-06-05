@@ -245,6 +245,22 @@
                             ?>
                         </div>
                     </div>
+                    <div class = 'form-group row'>
+                        <label for = 'edition' class = 'col-sm-4 col-form-label'>Total copies</label>
+                        <div class = 'col-sm-7'>                            
+                            <?php
+                            $attribute = array(
+                                "name" => "ledger_total_copies",
+                                "id" => "ledger_total_copies",
+                                "disabled" => "true",
+                                "class" => "form-control disabled",
+                                "type" => "text",
+                                "value" => (isset($data["ledger_total_copies"])) ? $data["ledger_total_copies"] : "0"
+                            );
+                            echo form_input($attribute);
+                            ?>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class = 'row'>
@@ -432,6 +448,7 @@
             e.preventDefault();
             var data = {'bpurchase_id': $(this).data('bpurchase_id')}
             var row = $(this).closest('tr');
+            var total_copy=$(this).data('purchase-books');
             BootstrapDialog.show({
                 title: 'Alert',
                 message: 'Do you want to delete the record?',
@@ -449,7 +466,10 @@
                                 data: data,
                                 success: function (result) {
                                     if (result == 1) {
-                                        dialog.close();
+                                        dialog.close();                                        
+                                        var ledg_total_copies = $('#ledger_total_copies').val();
+                                        var calc_copy = parseInt(ledg_total_copies) - parseInt(total_copy);
+                                        $('#ledger_total_copies').val(calc_copy);
                                         row.remove();
                                         if ($('#book_purchase_details_dt_table tr').length == 1) {
                                             window.location.reload(true);
@@ -665,6 +685,10 @@
                     $('#loading').css('display', 'none');
                     $('#new_purchase_detail_modal').modal('hide');
                     if ($.fn.DataTable.isDataTable('#book_purchase_details_dt_table')) {
+                        var total_copies = $('#total_copies').val();
+                        var ledg_total_copies = $('#ledger_total_copies').val();
+                        var calc_copy = parseInt(ledg_total_copies) + parseInt(total_copies);
+                        $('#ledger_total_copies').val(calc_copy);
                         win_book_purchase_details_dt_table_obj.ajax.reload();
                     }
                     resolve = JSON.parse(resolve);
@@ -675,6 +699,7 @@
                     $('#price').val('');
                     $('#vendor_name').val('');
                     $('#remarks').val('');
+                    $('#total_copies').val();
 
                 }, function (reject) {
                     $('#loading').css('display', 'none');
