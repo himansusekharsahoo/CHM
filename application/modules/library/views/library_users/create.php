@@ -179,10 +179,10 @@
                                 </div>
                             </div>
                             <div class = 'form-group row'>
-                                <label for = 'mobile' class = 'col-sm-5 col-form-label ele_required'>Mobile</label>
+                                <label for = 'mobile' class = 'col-sm-5 col-form-label ele_required'>Choose photo</label>
                                 <div class = 'col-sm-7'>
                                     <span class="control-fileupload"> 
-                                        <label for="file">Choose a file :</label>
+                                        <label for="file"></label>
                                         <input type="file" id="file">
                                     </span>
                                 </div>
