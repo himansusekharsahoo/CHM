@@ -23,7 +23,7 @@
         margin-top: 3px;
         margin-bottom: 3px;
         height: 25px;
-    }    
+    }
 </style>
 <div class="row">
     <div class="col-sm-12">
@@ -119,14 +119,10 @@
                                 </div>
                             </div>
                             <div class = 'form-group row'>
-                                <label for = 'mobile' class = 'col-sm-5 col-form-label ele_required'>Choose photo</label>
-                                <div class = 'col-sm-7'>
-                                    <span class="control-fileupload"> 
-                                        <label for="file"></label>
-                                        <input type="file" id="file">
-                                    </span>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="customFileLang" lang="es">
+                                    <label class="custom-file-label" for="customFileLang">Seleccionar Archivo</label>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -206,12 +202,6 @@
 
 <script type="text/javascript">
     $(function ($) {
-        $('input[type=file]').change(function () {
-            var t = $(this).val();
-            console.log('t',t);
-            var labelText =  t.substr(12, t.length);
-            $(this).prev('label').text(labelText);
-        })
         $('#library_new_users').validate({
             rules: {
                 first_name: {

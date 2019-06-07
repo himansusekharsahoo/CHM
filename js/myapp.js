@@ -162,12 +162,21 @@
         }
         myApp.modal.alert(params);
     });
-    $(document).on('click','.todo_dev',function(){
+    $(document).on('click', '.todo_dev', function () {
         var params = {
             'type': 'default',
             'title': 'Comming Soon <span class="fa fa-smile-o"></span> !',
             'message': 'Feature will be available very soon!'
         }
         myApp.modal.alert(params);
+    });
+    $(document).on('click', '.toggle-password', function () {    
+        $(this).toggleClass("fa-eye fa-eye-slash");
+        var input = $($(this).attr("toggle"));
+        if (input.attr("type") == "password") {
+            input.attr("type", "text");
+        } else {
+            input.attr("type", "password");
+        }
     });
 })(jQuery);

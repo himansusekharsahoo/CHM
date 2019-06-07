@@ -242,5 +242,36 @@ class Manage_employee extends CI_Model {
             $this->db->query($query);
         }
     }
+/**
+     * @param              : $data
+     * @desc               : update staff data
+     * @return             :
+     * @author             :
+     * @created:10/08/2018
+     */
+    public function update_emp_password($condition,$new_password) {
+        if ($condition) :
+            $this->db->trans_begin();
+            if (isset($condition['user_id']) && isset($condition['password'])) {
+                foreach ($condition as $key=>$val){
+                    $this->db->where($key, $val);
+                }
+                $staff_user_data = array(
+                    'password' => c_encode($new_password)
+                );                
+                $this->db->update("rbac_users", $staff_user_data);                
+            } else {
+                //invalid data to update
+                return false;
+            }
 
+            if ($this->db->trans_status() === false) {
+                $this->db->trans_rollback();
+                return false;
+            } else {
+                $this->db->trans_commit();
+                return true;
+            }
+        endif;
+    }
 }

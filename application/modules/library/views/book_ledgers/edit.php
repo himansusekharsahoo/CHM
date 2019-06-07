@@ -324,108 +324,106 @@
                 <h4 class="modal-title">Book purchase details</h4>
             </div>
             <div class="modal-body">
-                <div class="col-sm-12">
-                    <div class = 'form-group row'>
-                        <label for = 'bill_number' class = 'col-sm-3 col-form-label ele_required'>Bill number</label>
-                        <div class = 'col-sm-5'>
-                            <?php
-                            $attribute = array(
-                                "name" => "bill_number",
-                                "id" => "bill_number",
-                                "class" => "form-control",
-                                "title" => "",
-                                "required" => "",
-                                "type" => "text",
-                                "value" => ""
-                            );
-                            echo form_error("bill_number");
-                            echo form_input($attribute);
-                            ?>
-                        </div>
+                <div class = 'form-group row'>
+                    <label for = 'bill_number' class = 'col-sm-3 col-form-label ele_required'>Bill number</label>
+                    <div class = 'col-sm-5'>
+                        <?php
+                        $attribute = array(
+                            "name" => "bill_number",
+                            "id" => "bill_number",
+                            "class" => "form-control",
+                            "title" => "",
+                            "required" => "",
+                            "type" => "text",
+                            "value" => ""
+                        );
+                        echo form_error("bill_number");
+                        echo form_input($attribute);
+                        ?>
                     </div>
-                    <div class = 'form-group row'>
-                        <label for = 'purchase_date' class = 'col-sm-3 col-form-label ele_required'>Purchase date</label>
-                        <div class = 'col-sm-5'>
-                            <div class="input-group date">                
-                                <input type="text" class="form-control pull-right" id="purchase_date" name="purchase_date" value="">
-                                <div class="input-group-addon focus_date">
-                                    <i class="fa fa-calendar"></i>
-                                </div>
+                </div>
+                <div class = 'form-group row'>
+                    <label for = 'purchase_date' class = 'col-sm-3 col-form-label ele_required'>Purchase date</label>
+                    <div class = 'col-sm-5'>
+                        <div class="input-group date">                
+                            <input type="text" class="form-control pull-right" id="purchase_date" name="purchase_date" value="">
+                            <div class="input-group-addon focus_date">
+                                <i class="fa fa-calendar"></i>
                             </div>
-                            <span></span>                                            
                         </div>
+                        <span></span>                                            
                     </div>
-                    <div class = 'form-group row'>
-                        <label for = 'price' class = 'col-sm-3 col-form-label ele_required'>Price</label>
-                        <div class = 'col-sm-5'>
-                            <?php
-                            $attribute = array(
-                                "name" => "price",
-                                "id" => "price",
-                                "class" => "form-control",
-                                "title" => "",
-                                "required" => "",
-                                "type" => "text",
-                                "value" => ""
-                            );
-                            echo form_error("price");
-                            echo form_input($attribute);
-                            ?>
-                        </div>
+                </div>
+                <div class = 'form-group row'>
+                    <label for = 'price' class = 'col-sm-3 col-form-label ele_required'>Price</label>
+                    <div class = 'col-sm-5'>
+                        <?php
+                        $attribute = array(
+                            "name" => "price",
+                            "id" => "price",
+                            "class" => "form-control",
+                            "title" => "",
+                            "required" => "",
+                            "type" => "text",
+                            "value" => ""
+                        );
+                        echo form_error("price");
+                        echo form_input($attribute);
+                        ?>
                     </div>
-                    <div class = 'form-group row'>
-                        <label for = 'price' class = 'col-sm-3 col-form-label ele_required'>Total copies</label>
-                        <div class = 'col-sm-5'>
-                            <?php
-                            $attribute = array(
-                                "name" => "total_copies",
-                                "id" => "total_copies",
-                                "class" => "form-control",
-                                "title" => "",
-                                "required" => "",
-                                "type" => "number",
-                                "min" => "1",
-                                "value" => ""
-                            );
-                            echo form_error("price");
-                            echo form_input($attribute);
-                            ?>
-                        </div>
+                </div>
+                <div class = 'form-group row'>
+                    <label for = 'price' class = 'col-sm-3 col-form-label ele_required'>Total copies</label>
+                    <div class = 'col-sm-5'>
+                        <?php
+                        $attribute = array(
+                            "name" => "total_copies",
+                            "id" => "total_copies",
+                            "class" => "form-control",
+                            "title" => "",
+                            "required" => "",
+                            "type" => "number",
+                            "min" => "1",
+                            "value" => ""
+                        );
+                        echo form_error("price");
+                        echo form_input($attribute);
+                        ?>
                     </div>
-                    <div class = 'form-group row'>
-                        <label for = 'vendor_name' class = 'col-sm-3 col-form-label ele_required'>Vendor name</label>
-                        <div class = 'col-sm-5'>
-                            <?php
-                            $attribute = array(
-                                "name" => "vendor_name",
-                                "id" => "vendor_name",
-                                "class" => "form-control",
-                                "title" => "",
-                                "required" => "",
-                                "type" => "text",
-                                "value" => ""
-                            );
-                            echo form_error("vendor_name");
-                            echo form_input($attribute);
-                            ?>
-                        </div>
+                </div>
+                <div class = 'form-group row'>
+                    <label for = 'vendor_name' class = 'col-sm-3 col-form-label ele_required'>Vendor name</label>
+                    <div class = 'col-sm-5'>
+                        <?php
+                        $attribute = array(
+                            "name" => "vendor_name",
+                            "id" => "vendor_name",
+                            "class" => "form-control",
+                            "title" => "",
+                            "required" => "",
+                            "type" => "text",
+                            "value" => ""
+                        );
+                        echo form_error("vendor_name");
+                        echo form_input($attribute);
+                        ?>
                     </div>
-                    <div class = 'form-group row'>
-                        <label for = 'remarks' class = 'col-sm-3 col-form-label'>Remarks</label>
-                        <div class = 'col-sm-5'>
-                            <?php
-                            $attribute = array(
-                                "name" => "remarks",
-                                "id" => "remarks",
-                                "class" => "form-control",
-                                "title" => "",
-                                "rows" => "3"
-                            );
-                            $value = "";
-                            echo form_error("remarks");
-                            echo form_textarea($attribute, $value);
-                            ?>
-                        </div>
+                </div>
+                <div class = 'form-group row'>
+                    <label for = 'remarks' class = 'col-sm-3 col-form-label'>Remarks</label>
+                    <div class = 'col-sm-5'>
+                        <?php
+                        $attribute = array(
+                            "name" => "remarks",
+                            "id" => "remarks",
+                            "class" => "form-control",
+                            "title" => "",
+                            "rows" => "3"
+                        );
+                        $value = "";
+                        echo form_error("remarks");
+                        echo form_textarea($attribute, $value);
+                        ?>
                     </div>
                 </div>
             </div>
@@ -448,7 +446,7 @@
             e.preventDefault();
             var data = {'bpurchase_id': $(this).data('bpurchase_id')}
             var row = $(this).closest('tr');
-            var total_copy=$(this).data('purchase-books');
+            var total_copy = $(this).data('purchase-books');
             BootstrapDialog.show({
                 title: 'Alert',
                 message: 'Do you want to delete the record?',
@@ -466,7 +464,7 @@
                                 data: data,
                                 success: function (result) {
                                     if (result == 1) {
-                                        dialog.close();                                        
+                                        dialog.close();
                                         var ledg_total_copies = $('#ledger_total_copies').val();
                                         var calc_copy = parseInt(ledg_total_copies) - parseInt(total_copy);
                                         $('#ledger_total_copies').val(calc_copy);
