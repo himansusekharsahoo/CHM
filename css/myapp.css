@@ -86,7 +86,8 @@ label.error,div.error{color:red;font-weight: normal;}
 
 /* input [type = file]
     ----------------------------------------------- */
-
+.profile-user-img{cursor: pointer;}
+.profile-user-img{height:150px; width:150px;}
 input[type=file] {
     display: block;
     right: 1px;

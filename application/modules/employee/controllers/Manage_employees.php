@@ -567,6 +567,7 @@ class Manage_employees extends CI_Controller {
 
             if ($user_id) :
                 $result = $this->manage_employee->get_staff_data(null, array('t1.user_id' => $user_id), 1);
+            
                 if ($result) :
                     $result = current($result);
                 endif;
@@ -626,13 +627,54 @@ class Manage_employees extends CI_Controller {
         if ($this->input->is_ajax_request()) {
             $pass = c_encode($this->input->post('password'));
             $new_pass = $this->input->post('npassword');
-            $user_id=$this->rbac->get_user_id();
-            $condition=array('password'=>$pass,'user_id'=>$user_id);
-            if($this->manage_employee->update_emp_password($condition,$new_pass)){
-                $this->session->userdata['user_data']['password']= c_encode($new_pass);
-                echo json_encode(array('status' => 'success', 'title' => 'My Profile','message'=>'Password successfully updated!'));
-            }else{
+            $user_id = $this->rbac->get_user_id();
+            $condition = array('password' => $pass, 'user_id' => $user_id);
+            if ($this->manage_employee->update_emp_password($condition, $new_pass)) {
+                $this->session->userdata['user_data']['password'] = c_encode($new_pass);
+                echo json_encode(array('status' => 'success', 'title' => 'My Profile', 'message' => 'Password successfully updated!'));
+            } else {
                 echo json_encode(array('status' => 'error', 'title' => 'My Profile', 'message' => 'There is some error, Please refresh the page and try again!'));
+            }
+            exit;
+        } else {
+            $this->layout->data = array('status_code' => '403', 'message' => 'Request Forbidden.');
+            $this->layout->render(array('error' => 'general'));
+        }
+    }
+
+    /**
+     * 
+     * @method
+     * @param   
+     * @desc    used to update user profile picuture
+     * @return 
+     * @author  HimansuS                  
+     * @since   
+     */
+    public function update_my_profile_pic() {
+        if ($this->input->is_ajax_request()) {
+            //pma($_FILES, 1);
+            $user_id = $this->rbac->get_user_id();
+            $config['upload_path'] = './uploads/employee/profile_picture/';
+            $config['allowed_types'] = 'gif|jpg|png|jpeg';
+            $config['max_size'] = 5120;
+            $config['file_name'] = 'profile_pic_' . $user_id;
+            $config['overwrite'] = TRUE;
+            create_dir($config['upload_path']);
+            $this->load->library('upload', $config);
+            if (!$this->upload->do_upload('profile_image')) {
+                $error = array('error' => $this->upload->display_errors());
+                echo json_encode(array('status' => 'error', 'title' => 'My Profile', 'message' => 'There is some error, Please refresh the page and try again!'));
+            } else {
+                $data = array('upload_data' => $this->upload->data());                
+                $profile_data=array(                    
+                    'profile_pic'=>$data['upload_data']['file_name']
+                );
+                if ($this->manage_employee->update_profile_picture($profile_data,$user_id)) {
+                    echo json_encode(array('status' => 'success', 'title' => 'My Profile', 'message' => 'Profile picture successfully uploaded!'));
+                } else {
+                    echo json_encode(array('status' => 'error', 'title' => 'My Profile', 'message' => 'There is some error, Please refresh the page and try again!'));
+                }                
             }
             exit;
         } else {

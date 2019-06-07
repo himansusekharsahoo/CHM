@@ -118,11 +118,12 @@ class Manage_employee extends CI_Model {
                 ,t1.mobile,t1.mobile_verified,t1.email_verified,t1.created,t1.modified,t1.created_by
                 ,t1.modified_by,t1.status
                 ,concat(t2.first_name,t2.last_name) created_by_name
-                ,concat(t3.first_name,t3.last_name) modified_by_name';
+                ,concat(t3.first_name,t3.last_name) modified_by_name
+                ,t1.profile_pic';
         }
         $this->db->select($columns)->from('rbac_users t1')
-                ->join('rbac_users t2','t2.user_id=t1.created_by','LEFT')
-                ->join('rbac_users t3','t3.user_id=t1.modified_by','LEFT')
+                ->join('rbac_users t2', 't2.user_id=t1.created_by', 'LEFT')
+                ->join('rbac_users t3', 't3.user_id=t1.modified_by', 'LEFT')
                 ->where('t1.user_type', 'employee');
 
         if ($conditions && is_array($conditions)) :
@@ -135,7 +136,7 @@ class Manage_employee extends CI_Model {
 
         endif;
         $result = $this->db->get()->result_array();
-        
+
         return $result;
     }
 
@@ -237,29 +238,30 @@ class Manage_employee extends CI_Model {
         }
         //remove assigned role if not selected from dorpdown
         if ($removed_roles) {
-            $removed_roles=implode(',',$removed_roles);
-            $query="Delete from rbac_user_roles where user_id=$user_id and role_id in($removed_roles)";
+            $removed_roles = implode(',', $removed_roles);
+            $query = "Delete from rbac_user_roles where user_id=$user_id and role_id in($removed_roles)";
             $this->db->query($query);
         }
     }
-/**
+
+    /**
      * @param              : $data
      * @desc               : update staff data
      * @return             :
      * @author             :
      * @created:10/08/2018
      */
-    public function update_emp_password($condition,$new_password) {
+    public function update_emp_password($condition, $new_password) {
         if ($condition) :
             $this->db->trans_begin();
             if (isset($condition['user_id']) && isset($condition['password'])) {
-                foreach ($condition as $key=>$val){
+                foreach ($condition as $key => $val) {
                     $this->db->where($key, $val);
                 }
                 $staff_user_data = array(
                     'password' => c_encode($new_password)
-                );                
-                $this->db->update("rbac_users", $staff_user_data);                
+                );
+                $this->db->update("rbac_users", $staff_user_data);
             } else {
                 //invalid data to update
                 return false;
@@ -274,4 +276,27 @@ class Manage_employee extends CI_Model {
             }
         endif;
     }
+
+    /**
+     * 
+     * @method
+     * @param   
+     * @desc   used to update employee profile picture
+     * @return 
+     * @author  HimansuS                  
+     * @since   
+     */
+    public function update_profile_picture($picture_name, $user_id) {
+        $this->db->trans_begin();
+        $this->db->where('user_id', $user_id);
+        $this->db->update("rbac_users", $picture_name);
+        if ($this->db->trans_status() === false) {
+            $this->db->trans_rollback();
+            return false;
+        } else {
+            $this->db->trans_commit();
+            return true;
+        }
+    }
+
 }

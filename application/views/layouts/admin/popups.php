@@ -1,4 +1,4 @@
-<div class="modal fade" id="default_modal_box">
+<div class="modal fade" id="default_modal_box" style="z-index: 1060;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

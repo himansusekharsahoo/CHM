@@ -43,6 +43,8 @@ $route['export-employee-profile'] = 'employee/manage_employees/export_grid_data'
 $route['my-profile'] = 'employee/manage_employees/employee_profile';
 $route['validate-my-password'] = 'employee/manage_employees/validate_my_password';
 $route['update-my-password'] = 'employee/manage_employees/update_my_password';
+$route['update-my-profile-pic'] = 'employee/manage_employees/update_my_profile_pic';
+
 //student profile pages
 $route['student-list'] = 'student/manage_students/index';
 $route['create-student-profile'] = 'student/manage_students/create';

@@ -170,7 +170,7 @@
         }
         myApp.modal.alert(params);
     });
-    $(document).on('click', '.toggle-password', function () {    
+    $(document).on('click', '.toggle-password', function () {
         $(this).toggleClass("fa-eye fa-eye-slash");
         var input = $($(this).attr("toggle"));
         if (input.attr("type") == "password") {
@@ -179,4 +179,5 @@
             input.attr("type", "password");
         }
     });
+    
 })(jQuery);

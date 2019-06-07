@@ -5,7 +5,10 @@
             <div class="box-body box-profile">
                 <div class="row">
                     <div class="col-sm-12">
-                        <img class="profile-user-img img-responsive img-circle" src="<?= base_url(); ?>images/user-icon.png" alt="User profile picture"/>
+                        <?php
+                            $profile_pic=(isset($data['profile_pic']) && $data['profile_pic']!='' && $data['profile_pic']!=null)?'/uploads/employee/profile_picture/'.$data['profile_pic']:'images/user-icon.png';
+                        ?>
+                        <img title="Click to update profile picture" class="profile-user-img img-responsive img-circle" src="<?= base_url($profile_pic); ?>" alt="User profile picture"/>
                         <h3 class="profile-username text-center">
                             <?php
                             echo (isset($data["first_name"])) ? ucfirst($data["first_name"]) : "";
@@ -65,7 +68,7 @@
     </div>    
     <div class="col-sm-3">
         <a class="btn btn-block btn-social btn-twitter" href="#" id="upload_profile_image">
-            <i class="fa fa-file-image-o fa-sm"></i> Upload Image
+            <i class="fa fa-file-image-o fa-sm"></i> Upload profile picture
         </a>
         <a class="btn btn-block btn-social btn-google" href="#" id="change_my_pass">
             <i class="fa fa-key fa-sm"></i> Change Password
@@ -182,7 +185,7 @@
             <div class="modal-body">
                 <div class = 'form-group row'>
                     <label for = 'password' class = 'col-sm-5 col-form-label ele_required'>Select PNG/JPG/JPEG file</label>
-                    <div class = 'col-sm-5'>
+                    <div class = 'col-sm-7'>
                         <span class="control-fileupload"> 
                             <label for="file">Choose file</label>
                             <input type="file" id="profile_image" name="profile_image">
@@ -263,7 +266,7 @@
                 user_promise.then(function (resolve) {
                     $('#loading').css('display', 'none');
                     if (parseInt(resolve.match) === 1) {
-                        console.log('resolve', resolve, 'MATCH');
+
                         const user_match_promise = new Promise(function (resolve, reject) {
                             var form_data = {
                                 "password": $('#password').val(),
@@ -309,42 +312,91 @@
         });
         $('input[type=file]').change(function () {
             var t = $(this).val();
-            console.log('t',t);
-            var labelText =  t.substr(12, t.length);
+            var labelText = t.substr(12, t.length);
             $(this).prev('label').text(labelText);
         })
+        $.validator.addMethod('filesize', function (value, element, param) {
+            //file size in kb            
+            var size_in_kb = element.files[0].size / 1024;
+            return this.optional(element) || (size_in_kb <= param)
+        }, 'File size must be less than {0}');
+
         $('#upload_image_form').validate({
             rules: {
                 profile_image: {
                     required: true,
-                    extension: "png|jpg|jpeg"
+                    extension: "png|jpg|jpeg|pdf|xlsx|xls",
+                    filesize: 5120 //5mb
                 }
             },
             messages: {
                 profile_image: {
                     required: 'Select image to upload',
-                    extension:'Select valid image to upload'
+                    extension: 'Select a valid image to upload',
+                    filesize: 'File size should be within 5MB'
                 }
             },
             errorElement: 'div',
             errorPlacement: function (error, element) {
                 error.insertAfter(element.closest("div").find("span:last"));
             },
-            submitHandler: function (form) {                
+            submitHandler: function (form) {
                 return false; // prevent normal form posting
             }
         });
-        
+
         $(document).on('click', '#upload_profile_image', function (e) {
             $("#profile_image").val('');
             $("#profile_image-error").remove();
             $('.control-fileupload').find('label:first').html("Choose file");
             $('#upload_photo_modal').modal({backdrop: 'static', keyboard: false});
         });
-        $(document).on('click', '#save_upload_image', function (e) {            
+        $(document).on('click', '#save_upload_image', function (e) {
             if ($('#upload_image_form').valid()) {
-                console.log('process to upload');
+                var form_data = new FormData();
+                var files = $('#profile_image')[0].files[0];
+                form_data.append('profile_image', files);
+                console.log('profile_image', $('#profile_image')[0]);
+                const file_upload_promise = new Promise(function (resolve, reject) {
+
+
+                    $('#loading').css('display', 'block');
+                    $.ajax({
+                        url: "<?= base_url('update-my-profile-pic') ?>",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: form_data,
+                        processData: false,
+                        contentType: false,
+                        success: function (result) {
+                            resolve(result);
+                        },
+                        error: function (result) {
+                            reject(result);
+                        }
+                    });
+                });
+                file_upload_promise.then(function (resolve) {
+                    $('#loading').css('display', 'none');
+                    BootstrapDialog.show({
+                        title: resolve.title,
+                        message: resolve.message,
+                        buttons: [{
+                                label: 'Ok',
+                                action: function (dialog) {
+                                    dialog.close();
+                                    location.reload();
+                                }
+                            }]
+                    });
+                }, function (reject) {
+                    $('#loading').css('display', 'none');
+                    show_message(reject);
+                });
             }
+        });
+        $('.profile-user-img').on('click',function(){
+            $('#upload_profile_image').trigger('click');
         });
         function show_message(reject) {
             var errMsg = {
