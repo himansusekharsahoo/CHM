@@ -55,56 +55,56 @@ class Book_assignment extends CI_Controller {
             $header = array(
                 array(
                     'db_column' => 'isbn_no',
-                    'name' => 'Ledger ID',
-                    'title' => 'Ledger ID',
+                    'name' => 'isbn_no',
+                    'title' => 'ISBN',
                     'class_name' => 'ledger_id',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
                 ), array(
                     'db_column' => 'card_no',
-                    'name' => 'Card Number',
-                    'title' => 'Card Number',
+                    'name' => 'card_no',
+                    'title' => 'Card number',
                     'class_name' => 'card_no',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
                 ), array(
                     'db_column' => 'issue_date',
-                    'name' => 'Issue Date',
-                    'title' => 'Issue Date',
+                    'name' => 'issue_date',
+                    'title' => 'Issue date',
                     'class_name' => 'issue_date',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
                 ), array(
                     'db_column' => 'due_date',
-                    'name' => 'Due Date',
-                    'title' => 'Due Date',
+                    'name' => 'due_date',
+                    'title' => 'Due date',
                     'class_name' => 'due_date',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
                 ), array(
                     'db_column' => 'return_date',
-                    'name' => 'Return Date',
-                    'title' => 'Return Date',
+                    'name' => 'return_date',
+                    'title' => 'Return date',
                     'class_name' => 'return_date',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
                 ), array(
                     'db_column' => 'return_delay_fine',
-                    'name' => 'Delay Fine',
-                    'title' => 'Delay Fine',
+                    'name' => 'return_delay_fine',
+                    'title' => 'Delay fine',
                     'class_name' => 'return_delay_fine',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
                 ), array(
                     'db_column' => 'book_return_condition',
-                    'name' => 'Book Condition',
-                    'title' => 'Book Condition',
+                    'name' => 'book_return_condition',
+                    'title' => 'Book condition',
                     'class_name' => 'book_return_condition',
                     'orderable' => 'true',
                     'visible' => 'true',
@@ -119,8 +119,8 @@ class Book_assignment extends CI_Controller {
                     'searchable' => 'true'
                 ), array(
                     'db_column' => 'user_type',
-                    'name' => 'User Type',
-                    'title' => 'User Type',
+                    'name' => 'user_type',
+                    'title' => 'User type',
                     'class_name' => 'user_type',
                     'orderable' => 'true',
                     'visible' => 'true',
@@ -247,9 +247,18 @@ class Book_assignment extends CI_Controller {
         if ($this->input->is_ajax_request()):
             if ($this->rbac->has_permission('MANAGE_BOOK_ASSIGNS', 'XLS_EXPORT') || $this->rbac->has_permission('MANAGE_BOOK_ASSIGNS', 'CSV_EXPORT')) {
                 $export_type = $this->input->post('export_type');
-                $tableHeading = array('bledger_id' => 'bledger_id', 'member_id' => 'member_id', 'issue_date' => 'issue_date', 'due_date' => 'due_date', 'return_date' => 'return_date', 'return_delay_fine' => 'return_delay_fine', 'book_return_condition' => 'book_return_condition', 'book_lost_fine' => 'book_lost_fine', 'remarks' => 'remarks', 'created' => 'created', 'created_by' => 'created_by', 'user_type' => 'user_type',);
-                $cols = 'bledger_id,member_id,issue_date,due_date,return_date,return_delay_fine,book_return_condition,book_lost_fine,remarks,created,created_by,user_type';
-                $data = $this->book_assignments->get_book_assign_datatable(null, true, $tableHeading);
+                $tableHeading = array(
+                    'isbn_no' => 'ISBN',
+                    'card_no' => 'Card number',
+                    'issue_date' => 'Issue date',
+                    'due_date' => 'Due date',
+                    'return_date' => 'Return date',
+                    'return_delay_fine' => 'Delay fine',
+                    'book_return_condition' => 'Book condition',                    
+                    'remarks' => 'remarks',                    
+                    'user_type' => 'user_type'
+                );
+                $data = $this->book_assignments->get_book_assign_datatable(null, true);
                 $head_cols = $body_col_map = array();
                 $date = array(
                     array(

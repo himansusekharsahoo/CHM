@@ -70,7 +70,7 @@ class Book_publication_masters extends CI_Controller {
                     'db_column' => 'name',
                     'name' => 'Name',
                     'title' => 'Name',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'name',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
@@ -78,7 +78,7 @@ class Book_publication_masters extends CI_Controller {
                     'db_column' => 'code',
                     'name' => 'Code',
                     'title' => 'Code',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'code',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
@@ -86,7 +86,7 @@ class Book_publication_masters extends CI_Controller {
                     'db_column' => 'status',
                     'name' => 'Status',
                     'title' => 'Status',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'status',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
@@ -94,7 +94,7 @@ class Book_publication_masters extends CI_Controller {
                     'db_column' => 'remarks',
                     'name' => 'Remarks',
                     'title' => 'Remarks',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'remarks',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
@@ -102,15 +102,15 @@ class Book_publication_masters extends CI_Controller {
                     'db_column' => 'created',
                     'name' => 'Created',
                     'title' => 'Created',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'created',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
                 ), array(
                     'db_column' => 'created_by_name',
                     'name' => 'Created_by',
-                    'title' => 'Created_by',
-                    'class_name' => 'dt_name',
+                    'title' => 'Created by',
+                    'class_name' => 'created_by_name',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
