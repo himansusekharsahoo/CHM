@@ -53,3 +53,4 @@ $route['edit-student-profile-save'] = 'student/manage_students/edit';
 $route['view-student-profile/(:any)'] = 'student/manage_students/view/$1';
 $route['delete-student-profile'] = 'student/manage_students/delete';
 $route['export-student-profile'] = 'student/manage_students/export_grid_data';
+$route['reset-student-password'] = 'student/manage_students/reset_student_password';

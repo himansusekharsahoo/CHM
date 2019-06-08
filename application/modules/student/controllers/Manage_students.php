@@ -33,32 +33,34 @@ class Manage_students extends CI_Controller {
     public function index() {
         if ($this->rbac->has_permission('STUDENT_USERS', 'LIST')) {
             $this->breadcrumbs->push('index', base_url('student-list'));
-            $this->scripts_include->includePlugins(array('datatable','chosen'), 'css');
-            $this->scripts_include->includePlugins(array('datatable','chosen'), 'js');
+            $this->scripts_include->includePlugins(array('datatable', 'chosen'), 'css');
+            $this->scripts_include->includePlugins(array('datatable', 'chosen'), 'js');
             $this->layout->navTitle = 'Student list';
             $this->layout->title = 'Student list';
             $header = array(
                 array(
                     'db_column' => 'first_name',
                     'name' => 'First_name',
-                    'title' => 'First_name',
-                    'class_name' => 'dt_name',
+                    'title' => 'First name',
+                    'class_name' => 'first_name',
                     'orderable' => 'true',
                     'visible' => 'true',
-                    'searchable' => 'true'
+                    'searchable' => 'true',
+                    'data' => 'function (item) {return myApp.CommonMethod.ucFirst(item[0]);}'
                 ), array(
                     'db_column' => 'last_name',
                     'name' => 'Last_name',
-                    'title' => 'Last_name',
-                    'class_name' => 'dt_name',
+                    'title' => 'Last name',
+                    'class_name' => 'last_name',
                     'orderable' => 'true',
                     'visible' => 'true',
-                    'searchable' => 'true'
+                    'searchable' => 'true',
+                    'data' => 'function (item) {return myApp.CommonMethod.ucFirst(item[1]);}'
                 ), array(
                     'db_column' => 'login_id',
                     'name' => 'Login_id',
-                    'title' => 'Login_id',
-                    'class_name' => 'dt_name',
+                    'title' => 'Login id',
+                    'class_name' => 'login_id',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
@@ -66,55 +68,59 @@ class Manage_students extends CI_Controller {
                     'db_column' => 'email',
                     'name' => 'Email',
                     'title' => 'Email',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'email',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
                 ), array(
                     'db_column' => 'login_status',
                     'name' => 'Login_status',
-                    'title' => 'Login_status',
-                    'class_name' => 'dt_name',
+                    'title' => 'Login status',
+                    'class_name' => 'login_status',
                     'orderable' => 'true',
                     'visible' => 'true',
-                    'searchable' => 'true'
+                    'searchable' => 'true',
+                    'data' => 'function (item) {return myApp.CommonMethod.ucFirst(item[4]);}'
                 ), array(
                     'db_column' => 'mobile',
                     'name' => 'Mobile',
                     'title' => 'Mobile',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'mobile',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
                 ), array(
                     'db_column' => 'mobile_verified',
                     'name' => 'Mobile_verified',
-                    'title' => 'Mobile_verified',
-                    'class_name' => 'dt_name',
+                    'title' => 'Mobile verified',
+                    'class_name' => 'mobile_verified',
                     'orderable' => 'true',
                     'visible' => 'true',
-                    'searchable' => 'true'
+                    'searchable' => 'true',
+                    'data' => 'function (item) {return myApp.CommonMethod.ucFirst(item[6]);}'
                 ), array(
                     'db_column' => 'email_verified',
                     'name' => 'email_verified',
-                    'title' => 'email_verified',
-                    'class_name' => 'dt_name',
+                    'title' => 'Email verified',
+                    'class_name' => 'email_verified',
                     'orderable' => 'true',
                     'visible' => 'true',
-                    'searchable' => 'true'
+                    'searchable' => 'true',
+                    'data' => 'function (item) {return myApp.CommonMethod.ucFirst(item[7]);}'
                 ), array(
                     'db_column' => 'status',
                     'name' => 'Status',
                     'title' => 'Status',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'status',
                     'orderable' => 'true',
                     'visible' => 'true',
-                    'searchable' => 'true'
+                    'searchable' => 'true',
+                    'data' => 'function (item) {return myApp.CommonMethod.ucFirst(item[8]);}'
                 ), array(
                     'db_column' => 'Action',
                     'name' => 'Action',
                     'title' => 'Action',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'Action',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'false'
@@ -228,6 +234,7 @@ class Manage_students extends CI_Controller {
             $this->layout->render(array('error' => '401'));
         }
     }
+
     /**
      * @param              : 
      * @desc               :used to export grid data
@@ -293,7 +300,7 @@ class Manage_students extends CI_Controller {
             $this->breadcrumbs->push('create', base_url('create-student-profile'));
             $this->layout->navTitle = 'Add new student';
             $this->layout->title = 'Add new student';
-            $this->scripts_include->includePlugins(array('jq_validation'), 'js');
+            $this->scripts_include->includePlugins(array('jq_validation','pass_meter'), 'js');
             $user_id = $this->rbac->get_user_id();
             $data = array();
             if ($this->input->post()) :
@@ -360,7 +367,7 @@ class Manage_students extends CI_Controller {
     public function edit($user_id = null) {
         if ($this->rbac->has_permission('STUDENT_USERS', 'EDIT')) {
             $this->breadcrumbs->push('edit', base_url('edit-student-profile'));
-            $this->scripts_include->includePlugins(array('jq_validation'), 'js');
+            $this->scripts_include->includePlugins(array('jq_validation','pass_meter'), 'js');
             $this->layout->navTitle = 'Edit student profile';
             $this->layout->title = 'Edit student profile';
             $data = array();
@@ -386,20 +393,35 @@ class Manage_students extends CI_Controller {
                         'field' => 'mobile',
                         'label' => 'mobile',
                         'rules' => 'required'
+                    ),
+                    array(
+                        'field' => 'login_id',
+                        'label' => 'login_id',
+                        'rules' => 'required',
+                        'errors' => array(
+                            'required' => 'Please enter registration id'
+                        )
                     )
                 );
                 $this->form_validation->set_rules($config);
+                $this->form_validation->set_error_delimiters('<div class="error">', '</div>');
 
                 if ($this->form_validation->run()) :
                     $condition = " AND user_id!='" . $post_data['user_id'] . "'AND replace(lower(email),' ','')=replace(lower('" . $post_data['email'] . "'),' ','')";
                     if (!$this->manage_student->check_duplicate($condition)) :
-                        $result = $this->manage_student->update($data['data']);
-                        if ($result >= 1):
-                            $this->session->set_flashdata('success', 'Record successfully updated!');
-                            redirect('student-list');
+                        $condition = " AND user_id!='" . $post_data['user_id'] . "'AND replace(lower(login_id),' ','')=replace(lower('" . $post_data['login_id'] . "'),' ','')";
+                        if (!$this->manage_student->check_duplicate($condition)) :
+                            $result = $this->manage_student->update($data['data']);
+                            if ($result >= 1):
+                                $this->session->set_flashdata('success', 'Record successfully updated!');
+                                redirect('student-list');
+                            else:
+                                $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
+                            endif;
                         else:
-                            $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
+                            $this->session->set_flashdata('error', 'Registeration id is already exists, Please try another!');
                         endif;
+
                     else:
                         $this->session->set_flashdata('error', 'Email id is already exists, Please try another!');
                     endif;
@@ -408,6 +430,7 @@ class Manage_students extends CI_Controller {
             else:
                 $user_id = c_decode($user_id);
                 $result = $this->manage_student->get_student_data(null, array('user_id' => $user_id));
+
                 if ($result) :
                     $result = current($result);
                 endif;
@@ -485,4 +508,30 @@ class Manage_students extends CI_Controller {
         return 'Invalid request type.';
     }
 
+    /**
+     * 
+     * @method
+     * @param   
+     * @desc    used to reset student user password
+     * @return 
+     * @author  HimansuS                  
+     * @since   
+     */
+    public function reset_student_password() {
+        if ($this->input->is_ajax_request()) {            
+            $user_id = c_decode($this->input->post('uid'));
+            $new_pass = $this->input->post('npassword');
+            
+            $condition = array('user_id' => $user_id);
+            if ($this->manage_student->update_student_password($condition, $new_pass)) {                
+                echo json_encode(array('status' => 'success', 'title' => 'Reset Student Password', 'message' => 'Password successfully updated!'));
+            } else {
+                echo json_encode(array('status' => 'error', 'title' => 'Reset Student Password', 'message' => 'There is some error, Please refresh the page and try again!'));
+            }
+            exit;
+        } else {
+            $this->layout->data = array('status_code' => '403', 'message' => 'Request Forbidden.');
+            $this->layout->render(array('error' => 'general'));
+        }
+    }
 }

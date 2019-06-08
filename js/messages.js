@@ -2,10 +2,10 @@
 var myApp = myApp || {};
 
 myApp.CommonMethod = {
-    log_flag:false,
+    log_flag: false,
     name: '',
     pageUrl: window.location,
-    tempBaseUrl: base_url ,
+    tempBaseUrl: base_url,
     getBaseUrl: function () {
         if (this.tempBaseUrl)
             return this.tempBaseUrl;
@@ -20,45 +20,52 @@ myApp.CommonMethod = {
     getAlert: function (msg) {
         alert(msg);
     },
-    checkAll:function(eleObj,itemClass){
+    checkAll: function (eleObj, itemClass) {
         eleObj.on('click', function () {
-            $(':checkbox.'+itemClass).prop('checked', this.checked);
+            $(':checkbox.' + itemClass).prop('checked', this.checked);
         });
-    },app_log:function(key,value){
-        if(this.log_flag){
-            console.log(key,value);
+    },
+    app_log: function (key, value) {
+        if (this.log_flag) {
+            console.log(key, value);
         }
+    },
+    ucFirst: function (string) {
+        if (typeof string != 'undefined' && string.trim().length > 0) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+        return '';
     }
 }//end sub namespace 
-myApp.CommonVar={
-  stype:'primary',
-  stitle:'Success',
-  smesage:'Record successfully saved!',
-  etype:'danger',
-  etitle:'Error',
-  emesage:'Record can not be saved!'
+myApp.CommonVar = {
+    stype: 'primary',
+    stitle: 'Success',
+    smesage: 'Record successfully saved!',
+    etype: 'danger',
+    etitle: 'Error',
+    emesage: 'Record can not be saved!'
 };
 myApp.modal = {
-    alert: function (params) {         
+    alert: function (params) {
         //console.log('alert=',params);
         switch (params.type) {
             case 'default':
-                this.default(params.title,params.message);
+                this.default(params.title, params.message);
                 break;
             case 'primary':
-                this.primary(params.title,params.message);
+                this.primary(params.title, params.message);
                 break;
             case 'info':
-                this.info(params.title,params.message);
+                this.info(params.title, params.message);
                 break;
             case 'warning':
-                this.warning(params.title,params.message);
+                this.warning(params.title, params.message);
                 break;
             case 'success':
-                this.success(params.title,params.message);
+                this.success(params.title, params.message);
                 break;
             case 'danger':
-                this.danger(params.title,params.message);
+                this.danger(params.title, params.message);
                 break;
         }
     },
@@ -130,16 +137,16 @@ myApp.Ajax = {
         }
         return url;
     },
-    
+
     /**
      * @method: genericAjax() 
      * @param: eleObj,method, callBack, callBackParam,extra_code
      * @return:  NA
      * @desc: generic function for all ajax operation
      */
-    genericAjax: function (eleObj,method, callBack, callBackParam,extra_code) {
+    genericAjax: function (eleObj, method, callBack, callBackParam, extra_code) {
 
-        jQuery('#loading').css('display','block');
+        jQuery('#loading').css('display', 'block');
 
         if (!callBack) {
             callBack = this.unDefinedCallBack;
@@ -153,22 +160,22 @@ myApp.Ajax = {
             data: this.post_data,
             datatype: this.data_type,
             success: function (result) {
-                myApp.Ajax.result = result; 
-                if(eleObj && method){
+                myApp.Ajax.result = result;
+                if (eleObj && method) {
                     //console.log(eleObj, method);
-                    var code='eleObj.'+method+'(result)';
+                    var code = 'eleObj.' + method + '(result)';
                     eval(code);
                 }
             },
             failure: function (result) {
                 myApp.Ajax.result = result;
             }
-        }).done(function () {             
-            callBack(callBackParam)            
-            jQuery('#loading').css('display','none');
+        }).done(function () {
+            callBack(callBackParam)
+            jQuery('#loading').css('display', 'none');
         });
     }
-   
+
 };
 // sub namespace for validations
 myApp.RegEx = {}
@@ -177,13 +184,13 @@ function pop_up_message(param) {
     myApp.modal.alert(param);
 }
 function message_toggle() {
-    var data=JSON.parse(myApp.Ajax.result);    
+    var data = JSON.parse(myApp.Ajax.result);
     if (data) {
         var param = {
-            type: (data.type)?data.type:myApp.CommonVar.stype,
-            title: (data.title)?data.title:myApp.CommonVar.stitle,
-            message: (data.message)?data.message:myApp.CommonVar.smesage,
+            type: (data.type) ? data.type : myApp.CommonVar.stype,
+            title: (data.title) ? data.title : myApp.CommonVar.stitle,
+            message: (data.message) ? data.message : myApp.CommonVar.smesage,
         }
-    }    
+    }
     myApp.modal.alert(param);
 }

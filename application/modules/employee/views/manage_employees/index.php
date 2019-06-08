@@ -1,4 +1,18 @@
-<?php ?> <div class="row-fluid">
+<?php ?>
+<style type="text/css">
+    table{table-layout: fixed;}
+    .first_name{width:100px !important;}
+    .last_name{width:100px !important;}
+    .login_id{width:100px !important;}
+    .email{width:150px !important;}
+    .login_status{width:100px !important;}
+    .mobile{width:100px !important;}
+    .mobile_verified{width:120px !important;}
+    .email_verified{width:100px !important;}
+    .status{width:100px !important;}
+    .Action{width:100px !important;}
+</style>
+<div class="row-fluid">
     <div class="col-sm-12 no_pad table-responsive">
         <?php
         $this->load->library('c_datatable');
@@ -6,7 +20,8 @@
         echo $dt_data;
         ?>
     </div>
-</div><script type="text/javascript">
+</div>
+<script type="text/javascript">
     $(function ($) {
 //delete record
 
@@ -26,7 +41,7 @@
                         label: 'Delete',
                         action: function (dialog) {
                             $.ajax({
-                                url: '<?=base_url('delete-employee-profile')?>',
+                                url: '<?= base_url('delete-employee-profile') ?>',
                                 method: 'POST',
                                 data: data,
                                 success: function (result) {

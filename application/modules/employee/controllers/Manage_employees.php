@@ -41,24 +41,24 @@ class Manage_employees extends CI_Controller {
                 array(
                     'db_column' => 'first_name',
                     'name' => 'First_name',
-                    'title' => 'First_name',
-                    'class_name' => 'dt_name',
+                    'title' => 'First name',
+                    'class_name' => 'first_name',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
                 ), array(
                     'db_column' => 'last_name',
                     'name' => 'Last_name',
-                    'title' => 'Last_name',
-                    'class_name' => 'dt_name',
+                    'title' => 'Last name',
+                    'class_name' => 'last_name',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
                 ), array(
                     'db_column' => 'login_id',
                     'name' => 'Login_id',
-                    'title' => 'Login_id',
-                    'class_name' => 'dt_name',
+                    'title' => 'Login id',
+                    'class_name' => 'login_id',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
@@ -66,15 +66,15 @@ class Manage_employees extends CI_Controller {
                     'db_column' => 'email',
                     'name' => 'Email',
                     'title' => 'Email',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'email',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
                 ), array(
                     'db_column' => 'login_status',
                     'name' => 'Login_status',
-                    'title' => 'Login_status',
-                    'class_name' => 'dt_name',
+                    'title' => 'Login status',
+                    'class_name' => 'login_status',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
@@ -82,23 +82,23 @@ class Manage_employees extends CI_Controller {
                     'db_column' => 'mobile',
                     'name' => 'Mobile',
                     'title' => 'Mobile',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'mobile',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
                 ), array(
                     'db_column' => 'mobile_verified',
                     'name' => 'Mobile_verified',
-                    'title' => 'Mobile_verified',
-                    'class_name' => 'dt_name',
+                    'title' => 'Mobile verified',
+                    'class_name' => 'mobile_verified',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
                 ), array(
                     'db_column' => 'email_verified',
                     'name' => 'email_verified',
-                    'title' => 'email_verified',
-                    'class_name' => 'dt_name',
+                    'title' => 'Email verified',
+                    'class_name' => 'email_verified',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
@@ -106,7 +106,7 @@ class Manage_employees extends CI_Controller {
                     'db_column' => 'status',
                     'name' => 'Status',
                     'title' => 'Status',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'status',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
@@ -114,7 +114,7 @@ class Manage_employees extends CI_Controller {
                     'db_column' => 'Action',
                     'name' => 'Action',
                     'title' => 'Action',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'Action',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'false'
