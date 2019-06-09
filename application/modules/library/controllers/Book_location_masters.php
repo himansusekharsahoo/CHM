@@ -74,7 +74,7 @@ class Book_location_masters extends CI_Controller {
                     'db_column' => 'floor',
                     'name' => 'Floor',
                     'title' => 'Floor',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'floor',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
@@ -82,23 +82,23 @@ class Book_location_masters extends CI_Controller {
                     'db_column' => 'block',
                     'name' => 'Block',
                     'title' => 'Block',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'block',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
                 ), array(
                     'db_column' => 'rack_no',
                     'name' => 'Rack_no',
-                    'title' => 'Rack_no',
-                    'class_name' => 'dt_name',
+                    'title' => 'Rack no',
+                    'class_name' => 'rack_no',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
                 ), array(
                     'db_column' => 'self_no',
                     'name' => 'Self_no',
-                    'title' => 'Self_no',
-                    'class_name' => 'dt_name',
+                    'title' => 'Self no',
+                    'class_name' => 'self_no',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
@@ -106,7 +106,7 @@ class Book_location_masters extends CI_Controller {
                     'db_column' => 'remarks',
                     'name' => 'Remarks',
                     'title' => 'Remarks',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'remarks',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'

@@ -85,7 +85,7 @@
                     $attribute = array(
                         "name" => "password",
                         "id" => "password",
-                        "class" => "form-control",
+                        "class" => "form-control inputPassword",
                         "type" => "password",
                         "value" => "",
                         "autocomplete" => "off"
@@ -93,6 +93,8 @@
                     echo form_error("password");
                     echo form_input($attribute);
                     ?>
+                    <span toggle="#password" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                    <span class="form-control default complexity"></span>
                 </div>
             </div>
             <div class = 'form-group row'>
@@ -110,6 +112,7 @@
                     echo form_error("password");
                     echo form_input($attribute);
                     ?>
+                    <span toggle="#re_password" class="fa fa-fw fa-eye field-icon toggle-password"></span>
                 </div>
             </div>
             <div class = 'form-group row'>
@@ -133,7 +136,7 @@
     <div class="row-fluid">
         <div class = 'form-group row'>  
             <div class="col-sm-12">
-                <a class="text-right btn btn-default" href="<?=base_url('student-list')?>">
+                <a class="text-right btn btn-default" href="<?= base_url('student-list') ?>">
                     <span class="glyphicon glyphicon-th-list"></span> Cancel
                 </a>
                 <input type="submit" id="submit" value="Save" class="btn btn-primary">
@@ -150,61 +153,65 @@
                     required: true,
                     letters_space_only: true
                 },
-                last_name:{
+                last_name: {
                     required: true,
                     letters_space_only: true
                 },
-                login_id:{
+                login_id: {
                     required: true,
-                    letter_number_nospace:true
+                    letter_number_nospace: true
                 },
-                email:{
+                email: {
                     required: true,
-                    email:true
+                    email: true
                 },
-                password:{
+                password: {
                     required: true,
-                    alphanumeric:true
+                    alphanumeric: true
                 },
-                re_password:{
+                re_password: {
                     required: true,
-                    alphanumeric:true,
+                    alphanumeric: true,
                     equalTo: "#password"
                 },
-                mobile:{
+                mobile: {
                     required: true,
-                    'mobile_no':true
-                }                
+                    'mobile_no': true
+                }
             },
             messages: {
                 first_name: {
                     required: "Please enter your first name.",
                     letters_space_only: "Only alphabates are allowed."
                 },
-                last_name:{
+                last_name: {
                     required: "Please enter your last name.",
                     letters_space_only: "Only alphabates are allowed."
                 },
-                login_id:{
-                    required: "Please generate employee id."
-                    
+                login_id: {
+                    required: "Please enter registeration id."
+
                 },
-                email:{
+                email: {
                     required: "Please enter email id.",
-                    email:"Please enter valid email id."
+                    email: "Please enter valid email id."
                 },
-                password:{
+                password: {
                     required: "Please enter password.",
-                    alphanumeric:"Please enter alphanumeric value."
+                    alphanumeric: "Please enter alphanumeric value."
                 },
-                re_password:{
+                re_password: {
                     required: "Please re-enter password.",
-                    alphanumeric:"Please enter alphanumeric value.",
-                    equalTo:"Your password and confirmation password do not match."
+                    alphanumeric: "Please enter alphanumeric value.",
+                    equalTo: "Your password and confirmation password do not match."
                 },
-                mobile:{
+                mobile: {
                     required: "Please enter your 10 digit mobile number.",
-                }   
+                }
+            },
+            errorElement: 'div',
+            errorPlacement: function (error, element) {
+                error.insertAfter(element.closest("div").find("span:last"));
             },
             submitHandler: function (form) {
                 if ($(form).valid())
@@ -212,5 +219,6 @@
                 return false;
             }
         });
+         
     });
 </script>

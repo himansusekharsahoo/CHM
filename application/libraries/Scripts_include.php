@@ -90,7 +90,8 @@ class Scripts_include {
             COMPONENT_PATH . 'Multi-Select-Checkbox-Tree-treeSelector/jquery.treeSelector.js'
         ),
         'print_element'=>array(COMPONENT_PATH.'print-elements/print_elements.js'),
-        'd3'=>array('/assets/d3/d3.min.js')
+        'd3'=>array('/assets/d3/d3.min.js'),
+        'pass_meter'=>array('/js/pass_meter/js/mocha.js')
     );
     private $__cssFiles = array(
         'admin_layout' => array(

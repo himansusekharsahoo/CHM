@@ -23,7 +23,7 @@
         margin-top: 3px;
         margin-bottom: 3px;
         height: 25px;
-    }    
+    }
 </style>
 <div class="row">
     <div class="col-sm-12">
@@ -117,7 +117,13 @@
                                     echo form_input($attribute);
                                     ?>
                                 </div>
-                            </div>                            
+                            </div>
+                            <div class = 'form-group row'>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="customFileLang" lang="es">
+                                    <label class="custom-file-label" for="customFileLang">Seleccionar Archivo</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class = 'form-group row'>
@@ -196,7 +202,6 @@
 
 <script type="text/javascript">
     $(function ($) {
-        
         $('#library_new_users').validate({
             rules: {
                 first_name: {

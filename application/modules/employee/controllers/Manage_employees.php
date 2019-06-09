@@ -33,32 +33,32 @@ class Manage_employees extends CI_Controller {
     public function index() {
         if ($this->rbac->has_permission('STAFF_USERS', 'LIST')) {
             $this->breadcrumbs->push('index', base_url('employee-list'));
-            $this->scripts_include->includePlugins(array('datatable','chosen'), 'css');
-            $this->scripts_include->includePlugins(array('datatable','chosen'), 'js');
+            $this->scripts_include->includePlugins(array('datatable', 'chosen'), 'css');
+            $this->scripts_include->includePlugins(array('datatable', 'chosen'), 'js');
             $this->layout->navTitle = 'Employee list';
             $this->layout->title = 'Employee list';
             $header = array(
                 array(
                     'db_column' => 'first_name',
                     'name' => 'First_name',
-                    'title' => 'First_name',
-                    'class_name' => 'dt_name',
+                    'title' => 'First name',
+                    'class_name' => 'first_name',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
                 ), array(
                     'db_column' => 'last_name',
                     'name' => 'Last_name',
-                    'title' => 'Last_name',
-                    'class_name' => 'dt_name',
+                    'title' => 'Last name',
+                    'class_name' => 'last_name',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
                 ), array(
                     'db_column' => 'login_id',
                     'name' => 'Login_id',
-                    'title' => 'Login_id',
-                    'class_name' => 'dt_name',
+                    'title' => 'Login id',
+                    'class_name' => 'login_id',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
@@ -66,15 +66,15 @@ class Manage_employees extends CI_Controller {
                     'db_column' => 'email',
                     'name' => 'Email',
                     'title' => 'Email',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'email',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
                 ), array(
                     'db_column' => 'login_status',
                     'name' => 'Login_status',
-                    'title' => 'Login_status',
-                    'class_name' => 'dt_name',
+                    'title' => 'Login status',
+                    'class_name' => 'login_status',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
@@ -82,23 +82,23 @@ class Manage_employees extends CI_Controller {
                     'db_column' => 'mobile',
                     'name' => 'Mobile',
                     'title' => 'Mobile',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'mobile',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
                 ), array(
                     'db_column' => 'mobile_verified',
                     'name' => 'Mobile_verified',
-                    'title' => 'Mobile_verified',
-                    'class_name' => 'dt_name',
+                    'title' => 'Mobile verified',
+                    'class_name' => 'mobile_verified',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
                 ), array(
                     'db_column' => 'email_verified',
                     'name' => 'email_verified',
-                    'title' => 'email_verified',
-                    'class_name' => 'dt_name',
+                    'title' => 'Email verified',
+                    'class_name' => 'email_verified',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
@@ -106,7 +106,7 @@ class Manage_employees extends CI_Controller {
                     'db_column' => 'status',
                     'name' => 'Status',
                     'title' => 'Status',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'status',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'true'
@@ -114,7 +114,7 @@ class Manage_employees extends CI_Controller {
                     'db_column' => 'Action',
                     'name' => 'Action',
                     'title' => 'Action',
-                    'class_name' => 'dt_name',
+                    'class_name' => 'Action',
                     'orderable' => 'true',
                     'visible' => 'true',
                     'searchable' => 'false'
@@ -366,17 +366,17 @@ class Manage_employees extends CI_Controller {
 
             $this->layout->navTitle = 'Edit employee profile';
             $this->layout->title = 'Edit employee profile';
-            $logged_in_userid=  $this->rbac->get_user_id();
+            $logged_in_userid = $this->rbac->get_user_id();
             $data = array();
             if ($this->input->post()) :
                 $data['data'] = $post_data = $this->input->post();
-            
+
                 $conditions = array('created_by' => $this->rbac->get_user_id());
                 $roles = $this->rbac_role->get_options('name', 'role_id', $conditions, false);
                 $role_json = $this->_get_role_tree($roles);
                 $data['data']['roles'] = $roles;
                 $data['data']['roles_json'] = $role_json;
-                
+
                 $config = array(
                     array(
                         'field' => 'first_name',
@@ -402,8 +402,8 @@ class Manage_employees extends CI_Controller {
                         'field' => 'employee_roles',
                         'label' => 'employee_roles',
                         'rules' => 'required',
-                        'errors'=>array(
-                            'required'=>"Please select employee roles."
+                        'errors' => array(
+                            'required' => "Please select employee roles."
                         )
                     )
                 );
@@ -413,9 +413,9 @@ class Manage_employees extends CI_Controller {
                 if ($this->form_validation->run()) :
                     $condition = " AND user_id!='" . $post_data['user_id'] . "'AND replace(lower(email),' ','')=replace(lower('" . $post_data['email'] . "'),' ','')";
                     if (!$this->manage_employee->check_duplicate($condition)) :
-                        $post_data['modified']=date('Y-m-d');
-                        $post_data['modified_by']=$logged_in_userid;
-                        
+                        $post_data['modified'] = date('Y-m-d');
+                        $post_data['modified_by'] = $logged_in_userid;
+
                         $result = $this->manage_employee->update($post_data);
                         if ($result >= 1):
                             $this->session->set_flashdata('success', 'Record successfully updated!');
@@ -442,10 +442,10 @@ class Manage_employees extends CI_Controller {
                 $data['data']['roles'] = $roles;
                 $data['data']['roles_json'] = $role_json;
                 //fetch selected users assigned roles
-                $users_assigned_roles=$this->manage_employee->get_user_roles($user_id); 
-                $users_assigned_roles=flattenArray($users_assigned_roles);
-                $users_assigned_roles=  implode(',',$users_assigned_roles);
-                $data['data']['employee_roles']=$users_assigned_roles;
+                $users_assigned_roles = $this->manage_employee->get_user_roles($user_id);
+                $users_assigned_roles = flattenArray($users_assigned_roles);
+                $users_assigned_roles = implode(',', $users_assigned_roles);
+                $data['data']['employee_roles'] = $users_assigned_roles;
             endif;
             $this->layout->data = $data;
             $this->layout->render();
@@ -470,16 +470,16 @@ class Manage_employees extends CI_Controller {
             if ($user_id) :
                 $user_id = c_decode($user_id);
                 $result = $this->manage_employee->get_staff_data(null, array('t1.user_id' => $user_id), 1);
-                
+
                 if ($result) :
                     $result = current($result);
                 endif;
 
                 $data['data'] = $result;
-                $users_assigned_roles=$this->manage_employee->get_user_roles($user_id,'name'); 
-                $users_assigned_roles=flattenArray($users_assigned_roles);
-                $users_assigned_roles=  implode(',',$users_assigned_roles);
-                $data['data']['employee_roles']=$users_assigned_roles;                
+                $users_assigned_roles = $this->manage_employee->get_user_roles($user_id, 'name');
+                $users_assigned_roles = flattenArray($users_assigned_roles);
+                $users_assigned_roles = implode(',', $users_assigned_roles);
+                $data['data']['employee_roles'] = $users_assigned_roles;
                 $this->layout->data = $data;
                 $this->layout->render();
 
@@ -545,7 +545,7 @@ class Manage_employees extends CI_Controller {
 
         return json_encode($roles_arr);
     }
-    
+
     /**
      * 
      * @method employee_profile
@@ -555,25 +555,28 @@ class Manage_employees extends CI_Controller {
      * @author  HimansuS                  
      * @since   05/06/2019
      */
-    public function employee_profile(){
+    public function employee_profile() {
         if ($this->rbac->has_permission('STAFF_USERS', 'MY_PROFILE')) {
             $this->breadcrumbs->push('view', base_url('view-employee-profile'));
+            $this->scripts_include->includePlugins(array('pass_meter', 'jq_validation'), 'js');
+
             $this->layout->navTitle = 'My profile';
             $this->layout->title = 'My profile';
             $data = array();
             $user_id = $this->rbac->get_user_id();
+
+            if ($user_id) :
+                $result = $this->manage_employee->get_staff_data(null, array('t1.user_id' => $user_id), 1);
             
-            if ($user_id) :                
-                $result = $this->manage_employee->get_staff_data(null, array('t1.user_id' => $user_id), 1);                
                 if ($result) :
                     $result = current($result);
                 endif;
-                
+
                 $data['data'] = $result;
-                $users_assigned_roles=$this->manage_employee->get_user_roles($user_id,'name'); 
-                $users_assigned_roles=flattenArray($users_assigned_roles);
-                $users_assigned_roles=  implode(',',$users_assigned_roles);
-                $data['data']['employee_roles']=$users_assigned_roles;                
+                $users_assigned_roles = $this->manage_employee->get_user_roles($user_id, 'name');
+                $users_assigned_roles = flattenArray($users_assigned_roles);
+                $users_assigned_roles = implode(',', $users_assigned_roles);
+                $data['data']['employee_roles'] = $users_assigned_roles;
                 $this->layout->data = $data;
                 //pma($data,1);
                 $this->layout->render();
@@ -585,5 +588,99 @@ class Manage_employees extends CI_Controller {
         }
     }
 
-}
+    /**
+     * 
+     * @method
+     * @param   
+     * @desc    used to validate the user password before update
+     * @return 
+     * @author  HimansuS                  
+     * @since   
+     */
+    public function validate_my_password() {
+        if ($this->input->is_ajax_request()) {
+            $pass = $this->input->post('password');
+            $my_pass = c_decode($this->session->userdata['user_data']['password']);
 
+            if ($pass == $my_pass) {
+                echo json_encode(array('status' => 'success', 'match' => 1));
+            } else {
+                echo json_encode(array('status' => 'success', 'match' => 0));
+            }
+            exit;
+        } else {
+            $this->layout->data = array('status_code' => '403', 'message' => 'Request Forbidden.');
+            $this->layout->render(array('error' => 'general'));
+        }
+    }
+
+    /**
+     * 
+     * @method
+     * @param   
+     * @desc    used to update user password
+     * @return 
+     * @author  HimansuS                  
+     * @since   
+     */
+    public function update_my_password() {
+        if ($this->input->is_ajax_request()) {
+            $pass = c_encode($this->input->post('password'));
+            $new_pass = $this->input->post('npassword');
+            $user_id = $this->rbac->get_user_id();
+            $condition = array('password' => $pass, 'user_id' => $user_id);
+            if ($this->manage_employee->update_emp_password($condition, $new_pass)) {
+                $this->session->userdata['user_data']['password'] = c_encode($new_pass);
+                echo json_encode(array('status' => 'success', 'title' => 'My Profile', 'message' => 'Password successfully updated!'));
+            } else {
+                echo json_encode(array('status' => 'error', 'title' => 'My Profile', 'message' => 'There is some error, Please refresh the page and try again!'));
+            }
+            exit;
+        } else {
+            $this->layout->data = array('status_code' => '403', 'message' => 'Request Forbidden.');
+            $this->layout->render(array('error' => 'general'));
+        }
+    }
+
+    /**
+     * 
+     * @method
+     * @param   
+     * @desc    used to update user profile picuture
+     * @return 
+     * @author  HimansuS                  
+     * @since   
+     */
+    public function update_my_profile_pic() {
+        if ($this->input->is_ajax_request()) {
+            //pma($_FILES, 1);
+            $user_id = $this->rbac->get_user_id();
+            $config['upload_path'] = './uploads/employee/profile_picture/';
+            $config['allowed_types'] = 'gif|jpg|png|jpeg';
+            $config['max_size'] = 5120;
+            $config['file_name'] = 'profile_pic_' . $user_id;
+            $config['overwrite'] = TRUE;
+            create_dir($config['upload_path']);
+            $this->load->library('upload', $config);
+            if (!$this->upload->do_upload('profile_image')) {
+                $error = array('error' => $this->upload->display_errors());
+                echo json_encode(array('status' => 'error', 'title' => 'My Profile', 'message' => 'There is some error, Please refresh the page and try again!'));
+            } else {
+                $data = array('upload_data' => $this->upload->data());                
+                $profile_data=array(                    
+                    'profile_pic'=>$data['upload_data']['file_name']
+                );
+                if ($this->manage_employee->update_profile_picture($profile_data,$user_id)) {
+                    echo json_encode(array('status' => 'success', 'title' => 'My Profile', 'message' => 'Profile picture successfully uploaded!'));
+                } else {
+                    echo json_encode(array('status' => 'error', 'title' => 'My Profile', 'message' => 'There is some error, Please refresh the page and try again!'));
+                }                
+            }
+            exit;
+        } else {
+            $this->layout->data = array('status_code' => '403', 'message' => 'Request Forbidden.');
+            $this->layout->render(array('error' => 'general'));
+        }
+    }
+
+}

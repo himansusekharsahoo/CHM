@@ -48,7 +48,8 @@ class Book_assignments extends CI_Model {
     public function get_book_assign_datatable($data = null, $export = null, $tableHeading = null, $columns = null) {
         $this->load->library('datatables');
         if (!$columns) {
-            $columns = 'bassign_id,isbn_no,card_no,issue_date,due_date,return_date,return_delay_fine,book_return_condition,remarks,user_type';
+            $columns = 'bassign_id,isbn_no,card_no,issue_date,due_date,return_date,return_delay_fine'
+                    . ',book_return_condition,remarks,user_type';
         }
 
         /*

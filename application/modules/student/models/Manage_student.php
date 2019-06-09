@@ -156,4 +156,37 @@ class Manage_student extends CI_Model {
         $result = $this->db->query($query)->row();
         return $result->count_rec;
     }
+    
+    /**
+     * @param              : $data
+     * @desc               : update student password
+     * @return             :
+     * @author             :
+     * @created:10/08/2018
+     */
+    public function update_student_password($condition, $new_password) {
+        if ($condition) :
+            $this->db->trans_begin();
+            if (isset($condition['user_id'])) {
+                foreach ($condition as $key => $val) {
+                    $this->db->where($key, $val);
+                }
+                $student_user_data = array(
+                    'password' => c_encode($new_password)
+                );
+                $this->db->update("rbac_users", $student_user_data);
+            } else {
+                //invalid data to update
+                return false;
+            }
+
+            if ($this->db->trans_status() === false) {
+                $this->db->trans_rollback();
+                return false;
+            } else {
+                $this->db->trans_commit();
+                return true;
+            }
+        endif;
+    }
 }
