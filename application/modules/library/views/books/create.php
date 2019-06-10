@@ -1,7 +1,7 @@
-<div class="col-sm-6">
+<div class="col-sm-12">
     <div class="box box-primary">
         <div class="box-header with-border">
-            <h3 class="box-title">Book information</h3>
+            <h3 class="box-title">Add new book</h3>
         </div>
         <div class="box-body">
             <?php
@@ -24,16 +24,18 @@
                         "title" => "",
                         "required" => "",
                         "type" => "text",
+                        "rows" => 5,
+                        "cols" => 10,
                         "placeholder" => "Book name",
                         "value" => (isset($data["name"])) ? $data["name"] : ""
                     );
                     echo form_error("name");
-                    echo form_input($attribute);
+                    echo form_textarea($attribute);
                     ?>
                 </div>
             </div>
             <div class = 'form-group row'>
-                <label for = 'code' class = 'col-sm-3 col-form-label'>Book code</label>
+                <label for = 'code' class = 'col-sm-3 col-form-label'>Product Code</label>
                 <div class = 'col-sm-4'>
                     <?php
                     $attribute = array(
@@ -51,18 +53,36 @@
                     ?>
                 </div>
             </div>
-
             <div class = 'form-group row'>
-                <div class = 'col-sm-2 col-sm-offset-3'>
+                <label for = 'language' class = 'col-sm-3 col-form-label'>Language</label>
+                <div class = 'col-sm-4'>
+                    <?php
+                    $attribute = array(
+                        "name" => "language",
+                        "id" => "language",
+                        "class" => "form-control",
+                        "title" => "",
+                        "required" => "",
+                        "type" => "text",
+                        "placeholder" => "Language",
+                        "autocomplete"=> "off",
+                        "value" => (isset($data["code"])) ? $data["code"] : ""
+                    );
+                    echo form_error("code");
+                    echo form_input($attribute);
+                    ?>
+                </div>
+            </div>
+            <div class="box-footer">
+                <div class="pull-right">
                     <a class="text-right btn btn-default" href="<?= APP_BASE ?>library/books/index">
                         <span class="glyphicon glyphicon-th-list"></span> Cancel
                     </a>
-                </div>
-                <div class = 'col-sm-3'>
-                    <input type="submit" id="submit" value="Save" class="btn btn-primary">
+                    <button type="submit" id="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
                 </div>
             </div>
-            <?= form_close() ?>
         </div>
+        <?= form_close() ?>
     </div>
+</div>
 </div>

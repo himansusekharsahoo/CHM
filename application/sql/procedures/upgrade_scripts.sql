@@ -26,3 +26,4 @@ CREATE TABLE `book_copies_info` (
 ENGINE = InnoDB;
 
 ALTER TABLE `book_copies_info` ADD COLUMN `book_availability` VARCHAR(5) NOT NULL DEFAULT 'A' AFTER `book_copy_count`;
+ALTER TABLE `books` ADD `language` VARCHAR(100) NULL DEFAULT NULL AFTER `status`;

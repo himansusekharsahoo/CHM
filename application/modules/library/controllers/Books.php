@@ -49,6 +49,8 @@ class Books extends CI_Controller {
         $this->layout->lMmenuFlag = 1;
         $this->layout->rightControlFlag = 1;
         $this->layout->navTitleFlag = 1;
+        
+        $this->layout->title = 'Books information';
     }
 
     /**
@@ -63,10 +65,10 @@ class Books extends CI_Controller {
     public function index() {
 
         $this->breadcrumbs->push('index', '/library/books/index');
-        $this->scripts_include->includePlugins(array('datatable','chosen'), 'css');
-        $this->scripts_include->includePlugins(array('datatable','chosen'), 'js');
-        $this->layout->navTitle = 'Book list';
-        $this->layout->title = 'Book list';
+        $this->scripts_include->includePlugins(array('datatable', 'chosen'), 'css');
+        $this->scripts_include->includePlugins(array('datatable', 'chosen'), 'js');
+        $this->layout->navTitle = 'Books list';
+        $this->layout->title = 'Books list';
         $header = array(
             array(
                 'db_column' => 'name',
@@ -80,6 +82,14 @@ class Books extends CI_Controller {
                 'db_column' => 'code',
                 'name' => 'Code',
                 'title' => 'Code',
+                'class_name' => 'dt_name',
+                'orderable' => 'true',
+                'visible' => 'true',
+                'searchable' => 'true'
+            ), array(
+                'db_column' => 'language',
+                'name' => 'Language',
+                'title' => 'Language',
                 'class_name' => 'dt_name',
                 'orderable' => 'true',
                 'visible' => 'true',
@@ -242,8 +252,8 @@ class Books extends CI_Controller {
     public function export_grid_data() {
         if ($this->input->is_ajax_request()):
             $export_type = $this->input->post('export_type');
-            $tableHeading = array('name' => 'name', 'code' => 'code', 'status' => 'status', 'created' => 'created', 'created_by' => 'created_by', 'modified' => 'modified', 'modified_by' => 'modified_by',);
-            $cols = 'name,code,status,created,created_by,modified,modified_by';
+            $tableHeading = array('name' => 'name', 'code' => 'code', 'language' => 'langauge', 'status' => 'status', 'created' => 'created', 'created_by' => 'created_by', 'modified' => 'modified', 'modified_by' => 'modified_by',);
+            $cols = 'name,code,language,status,created,created_by,modified,modified_by';
             $data = $this->book->get_book_datatable(null, true, $tableHeading);
             $head_cols = $body_col_map = array();
             $date = array(
@@ -294,7 +304,7 @@ class Books extends CI_Controller {
     public function create() {
         $this->breadcrumbs->push('create', '/library/books/create');
 
-        $this->layout->navTitle = 'Add new book';
+        $this->layout->navTitle = 'Book information';
         $data = array();
         if ($this->input->post()):
             $config = array(
@@ -306,6 +316,11 @@ class Books extends CI_Controller {
                 array(
                     'field' => 'code',
                     'label' => 'code',
+                    'rules' => 'required'
+                ),
+                array(
+                    'field' => 'language',
+                    'label' => 'language',
                     'rules' => 'required'
                 ),
             );
@@ -340,7 +355,7 @@ class Books extends CI_Controller {
     public function edit($book_id = null) {
         $this->breadcrumbs->push('edit', '/library/books/edit');
 
-        $this->layout->navTitle = 'Book edit';
+        $this->layout->navTitle = 'Book information:';
         $data = array();
         if ($this->input->post()):
             $data['data'] = $this->input->post();
@@ -353,6 +368,11 @@ class Books extends CI_Controller {
                 array(
                     'field' => 'code',
                     'label' => 'code',
+                    'rules' => 'required'
+                ),
+                array(
+                    'field' => 'language',
+                    'label' => 'language',
                     'rules' => 'required'
                 ),
             );

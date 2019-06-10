@@ -77,3 +77,4 @@ require_once 'custom_routs/app_configs.php';
 require_once 'custom_routs/library_members.php';
 require_once 'custom_routs/library_users.php';
 require_once 'custom_routs/book_return.php';
+require_once 'custom_routs/books.php';
