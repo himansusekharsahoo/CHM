@@ -27,8 +27,7 @@ if (!defined('BASEPATH'))
  * @author     HimansuS                  
  * @since   10/28/2018
  */
-class Book extends CI_Model
-{
+class Book extends CI_Model {
 
     /**
      * __construct Method
@@ -39,8 +38,7 @@ class Book extends CI_Model
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
 
 
@@ -60,12 +58,10 @@ class Book extends CI_Model
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function get_book_datatable($data = null, $export = null, $tableHeading = null, $columns = null)
-    {
+    public function get_book_datatable($data = null, $export = null, $tableHeading = null, $columns = null) {
         $this->load->library('datatables');
-        if (!$columns)
-        {
-            $columns = 'book_id,name,code,language,status,created,created_by,modified,modified_by';
+        if (!$columns) {
+            $columns = 'book_id,name,code,language,status,created';
         }
 
         /*
@@ -92,10 +88,8 @@ class Book extends CI_Model
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function get_book($columns = null, $conditions = null, $limit = null, $offset = null)
-    {
-        if (!$columns)
-        {
+    public function get_book($columns = null, $conditions = null, $limit = null, $offset = null) {
+        if (!$columns) {
             $columns = 'book_id,name,code,language,status,created,created_by,modified,modified_by';
         }
 
@@ -126,8 +120,7 @@ class Book extends CI_Model
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function save($data)
-    {
+    public function save($data) {
         if ($data):
             $this->db->insert("books", $data);
             $book_id_inserted_id = $this->db->insert_id();
@@ -149,8 +142,7 @@ class Book extends CI_Model
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function update($data)
-    {
+    public function update($data) {
         if ($data):
             $this->db->where("book_id", $data['book_id']);
             return $this->db->update('books', $data);
@@ -167,18 +159,15 @@ class Book extends CI_Model
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function delete($book_id)
-    {
+    public function delete($book_id) {
         if ($book_id):
             $this->db->trans_begin();
             $result = 0;
             $this->db->delete('books', array('book_id' => $book_id));
-            if ($this->db->trans_status() === FALSE)
-            {
+            if ($this->db->trans_status() === FALSE) {
                 $this->db->trans_rollback();
                 return false;
-            } else
-            {
+            } else {
                 $this->db->trans_commit();
                 return true;
             }
@@ -196,14 +185,11 @@ class Book extends CI_Model
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function get_options($columns, $index = null, $conditions = null, $chosen_flag = false)
-    {
-        if (!$columns)
-        {
+    public function get_options($columns, $index = null, $conditions = null, $chosen_flag = false) {
+        if (!$columns) {
             $columns = 'book_id';
         }
-        if (!$index)
-        {
+        if (!$index) {
             $index = 'book_id';
         }
         $this->db->select("$columns,$index")->from('books t1');
@@ -217,11 +203,9 @@ class Book extends CI_Model
         $result = $this->db->get()->result_array();
 
         $list = array();
-        if ($chosen_flag)
-        {
+        if ($chosen_flag) {
             $list[''] = '';
-        } else
-        {
+        } else {
             $list[''] = 'Select books';
         }
 
@@ -232,8 +216,7 @@ class Book extends CI_Model
         return $list;
     }
 
-    public function record_count()
-    {
+    public function record_count() {
         return $this->db->count_all('books');
     }
 

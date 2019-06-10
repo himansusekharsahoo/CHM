@@ -68,13 +68,13 @@ class Books extends CI_Controller {
         $this->scripts_include->includePlugins(array('datatable', 'chosen'), 'css');
         $this->scripts_include->includePlugins(array('datatable', 'chosen'), 'js');
         $this->layout->navTitle = 'Books list';
-        $this->layout->title = 'Books list';
+        $this->layout->title = 'Books information';
         $header = array(
             array(
                 'db_column' => 'name',
                 'name' => 'Name',
                 'title' => 'Name',
-                'class_name' => 'dt_name',
+                'class_name' => 'name',
                 'orderable' => 'true',
                 'visible' => 'true',
                 'searchable' => 'true'
@@ -82,7 +82,7 @@ class Books extends CI_Controller {
                 'db_column' => 'code',
                 'name' => 'Code',
                 'title' => 'Code',
-                'class_name' => 'dt_name',
+                'class_name' => 'code',
                 'orderable' => 'true',
                 'visible' => 'true',
                 'searchable' => 'true'
@@ -90,7 +90,7 @@ class Books extends CI_Controller {
                 'db_column' => 'language',
                 'name' => 'Language',
                 'title' => 'Language',
-                'class_name' => 'dt_name',
+                'class_name' => 'language',
                 'orderable' => 'true',
                 'visible' => 'true',
                 'searchable' => 'true'
@@ -98,7 +98,7 @@ class Books extends CI_Controller {
                 'db_column' => 'status',
                 'name' => 'Status',
                 'title' => 'Status',
-                'class_name' => 'dt_name',
+                'class_name' => 'status',
                 'orderable' => 'true',
                 'visible' => 'true',
                 'searchable' => 'true'
@@ -106,11 +106,11 @@ class Books extends CI_Controller {
                 'db_column' => 'created',
                 'name' => 'Created',
                 'title' => 'Created',
-                'class_name' => 'dt_name',
+                'class_name' => 'created',
                 'orderable' => 'true',
                 'visible' => 'true',
                 'searchable' => 'true'
-            ), array(
+            ), /*array(
                 'db_column' => 'created_by',
                 'name' => 'Created_by',
                 'title' => 'Created_by',
@@ -134,7 +134,7 @@ class Books extends CI_Controller {
                 'orderable' => 'true',
                 'visible' => 'true',
                 'searchable' => 'true'
-            ), array(
+            ),*/ array(
                 'db_column' => 'Action',
                 'name' => 'Action',
                 'title' => 'Action',
@@ -415,7 +415,7 @@ class Books extends CI_Controller {
         if ($book_id):
             $book_id = c_decode($book_id);
 
-            $this->layout->navTitle = 'Book view';
+            $this->layout->navTitle = 'Book information';
             $result = $this->book->get_book(null, array('book_id' => $book_id), 1);
             if ($result):
                 $result = current($result);

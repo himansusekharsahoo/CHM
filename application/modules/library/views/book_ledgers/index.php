@@ -17,12 +17,18 @@
     .action_td{width:100px !important; vertical-align: middle !important;}
 </style>
 <div class="row-fluid">
-    <div class="col-sm-12 no_pad table-responsive">
-        <?php
-        $this->load->library('c_datatable');
-        $dt_data = $this->c_datatable->generate_grid($config);
-        echo $dt_data;
-        ?>
+    <div class="col-sm-12">
+        <div class="box">
+            <div class="box-body">
+                <div class="no_pad table-responsive">
+                    <?php
+                    $this->load->library('c_datatable');
+                    $dt_data = $this->c_datatable->generate_grid($config);
+                    echo $dt_data;
+                    ?>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <div class="modal fade" id="qrcode_modal_box">
@@ -49,7 +55,7 @@
     $(function ($) {
         myApp.CommonMethod.checkAll($('#raw_cert_data_dt_table th:first').find("input:checkbox"), 'book_ledger_chk');
 //delete record
-        function show_message(reject) {            
+        function show_message(reject) {
             var errMsg = {
                 'type': 'default',
                 title: (typeof reject.title != 'undefined' && reject.title != '') ? reject.title : 'Book Ledger List',
@@ -169,7 +175,7 @@
 
         });
 
-        $('#print_one_barcode').on('click', function () {            
+        $('#print_one_barcode').on('click', function () {
             printDiv(document.getElementsByClassName('qrcode_modal_body'));
         });
 
@@ -217,8 +223,8 @@
                 });
             } else {
                 var errMsg = {
-                    message:'Please select record to generate QR code.'
-                };            
+                    message: 'Please select record to generate QR code.'
+                };
                 show_message(errMsg);
             }
         });
