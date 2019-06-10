@@ -16,3 +16,13 @@ ALTER TABLE `book_ledgers` ADD COLUMN `total_copies` INTEGER DEFAULT 0 AFTER `mi
  ADD COLUMN `lost_copies` INTEGER DEFAULT 0 AFTER `total_copies`,
  ADD COLUMN `copies_instock` INTEGER DEFAULT 0 AFTER `lost_copies`;
 
+CREATE TABLE `book_copies_info` (
+  `book_copies_id` INTEGER NOT NULL AUTO_INCREMENT,
+  `bledger_id` INTEGER NOT NULL,
+  `book_barcode_info` VARCHAR(250),
+  `book_copy_count` INTEGER,
+  PRIMARY KEY (`book_copies_id`)
+)
+ENGINE = InnoDB;
+
+ALTER TABLE `book_copies_info` ADD COLUMN `book_availability` VARCHAR(5) NOT NULL DEFAULT 'A' AFTER `book_copy_count`;

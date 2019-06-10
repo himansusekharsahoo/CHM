@@ -27,8 +27,7 @@ if (!defined('BASEPATH'))
  * @author     HimansuS                  
  * @since   10/28/2018
  */
-class Book_ledgers extends CI_Controller
-{
+class Book_ledgers extends CI_Controller {
 
     /**
      * __construct Method
@@ -39,8 +38,7 @@ class Book_ledgers extends CI_Controller
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
 
         $this->load->model('book_ledger');
@@ -62,11 +60,9 @@ class Book_ledgers extends CI_Controller
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function index()
-    {
+    public function index() {
 
-        if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'LIST'))
-        {
+        if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'LIST')) {
             $this->breadcrumbs->push('index', '/library/book_ledgers/index');
             $this->scripts_include->includePlugins(array('datatable', 'chosen', 'print_element'), 'css');
             $this->scripts_include->includePlugins(array('datatable', 'chosen', 'jq_validation', 'promise', 'print_element'), 'js');
@@ -185,8 +181,7 @@ class Book_ledgers extends CI_Controller
             );
             $button_flag = FALSE;
             $data = $grid_buttons = array();
-            if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'VIEW'))
-            {
+            if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'VIEW')) {
                 $grid_buttons[] = array(
                     'btn_class' => 'btn-info',
                     'btn_href' => base_url('view-book-ledger'),
@@ -198,8 +193,7 @@ class Book_ledgers extends CI_Controller
                 );
                 $button_flag = TRUE;
             }
-            if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'EDIT'))
-            {
+            if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'EDIT')) {
                 $grid_buttons[] = array(
                     'btn_class' => 'btn-primary',
                     'btn_href' => base_url('edit-book-ledger'),
@@ -211,8 +205,7 @@ class Book_ledgers extends CI_Controller
                 );
                 $button_flag = TRUE;
             }
-            if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'DELETE'))
-            {
+            if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'DELETE')) {
                 $grid_buttons[] = array(
                     'btn_class' => 'btn-danger delete-record',
                     'btn_href' => '#',
@@ -225,8 +218,7 @@ class Book_ledgers extends CI_Controller
                 );
                 $button_flag = TRUE;
             }
-            if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'QRCODE'))
-            {
+            if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'QRCODE')) {
                 $grid_buttons[] = array(
                     'btn_class' => 'btn-primary',
                     'btn_href' => '#',
@@ -237,8 +229,7 @@ class Book_ledgers extends CI_Controller
                     'attr' => 'id="show_qrcode_popup" data-ledger-id="$1"'
                 );
             }
-            if ($button_flag)
-            {
+            if ($button_flag) {
                 $button_set = get_link_buttons($grid_buttons);
                 $data['button_set'] = $button_set;
                 $action_column = array(
@@ -253,16 +244,14 @@ class Book_ledgers extends CI_Controller
                 array_push($header, $action_column);
             }
 
-            if ($this->input->is_ajax_request())
-            {
+            if ($this->input->is_ajax_request()) {
                 $returned_list = $this->book_ledger->get_book_ledger_datatable($data);
                 echo $returned_list;
                 exit();
             }
             $dt_button_flag = false;
             $dt_tool_btn = array();
-            if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'CREATE'))
-            {
+            if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'CREATE')) {
                 $dt_tool_btn[] = array(
                     'btn_class' => 'btn-primary',
                     'btn_href' => base_url('create-book-ledger'),
@@ -274,8 +263,7 @@ class Book_ledgers extends CI_Controller
                 $dt_button_flag = true;
             }
 
-            if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'XLS_EXPORT'))
-            {
+            if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'XLS_EXPORT')) {
                 $dt_tool_btn[] = array(
                     'btn_class' => 'btn-warning',
                     'btn_href' => '#',
@@ -288,8 +276,7 @@ class Book_ledgers extends CI_Controller
                 $dt_button_flag = true;
             }
 
-            if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'CSV_EXPORT'))
-            {
+            if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'CSV_EXPORT')) {
                 $dt_tool_btn[] = array(
                     'btn_class' => 'btn-info',
                     'btn_href' => '#',
@@ -301,8 +288,7 @@ class Book_ledgers extends CI_Controller
                 );
                 $dt_button_flag = true;
             }
-            if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'PRINT'))
-            {
+            if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'PRINT')) {
                 $dt_tool_btn[] = array(
                     'btn_class' => 'btn-default',
                     'btn_href' => '#',
@@ -314,8 +300,7 @@ class Book_ledgers extends CI_Controller
                 );
                 $dt_button_flag = true;
             }
-            if ($dt_button_flag)
-            {
+            if ($dt_button_flag) {
                 $dt_tool_btn = get_link_buttons($dt_tool_btn);
             }
 
@@ -349,8 +334,7 @@ class Book_ledgers extends CI_Controller
             );
             $data['data'] = array('config' => $config);
             $this->layout->render($data);
-        } else
-        {
+        } else {
             $this->layout->render(array('error' => '401'));
         }
     }
@@ -364,17 +348,15 @@ class Book_ledgers extends CI_Controller
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function export_grid_data()
-    {
+    public function export_grid_data() {
         if ($this->input->is_ajax_request()):
-            if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'XLS_EXPORT') || $this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'CSV_EXPORT'))
-            {
+            if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'XLS_EXPORT') || $this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'CSV_EXPORT')) {
                 $export_type = $this->input->post('export_type');
                 $tableHeading = array(
                     'book_name' => 'book_name', 'bcategory_name' => 'category_name'
                     , 'publicatoin_name' => 'ublicatoin_name', 'author_name' => 'author_name'
                     , 'location' => 'location', 'page' => 'page', 'mrp' => 'mrp'
-                    , 'isbn_no' => 'isbn_no', 'edition' => 'edition','ledger_total_copies'=>'total_copies', 'created' => 'created', 'created_by' => 'created_by'
+                    , 'isbn_no' => 'isbn_no', 'edition' => 'edition', 'ledger_total_copies' => 'total_copies', 'created' => 'created', 'created_by' => 'created_by'
                     , 'modified' => 'modified', 'midified_by' => 'midified_by'
                 );
 
@@ -386,8 +368,7 @@ class Book_ledgers extends CI_Controller
                         'value' => date('d-m-Y')
                     )
                 );
-                foreach ($tableHeading as $db_col => $col)
-                {
+                foreach ($tableHeading as $db_col => $col) {
                     $head_cols[] = array(
                         'title' => ucfirst($col),
                         'track_auto_filter' => 1
@@ -410,8 +391,7 @@ class Book_ledgers extends CI_Controller
                 $this->excel_utility->download_excel($config, $export_type);
                 ob_end_flush();
                 exit;
-            } else
-            {
+            } else {
                 $this->layout->data = array('status_code' => '403', 'message' => 'Request Forbidden.');
                 $this->layout->render(array('error' => 'general'));
             }
@@ -430,10 +410,8 @@ class Book_ledgers extends CI_Controller
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function create()
-    {
-        if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'CREATE'))
-        {
+    public function create() {
+        if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'CREATE')) {
             $this->breadcrumbs->push('create', '/library/book_ledgers/create');
             $this->scripts_include->includePlugins(array('jq_validation', 'bs_datepicker', 'chosen'), 'js');
             $this->scripts_include->includePlugins(array('bs_datepicker', 'chosen'), 'css');
@@ -492,8 +470,7 @@ class Book_ledgers extends CI_Controller
                         ),
                     )
                 );
-                if (isset($post_data['purchase_det_flag']) && $post_data['purchase_det_flag'])
-                {
+                if (isset($post_data['purchase_det_flag']) && $post_data['purchase_det_flag']) {
                     $config[] = array(
                         'field' => 'bill_number',
                         'label' => 'bill_number',
@@ -558,8 +535,7 @@ class Book_ledgers extends CI_Controller
             $data['bpublication_id_list'] = $this->book_ledger->get_book_publication_masters_options('name', 'publication_id', '', true);
             $this->layout->data = $data;
             $this->layout->render();
-        }else
-        {
+        }else {
             $this->layout->render(array('error' => '401'));
         }
     }
@@ -573,10 +549,8 @@ class Book_ledgers extends CI_Controller
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function edit($bledger_id = null)
-    {
-        if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'EDIT'))
-        {
+    public function edit($bledger_id = null) {
+        if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'EDIT')) {
             $this->breadcrumbs->push('edit', '/library/book_ledgers/edit');
             $this->scripts_include->includePlugins(array('jq_validation', 'datatable', 'chosen', 'bs_datepicker', 'promise'), 'js');
             $this->scripts_include->includePlugins(array('datatable', 'chosen', 'bs_datepicker'), 'css');
@@ -587,10 +561,10 @@ class Book_ledgers extends CI_Controller
                 $user_id = $this->rbac->get_user_id();
                 $data['data'] = $post_data = $this->input->post();
                 $data['purchase_details_flag'] = $post_data['purchase_details_flag'];
-                
+
                 $condition = " AND book_id='" . $post_data['book_id'] . "' AND bcategory_id='" . $post_data['bcategory_id'] . "' AND "
-                            . "bpublication_id='" . $post_data['bpublication_id'] . "' AND bauthor_id='" . $post_data['bauthor_id'] . "' AND "
-                            . "isbn_no='" . $post_data['isbn_no'] . "' AND bledger_id!='" . c_decode($post_data['bledger_id']) . "'";
+                        . "bpublication_id='" . $post_data['bpublication_id'] . "' AND bauthor_id='" . $post_data['bauthor_id'] . "' AND "
+                        . "isbn_no='" . $post_data['isbn_no'] . "' AND bledger_id!='" . c_decode($post_data['bledger_id']) . "'";
                 $config = array(
                     array(
                         'field' => 'blocation_id',
@@ -609,8 +583,7 @@ class Book_ledgers extends CI_Controller
                         ),
                     )
                 );
-                if (!$post_data['purchase_details_flag'])
-                {
+                if (!$post_data['purchase_details_flag']) {
                     $config[] = array(
                         'field' => 'book_id',
                         'label' => 'book_id',
@@ -642,20 +615,20 @@ class Book_ledgers extends CI_Controller
                         'errors' => array(
                             'required' => 'Book author is required',
                         )
-                    );                   
+                    );
                 }
-                
+
                 $this->form_validation->set_rules($config);
 
                 if ($this->form_validation->run()):
                     $post_data['modified'] = date("Y-m-d H:i:s");
                     $post_data['modified_by'] = $user_id;
                     unset($post_data['submit']);
-                   
+
                     $condition = " AND book_id='" . $post_data['book_id'] . "' AND bcategory_id='" . $post_data['bcategory_id'] . "' AND "
                             . "bpublication_id='" . $post_data['bpublication_id'] . "' AND bauthor_id='" . $post_data['bauthor_id'] . "' AND "
                             . "isbn_no='" . $post_data['isbn_no'] . "' AND bledger_id!='" . c_decode($post_data['bledger_id']) . "'";
-                    
+
                     if (!$this->book_ledger->check_duplicate($condition)) :
                         $result = $this->book_ledger->update($post_data);
                         if ($result >= 1):
@@ -675,13 +648,12 @@ class Book_ledgers extends CI_Controller
                 $data = $grid_buttons = array();
                 $dbledger_id = c_decode($bledger_id);
                 $result = $this->book_ledger->get_book_ledger(null, array('t1.bledger_id' => $dbledger_id));
-                
+
                 //end purchage details gird
                 $data['purchase_details_flag'] = FALSE;
                 if ($result):
                     $result = current($result);
-                    if ($result['bpurchase_id'])
-                    {
+                    if ($result['bpurchase_id']) {
                         $data['purchase_details_flag'] = TRUE;
                     }
                 endif;
@@ -750,8 +722,7 @@ class Book_ledgers extends CI_Controller
 
                 $dt_button_flag = false;
                 $dt_tool_btn = array();
-                if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'CREATE'))
-                {
+                if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'CREATE')) {
                     $dt_tool_btn[] = array(
                         'btn_class' => 'btn-primary',
                         'btn_href' => '#',
@@ -764,8 +735,7 @@ class Book_ledgers extends CI_Controller
                     $dt_button_flag = true;
                 }
 
-                if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'XLS_EXPORT'))
-                {
+                if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'XLS_EXPORT')) {
                     $dt_tool_btn[] = array(
                         'btn_class' => 'btn-warning',
                         'btn_href' => '#',
@@ -778,8 +748,7 @@ class Book_ledgers extends CI_Controller
                     $dt_button_flag = true;
                 }
 
-                if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'CSV_EXPORT'))
-                {
+                if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'CSV_EXPORT')) {
                     $dt_tool_btn[] = array(
                         'btn_class' => 'btn-info',
                         'btn_href' => '#',
@@ -792,8 +761,7 @@ class Book_ledgers extends CI_Controller
                     $dt_button_flag = true;
                 }
 
-                if ($dt_button_flag)
-                {
+                if ($dt_button_flag) {
                     $dt_tool_btn = get_link_buttons($dt_tool_btn);
                 }
 
@@ -831,8 +799,7 @@ class Book_ledgers extends CI_Controller
 
             $this->layout->data = $data;
             $this->layout->render();
-        } else
-        {
+        } else {
             $this->layout->render(array('error' => '401'));
         }
     }
@@ -846,14 +813,12 @@ class Book_ledgers extends CI_Controller
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function view($bledger_id)
-    {
-        if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'VIEW'))
-        {
+    public function view($bledger_id) {
+        if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'VIEW')) {
             $this->breadcrumbs->push('view', '/library/book_ledgers/view');
             $this->scripts_include->includePlugins(array('datatable', 'promise'), 'js');
             $this->scripts_include->includePlugins(array('datatable'), 'css');
-            
+
             $data = array();
             if ($bledger_id):
                 $ledger_id = c_decode($bledger_id);
@@ -864,7 +829,7 @@ class Book_ledgers extends CI_Controller
                 if ($result):
                     $result = current($result);
                 endif;
-                 //purchage details grid
+                //purchage details grid
                 $header = array(
                     array(
                         'db_column' => 'bill_number',
@@ -918,10 +883,9 @@ class Book_ledgers extends CI_Controller
                 );
 
                 $dt_button_flag = false;
-                $dt_tool_btn = array();                
+                $dt_tool_btn = array();
 
-                if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'XLS_EXPORT'))
-                {
+                if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'XLS_EXPORT')) {
                     $dt_tool_btn[] = array(
                         'btn_class' => 'btn-warning',
                         'btn_href' => '#',
@@ -934,8 +898,7 @@ class Book_ledgers extends CI_Controller
                     $dt_button_flag = true;
                 }
 
-                if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'CSV_EXPORT'))
-                {
+                if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'CSV_EXPORT')) {
                     $dt_tool_btn[] = array(
                         'btn_class' => 'btn-info',
                         'btn_href' => '#',
@@ -948,8 +911,7 @@ class Book_ledgers extends CI_Controller
                     $dt_button_flag = true;
                 }
 
-                if ($dt_button_flag)
-                {
+                if ($dt_button_flag) {
                     $dt_tool_btn = get_link_buttons($dt_tool_btn);
                 }
 
@@ -976,7 +938,7 @@ class Book_ledgers extends CI_Controller
                         'iDisplayLength' => 15
                     )
                 );
-                
+
                 $data['data'] = $result;
                 $data['config'] = $config;
                 $this->layout->data = $data;
@@ -984,8 +946,7 @@ class Book_ledgers extends CI_Controller
 
             endif;
             return 0;
-        }else
-        {
+        } else {
             $this->layout->render(array('error' => '401'));
         }
     }
@@ -999,11 +960,9 @@ class Book_ledgers extends CI_Controller
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function delete()
-    {
+    public function delete() {
         if ($this->input->is_ajax_request()):
-            if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'DELETE'))
-            {
+            if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'DELETE')) {
                 $bledger_id = $this->input->post('bledger_id');
                 if ($bledger_id):
                     $bledger_id = c_decode($bledger_id);
@@ -1018,8 +977,7 @@ class Book_ledgers extends CI_Controller
                 endif;
                 echo 'No data found to delete';
                 exit();
-            }else
-            {
+            }else {
                 $this->layout->render(array('error' => '401'));
             }
         else:
@@ -1036,14 +994,11 @@ class Book_ledgers extends CI_Controller
      * @author : HimansuS
      * @created:
      */
-    public function get_bar_qr_code()
-    {
-        if ($this->input->is_ajax_request())
-        {
+    public function get_bar_qr_code() {
+        if ($this->input->is_ajax_request()) {
             $ledger_ids = $this->input->post('ledger_id');
             $encoded = $this->input->post('enc');
-            if ($ledger_ids)
-            {
+            if ($ledger_ids) {
                 $markup = "";
                 require_once APPPATH . 'libraries/Chm_qrcode.php';
                 require_once APPPATH . 'libraries/Chm_barcode.php';
@@ -1052,34 +1007,28 @@ class Book_ledgers extends CI_Controller
                 $bar_code_details = $msg = array();
                 $exp_ids = explode(",", $ledger_ids);
 
-                foreach ($exp_ids as $ledger_id)
-                {
+                foreach ($exp_ids as $ledger_id) {
 
-                    if ($ledger_id)
-                    {
-                        if ($encoded)
-                        {
+                    if ($ledger_id) {
+                        if ($encoded) {
                             $ledger_id = c_decode($ledger_id);
                         }
+
                         $conditions = array('t1.bledger_id' => $ledger_id);
                         $ledger_detail = $this->book_ledger->get_book_ledger(null, $conditions);
 
-                        if ($ledger_detail)
-                        {
+                        if ($ledger_detail) {
                             $ledger_detail = $ledger_detail[0];
                             $ledger_id = c_decode($ledger_id);
                             $qr_columns = $this->rbac->get_app_config_item('library/book_qrcode_columns');
                             $qr_col_text = '';
-                            if (isset($qr_columns))
-                            {
+                            if (isset($qr_columns)) {
                                 $qr_columns = (string) $qr_columns[0];
                                 $extract = explode(',', $qr_columns);
-                                foreach ($extract as $col)
-                                {
+                                foreach ($extract as $col) {
                                     $lebel = str_replace("_", " ", $col);
                                     $lebel = ucfirst(strtolower($lebel));
-                                    if (isset($ledger_detail[$col]))
-                                    {
+                                    if (isset($ledger_detail[$col])) {
                                         $qr_col_text .= $lebel . ": " . $ledger_detail[$col] . " ";
                                     }
                                 }
@@ -1088,58 +1037,63 @@ class Book_ledgers extends CI_Controller
                             $qr_config = array(
                                 'text' => $qr_col_text
                             );
-                            $bar_config = array(
-                                'text' => ($ledger_detail['isbn_no']) ? $ledger_detail['isbn_no'] : $ledger_id
-                            );
-                            $qrcode_details = $qrcode->generate_qrcode($qr_config);
-                            $barcode_details = $barcode->generate_barcode($bar_config);
-                            $bar_code_details[] = array(
-                                'qrcode_image' => base_url($qrcode_details['qrcode_image']),
-                                'barcode_image' => base_url($barcode_details['barcode_image']),
-                                'book_name' => $ledger_detail['book_name'],
-                                'isbn_no' => $ledger_detail['isbn_no']
-                            );
+
+                            //$qrcode_details = $qrcode->generate_qrcode($qr_config);
+                            $sql = "SELECT * FROM book_copies_info b where bledger_id='" . $ledger_detail['bledger_id'] . "'";
+                            $book_copies = $this->db->query($sql)->result_array();
+                            if (!empty($book_copies)) {
+                                foreach ($book_copies as $copy) {
+                                    $bar_config = array(
+                                        'text' => ($copy['book_barcode_info']) ? $copy['book_barcode_info'] : $ledger_detail['bledger_id']
+                                    );
+                                    $barcode_details = $barcode->generate_barcode($bar_config);
+                                    $bar_code_details[] = array(
+                                        //'qrcode_image' => base_url($qrcode_details['qrcode_image']),
+                                        'barcode_image' => base_url($barcode_details['barcode_image']),
+                                        'book_name' => $ledger_detail['book_name'],
+                                        'isbn_no' => $ledger_detail['isbn_no']
+                                    );
+                                }
+                            }
                         }
                     }
                 }//end loop
 
-                if ($bar_code_details)
-                {
+                if ($bar_code_details) {
                     $chunk = array_chunk($bar_code_details, 3);
-                    foreach ($chunk as $rows)
-                    {
-                        $markup .= "<div class='row'>";
-                        $markup .= "<div class='col-sm-12'>";
-                        foreach ($rows as $rec)
-                        {
-                            $markup .= "<div class='col-sm-4 no_pad'><div class='qr_code_box'>";
-                            $markup .= "<div>Name: " . $rec['book_name'] . "</div>";
-                            $markup .= "<div>ISBN: " . $rec['isbn_no'] . "</div><br>";
-                            $markup .= "<div><image src='" . $rec['qrcode_image'] . "' alter='No QR code found'></div><br>";
-                            $markup .= "<div><image src='" . $rec['barcode_image'] . "' alter='No QR code found'></div>";
-                            $markup .= "</div></div>";
+                    
+                    $markup .= "<div class='row'>";
+                    $markup .= "<div class='col-sm-12'>";
+                    $markup .= "<div>Name: " . $chunk[0][0]['book_name'] . "</div>";
+                    $markup .= "<div>ISBN: " . $chunk[0][0]['isbn_no'] . "</div><br>";
+                    foreach ($chunk as $rows) {
+                        $markup .= '<table>';
+                        foreach ($rows as $rec) {
+                            $markup .= "<tr>";
+                            //$markup .= "<div><image src='" . $rec['qrcode_image'] . "' alter='No QR code found'></div><br>";
+                            $markup .= "<td><image src='" . $rec['barcode_image'] . "'></td>";
+                            $markup .= "</tr>";
                         }
-                        $markup .= "</div>";
-                        $markup .= "</div>";
+                        $markup .= '</table>';
                     }
+                    $markup .= "</div>";
+                    $markup .= "</div>";
                 }
                 $msg = array(
                     'status' => 'success',
-                    'title' => 'Book QR & Bar code',
+                    'title' => 'Bar codes',
                     'message' => $markup
                 );
-            } else
-            {
+            } else {
                 $msg = array(
                     'status' => 'error',
-                    'title' => 'Book QR & Bar code',
+                    'title' => 'Bar codes',
                     'message' => 'There are some error, please refresh the page and try again!'
                 );
             }
             echo json_encode($msg);
             exit;
-        } else
-        {
+        } else {
             $this->layout->render(array('error' => '401'));
         }
     }
@@ -1153,8 +1107,7 @@ class Book_ledgers extends CI_Controller
      * @author  HimansuS                  
      * @since   20May19
      */
-    public function get_book_purchase_details()
-    {
+    public function get_book_purchase_details() {
         if ($this->input->is_ajax_request()):
             $ledger_id = $this->input->post('ledger_id');
 
@@ -1173,17 +1126,14 @@ class Book_ledgers extends CI_Controller
      * @author  HimansuS                  
      * @since   21/05/2019
      */
-    public function get_purchage_details_grid()
-    {
-        if ($this->input->is_ajax_request())
-        {
-            
+    public function get_purchage_details_grid() {
+        if ($this->input->is_ajax_request()) {
+
             $ledger_id = $this->input->post('ledger_id');
             $button_flag = FALSE;
             $data = array();
 
-            if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'DELETE'))
-            {
+            if ($this->rbac->has_permission('MANAGE_BOOK_LEDGER', 'DELETE')) {
                 $grid_buttons[] = array(
                     'btn_class' => 'btn-danger delete-purchase-details',
                     'btn_href' => '#',
@@ -1197,8 +1147,7 @@ class Book_ledgers extends CI_Controller
                 $button_flag = TRUE;
             }
 
-            if ($button_flag)
-            {
+            if ($button_flag) {
                 $button_set = get_link_buttons($grid_buttons);
                 $data['button_set'] = $button_set;
                 $action_column = array(
@@ -1216,8 +1165,7 @@ class Book_ledgers extends CI_Controller
             $returned_list = $this->book_ledger->get_book_purchage_detail_log_datatable($data, false, $condition);
             echo $returned_list;
             exit();
-        } else
-        {
+        } else {
             $this->layout->data = array('status_code' => '403', 'message' => 'Request Forbidden.');
             $this->layout->render(array('error' => 'general'));
         }
@@ -1232,22 +1180,18 @@ class Book_ledgers extends CI_Controller
      * @author  HimansuS                  
      * @since   22/05/2019
      */
-    public function save_book_purchase_details()
-    {
-        if ($this->input->is_ajax_request())
-        {
+    public function save_book_purchase_details() {
+        if ($this->input->is_ajax_request()) {
             $post_data = $this->input->post();
             $this->load->library('security');
             $post_data = $this->security->xss_clean($post_data);
-            if ($this->book_ledger->save_book_purchase_details($post_data))
-            {
+            if ($this->book_ledger->save_book_purchase_details($post_data)) {
                 $msg = array(
                     'status' => 'success',
                     'title' => 'Book Purchase Details',
                     'message' => 'Purchase details saved successfully.'
                 );
-            } else
-            {
+            } else {
                 $msg = array(
                     'status' => 'error',
                     'title' => 'Book Purchase Details',
@@ -1256,12 +1200,12 @@ class Book_ledgers extends CI_Controller
             }
             echo json_encode($msg);
             exit;
-        } else
-        {
+        } else {
             $this->layout->data = array('status_code' => '403', 'message' => 'Request Forbidden.');
             $this->layout->render(array('error' => 'general'));
         }
     }
+
     /**
      * export_purchase_details_grid_data Method
      * 
@@ -1274,13 +1218,13 @@ class Book_ledgers extends CI_Controller
     public function export_purchase_details_grid_data() {
         if ($this->input->is_ajax_request()):
             $export_type = $this->input->post('export_type');
-            $book_ledger_id = $this->input->post('book_ledger_id');            
-            $condition='';
-            if($book_ledger_id){
-                $book_ledger_id= c_decode($book_ledger_id);
-                $condition=array('bledger_id'=>$book_ledger_id);
+            $book_ledger_id = $this->input->post('book_ledger_id');
+            $condition = '';
+            if ($book_ledger_id) {
+                $book_ledger_id = c_decode($book_ledger_id);
+                $condition = array('bledger_id' => $book_ledger_id);
             }
-           
+
             $data = $this->book_ledger->get_book_purchage_detail_log_datatable(null, true, $condition);
             $head_cols = $body_col_map = array();
             $date = array(
@@ -1289,7 +1233,7 @@ class Book_ledgers extends CI_Controller
                     'value' => date('d-m-Y')
                 )
             );
-            $tableHeading = array('bill_number' => 'bill number', 'purchase_date' => 'purchase date', 'price' => 'price','total_copies' => 'total copies', 'vendor_name' => 'vendor name', 'remarks' => 'remarks',);
+            $tableHeading = array('bill_number' => 'bill number', 'purchase_date' => 'purchase date', 'price' => 'price', 'total_copies' => 'total copies', 'vendor_name' => 'vendor name', 'remarks' => 'remarks',);
             foreach ($tableHeading as $db_col => $col) {
                 $head_cols[] = array(
                     'title' => ucfirst($col),
@@ -1320,7 +1264,7 @@ class Book_ledgers extends CI_Controller
         endif;
     }
 
-     /**
+    /**
      * delete_purchase_details Method
      * 
      * @param   
@@ -1352,6 +1296,7 @@ class Book_ledgers extends CI_Controller
         endif;
         return 'Invalid request type.';
     }
+
 }
 
 ?>
