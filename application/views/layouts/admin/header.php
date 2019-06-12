@@ -219,13 +219,15 @@
                 <!-- User Account: style can be found in dropdown.less -->
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <span class="hidden-xs"><?=$this->rbac->get_user_name()?></span>
+                        <img src="<?= base_url(); ?>/images/user-icon.png" class="user-image" alt=""> 
+                        <span class="hidden-xs"><?=$this->rbac->get_user_email()?></span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- User image -->
                         <li class="user-header">
-                            <p>
-                                Users info here..
+                            <img src="<?= base_url(); ?>/images/user-icon.png" class="img-circle" alt="">                            
+                            <p>      
+                                <?=$this->rbac->get_user_name()?>
                                 <small></small>
                             </p>
                         </li>
@@ -233,10 +235,10 @@
                         <!-- Menu Footer-->
                         <li class="user-footer">
                             <div class="pull-left">
-                                <a href="#" class="btn btn-default btn-flat">Profile</a>
+                                <a href="<?=base_url('my-profile')?>" class="btn btn-default btn-flat">Profile</a>
                             </div>
                             <div class="pull-right">
-                                <a href="<?=base_url('admin_users/log_out')?>" class="btn btn-default btn-flat">Sign out</a>
+                                <a href="<?=base_url('employee-logout')?>" class="btn btn-default btn-flat">Sign out</a>
                             </div>
                         </li>
                     </ul>
@@ -244,7 +246,7 @@
                 <?php endif;?>
                 <!-- Control Sidebar Toggle Button -->
                 <li>
-                    <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                    <!--<a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>-->
                 </li>
             </ul>
         </div>

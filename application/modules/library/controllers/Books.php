@@ -49,6 +49,8 @@ class Books extends CI_Controller {
         $this->layout->lMmenuFlag = 1;
         $this->layout->rightControlFlag = 1;
         $this->layout->navTitleFlag = 1;
+        
+        $this->layout->title = 'Books information';
     }
 
     /**
@@ -63,16 +65,16 @@ class Books extends CI_Controller {
     public function index() {
 
         $this->breadcrumbs->push('index', '/library/books/index');
-        $this->scripts_include->includePlugins(array('datatable'), 'css');
-        $this->scripts_include->includePlugins(array('datatable'), 'js');
-        $this->layout->navTitle = 'Book list';
-        $this->layout->title = 'Book list';
+        $this->scripts_include->includePlugins(array('datatable', 'chosen'), 'css');
+        $this->scripts_include->includePlugins(array('datatable', 'chosen'), 'js');
+        $this->layout->navTitle = 'Books list';
+        $this->layout->title = 'Books information';
         $header = array(
             array(
                 'db_column' => 'name',
                 'name' => 'Name',
                 'title' => 'Name',
-                'class_name' => 'dt_name',
+                'class_name' => 'name',
                 'orderable' => 'true',
                 'visible' => 'true',
                 'searchable' => 'true'
@@ -80,7 +82,15 @@ class Books extends CI_Controller {
                 'db_column' => 'code',
                 'name' => 'Code',
                 'title' => 'Code',
-                'class_name' => 'dt_name',
+                'class_name' => 'code',
+                'orderable' => 'true',
+                'visible' => 'true',
+                'searchable' => 'true'
+            ), array(
+                'db_column' => 'language',
+                'name' => 'Language',
+                'title' => 'Language',
+                'class_name' => 'language',
                 'orderable' => 'true',
                 'visible' => 'true',
                 'searchable' => 'true'
@@ -88,7 +98,7 @@ class Books extends CI_Controller {
                 'db_column' => 'status',
                 'name' => 'Status',
                 'title' => 'Status',
-                'class_name' => 'dt_name',
+                'class_name' => 'status',
                 'orderable' => 'true',
                 'visible' => 'true',
                 'searchable' => 'true'
@@ -96,11 +106,11 @@ class Books extends CI_Controller {
                 'db_column' => 'created',
                 'name' => 'Created',
                 'title' => 'Created',
-                'class_name' => 'dt_name',
+                'class_name' => 'created',
                 'orderable' => 'true',
                 'visible' => 'true',
                 'searchable' => 'true'
-            ), array(
+            ), /*array(
                 'db_column' => 'created_by',
                 'name' => 'Created_by',
                 'title' => 'Created_by',
@@ -124,7 +134,7 @@ class Books extends CI_Controller {
                 'orderable' => 'true',
                 'visible' => 'true',
                 'searchable' => 'true'
-            ), array(
+            ),*/ array(
                 'db_column' => 'Action',
                 'name' => 'Action',
                 'title' => 'Action',
@@ -184,20 +194,20 @@ class Books extends CI_Controller {
                 'btn_separator' => ' '
             ),
             array(
-                'btn_class' => 'no_pad',
+                'btn_class' => 'btn-warning',
                 'btn_href' => '#',
                 'btn_icon' => '',
                 'btn_title' => 'XLS',
-                'btn_text' => ' <img src="' . base_url("images/excel_icon.png") . '" alt="XLS">',
+                'btn_text' => '<span class="fa fa-file-excel-o"></span> Excel',
                 'btn_separator' => ' ',
                 'attr' => 'id="export_table_xls"'
             ),
             array(
-                'btn_class' => 'no_pad',
+                'btn_class' => 'btn-info',
                 'btn_href' => '#',
                 'btn_icon' => '',
                 'btn_title' => 'CSV',
-                'btn_text' => ' <img src="' . base_url("images/csv_icon_sm.gif") . '" alt="CSV">',
+                'btn_text' => '<span class="fa fa-file-text-o"></span> CSV',
                 'btn_separator' => ' ',
                 'attr' => 'id="export_table_csv"'
             )
@@ -219,11 +229,11 @@ class Books extends CI_Controller {
                 'top_buttons' => $dt_tool_btn,
                 'top_pagination' => true,
                 'buttom_dom' => true,
-                'buttom_length_change' => true,
+                'buttom_length_change' => FALSE,
                 'buttom_pagination' => true
             ),
             'options' => array(
-                'iDisplayLength' => '15'
+                'iDisplayLength' => 15
             )
         );
         $data['data'] = array('config' => $config);
@@ -242,8 +252,8 @@ class Books extends CI_Controller {
     public function export_grid_data() {
         if ($this->input->is_ajax_request()):
             $export_type = $this->input->post('export_type');
-            $tableHeading = array('name' => 'name', 'code' => 'code', 'status' => 'status', 'created' => 'created', 'created_by' => 'created_by', 'modified' => 'modified', 'modified_by' => 'modified_by',);
-            $cols = 'name,code,status,created,created_by,modified,modified_by';
+            $tableHeading = array('name' => 'name', 'code' => 'code', 'language' => 'langauge', 'status' => 'status', 'created' => 'created', 'created_by' => 'created_by', 'modified' => 'modified', 'modified_by' => 'modified_by',);
+            $cols = 'name,code,language,status,created,created_by,modified,modified_by';
             $data = $this->book->get_book_datatable(null, true, $tableHeading);
             $head_cols = $body_col_map = array();
             $date = array(
@@ -294,7 +304,7 @@ class Books extends CI_Controller {
     public function create() {
         $this->breadcrumbs->push('create', '/library/books/create');
 
-        $this->layout->navTitle = 'Add new book';
+        $this->layout->navTitle = 'Book information';
         $data = array();
         if ($this->input->post()):
             $config = array(
@@ -306,6 +316,11 @@ class Books extends CI_Controller {
                 array(
                     'field' => 'code',
                     'label' => 'code',
+                    'rules' => 'required'
+                ),
+                array(
+                    'field' => 'language',
+                    'label' => 'language',
                     'rules' => 'required'
                 ),
             );
@@ -340,7 +355,7 @@ class Books extends CI_Controller {
     public function edit($book_id = null) {
         $this->breadcrumbs->push('edit', '/library/books/edit');
 
-        $this->layout->navTitle = 'Book edit';
+        $this->layout->navTitle = 'Book information:';
         $data = array();
         if ($this->input->post()):
             $data['data'] = $this->input->post();
@@ -353,6 +368,11 @@ class Books extends CI_Controller {
                 array(
                     'field' => 'code',
                     'label' => 'code',
+                    'rules' => 'required'
+                ),
+                array(
+                    'field' => 'language',
+                    'label' => 'language',
                     'rules' => 'required'
                 ),
             );
@@ -395,7 +415,7 @@ class Books extends CI_Controller {
         if ($book_id):
             $book_id = c_decode($book_id);
 
-            $this->layout->navTitle = 'Book view';
+            $this->layout->navTitle = 'Book information';
             $result = $this->book->get_book(null, array('book_id' => $book_id), 1);
             if ($result):
                 $result = current($result);

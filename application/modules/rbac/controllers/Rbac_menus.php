@@ -81,7 +81,7 @@ class Rbac_menus extends CI_Controller {
                 )
             );
             //pma($menu,1);
-            $view = $this->layout->render(array('view' => 'tree/menu_details_form'), true);
+            $view = $this->layout->render(array('view' => 'rbac/rbac_menus/menu_details_form'), true);
             echo $view;
         }
     }

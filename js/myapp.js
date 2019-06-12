@@ -34,10 +34,11 @@
     }
 
     jQuery.browser = browser;
-//APP CODE
+    //APP CODE   
+
     $('#admin_login_submit').on('click', function (e) {
         e.preventDefault();
-        
+
         $("#admin_login").validate({
             rules: {
                 user_email: {
@@ -46,7 +47,7 @@
                 },
                 user_pass: "required"
             },
-            messages: {                
+            messages: {
                 user_email: {
                     required: "Please enter your email address",
                     email: "Please enter a valid emial address"
@@ -55,15 +56,15 @@
             },
             errorLabelContainer: $("#login_error")
         });
-        if($("#admin_login").valid()){            
+        if ($("#admin_login").valid()) {
             $("#admin_login").submit();
         }
     });
 
 
-$('#rbac_create_users_submit').on('click', function (e) {
+    $('#rbac_create_users_submit').on('click', function (e) {
         e.preventDefault();
-        
+
         $("#rbac_create_users").validate({
             rules: {
                 email: {
@@ -72,34 +73,30 @@ $('#rbac_create_users_submit').on('click', function (e) {
                 },
                 password: "required",
                 re_password: {
-                 equalTo: "#password"   
+                    equalTo: "#password"
                 },
                 mobile: "required",
                 roles: "required",
                 status: "required",
             },
-            messages: {                
+            messages: {
                 user_email: {
                     required: "Please enter email address",
                     email: "Please enter a valid emial address"
                 },
                 password: "Please enter password",
-                re_password:'Password do match',
+                re_password: 'Password do match',
                 mobile: "Please enter mobile number",
                 roles: "Please select roles for user",
                 status: "Please user status",
-            }            
+            }
         });
-        if($("#rbac_create_users").valid()){            
+        if ($("#rbac_create_users").valid()) {
             $("#rbac_create_users").submit();
         }
     });
 
 //APP CODE
-
-
-
-
     //enable tooltip
     $('[data-toggle="tooltip"]').tooltip()
 
@@ -165,4 +162,22 @@ $('#rbac_create_users_submit').on('click', function (e) {
         }
         myApp.modal.alert(params);
     });
+    $(document).on('click', '.todo_dev', function () {
+        var params = {
+            'type': 'default',
+            'title': 'Comming Soon <span class="fa fa-smile-o"></span> !',
+            'message': 'Feature will be available very soon!'
+        }
+        myApp.modal.alert(params);
+    });
+    $(document).on('click', '.toggle-password', function () {
+        $(this).toggleClass("fa-eye fa-eye-slash");
+        var input = $($(this).attr("toggle"));
+        if (input.attr("type") == "password") {
+            input.attr("type", "text");
+        } else {
+            input.attr("type", "password");
+        }
+    });
+    
 })(jQuery);

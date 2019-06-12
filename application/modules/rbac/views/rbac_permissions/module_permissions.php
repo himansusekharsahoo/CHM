@@ -11,7 +11,7 @@
             "method" => "POST",
             "class" => "form-horizontal",
         );
-        $form_action = "/rbac/rbac_permissions/module_permissions";
+        $form_action = base_url('rbac-module-permissions');
         echo form_open($form_action, $form_attribute);
         ?>        
         <div class="panel-body">
@@ -81,7 +81,7 @@
                                                                                             $attribute['permission_id'] = $permission_id;
                                                                                             $attribute['checked'] = 'checked';
                                                                                         }
-                                                                                        echo '<div class="checkbox wraper_checkbox">' . form_checkbox($attribute) . ucfirst($val) . '</div>';
+                                                                                        echo '<div class="checkbox wraper_checkbox"><label style="width: 100%;">' . form_checkbox($attribute) . ucfirst($val) . '</label></div>';
                                                                                     }
                                                                                 }
                                                                                 ?>                                                                

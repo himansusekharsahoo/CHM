@@ -1,3 +1,6 @@
+<style>
+    .footer {position: absolute !important;bottom: 0px !important;width: 100% !important;}
+</style>
 <!-- BEGIN FOOTER -->
 <div class="footer">
     <div class="container">

@@ -1,10 +1,16 @@
-<?php ?> <div class="row-fluid">
-    <div class="col-sm-12 no_pad table-responsive">
-        <?php
-        $this->load->library('c_datatable');
-        $dt_data = $this->c_datatable->generate_grid($config);
-        echo $dt_data;
-        ?>
+<div class="row-fluid">
+    <div class="col-sm-12">
+        <div class="box">
+            <div class="box-body">
+                <div class="no_pad table-responsive">
+                    <?php
+                    $this->load->library('c_datatable');
+                    $dt_data = $this->c_datatable->generate_grid($config);
+                    echo $dt_data;
+                    ?>
+                </div>
+            </div>
+        </div>
     </div>
 </div><script type="text/javascript">
     $(function ($) {
@@ -26,7 +32,7 @@
                         label: 'Delete',
                         action: function (dialog) {
                             $.ajax({
-                                url: '<?= APP_BASE ?>library/book_category_masters/delete',
+                                url: '<?= base_url('delete-book-category') ?>',
                                 method: 'POST',
                                 data: data,
                                 success: function (result) {
@@ -59,7 +65,7 @@
             };
             $.ajax({
                 type: 'POST',
-                url: "<?= base_url('library/book_category_masters/export_grid_data') ?>",
+                url: "<?= base_url('export-book-category') ?>",
                 data: param,
                 dataType: 'json'
             }).done(function (data) {
@@ -77,7 +83,7 @@
             };
             $.ajax({
                 type: 'POST',
-                url: "<?= base_url('library/book_category_masters/export_grid_data') ?>",
+                url: "<?= base_url('export-book-category') ?>",
                 data: param,
                 dataType: 'json'
             }).done(function (data) {

@@ -14,8 +14,8 @@
 
     <div class = 'form-group row'>
         <div class = 'col-sm-1'>
-            <a class="text-right btn btn-default" href="<?php echo APP_BASE ?>rbac/rbac_roles/index">
-                <span class="glyphicon glyphicon-th-list"></span> Cancel
+            <a class="text-right btn btn-default" href="<?=base_url('rbac-roles-list')?>">
+                <span class="glyphicon glyphicon-th-list"></span> Back
             </a>
         </div>
     </div>

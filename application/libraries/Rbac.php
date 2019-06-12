@@ -9,6 +9,7 @@ class Rbac {
         $this->_ci = & get_instance();
         $this->_session = $this->_ci->session->all_userdata();
         //pma($this->_ci->session->all_userdata());
+        //pma($this->_session['user_data']['role_codes'],1);       
     }
 
     /**
@@ -18,11 +19,19 @@ class Rbac {
      * @author : HimansuS
      * @created:
      */
-    public function is_login() {
+    public function is_login($return_flag = false) {
         if (isset($this->_session['user_data']['user_id'])) {
             return $this->_session['user_data']['user_id'];
         } else {
-            redirect('admin-login');
+            if ($return_flag === TRUE) {
+                return FALSE;
+            } else {
+                if ($this->_ci->layout->layout == 'admin_layout') {
+                    redirect('employee-login');
+                } else if (!strpos(current_url(), 'user-login')) {
+                    redirect('user-login');
+                }
+            }
         }
     }
 
@@ -161,9 +170,23 @@ class Rbac {
      * @author : HimansuS
      * @created:
      */
-    public function get_user_name() {
+    public function get_user_email() {
         if (isset($this->_session['user_data']['email'])) {
             return $this->_session['user_data']['email'];
+        }
+        return '';
+    }
+
+    /**
+     * @param  : 
+     * @desc   :fetch user full name
+     * @return :
+     * @author : HimansuS
+     * @created:
+     */
+    public function get_user_name() {
+        if (isset($this->_session['user_data']['first_name'])) {
+            return $this->_session['user_data']['first_name'] . " " . $this->_session['user_data']['last_name'];
         }
         return '';
     }
@@ -225,7 +248,7 @@ class Rbac {
                             } else {
                                 $pmenu = $parent['action_name'];
                             }
-                            $menu_str.='<li class="treeview">
+                            $menu_str .= '<li class="treeview">
                                    <a href="#">
                                        <i class="fa ' . $parent['header_class'] . '"></i> <span>' . $pmenu . '</span>
                                        <span class="pull-right-container">
@@ -233,7 +256,7 @@ class Rbac {
                                        </span>
                                    </a>';
                             $smenu_flag = 1;
-                            $menu_str.='<ul class="treeview-menu">';
+                            $menu_str .= '<ul class="treeview-menu">';
                             foreach ($menus as $scode => $menu) {
                                 if (isset($menu[$scode])) {
                                     $sparent = $menu[$scode];
@@ -245,13 +268,13 @@ class Rbac {
                                         $pmenu = $sparent['action_name'];
                                     }
                                     unset($menu[$scode]);
-                                    $menu_str.='<li class="treeview"><a href="#"><i class="fa ' . $sparent['header_class'] . '"></i> ' . $pmenu . '
+                                    $menu_str .= '<li class="treeview"><a href="#"><i class="fa ' . $sparent['header_class'] . '"></i> ' . $pmenu . '
                                                        <span class="pull-right-container">
                                                            <i class="fa fa-angle-left pull-right"></i>
                                                        </span>
                                                    </a>';
                                     //sub-sub menu
-                                    $menu_str.='<ul class="treeview-menu">';
+                                    $menu_str .= '<ul class="treeview-menu">';
                                     foreach ($menu as $sscode => $ssmenu) {
                                         if ($ssmenu['menu_header']) {
                                             $smenu = $ssmenu['menu_header'];
@@ -260,10 +283,10 @@ class Rbac {
                                         } else {
                                             $smenu = $ssmenu['action_name'];
                                         }
-                                        $menu_str.='<li><a href="' . base_url($ssmenu['url']) . '"><i class="fa ' . $ssmenu['menu_class'] . '"></i> ' . $smenu . '</a></li>';
+                                        $menu_str .= '<li><a href="' . base_url($ssmenu['url']) . '"><i class="fa ' . $ssmenu['menu_class'] . '"></i> ' . $smenu . '</a></li>';
                                     }
-                                    $menu_str.='</ul>';
-                                    $menu_str.='<li>';
+                                    $menu_str .= '</ul>';
+                                    $menu_str .= '<li>';
                                 } else {
                                     if ($menu['menu_header']) {
                                         $smenu = $menu['menu_header'];
@@ -272,11 +295,11 @@ class Rbac {
                                     } else {
                                         $smenu = $menu['action_name'];
                                     }
-                                    $menu_str.='<li><a href="' . base_url($menu['url']) . '"><i class="fa ' . $menu['menu_class'] . '"></i> ' . $smenu . '</a></li>';
+                                    $menu_str .= '<li><a href="' . base_url($menu['url']) . '"><i class="fa ' . $menu['menu_class'] . '"></i> ' . $smenu . '</a></li>';
                                 }
                             }
-                            $menu_str.='</ul>';
-                            $menu_str.='</li>';
+                            $menu_str .= '</ul>';
+                            $menu_str .= '</li>';
                         } else {
                             if ($menus['menu_header']) {
                                 $pmenu = $menus['menu_header'];
@@ -285,14 +308,14 @@ class Rbac {
                             } else {
                                 $pmenu = $menus['action_name'];
                             }
-                            $menu_str.='<li>
+                            $menu_str .= '<li>
                                    <a href="' . base_url($menus['url']) . '">
                                        <i class="fa ' . $menus['header_class'] . '"></i> <span>' . $pmenu . '</span>                    
                                    </a>
                                </li>';
                         }
                     }
-                    $menu_str.='</ul>';
+                    $menu_str .= '</ul>';
                     return $menu_str;
                 }
             }
@@ -372,6 +395,93 @@ class Rbac {
             }
         }
         return false;
+    }
+
+    /**
+     * @param  : 
+     * @desc   : used to fetch app config item using xpath
+     * @return :
+     * @author : HimansuS
+     * @created:
+     */
+    public function get_app_config_item($xpath) {
+        $app_configs = $this->_session['user_data']['app_configs'];
+        // creating object of SimpleXMLElement
+        $xml_data = new SimpleXMLElement('<?xml version="1.0"?><data></data>');
+        //call by reference
+        array_to_xml($app_configs, $xml_data);
+        return $xml_data->xpath($xpath);
+    }
+
+    /**
+     * @param  : 
+     * @desc   : used to fetch heighest role from role code list based on role priority set in app config page
+     * @return :
+     * @author : HimansuS
+     * @created:
+     */
+    public function get_highest_role($role_code_array) {
+        $role_priority = $this->get_app_config_item('chm_app/role_priority');
+        if (isset($role_priority[0])) {
+            $priority = array();
+            foreach ($role_priority[0] as $key => $ele) {
+                $priority[] = (string) $ele;
+            }
+            $highest_role = '';
+            $index = 0;
+            $swap = '';
+            foreach ($role_code_array as $role) {
+                $index = array_search($role, $priority);
+                if ($swap == '') {
+                    $swap = $index;
+                }
+                if ($index == 0) {
+                    $highest_role = $role;
+                    break;
+                } else if ($swap > $index) {
+                    $swap = $index;
+                    $highest_role = $priority[$index];
+                } elseif ($swap < $index) {
+                    $highest_role = $priority[$swap];
+                } else {
+                    $highest_role = $priority[$swap];
+                }
+            }
+            return $highest_role;
+        }
+    }
+
+    /**
+     * 
+     * @method
+     * @param   
+     * @desc    used to sort user role code as per the priority set
+     * @return Array $sorted_roles
+     * @author  HimansuS                  
+     * @since   
+     */
+    public function sort_user_roles($role_codes) {
+        $role_codes_copy = $role_codes;
+        $sorted_code = array();
+        foreach ($role_codes as $role_code) {
+            $heighest_code = $this->get_highest_role($role_codes_copy);
+            $sorted_code[] = $heighest_code;
+            $index = array_search($heighest_code, $role_codes_copy);
+            unset($role_codes_copy[$index]);
+        }
+        return $sorted_code;
+    }
+
+    public function get_role_desc($role_code) {
+        if (isset($this->_session['user_data']['roles'])) {
+            $roles=$this->_session['user_data']['roles'];
+            foreach($roles as $role){
+                if($role['code']==$role_code){
+                    return $role['name'];
+                }
+            }
+        }
+        return '';
     }
 
 }

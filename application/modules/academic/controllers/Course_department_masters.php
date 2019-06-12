@@ -63,8 +63,8 @@ class Course_department_masters extends CI_Controller {
     public function index() {
 
         $this->breadcrumbs->push('index', '/academic/course_department_masters/index');
-        $this->scripts_include->includePlugins(array('datatable'), 'css');
-        $this->scripts_include->includePlugins(array('datatable'), 'js');
+        $this->scripts_include->includePlugins(array('datatable','chosen'), 'css');
+        $this->scripts_include->includePlugins(array('datatable','chosen'), 'js');
         $this->layout->navTitle = 'Course department master list';
         $this->layout->title = 'Course department master list';
         $header = array(
@@ -176,20 +176,20 @@ class Course_department_masters extends CI_Controller {
                 'btn_separator' => ' '
             ),
             array(
-                'btn_class' => 'no_pad',
+                'btn_class' => 'btn-warning',
                 'btn_href' => '#',
                 'btn_icon' => '',
                 'btn_title' => 'XLS',
-                'btn_text' => ' <img src="' . base_url("images/excel_icon.png") . '" alt="XLS">',
+                'btn_text' => '<span class="fa fa-file-excel-o"></span> Excel',
                 'btn_separator' => ' ',
                 'attr' => 'id="export_table_xls"'
             ),
             array(
-                'btn_class' => 'no_pad',
+                'btn_class' => 'btn-info',
                 'btn_href' => '#',
                 'btn_icon' => '',
                 'btn_title' => 'CSV',
-                'btn_text' => ' <img src="' . base_url("images/csv_icon_sm.gif") . '" alt="CSV">',
+                'btn_text' => '<span class="fa fa-file-text-o"></span> CSV',
                 'btn_separator' => ' ',
                 'attr' => 'id="export_table_csv"'
             )
@@ -211,11 +211,11 @@ class Course_department_masters extends CI_Controller {
                 'top_buttons' => $dt_tool_btn,
                 'top_pagination' => true,
                 'buttom_dom' => true,
-                'buttom_length_change' => true,
+                'buttom_length_change' => FALSE,
                 'buttom_pagination' => true
             ),
             'options' => array(
-                'iDisplayLength' => '15'
+                'iDisplayLength' => 15
             )
         );
         $data['data'] = array('config' => $config);

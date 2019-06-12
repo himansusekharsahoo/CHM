@@ -5,7 +5,7 @@
         "id" => "book_publication_masters",
         "method" => "POST"
     );
-    $form_action = "/library/book_publication_masters/edit";
+    $form_action = base_url('edit-book-publication-save');
     echo form_open($form_action, $form_attribute);
     ?>
     <?php
@@ -37,25 +37,7 @@
             echo form_input($attribute);
             ?>
         </div>
-    </div>
-    <div class = 'form-group row'>
-        <label for = 'code' class = 'col-sm-2 col-form-label'>Code</label>
-        <div class = 'col-sm-3'>
-            <?php
-            $attribute = array(
-                "name" => "code",
-                "id" => "code",
-                "class" => "form-control",
-                "title" => "",
-                "required" => "",
-                "type" => "text",
-                "value" => (isset($data["code"])) ? $data["code"] : ""
-            );
-            echo form_error("code");
-            echo form_input($attribute);
-            ?>
-        </div>
-    </div>
+    </div>    
     <div class = 'form-group row'>
         <label for = 'remarks' class = 'col-sm-2 col-form-label'>Remarks</label>
         <div class = 'col-sm-3'>
@@ -73,10 +55,9 @@
             ?>
         </div>
     </div>
-
     <div class = 'form-group row'>
         <div class = 'col-sm-1'>
-            <a class="text-right btn btn-default" href="<?= APP_BASE ?>library/book_publication_masters/index">
+            <a class="text-right btn btn-default" href="<?= base_url('manage-book-publication')?>">
                 <span class="glyphicon glyphicon-th-list"></span> Cancel
             </a>
         </div>
@@ -86,3 +67,25 @@
     </div>
     <?= form_close() ?>
 </div>
+<script type="text/javascript">
+    $(document).ready(function () {        
+        $('#book_publication_masters').validate({
+            rules: {
+                name: {
+                    required: true,                    
+                    letter_number_only:true
+                }
+            },
+            messages: {
+                name:{
+                    required:'Please enter book publication name',
+                }
+            },
+            submitHandler: function (form) {
+                if ($(form).valid())
+                    form.submit();
+                return false; // prevent normal form posting
+            }
+        });
+    });
+</script>

@@ -1,10 +1,22 @@
-<?php ?> <div class="row-fluid">
+<style>
+    .name{ width: 250px !important;}
+    .code{ width: 100px !important;}
+    .language{ width: 100px !important;}
+    .status{ width: 100px !important;}
+    .created{ width: 100px !important;}
+</style>
+<div class="row-fluid">
     <div class="col-sm-12 no_pad table-responsive">
-        <?php
-        $this->load->library('c_datatable');
-        $dt_data = $this->c_datatable->generate_grid($config);
-        echo $dt_data;
-        ?>
+        <div class="box">
+            <div class="box-body">
+                <?php
+                $this->load->library('c_datatable');
+                $dt_data = $this->c_datatable->generate_grid($config);
+                echo $dt_data;
+                ?>
+            </div>
+            <div class="box-footer"></div>
+        </div>
     </div>
 </div><script type="text/javascript">
     $(function ($) {

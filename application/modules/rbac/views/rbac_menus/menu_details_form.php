@@ -35,7 +35,7 @@
                             $attribute = array(
                                 "name" => "menu_type",
                                 "id" => "menu_type",
-                                "class" => "form-control"                                
+                                "class" => "form-control"
                             );
                             $menu_type = (isset($menu_details['menu_type'])) ? $menu_details['menu_type'] : '';
                             echo form_error("menu_type");
@@ -106,9 +106,10 @@
         <!-- /.box-body -->
         <div class="box-footer">
             <div class="pull-right">
-                <input name="menu_id" id="menu_id" value="<?= $menu_details['id'] ?>" class="form-control" type="hidden">
-                <button type="button" class="btn btn-default" >Cancel</button>&nbsp;&nbsp;
-                <button type="button" class="btn btn-primary" id="save_menu_detail">Save</button>
+                <?php if ($this->rbac->has_permission('MANAGE_MENU', 'DELETE')) : ?>
+                    <input name="menu_id" id="menu_id" value="<?= $menu_details['id'] ?>" class="form-control" type="hidden">                
+                    <button type="button" class="btn btn-primary" id="save_menu_detail">Save</button>
+                <?php endif; ?>
             </div>
         </div>
     </div>

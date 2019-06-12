@@ -63,12 +63,14 @@ class Course_academic_batch_utility extends CI_Model {
         if ($condition && is_string($condition)) {
             $this->datatables->where(null, null, false, $condition);
         }
-        $this->datatables->unset_column("record_no");
+        if (!$export) {
+            $this->datatables->unset_column("record_no");
+        }
         if (isset($data['button_set'])):
             $this->datatables->add_column("Action", $data['button_set'], 'c_encode(record_no)', 1, 1);
         endif;
         if ($export):
-            $data = $this->datatables->generate_export($export);
+            $data = $this->datatables->generate_export($export);            
             return $data;
         endif;
         return $this->datatables->generate();

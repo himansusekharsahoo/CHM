@@ -61,12 +61,10 @@ class Book_author_master extends CI_Model {
     public function get_book_author_master_datatable($data = null, $export = null, $tableHeading = null, $columns = null) {
         $this->load->library('datatables');
         if (!$columns) {
-            $columns = 'bauthor_id,author_name,status,remarks,created,created_by';
+            $columns = 'bauthor_id,author_name,status,remarks,created,created_by_name';
         }
-
-        /*
-         */
-        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, FALSE, FALSE)->from('book_author_masters t1');
+        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, FALSE, FALSE)
+                ->from('book_author_list_view');
 
         $this->datatables->unset_column("bauthor_id");
         if (isset($data['button_set'])):
@@ -185,7 +183,7 @@ class Book_author_master extends CI_Model {
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function get_options($columns, $index = null, $conditions = null) {
+    public function get_options($columns, $index = null, $conditions = null,$chosen_flag=false) {
         if (!$columns) {
             $columns = 'bauthor_id';
         }
@@ -203,7 +201,11 @@ class Book_author_master extends CI_Model {
         $result = $this->db->get()->result_array();
 
         $list = array();
-        $list[''] = 'Select book author masters';
+        if($chosen_flag){
+            $list[''] = '';
+        }else{
+             $list[''] = 'Select book author masters';
+        }
         foreach ($result as $key => $val):
             $list[$val[$index]] = $val[$columns];
         endforeach;
@@ -213,7 +215,18 @@ class Book_author_master extends CI_Model {
     public function record_count() {
         return $this->db->count_all('book_author_masters');
     }
-
+/**
+     * @param  : string $condition
+     * @desc   : used to check duplicacy of book author name
+     * @return : number 0/count value
+     * @author : HimansuS
+     * @created:
+     */
+    public function check_duplicate($condition){
+        $query="select count(bauthor_id) count_rec from book_author_masters where 1=1 $condition";
+        $result=$this->db->query($query)->row();        
+        return $result->count_rec;
+    }
 }
 
 ?>

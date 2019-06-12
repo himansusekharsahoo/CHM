@@ -1,0 +1,6 @@
+source book_ledger_list_view.sql
+source book_author_list_view.sql
+source book_category_list_view.sql
+source book_publication_list_view.sql
+source library_member_view.sql
+source user_details_view.sql

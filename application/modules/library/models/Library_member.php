@@ -41,7 +41,7 @@ class Library_member extends CI_Model {
     public function __construct() {
         parent::__construct();
 
-
+        $this->load->model('rbac/rbac_user');
         $this->layout->layout = 'admin_layout';
         $this->layout->layoutsFolder = 'layouts/admin';
         $this->layout->lMmenuFlag = 1;
@@ -61,13 +61,13 @@ class Library_member extends CI_Model {
     public function get_library_member_datatable($data = null, $export = null, $tableHeading = null, $columns = null) {
         $this->load->library('datatables');
         if (!$columns) {
-            $columns = 'member_id,card_no,date_issue,expiry_date,user_id,user_role_id,created,created_by,status';
+            $columns = 'member_id,card_no,date_issue,expiry_date,rbac_users.email,IF(user_role_id=1,"Staff","Student"),t1.status';
         }
 
         /*
          */
         $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, FALSE, FALSE)->from('library_members t1');
-
+        $this->datatables->join('rbac_users','rbac_users.user_id=t1.user_id');
         $this->datatables->unset_column("member_id");
         if (isset($data['button_set'])):
             $this->datatables->add_column("Action", $data['button_set'], 'c_encode(member_id)', 1, 1);
@@ -90,12 +90,13 @@ class Library_member extends CI_Model {
      */
     public function get_library_member($columns = null, $conditions = null, $limit = null, $offset = null) {
         if (!$columns) {
-            $columns = 'member_id,card_no,date_issue,expiry_date,user_id,user_role_id,created,created_by,status';
+            $columns = 'member_id,card_no,date_issue,expiry_date, t1.user_id,user_role_id,t1.created,t1.created_by,t1.status';
         }
 
         /*
          */
         $this->db->select($columns)->from('library_members t1');
+        $this->db->join('rbac_users u','t1.user_id=u.user_id');
 
         if ($conditions && is_array($conditions)):
             foreach ($conditions as $col => $val):
@@ -214,6 +215,21 @@ class Library_member extends CI_Model {
         return $this->db->count_all('library_members');
     }
 
+    public function get_user_list($columns, $index = null, $conditions = null) {
+        return $this->rbac_user->get_options($columns, $index, $conditions);
+    }
+    
+    public function unique_card_number($card_no) {
+        $this->db->where('card_no', $card_no);
+        $query = $this->db->get('library_members');
+        return $query->num_rows();
+    }
+    
+    public function unique_user($user_id) {
+        $this->db->where('user_id',$user_id);
+        $query = $this->db->get('library_members');
+        return $query->num_rows();
+    }
 }
 
 ?>

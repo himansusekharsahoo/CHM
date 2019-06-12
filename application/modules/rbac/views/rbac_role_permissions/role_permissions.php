@@ -8,7 +8,7 @@
             "method" => "POST",
             "class" => "form-horizontal",
         );
-        $form_action = "/rbac/rbac_role_permissions/role_permissions";
+        $form_action = base_url('rbac-role-permissions');
         echo form_open($form_action, $form_attribute);
         ?>        
         <div class="panel-body">
@@ -48,7 +48,7 @@
                                                     <div class="row perm_row">
                                                         <span class="pull-left">
                                                             <div class="col-sm-12">
-                                                                <label><input type="checkbox" class="check_all">&nbsp;&nbsp;Check all</label>
+                                                                <label class="pull-left"><input type="checkbox" class="check_all">&nbsp;&nbsp;Check all</label>
                                                             </div>
                                                         </span>
                                                         <div class="col-sm-12 no_pad text-left">                                                            
@@ -61,7 +61,7 @@
                                                                     ?>
                                                                     <div class="col-sm-6">
                                                                         <div class="row">                                                                         
-                                                                            <div class="col-sm-12 text-left">
+                                                                            <div class="col-sm-12 text-left no_pad">
                                                                                 <?php
                                                                                 $attribute = array(
                                                                                     "name" => "permission[$indx][permission_id][]",
@@ -87,7 +87,7 @@
                                                                                     $attribute['permission_id'] = $perm['permission_id'];
                                                                                     $attribute['checked'] = 'checked';
                                                                                 }
-                                                                                echo '<div class="checkbox wraper_checkbox">' . form_checkbox($attribute) . ucfirst(strtolower($perm['module_name'])) . ' <span class="fa fa-long-arrow-right"> ' . ucfirst(strtolower($perm['action_name'])) . '</div>';
+                                                                                echo '<div class="checkbox wraper_checkbox"><label style="width: 100%;">' . form_checkbox($attribute) . ucfirst(strtolower($perm['module_name'])) . ' <span class="fa fa-long-arrow-right"> ' . ucfirst(strtolower($perm['action_name'])) . '</label></div>';
                                                                                 ?>
                                                                             </div>
                                                                         </div>

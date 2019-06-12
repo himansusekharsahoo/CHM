@@ -26,6 +26,7 @@ class Scripts_include {
                 '/js/messages.js',
                 '/js/myapp.js'
             ),
+            'bs_datepicker' => array(COMPONENT_PATH . 'bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js'),
         ),
         'blank_layout' => array(
             'top' => array(
@@ -39,6 +40,22 @@ class Scripts_include {
                 '/js/myapp.js'
             ),
         ),
+        'ecom_layout' => array(
+            'top' => array(
+                COMPONENT_PATH . 'ecom/theme/assets/plugins/jquery.min.js',
+                COMPONENT_PATH . 'ecom/theme/assets/plugins/jquery-migrate.min.js',
+                COMPONENT_PATH . 'ecom/theme/assets/plugins/bootstrap/js/bootstrap.min.js'
+            ),
+            'common' => array(
+                COMPONENT_PATH . 'ecom/theme/assets/corporate/scripts/back-to-top.js',
+                COMPONENT_PATH . 'ecom/theme/assets/plugins/fancybox/source/jquery.fancybox.pack.js',
+                COMPONENT_PATH . 'ecom/theme/assets/plugins/owl.carousel/owl.carousel.min.js',
+                COMPONENT_PATH . 'ecom/theme/assets/corporate/scripts/layout.js',
+                COMPONENT_PATH . 'ecom/theme/assets/pages/scripts/bs-carousel.js',
+                '/js/messages.js',
+                '/js/myapp.js'
+            )
+        ),
         'default' => array(
             'top' => array(),
             'common' => array()
@@ -49,7 +66,8 @@ class Scripts_include {
         'multiselect' => array('/assets/multiselect/jquery.multiselect.js'),
         'jq_validation' => array(
             COMPONENT_PATH . 'jquery-validation/dist/jquery.validate.min.js',
-            COMPONENT_PATH . 'jquery-validation/dist/additional-methods.min.js'
+            COMPONENT_PATH . 'jquery-validation/dist/additional-methods.min.js',
+            '/js/additional_jq_validation.js'
         ),
         'datatable' => array(
             COMPONENT_PATH . 'datatables/media/js/jquery.dataTables.min.js',
@@ -61,12 +79,19 @@ class Scripts_include {
             COMPONENT_PATH . 'datatables-scroller/js/dataTables.scroller.js',
             COMPONENT_PATH . 'dataTables.treeGrid.js/dataTables.treeGrid.js',
         ),
-        'chosen' => array('/assets/bootstrap-chosen/chosen.jquery.js'),
+        'chosen' => array(COMPONENT_PATH.'chosen/chosen.jquery.js'),
         'tree' => array('/js/tree.js'),
         'jstree' => array(COMPONENT_PATH . 'jstree/dist/jstree.min.js'),
         'promise' => array(COMPONENT_PATH . 'bluebird/js/browser/bluebird.min.js'),
         'bs_multiselect' => array('/assets/layout/default/bootstrap/js/bootstrap-multiselect.js'),
-        'js_validation' => array('/assets/bower_components/jquery-validation/jquery.validate.js'),
+        'js_validation' => array(COMPONENT_PATH . 'jquery-validation/jquery.validate.js'),
+        'jq_typehead' => array(COMPONENT_PATH . 'jquery-typeahead/dist/jquery.typeahead.min.js'),
+        'jq_multitag_select' => array(
+            COMPONENT_PATH . 'Multi-Select-Checkbox-Tree-treeSelector/jquery.treeSelector.js'
+        ),
+        'print_element'=>array(COMPONENT_PATH.'print-elements/print_elements.js'),
+        'd3'=>array('/assets/d3/d3.min.js'),
+        'pass_meter'=>array('/js/pass_meter/js/mocha.js')
     );
     private $__cssFiles = array(
         'admin_layout' => array(
@@ -92,6 +117,21 @@ class Scripts_include {
                 COMPONENT_PATH . 'admin-lte/dist/css/skins/_all-skins.min.css',
                 '/css/myapp.css',
             )
+        ), 'ecom_layout' => array(
+            'common' => array(
+                COMPONENT_PATH . 'ecom/theme/assets/plugins/font-awesome/css/font-awesome.min.css',
+                COMPONENT_PATH . 'ecom/theme/assets/plugins/bootstrap/css/bootstrap.min.css',
+                COMPONENT_PATH . 'ecom/theme/assets/pages/css/animate.css',
+                COMPONENT_PATH . 'ecom/theme/assets/plugins/fancybox/source/jquery.fancybox.css',
+                COMPONENT_PATH . 'ecom/theme/assets/plugins/owl.carousel/assets/owl.carousel.css',
+                COMPONENT_PATH . 'ecom/theme/assets/pages/css/components.css',
+                COMPONENT_PATH . 'ecom/theme/assets/pages/css/slider.css',
+                COMPONENT_PATH . 'ecom/theme/assets/corporate/css/style.css',
+                COMPONENT_PATH . 'ecom/theme/assets/corporate/css/style-responsive.css',
+                COMPONENT_PATH . 'ecom/theme/assets/corporate/css/themes/red.css',
+                COMPONENT_PATH . 'ecom/theme/assets/corporate/css/custom.css',
+                COMPONENT_PATH . 'ecom/my_ecom.css'
+            )
         ),
         'default' => array(
             'common' => array()
@@ -102,8 +142,13 @@ class Scripts_include {
         'datatable' => array(
             COMPONENT_PATH . 'datatables/media/css/jquery.dataTables.min.css',
         ),
-        'chosen' => array('/assets/bootstrap-chosen/bootstrap-chosen.css'),
-        'jstree' => array(COMPONENT_PATH . 'jstree/dist/themes/default/style.min.css')
+        'chosen' => array(COMPONENT_PATH.'chosen/chosen.css'),
+        'jstree' => array(COMPONENT_PATH . 'jstree/dist/themes/default/style.min.css'),
+        'jq_typehead' => array(COMPONENT_PATH . 'jquery-typeahead/dist/jquery.typeahead.min.css'),
+        'jq_multitag_select' => array(
+            COMPONENT_PATH . 'Multi-Select-Checkbox-Tree-treeSelector/jquery.treeSelector.css'
+        ),
+        'print_element'=>array(COMPONENT_PATH.'print-elements/print.css')
     );
 
     function __construct() {

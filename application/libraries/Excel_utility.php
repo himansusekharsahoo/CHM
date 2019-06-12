@@ -24,6 +24,7 @@ class Excel_utility {
     private $_freeze_column_flag = false;
     private $_excel;
     private $_active_sheet;
+    private $_data_validation = false;
 
     private function _validate_options($config) {
         $flag = FALSE;
@@ -97,7 +98,7 @@ class Excel_utility {
                         } else {
                             if (isset($cols['title']) && isset($cols['value'])) {
                                 $this->_active_sheet->SetCellValue($xcol . $this->_row_indx, strip_tags($cols['title']));
-                                $this->_active_sheet->SetCellValue( ++$range_cols . $this->_row_indx, strip_tags($cols['value']));
+                                $this->_active_sheet->SetCellValue(++$range_cols . $this->_row_indx, strip_tags($cols['value']));
                                 //make header text bold                                
                                 $this->_active_sheet->getStyle($xcol . $this->_row_indx . ':' . $xcol . $this->_row_indx)->getFont()->setBold(true);
                             } else if (isset($cols['title']) && (!isset($cols['value']) || $cols['value'] == '')) {
@@ -114,7 +115,7 @@ class Excel_utility {
                                 }
 
                                 $this->_active_sheet->SetCellValue($xcol . $this->_row_indx, strip_tags($cols['title']));
-                                //set column autowidth
+                                //set column autowidth                               
                                 $this->_active_sheet->getColumnDimension($xcol)->setAutoSize(true);
                                 //make header text bold                                
                                 $this->_active_sheet->getStyle('A' . $this->_row_indx . ':' . $xcol . $this->_row_indx)->getFont()->setBold(true);
@@ -251,6 +252,70 @@ class Excel_utility {
     }
 
     /**
+     * @param  : 
+     * @desc   :
+     * @return :
+     * @author : HimansuS
+     * @created:
+     */
+    private function _set_data_validation() {
+//        sample code for validaation array
+//        $data_validation=array(
+//            'column_name/column_range'=>array(
+//                'allow_blank_flag'=>'',
+//                'show_input_message_flag'=>'',
+//                'show_error_message_flag'=>'',
+//                'show_dropdown_flag'=>'',
+//                'error_popup_title_message'=>'',
+//                'error_popup_body_message'=>'',
+//                'tooltip_title_message'=>'',
+//                'tooltip_body_message'=>'',
+//                'formula_data'=>'',
+//                'range_flag'=>''
+//            )
+//        );
+
+        if (isset($this->_configs['data_validation']) && is_array($this->_configs['data_validation']) && count($this->_configs['data_validation']) > 0) {
+            $objValidation = $this->_active_sheet->getDataValidation();
+            $objValidation->setType(PHPExcel_Cell_DataValidation::TYPE_LIST);
+            $objValidation->setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_INFORMATION);
+            $loop = 1;
+            foreach ($this->_configs['data_validation'] as $column => $options) {
+
+                if (isset($options['allow_blank_flag']) && $options['allow_blank_flag'] != '') {
+                    $objValidation->setAllowBlank($options['allow_blank_flag']);
+                }
+                if (isset($options['show_input_message_flag']) && $options['show_input_message_flag'] != '') {
+                    $objValidation->setShowInputMessage($options['show_input_message_flag']);
+                }
+                if (isset($options['show_error_message_flag']) && $options['show_error_message_flag'] != '') {
+                    $objValidation->setShowErrorMessage($options['show_error_message_flag']);
+                }
+                if (isset($options['show_dropdown_flag']) && $options['show_dropdown_flag'] != '') {
+                    $objValidation->setShowDropDown($options['show_dropdown_flag']);
+                }
+                if (isset($options['error_popup_title_message']) && $options['error_popup_title_message'] != '') {
+                    $objValidation->setErrorTitle($options['error_popup_title_message']);
+                }
+                if (isset($options['error_popup_body_message']) && $options['error_popup_body_message'] != '') {
+                    $objValidation->setError($options['error_popup_body_message']);
+                }
+                if (isset($options['tooltip_title_message']) && $options['tooltip_title_message'] != '') {
+                    $objValidation->setPromptTitle($options['tooltip_title_message']);
+                }
+                if (isset($options['tooltip_body_message']) && $options['tooltip_body_message'] != '') {
+                    $objValidation->setPrompt($options['tooltip_body_message']);
+                }
+                if (isset($options['formula_data']) && $options['formula_data'] != '') {
+                    $objValidation->setFormula1($options['formula_data']);//data fromat should be like "'data1,data2,data3'"
+                }
+                $this->_active_sheet->setDataValidation("$column", $objValidation);
+            }
+        }
+        return $this;
+    }
+
+    /**
      * @param
      * @return
      * @desc
@@ -261,6 +326,7 @@ class Excel_utility {
             $this->_create_header()
                     ->_create_body()
                     ->_set_auto_filter()
+                    ->_set_data_validation()
                     ->_set_freeze_column()
                     ->_set_worksheet_name()
                     ->_download($type);
@@ -300,7 +366,7 @@ class Excel_utility {
         if (isset($this->_configs['file_name'])) {
             $file_name = $this->_configs['file_name'];
         }
-        
+
         switch ($type) {
             case 'csv':
                 $objWriter = PHPExcel_IOFactory::createWriter($this->_excel, 'CSV');

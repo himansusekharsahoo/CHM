@@ -26,7 +26,7 @@
                         label: 'Delete',
                         action: function (dialog) {
                             $.ajax({
-                                url: '<?php echo APP_BASE ?>rbac/rbac_roles/delete',
+                                url: '<?=base_url('delete-rbac-role')?>',
                                 method: 'POST',
                                 data: data,
                                 success: function (result) {
@@ -59,7 +59,7 @@
             };
             $.ajax({
                 type: 'POST',
-                url: "<?php echo base_url('rbac/rbac_roles/export_grid_data') ?>",
+                url: "<?=base_url('export-rbac-role')?>",
                 data: param,
                 dataType: 'json'
             }).done(function (data) {
@@ -77,7 +77,7 @@
             };
             $.ajax({
                 type: 'POST',
-                url: "<?php echo base_url('rbac/rbac_roles/export_grid_data') ?>",
+                url: "<?=base_url('export-rbac-role')?>",
                 data: param,
                 dataType: 'json'
             }).done(function (data) {

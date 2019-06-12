@@ -1,4 +1,4 @@
-<div class="modal fade" id="default_modal_box">
+<div class="modal fade" id="default_modal_box" style="z-index: 1060;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -10,7 +10,8 @@
                 <p>One fine body…</p>
             </div>
             <div class="modal-footer">
-                <button data-dismiss="modal" class="btn btn-default pull-right" type="button">Close</button>                    
+                <button data-dismiss="modal" class="btn btn-success" id="default_modal_box_btn" type="button">Ok</button>
+                <button data-dismiss="modal" class="btn btn-danger" id="default_modal_box_btn_cancel" type="button">Cancel</button>
             </div>
         </div>
         <!-- /.modal-content -->
@@ -32,7 +33,7 @@
                 <p>One fine body…</p>
             </div>
             <div class="modal-footer">
-                <button data-dismiss="modal" class="btn btn-outline pull-right" type="button">Close</button>                    
+                <button data-dismiss="modal" class="btn btn-outline pull-right" id="primary_modal_box_btn" type="button">Close</button>                    
             </div>
         </div>
         <!-- /.modal-content -->

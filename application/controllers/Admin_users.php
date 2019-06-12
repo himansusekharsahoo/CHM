@@ -21,7 +21,7 @@ class Admin_users extends CI_Controller {
      */
     public function index() {
         if (!$this->rbac->is_login()) {
-            redirect(APP_BASE . 'admin_users/sign_in');
+            redirect(base_url('employee-login'));
         } else {
             
         }
@@ -35,8 +35,8 @@ class Admin_users extends CI_Controller {
      * @author :
      */
     public function sign_in() {
-        $this->scripts_include->includePlugins(array('jq_validation'),'js');
-        
+        $this->scripts_include->includePlugins(array('jq_validation'), 'js');
+
         $this->layout->layout = 'blank_layout';
         if ($this->input->post()) {
             //server side validation
@@ -58,31 +58,37 @@ class Admin_users extends CI_Controller {
 
                 $email = $this->input->post('user_email');
                 $pass = $this->input->post('user_pass');
-                $condition = array('email' => $email, 'password' => $pass);
+                //$condition = array('email' => $email, 'password' => c_encode($pass),'user_type'=>'');
+                $condition = "email='$email' and password='" . c_encode($pass) . "' and user_type in('employee','developer')";
                 $user_detail = $this->user->get_user_detail(null, $condition);
 
                 if ($user_detail) {
-                    $admin_flag = FALSE;
-                    $menus = $permissions = array();
-                    if (in_array('DEVELOPER', $user_detail['role_codes'])) {
-                        //fetch all the permissions
-                        $condition = '';
-                        $permissions = $this->rbac_role_permission->get_rbac_role_permission_lib(null, null, TRUE);                        
-                        //pma($permissions,1);
-                    } else {
-                        //fetch only assigned permissions
-                        $role_ids = array_column($user_detail['roles'], 'role_id');
-                        if ($role_ids) {
-                            $condition = 'rrp.role_id IN(' . implode(',', $role_ids) . ')';
-                            $permissions = $this->rbac_role_permission->get_rbac_role_permission_lib(null, $condition);                            
+                    if (isset($user_detail['status']) && $user_detail['status'] == 'active') {
+                        $menus = $permissions = array();
+                        if (in_array('DEVELOPER', $user_detail['role_codes'])) {
+                            //fetch all the permissions
+                            $condition = '';
+                            $permissions = $this->rbac_role_permission->get_rbac_role_permission_lib(null, null, TRUE);
+                        } else {
+                            //fetch only assigned permissions
+                            $role_ids = array_column($user_detail['roles'], 'role_id');
+                            if ($role_ids) {
+                                $condition = 'rrp.role_id IN(' . implode(',', $role_ids) . ')';
+                                $permissions = $this->rbac_role_permission->get_rbac_role_permission_lib(null, $condition);
+                            }
                         }
+                        //get app configs
+                        $app_configs = $this->user->get_app_configs();
+                        //remove action list, does not required her..
+                        unset($permissions['action_list']);
+                        $user_detail['permissions'] = $permissions;
+                        $user_detail['permission_modules'] = array_keys($permissions);
+                        $user_detail['app_configs'] = $app_configs;
+                        $this->session->set_userdata('user_data', $user_detail);
+                        redirect('employee-dashboard');
+                    } else {
+                        $this->session->set_flashdata('error', 'You are not authorised to access the application.');
                     }
-                    //remove action list, does not required her..
-                    unset($permissions['action_list']);
-                    $user_detail['permissions'] = $permissions;                    
-                    $user_detail['permission_modules'] = array_keys($permissions);                    
-                    $this->session->set_userdata('user_data', $user_detail);
-                    redirect('admin-dashboard');
                 } else {
                     $this->session->set_flashdata('error', 'Invalid login credentials.');
                 }
@@ -99,7 +105,7 @@ class Admin_users extends CI_Controller {
      */
     public function dashboard() {
         if (!$this->rbac->is_login()) {
-            redirect(APP_BASE . 'admin_users/sign_in');
+            redirect(base_url('employee-login'));
         } else {
             //pma($this->session->all_userdata(),1);
             //$this->layout->navTitle='test title';
@@ -107,7 +113,7 @@ class Admin_users extends CI_Controller {
             $this->layout->title = 'test page title';
             $data = array();
             $this->layout->data = $data;
-            $this->breadcrumbs->push('dashboard', '/admin_users/dashboard');
+            $this->breadcrumbs->push('dashboard', base_url('employee-dashboard'));
             //$this->layout->navTitleFlag=0;
             $this->layout->breadcrumbsFlag = 0;
             $this->layout->render();
@@ -123,7 +129,7 @@ class Admin_users extends CI_Controller {
     public function log_out() {
         $this->session->unset_userdata('user_data');
         $this->session->unset_userdata('selected_left_menu');
-        redirect('admin-login');
+        redirect('employee-login');
     }
 
 }

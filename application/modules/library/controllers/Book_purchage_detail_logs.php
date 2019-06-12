@@ -63,20 +63,12 @@ class Book_purchage_detail_logs extends CI_Controller {
     public function index() {
 
         $this->breadcrumbs->push('index', '/library/book_purchage_detail_logs/index');
-        $this->scripts_include->includePlugins(array('datatable'), 'css');
-        $this->scripts_include->includePlugins(array('datatable'), 'js');
+        $this->scripts_include->includePlugins(array('datatable','chosen'), 'css');
+        $this->scripts_include->includePlugins(array('datatable','chosen'), 'js');
         $this->layout->navTitle = 'Book purchage detail log list';
         $this->layout->title = 'Book purchage detail log list';
         $header = array(
             array(
-                'db_column' => 'bledger_id',
-                'name' => 'Bledger_id',
-                'title' => 'Bledger_id',
-                'class_name' => 'dt_name',
-                'orderable' => 'true',
-                'visible' => 'true',
-                'searchable' => 'true'
-            ), array(
                 'db_column' => 'bill_number',
                 'name' => 'Bill_number',
                 'title' => 'Bill_number',
@@ -176,20 +168,20 @@ class Book_purchage_detail_logs extends CI_Controller {
                 'btn_separator' => ' '
             ),
             array(
-                'btn_class' => 'no_pad',
+                'btn_class' => 'btn-warning',
                 'btn_href' => '#',
                 'btn_icon' => '',
                 'btn_title' => 'XLS',
-                'btn_text' => ' <img src="' . base_url("images/excel_icon.png") . '" alt="XLS">',
+                'btn_text' => '<span class="fa fa-file-excel-o"></span> Excel',
                 'btn_separator' => ' ',
                 'attr' => 'id="export_table_xls"'
             ),
             array(
-                'btn_class' => 'no_pad',
+                'btn_class' => 'btn-info',
                 'btn_href' => '#',
                 'btn_icon' => '',
                 'btn_title' => 'CSV',
-                'btn_text' => ' <img src="' . base_url("images/csv_icon_sm.gif") . '" alt="CSV">',
+                'btn_text' => '<span class="fa fa-file-text-o"></span> CSV',
                 'btn_separator' => ' ',
                 'attr' => 'id="export_table_csv"'
             )
@@ -211,11 +203,11 @@ class Book_purchage_detail_logs extends CI_Controller {
                 'top_buttons' => $dt_tool_btn,
                 'top_pagination' => true,
                 'buttom_dom' => true,
-                'buttom_length_change' => true,
+                'buttom_length_change' => FALSE,
                 'buttom_pagination' => true
             ),
             'options' => array(
-                'iDisplayLength' => '15'
+                'iDisplayLength' => 15
             )
         );
         $data['data'] = array('config' => $config);
@@ -234,9 +226,14 @@ class Book_purchage_detail_logs extends CI_Controller {
     public function export_grid_data() {
         if ($this->input->is_ajax_request()):
             $export_type = $this->input->post('export_type');
-            $tableHeading = array('bledger_id' => 'bledger_id', 'bill_number' => 'bill_number', 'purchase_date' => 'purchase_date', 'price' => 'price', 'vendor_name' => 'vendor_name', 'remarks' => 'remarks',);
-            $cols = 'bledger_id,bill_number,purchase_date,price,vendor_name,remarks';
-            $data = $this->book_purchage_detail_log->get_book_purchage_detail_log_datatable(null, true, $tableHeading);
+            $book_ledger_id = $this->input->post('book_ledger_id');            
+            $condition='';
+            if($book_ledger_id){
+                $book_ledger_id= c_decode($book_ledger_id);
+                $condition=array('bledger_id'=>$book_ledger_id);
+            }
+           
+            $data = $this->book_purchage_detail_log->get_book_purchage_detail_log_datatable(null, true, $condition);
             $head_cols = $body_col_map = array();
             $date = array(
                 array(
@@ -244,6 +241,7 @@ class Book_purchage_detail_logs extends CI_Controller {
                     'value' => date('d-m-Y')
                 )
             );
+            $tableHeading = array('bill_number' => 'bill number', 'purchase_date' => 'purchase date', 'price' => 'price', 'vendor_name' => 'vendor name', 'remarks' => 'remarks',);
             foreach ($tableHeading as $db_col => $col) {
                 $head_cols[] = array(
                     'title' => ucfirst($col),

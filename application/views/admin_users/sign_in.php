@@ -13,9 +13,9 @@
              };?>
         </div>
     </div>
-    <div class="login-logo">
+<!--    <div class="login-logo">
         <a href="<?=base_url('admin_users/sign_in');?>"><b>Admin</b>Login</a>
-    </div>    
+    </div>    -->
     <!-- /.login-logo -->
     <div class="login-box-body">
         <p class="login-box-msg">Log in to start your session</p>

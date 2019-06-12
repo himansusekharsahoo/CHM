@@ -292,14 +292,17 @@ if (!function_exists('get_csv_heading')) {
      * @desc return csv file heading - first line of file is treated as heading
      * @author
      */
-    function get_csv_heading($file, $delimeter) {
+    function get_csv_heading($file, $delimeter, $seek_line = null) {
         $f = fopen("$file", "r");
         $ln = 0;
+        if ($seek_line > 0) {
+            for ($i = 1; $i <= $seek_line; $i++) {
+                $csv_heading = fgets($f);
+            }
+        }
         $csv_heading = fgets($f);
         fclose($f);
-        if ($csv_heading) {
-            
-        }
+
         $csv_heading = str_replace('"', "", trim(strtolower($csv_heading)));
         $csv_heading = explode($delimeter, $csv_heading);
         $csv_columns = array();
@@ -1172,6 +1175,24 @@ if (!function_exists('tree_array')) {
         };
         $tree = $fnBuilder($grouped[0]);
         return $tree;
+    }
+
+}
+
+if (!function_exists('array_to_xml')) {
+
+    function array_to_xml($data, &$xml_data) {
+        foreach ($data as $key => $value) {
+            if (is_numeric($key)) {
+                $key = 'item' . $key; //dealing with <0/>..<n/> issues
+            }
+            if (is_array($value)) {
+                $subnode = $xml_data->addChild($key);
+                array_to_xml($value, $subnode);
+            } else {
+                $xml_data->addChild("$key", htmlspecialchars("$value"));
+            }
+        }
     }
 
 }

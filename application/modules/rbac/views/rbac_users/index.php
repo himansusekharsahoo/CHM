@@ -6,7 +6,8 @@
         echo $dt_data;
         ?>
     </div>
-</div><script type="text/javascript">
+</div>
+<script type="text/javascript">
     $(function ($) {
 //delete record
 

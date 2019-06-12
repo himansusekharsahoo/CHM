@@ -27,7 +27,8 @@ if (!defined('BASEPATH'))
  * @author     HimansuS                  
  * @since   10/28/2018
  */
-class Book_publication_master extends CI_Model {
+class Book_publication_master extends CI_Model
+{
 
     /**
      * __construct Method
@@ -38,7 +39,8 @@ class Book_publication_master extends CI_Model {
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
 
 
@@ -58,15 +60,15 @@ class Book_publication_master extends CI_Model {
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function get_book_publication_master_datatable($data = null, $export = null, $tableHeading = null, $columns = null) {
+    public function get_book_publication_master_datatable($data = null, $export = null, $tableHeading = null, $columns = null)
+    {
         $this->load->library('datatables');
-        if (!$columns) {
-            $columns = 'publication_id,name,code,status,remarks,created,created_by';
+        if (!$columns)
+        {
+            $columns = 'publication_id,name,code,status,remarks,created,created_by_name';
         }
-
-        /*
-         */
-        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, FALSE, FALSE)->from('book_publication_masters t1');
+        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, FALSE, FALSE)
+                ->from('book_publication_list_view t1');
 
         $this->datatables->unset_column("publication_id");
         if (isset($data['button_set'])):
@@ -88,8 +90,10 @@ class Book_publication_master extends CI_Model {
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function get_book_publication_master($columns = null, $conditions = null, $limit = null, $offset = null) {
-        if (!$columns) {
+    public function get_book_publication_master($columns = null, $conditions = null, $limit = null, $offset = null)
+    {
+        if (!$columns)
+        {
             $columns = 'publication_id,name,code,status,remarks,created,created_by';
         }
 
@@ -120,7 +124,8 @@ class Book_publication_master extends CI_Model {
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function save($data) {
+    public function save($data)
+    {
         if ($data):
             $this->db->insert("book_publication_masters", $data);
             $publication_id_inserted_id = $this->db->insert_id();
@@ -142,7 +147,8 @@ class Book_publication_master extends CI_Model {
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function update($data) {
+    public function update($data)
+    {
         if ($data):
             $this->db->where("publication_id", $data['publication_id']);
             return $this->db->update('book_publication_masters', $data);
@@ -159,15 +165,18 @@ class Book_publication_master extends CI_Model {
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function delete($publication_id) {
+    public function delete($publication_id)
+    {
         if ($publication_id):
             $this->db->trans_begin();
             $result = 0;
             $this->db->delete('book_publication_masters', array('publication_id' => $publication_id));
-            if ($this->db->trans_status() === FALSE) {
+            if ($this->db->trans_status() === FALSE)
+            {
                 $this->db->trans_rollback();
                 return false;
-            } else {
+            } else
+            {
                 $this->db->trans_commit();
                 return true;
             }
@@ -185,11 +194,14 @@ class Book_publication_master extends CI_Model {
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function get_options($columns, $index = null, $conditions = null) {
-        if (!$columns) {
+    public function get_options($columns, $index = null, $conditions = null, $chosen_flag = false)
+    {
+        if (!$columns)
+        {
             $columns = 'publication_id';
         }
-        if (!$index) {
+        if (!$index)
+        {
             $index = 'publication_id';
         }
         $this->db->select("$columns,$index")->from('book_publication_masters t1');
@@ -203,15 +215,37 @@ class Book_publication_master extends CI_Model {
         $result = $this->db->get()->result_array();
 
         $list = array();
-        $list[''] = 'Select book publication masters';
+        if ($chosen_flag)
+        {
+            $list[''] = '';
+        } else
+        {
+            $list[''] = 'Select book publication masters';
+        }
+
         foreach ($result as $key => $val):
             $list[$val[$index]] = $val[$columns];
         endforeach;
         return $list;
     }
 
-    public function record_count() {
+    public function record_count()
+    {
         return $this->db->count_all('book_publication_masters');
+    }
+
+    /**
+     * @param  : string $condition
+     * @desc   : used to check duplicacy of book category
+     * @return : number 0/count value
+     * @author : HimansuS
+     * @created:
+     */
+    public function check_duplicate($condition)
+    {
+        $query = "select count(publication_id) count_rec from book_publication_masters where 1=1 $condition";
+        $result = $this->db->query($query)->row();
+        return $result->count_rec;
     }
 
 }

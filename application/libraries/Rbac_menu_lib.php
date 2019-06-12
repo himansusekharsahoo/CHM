@@ -22,7 +22,9 @@ class Rbac_menu_lib {
     public function get_user_menus($condition = '') {
 
         $role_codes = $this->_get_user_role_codes();
+        $query_flag = FALSE;
         if (in_array('DEVELOPER', $role_codes)) {
+            $query_flag = true;
             $query = "
                 select * from rbac_menu
                 where menu_id in(
@@ -42,8 +44,10 @@ class Rbac_menu_lib {
                 )";
         } else {
             $role_ids = $this->_get_user_role_ids();
-            $role_ids = implode(",", $role_ids);
-            $query = "select * from rbac_menu
+            if ($role_ids) {
+                $query_flag = true;
+                $role_ids = implode(",", $role_ids);
+                $query = "select * from rbac_menu
             where menu_id in(
                 select parent from rbac_menu
                 where permission_id in(
@@ -62,12 +66,17 @@ class Rbac_menu_lib {
                     and lower(rrp.status)='active'
                 )
              $condition";
+            }
         }
-        $result = $this->_ci->db->query($query)->result_array();        
-        $tree = $this->_populate_tree($result, 'parent', 'menu_id');        
-        $menu = '<ul class="sidebar-menu" data-widget="tree">';
-        $menu.=$this->populate_left_menu($tree);
-        $menu.='</ul>';
+        $menu = "";
+        if ($query_flag) {
+            $result = $this->_ci->db->query($query)->result_array();
+            $tree = $this->_populate_tree($result, 'parent', 'menu_id');
+            $menu = '<ul class="sidebar-menu" data-widget="tree">';
+            $menu.=$this->populate_left_menu($tree);
+            $menu.='</ul>';
+        }
+
         return $menu;
     }
 
@@ -111,7 +120,10 @@ class Rbac_menu_lib {
      * @created:
      */
     private function _get_user_role_ids() {
-        $role_ids = array_column($this->_session['user_data']['roles'], 'role_id');
+        $role_ids = array();
+        if (isset($this->_session['user_data']['roles'])) {
+            $role_ids = array_column($this->_session['user_data']['roles'], 'role_id');
+        }
         return $role_ids;
     }
 
@@ -123,7 +135,10 @@ class Rbac_menu_lib {
      * @created:
      */
     private function _get_user_role_codes() {
-        $role_codes = array_column($this->_session['user_data']['roles'], 'code');
+        $role_codes = array();
+        if (isset($this->_session['user_data']['roles'])) {
+            $role_codes = array_column($this->_session['user_data']['roles'], 'code');
+        }
         return $role_codes;
     }
 

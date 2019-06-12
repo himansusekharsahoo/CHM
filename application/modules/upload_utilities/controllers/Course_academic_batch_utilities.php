@@ -52,6 +52,8 @@ class Course_academic_batch_utilities extends CI_Controller {
      * @created:
      */
     public function index() {
+        $this->layout->navTitle = 'Course academic upload utility';
+        $this->layout->title = 'Course academic upload utility';
         if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'COURSE_ACADEMIC_BATCH_MASTERS')) {
             $this->scripts_include->includePlugins(array('jq_validation'), 'js');
             $this->layout->render();
@@ -68,10 +70,12 @@ class Course_academic_batch_utilities extends CI_Controller {
      * @created:
      */
     public function upload_file() {
+        $this->layout->navTitle = 'Course academic upload utility';
+        $this->layout->title = 'Course academic upload utility';
         if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'COURSE_ACADEMIC_BATCH_MASTERS')) {
 
-            $this->scripts_include->includePlugins(array('datatable', 'jq_validation'), 'js');
-            $this->scripts_include->includePlugins(array('datatable'), 'css');
+            $this->scripts_include->includePlugins(array('datatable','chosen', 'jq_validation'), 'js');
+            $this->scripts_include->includePlugins(array('datatable','chosen'), 'css');
             $config = array();
             $user_id = $this->rbac->get_user_id();
             $temp_table_name = 'temp_course_a_b_m_' . $user_id;
@@ -81,7 +85,7 @@ class Course_academic_batch_utilities extends CI_Controller {
             $config['on_failure_redirect'] = 'course-academic-batch-upload';
             $config['file'] = $_FILES;
             $config['temp_table_name'] = 'temp_course_a_b_m_';
-
+            $config['seek_line'] = 1;
             $config['temp_table_heading'] = array(
                 'CATEGORY_NAME',
                 'CATEGORY_CODE',
@@ -193,20 +197,20 @@ class Course_academic_batch_utilities extends CI_Controller {
 
         $dt_tool_btn = array(
             array(
-                'btn_class' => 'no_pad',
+                'btn_class' => 'btn-warning',
                 'btn_href' => '#',
                 'btn_icon' => '',
                 'btn_title' => 'XLS',
-                'btn_text' => ' <img src="' . base_url("images/excel_icon.png") . '" alt="XLS">',
+                'btn_text' => '<span class="fa fa-file-excel-o"></span> Excel',
                 'btn_separator' => ' ',
                 'attr' => ($type == 'valid') ? 'id="export_valid_xls"' : 'id="export_invalid_xls"'
             ),
             array(
-                'btn_class' => 'no_pad',
+                'btn_class' => 'btn-info',
                 'btn_href' => '#',
                 'btn_icon' => '',
                 'btn_title' => 'CSV',
-                'btn_text' => ' <img src="' . base_url("images/csv_icon_sm.gif") . '" alt="CSV">',
+                'btn_text' => '<span class="fa fa-file-text-o"></span> CSV',
                 'btn_separator' => ' ',
                 'attr' => ($type == 'valid') ? 'id="export_valid_csv"' : 'id="export_invalid_csv"'
             )
@@ -229,13 +233,16 @@ class Course_academic_batch_utilities extends CI_Controller {
                 'top_buttons' => $dt_tool_btn,
                 'top_pagination' => true,
                 'buttom_dom' => true,
-                'buttom_length_change' => true,
+                'buttom_length_change' => FALSE,
                 'buttom_pagination' => true
             ),
             'options' => array(
-                'iDisplayLength' => '15'
+                'iDisplayLength' => 15
             )
         );
+        if ($type == 'valid') {
+            $config['dt_sleep'] = 3000; //to avoid datatable hand issue
+        }
         return $config;
     }
 
@@ -338,20 +345,27 @@ class Course_academic_batch_utilities extends CI_Controller {
 
         if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'COURSE_ACADEMIC_BATCH_MASTERS')) {
             if ($this->input->is_ajax_request()):
-
+                
                 $export_type = $this->input->post('export_type');
-                $data_type = $this->input->post('data');
+                $type = $this->input->post('data');
+                
+                $columns="";
+                $remarks=array();
 
-                $columns = "category_name,category_code,category_desc,department_name,department_code,batch_name,batch_desc,start_year,end_year,no_of_semister,record_no";
                 $user_id = $this->rbac->get_user_id();
                 $temp_table_name = 'temp_course_a_b_m_' . $user_id;
+                
                 if ($type == 'invalid') {
                     $condition = "LENGTH(TRIM(REMARKS))>0";
+                    $columns="remarks,";
+                    $remarks=array('remarks'=>'remarks');
                 } else {
                     $condition = "REMARKS IS NULL OR REMARKS=''";
                 }
+                $columns .= "record_no,category_name,category_code,category_desc,department_name,department_code,batch_name,batch_desc,start_year,end_year,no_of_semister";
 
                 $tableHeading = array(
+                    'record_no' => 'record_no',
                     'category_name' => 'category_name',
                     'category_code' => 'category_code',
                     'category_desc' => 'category_desc',
@@ -361,9 +375,9 @@ class Course_academic_batch_utilities extends CI_Controller {
                     'batch_desc' => 'batch_desc',
                     'start_year' => 'start_year',
                     'end_year' => 'end_year',
-                    'no_of_semister' => 'no_of_semister',
-                    'record_no' => 'record_no'
+                    'no_of_semister' => 'no_of_semister'                    
                 );
+                $tableHeading=  array_merge($remarks,$tableHeading);
                 $data = $this->Course_academic_batch_utility->get_temp_table_data_dt($columns, $temp_table_name, null, $condition, true);
                 $head_cols = $body_col_map = array();
                 $date = array(
@@ -423,10 +437,10 @@ class Course_academic_batch_utilities extends CI_Controller {
      */
     public function save_import_data() {
         if ($this->Course_academic_batch_utility->save_import_data_db()) {
-            echo json_encode(array('type'=>'success','message'=>'Data uploaded successfully.'));
+            echo json_encode(array('type' => 'success', 'message' => 'Data uploaded successfully.'));
             exit();
-        }else{
-            echo json_encode(array('type'=>'error','message'=>'Data saving error, Please tray again!'));            
+        } else {
+            echo json_encode(array('type' => 'error', 'message' => 'Data saving error, Please tray again!'));
             exit();
         }
     }

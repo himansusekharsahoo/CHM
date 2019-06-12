@@ -58,7 +58,8 @@ class Upload_utility {
         'csv_delimeter' => ';',
         'validation_rules' => '', //validation rules
         'validation_rules_error' => '', //Generates by script when validation rule is not correctly defined
-        'utility_err_message' => ''//provide message if you want to overwrite default message in _message var
+        'utility_err_message' => '',//provide message if you want to overwrite default message in _message var
+        'seek_line'=>0
     );
 
     /**
@@ -366,12 +367,13 @@ class Upload_utility {
      * @author : HimansuS
      * @created:
      */
-    private function _load_temp_data($full_csv_file_path, $temp_table_name, $temp_table_columns, $delemeter = ';') {
+    private function _load_temp_data($full_csv_file_path, $temp_table_name, $temp_table_columns, $delemeter = ';',$seek_line=0) {
+        $seek_line++;
         $load_query = "LOAD DATA local INFILE '" . $full_csv_file_path . "'
                 IGNORE INTO TABLE $temp_table_name CHARACTER SET UTF8
                 FIELDS TERMINATED BY '$delemeter'  ENCLOSED BY '\"'				
                 LINES TERMINATED BY '\r\n' 				
-                IGNORE 1 LINES
+                IGNORE $seek_line LINES
                 (" . implode(', ', $temp_table_columns) . ")";        
         if ($this->_ci->db->simple_query($load_query)) {
             return true;
@@ -437,8 +439,8 @@ class Upload_utility {
                     $this->_config['temp_table_name'] = $this->_config['temp_table_name'] . $this->_ci->rbac->get_user_id();
 
                     //validate uploaded file columns
-                    $csv_file_heading = get_csv_heading($this->_config['uploaded_file_details']['csv_full_path'], $this->_config['csv_delimeter']);
-
+                    $csv_file_heading = get_csv_heading($this->_config['uploaded_file_details']['csv_full_path'], $this->_config['csv_delimeter'],$this->_config['seek_line']);
+                    
                     if (count($this->_config['uploaded_file_heading_comparison']) != count($csv_file_heading) ||
                             array_diff_uassoc($this->_config['uploaded_file_heading_comparison'], $csv_file_heading, "array_key_val_check")) {
                         $this->_ci->session->set_flashdata($this->_config['file_element'], '<br>' . $this->_ci->lang->line('UPLOAD_UTILITY_COLUMN_ERR_MSG') . ' - <br>' . str_replace('_', ' ', implode('<br>', $this->_config['uploaded_file_heading']) . '<br>'));
@@ -455,7 +457,9 @@ class Upload_utility {
                         if ($this->_ci->db->dbdriver == 'mysqli') {
                             if ($this->_load_temp_data($this->_config['uploaded_file_details']['csv_full_path']
                                             , $this->_config['temp_table_name']
-                                            , $this->_config['temp_table_heading'])) {
+                                            , $this->_config['temp_table_heading']
+                                            ,$this->_config['csv_delimeter']
+                                            ,$this->_config['seek_line'])) {
                                 if ($this->_validate_records($this->_config['validation_rules'])) {
                                     //render grid page                                    
                                     return $this->_config['temp_table_name'];

@@ -62,7 +62,7 @@ class Book_assign extends CI_Model {
     public function get_book_assign_datatable($data = null, $export = null, $tableHeading = null, $columns = null) {
         $this->load->library('datatables');
         if (!$columns) {
-            $columns = 'bassign_id,bledger_id,member_id,issue_date,due_date,return_date,return_delay_fine,book_return_condition,book_lost_fine,remarks,created,created_by,user_type';
+            $columns = 'bassign_id,isbn_no,card_no,issue_date,due_date,return_date,return_delay_fine,book_return_condition,remarks,user_type';
         }
 
         /*
@@ -73,7 +73,9 @@ class Book_assign extends CI_Model {
           Columns:-	member_id,card_no,date_issue,expiry_date,user_id,user_role_id,created,created_by,status
 
          */
-        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, FALSE, FALSE)->from('book_assigns t1');
+        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, FALSE, FALSE)->from('book_assigns t1')
+                ->join('library_members','t1.member_id=library_members.member_id')
+                ->join('book_ledgers','t1.bledger_id=book_ledgers.bledger_id');
 
         $this->datatables->unset_column("bassign_id");
         if (isset($data['button_set'])):
@@ -135,6 +137,7 @@ class Book_assign extends CI_Model {
      */
     public function save($data) {
         if ($data):
+            //$data[''] = $data
             $this->db->insert("book_assigns", $data);
             $bassign_id_inserted_id = $this->db->insert_id();
 
@@ -252,7 +255,26 @@ class Book_assign extends CI_Model {
     public function record_count() {
         return $this->db->count_all('book_assigns');
     }
+    
+    public function enroll_member($data) {
+        if ($data):
+            $this->db->insert("library_members", $data);
+            $member_id = $this->db->insert_id();
 
+            if ($member_id):
+                return true;
+            endif;
+            return 'No data found to store!';
+        endif;
+        return 'Unable to store the data, please try again later!';
+    }
+
+    public function isbn_status($bledger_id) {
+        $this->db->where('bledger_id',$bledger_id);
+        $this->db->where('return_date',0);
+        $query = $this->db->get('book_assigns');
+        return $query->num_rows();
+    }
 }
 
 ?>

@@ -61,7 +61,7 @@ class Book extends CI_Model {
     public function get_book_datatable($data = null, $export = null, $tableHeading = null, $columns = null) {
         $this->load->library('datatables');
         if (!$columns) {
-            $columns = 'book_id,name,code,status,created,created_by,modified,modified_by';
+            $columns = 'book_id,name,code,language,status,created';
         }
 
         /*
@@ -90,7 +90,7 @@ class Book extends CI_Model {
      */
     public function get_book($columns = null, $conditions = null, $limit = null, $offset = null) {
         if (!$columns) {
-            $columns = 'book_id,name,code,status,created,created_by,modified,modified_by';
+            $columns = 'book_id,name,code,language,status,created,created_by,modified,modified_by';
         }
 
         /*
@@ -185,7 +185,7 @@ class Book extends CI_Model {
      * @author  HimansuS                  
      * @since   10/28/2018
      */
-    public function get_options($columns, $index = null, $conditions = null) {
+    public function get_options($columns, $index = null, $conditions = null, $chosen_flag = false) {
         if (!$columns) {
             $columns = 'book_id';
         }
@@ -203,7 +203,13 @@ class Book extends CI_Model {
         $result = $this->db->get()->result_array();
 
         $list = array();
-        $list[''] = 'Select books';
+        if ($chosen_flag) {
+            $list[''] = '';
+        } else {
+            $list[''] = 'Select books';
+        }
+
+
         foreach ($result as $key => $val):
             $list[$val[$index]] = $val[$columns];
         endforeach;
