@@ -254,8 +254,8 @@ class Book_assignment extends CI_Controller {
                     'due_date' => 'Due date',
                     'return_date' => 'Return date',
                     'return_delay_fine' => 'Delay fine',
-                    'book_return_condition' => 'Book condition',                    
-                    'remarks' => 'remarks',                    
+                    'book_return_condition' => 'Book condition',
+                    'remarks' => 'remarks',
                     'user_type' => 'user_type'
                 );
                 $data = $this->book_assignments->get_book_assign_datatable(null, true);
@@ -311,8 +311,8 @@ class Book_assignment extends CI_Controller {
      */
     public function create() {
         if ($this->rbac->has_permission('MANAGE_BOOK_ASSIGNS', 'CREATE')) {
-            $this->scripts_include->includePlugins(array('jq_validation', 'bs_datepicker', 'jq_typehead'), 'js');
-            $this->scripts_include->includePlugins(array('bs_datepicker', 'jq_typehead'), 'css');
+            $this->scripts_include->includePlugins(array('jq_validation', 'bs_datepicker', 'jq_typehead', 'datatable'), 'js');
+            $this->scripts_include->includePlugins(array('bs_datepicker', 'jq_typehead', 'datatable'), 'css');
             $this->breadcrumbs->push('create', '/library/book_assignment/create');
 
             $this->layout->navTitle = 'Book assignment';
@@ -798,8 +798,10 @@ class Book_assignment extends CI_Controller {
 
         $book_ledger_id = $this->input->post('ledger_id');
         $user_id = $this->input->post('user_id');
+        $book_copy_id = $this->input->post('book_copy_id');
         $issue_date = date('Y-m-d h:m:s');
         $due_date = date('Y-m-d H:i:s', strtotime("+$days day", time()));
+        $this->db->trans_start();
         $member_id = $this->book_assignments->get_member_id_user($user_id);
         if (empty($member_id)) {
             echo json_encode(array('status' => false));
@@ -819,17 +821,32 @@ class Book_assignment extends CI_Controller {
         $book_data = array(
             'bledger_id' => $book_ledger_id,
             'member_id' => $member_id,
+            'book_copy_id' => $book_copy_id,
             'issue_date' => $issue_date,
             'due_date' => $due_date,
             'return_date' => NULL
         );
-        $is_inserted = $this->book_assignments->store_book_assignment_info($book_data);
-        if ($is_inserted) {
-            $this->book_assignments->update_current_copies($book_ledger_id);
+
+        $this->book_assignments->store_book_assignment_info($book_data);
+        $this->book_assignments->update_current_copies($book_ledger_id);
+        $this->book_assignments->update_book_availability($book_copy_id);
+        $this->db->trans_complete();
+        if ($this->db->trans_status()) {
             echo json_encode(array('status' => true, 'msg' => 'Book is assigned successfully'));
         } else {
             echo json_encode(array('status' => false, 'msg' => 'Error occurred please try again'));
         }
+    }
+
+    function fetch_books_list() {
+        $input_array = array();
+        $input_array['bledger_id'] = $this->input->post('bledger_id');
+        $input_array['start'] = $this->input->post('start');
+        $input_array['length'] = $this->input->post('length');
+        $input_array['order'] = $this->input->post('order');
+        $data = $this->book_assignments->get_books_list($input_array);
+        $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data']);
+        echo json_encode($response);
     }
 
 }

@@ -325,4 +325,42 @@ class Book_assignments extends CI_Model {
         return $this->db->query($query);
     }
 
+    function update_book_availability($book_copy_id) {
+        $query = "UPDATE book_copies_info SET book_availability='N' WHERE book_copies_id='$book_copy_id'";
+        return $this->db->query($query);
+    }
+
+    function get_books_list($conditions, $export_flag = false) {
+        $columns = array(
+            'book_copies_id', 'b.bledger_id', 'book_barcode_info', 'book_copy_count', 'book_availability', 'first_name', 'last_name'
+        );
+        $limit = '';
+        if (!$export_flag) {
+            $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
+            $length = (isset($conditions['length'])) ? $conditions['length'] : 25;
+            $limit = ' LIMIT ' . $start . ',' . ($length);
+            unset($conditions['start'], $conditions['length'], $conditions['order']);
+        }
+
+        $where = "WHERE TRIM(LOWER(b.bledger_id))=TRIM(LOWER('" . $conditions['bledger_id'] . "'))";
+
+        /* $query = "SELECT " . implode(',', $columns) . " FROM book_assigns ba 
+          JOIN library_members lm ON ba.member_id=lm.member_id
+          JOIN book_ledgers bl ON ba.bledger_id=bl.bledger_id
+          JOIN books b ON b.book_id=bl.book_id
+          JOIN book_author_masters bam ON bl.bauthor_id=bam.bauthor_id
+          $where
+          "; */
+        $query = "SELECT " . implode(',', $columns) . " FROM book_copies_info b "
+                . " LEFT JOIN book_assigns ba ON ba.book_copy_id=b.book_copies_id"
+                . " LEFT JOIN library_members lm ON ba.member_id=lm.member_id "
+                . " LEFT JOIN rbac_users ru ON ru.user_id=lm.user_id"
+                . " $where";
+        $result = $this->db->query($query);
+        $return['data'] = $result->result_array();
+        $return['found_rows'] = $this->db->query($query)->num_rows();
+        $return['total_rows'] = $result->num_rows();
+        return $return;
+    }
+
 }

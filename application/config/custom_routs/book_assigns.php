@@ -12,3 +12,4 @@ $route['isbn-status'] = 'library/book_assignment/isbn_status';
 $route['show-user-data'] = 'library/book_assignment/show_search_user_details';
 $route['search-book-data'] = 'library/book_assignment/search_book_details';
 $route['assign-book'] = 'library/book_assignment/assign_book';
+$route['get-books-list'] = 'library/book_assignment/fetch_books_list';
