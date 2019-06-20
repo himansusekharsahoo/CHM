@@ -21,7 +21,7 @@ switch (APP_ENV) {
          *  SET ALL THE UAT ENVIRONMENT RELATED CONSTANTS
          *
          * *********************************************** */
-	
+	defined('SITE_IS_DOWN') OR define('SITE_IS_DOWN', '0');
         break;
     default:
         /*         * **********************************************
