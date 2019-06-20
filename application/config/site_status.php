@@ -22,6 +22,7 @@ switch (APP_ENV) {
          *
          * *********************************************** */
 	defined('SITE_IS_DOWN') OR define('SITE_IS_DOWN', '0');
+        defined('SITE_IS_DOWN') OR define('SITE_IS_DOWN', '0');
         break;
     default:
         /*         * **********************************************
