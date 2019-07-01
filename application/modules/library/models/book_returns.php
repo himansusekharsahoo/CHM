@@ -97,12 +97,14 @@ class book_returns extends CI_Model {
     }
 
     function calculate_return_delay_fine($assigned_id = '') {
-        $return_delay_fine = $this->rbac->get_app_config_item('library/library/role_config/default/return_delay_fine');
+        $return_delay_fine = $this->rbac->get_app_config_item('library/role_config/default/return_delay_fine');
         $return_delay_fine = (string) $return_delay_fine[0];
         $return_delay_fine = explode(',', $return_delay_fine);
         $fine = (isset($return_delay_fine[0])) ? $return_delay_fine[0] : 1; //return days
         $query = "SELECT DATEDIFF(CURDATE(),due_date) as date_different FROM book_assigns where bassign_id='" . $assigned_id . "'";
-        $date_diff = $this->db->query($query)->row()->date_different;
+        $date_diff = $this->db->query($query);
+        echo $this->db->last_query();exit;
+        //->row()->date_different;
         $return_delay_fine = NULL;
         if ($date_diff > 0) {
             $return_delay_fine = $date_diff * $fine;

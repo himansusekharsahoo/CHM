@@ -849,4 +849,13 @@ class Book_assignment extends CI_Controller {
         echo json_encode($response);
     }
 
+    function return_borrowed_books() {
+        $is_updated = $this->book_returns->return_borrowed_book($this->input->post());
+        if ($is_updated) {
+            echo json_encode(array('status' => TRUE));
+        } else {
+            echo json_encode(array('status' => FALSE));
+        }
+    }
+
 }

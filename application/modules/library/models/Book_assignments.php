@@ -332,7 +332,7 @@ class Book_assignments extends CI_Model {
 
     function get_books_list($conditions, $export_flag = false) {
         $columns = array(
-            'book_copies_id', 'b.bledger_id', 'book_barcode_info', 'book_copy_count', 'book_availability', 'first_name', 'last_name'
+            'book_copies_id', 'b.bledger_id', 'book_barcode_info', 'book_copy_count', 'book_availability', 'first_name', 'last_name', 'lm.member_id'
         );
         $limit = '';
         if (!$export_flag) {
@@ -361,6 +361,46 @@ class Book_assignments extends CI_Model {
         $return['found_rows'] = $this->db->query($query)->num_rows();
         $return['total_rows'] = $result->num_rows();
         return $return;
+    }
+
+    function return_borrowed_book($post_values = null) {
+        $update_data = array();
+        if (isset($post_values['book_lost']) && $post_values['book_lost'] == '1') {
+            $update_data = array(
+                'is_book_lost' => 1,
+                'book_lost_fine' => $post_values['book_lost_fine'],
+                'book_return_condition' => $post_values['book_condition']
+            );
+            return $this->mark_book_as_lost($post_values['book_assign_id'], $update_data);
+        } else {
+            $return_delay_fine = $this->rbac->get_app_config_item('library/role_config/default/return_delay_fine');
+            $return_delay_fine = (string) $return_delay_fine[0];
+            $return_delay_fine = explode(',', $return_delay_fine);
+            $fine = (isset($return_delay_fine[0])) ? $return_delay_fine[0] : 1; //return days
+            $cur_date = date('Y-m-d h:m:s');
+
+            $query = "SELECT DATEDIFF(CURDATE(),due_date) as date_different FROM book_assigns where bassign_id='" . $post_values['book_assign_id'] . "'";
+            $date_diff = $this->db->query($query)->row()->date_different;
+            $return_delay_fine = NULL;
+
+            if ($date_diff > 0) {
+                $return_delay_fine = $date_diff * $fine;
+            }
+            $update_data = array(
+                'return_date' => $cur_date,
+                'return_delay_fine' => $return_delay_fine,
+                'book_return_condition' => $post_values['book_condition']
+            );
+
+            $this->db->where('bassign_id', $post_values['book_assign_id']);
+            $is_updated = $this->db->update('book_assigns', $update_data);
+            if ($is_updated) {
+                $query = "update book_ledgers set copies_instock = (copies_instock+1) where bledger_id = (SELECT bledger_id FROM book_assigns where bassign_id='" . $post_values['book_assign_id'] . "')";
+                return $this->db->query($query);
+            } else {
+                return false;
+            }
+        }
     }
 
 }
