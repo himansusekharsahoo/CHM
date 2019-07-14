@@ -352,7 +352,7 @@ class Book_assignments extends CI_Model {
           $where
           "; */
         $query = "SELECT " . implode(',', $columns) . " FROM book_copies_info b "
-                . " LEFT JOIN book_assigns ba ON ba.book_copy_id=b.book_copies_id"
+                . " LEFT JOIN book_assigns ba ON ba.book_copy_id=b.book_copies_id and return_date is null"
                 . " LEFT JOIN library_members lm ON ba.member_id=lm.member_id "
                 . " LEFT JOIN rbac_users ru ON ru.user_id=lm.user_id"
                 . " $where";

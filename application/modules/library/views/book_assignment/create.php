@@ -54,23 +54,6 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="reutrn-modalzzz" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Default Modal</h4>
-            </div>
-            <div class="modal-body">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="return_book_confirm">Return</button>
-            </div>
-        </div>
-    </div>
-</div>
 <div class="modal fade" id="modal-default" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -139,9 +122,10 @@
             <div class="modal-body">
                 <form name="form_return_books" id="form_return_books" method="POST">
                     <input type="checkbox" name="book_lost" id="book_lost" value="1"/> Mark book as lost.
-                    <div id="fine_details" class="text-bold"></div><br/>
+                    <div id="fine_details" class="text-bold error"></div><br/>
                     <div id="lost_fine_details" class="text-bold"></div><br/>
                     <input type="hidden" name="book_assign_id" id="book_assign_id"/>
+                    <input type="hidden" name="member_id" id="member_id"/>
                     <div class="form-group">
                         <label for="book_condition">Book return condition:</label>
                         <input type="text" name="book_condition" id="book_condition" placeholder="Book condition" class="form-control required" required="required"/>
@@ -247,7 +231,6 @@
                 title: "Assigned to",
                 class: "",
                 data: function (item) {
-                    console.log(item);
                     var name = '';
                     if (item.first_name || item.last_name) {
                         name = item.first_name + ' ' + item.last_name;
@@ -275,7 +258,6 @@
                         btn_disabled = '';
                     }
                     var action_mark_up = '<button data-unique_id="' + item.book_barcode_info + '" data-id="' + item.book_copies_id + '" class="btn btn-sm btn-primary assign_book_to" ' + btn_disabled + ' id="assign_book_to">Assign to</button>' +
-                            ' <button class="btn btn-sm btn-danger" id="mark_as_lost">Lost</button>' +
                             ' <button class="btn btn-sm btn-success return_book" data-member_id="' + item.member_id + '" data-unique_id="' + item.book_barcode_info +
                             '" data-id="' + item.book_copies_id + '" id="return_book">Return</button>';
                     return action_mark_up;
@@ -443,30 +425,75 @@
                 url: "<?= base_url('get-delayed-fine') ?>",
                 type: 'POST',
                 dataType: 'json',
-                data: {book_assign_id: id},
+                data: {book_assign_id: id, member_id: member_id},
                 success: function (result) {
                     console.log(result);
                     var days = result.data.date_diff;
                     fine_amt = result.data.fine_amount;
                     if (fine_amt > 0) {
-                        $('#fine_details').html('As the book return is delayed by ' + days + ' days there will be fine of Rs. <span class="label label-danger">' + fine_amt + ' INR</span>');
+                    $('#form_return_books #fine_details').html('As the book return is delayed by ' + days + ' days there will be fine of Rs. <span class="label label-danger">' + fine_amt + ' INR</span>');
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    console.log('error'+textStatus);
+                    console.log('error' + textStatus);
                 }
             });
 
-            $('#return_modal_box #book_assign_id').val(id);
+            $('#return-modal #book_assign_id').val(id);
+            $('#return-modal #member_id').val(member_id);
             $('#form_return_books #book_name').html();
 
-            $('#reutrn-modal .modal-header .modal-title').html($('#book_kw').val());
-            $('#reutrn-modal .modal-body .book-info #book_isbn_id ').html('Book ID: ' + unique_id);
-            $('#reutrn-modal').modal('show');
+            $('#return-modal .modal-header .modal-title').html($('#book_kw').val());
+            $('#return-modal .modal-body .book-info #book_isbn_id ').html('Book ID: ' + unique_id);
+            $('#return-modal').modal('show');
         });
 
-        $('#return-modal').on('click', '#return_book_confirm', function () {
+        $('#return-modal').on('change', '#book_lost', function () {
+            if ($('#book_lost').is(":checked")) {
+                $.ajax({
+                    url: "<?= base_url('get-lost-fine') ?>",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: '',
+                    success: function (result) {
+                        var amt = 0;
+                        amt = result.book_lost_fine;
+                        $('#fine_details').hide();
+                        $('#lost_fine_details').html('As the book is lost there will be fine of Rs. <input type="text" name="book_lost_fine" id="book_lost_fine class="form-control" value="' + amt + '"/>');
+                        $('#lost_fine_details').show();
+                        $('#book_condition').val('LOST');
+                        $('#confim_msg').html('Are you sure you want to mark this book as lost?');
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log('error' + textStatus);
+                    }
+                });
+            } else {
+                $('#fine_details').show();
+                $('#lost_fine_details').hide();
+                $('#book_condition').val('');
+                $('#confim_msg').html('Are you sure you want to return this book?');
+            }
+        });
 
+        $('#form_return_books').validate();
+        $('#return-modal').on('click', '#return_book_confirm', function () {
+            var form_data = $('#form_return_books').serializeArray();
+            if ($('#form_return_books').valid()) {
+                $.ajax({
+                    url: "<?= base_url('return-borrowed-books') ?>",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: form_data,
+                    success: function (result) {
+                        populate_table(fetched_book_ledger_id);
+                        $('#return_modal_box').modal('hide');
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log('error' + textStatus);
+                    }
+                });
+            }
         });
 
         $('#modal-default').on('click', '#assign_book', function () {
