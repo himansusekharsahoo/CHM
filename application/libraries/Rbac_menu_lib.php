@@ -41,7 +41,7 @@ class Rbac_menu_lib {
                     select permission_id 
                     from rbac_permissions rp
                     WHERE lower(rp.status)='active'
-                )";
+                ) order by menu_order";
         } else {
             $role_ids = $this->_get_user_role_ids();
             if ($role_ids) {
@@ -65,7 +65,7 @@ class Rbac_menu_lib {
                     WHERE rrp.role_id IN($role_ids)
                     and lower(rrp.status)='active'
                 )
-             $condition";
+             $condition order by menu_order";
             }
         }
         $menu = "";
