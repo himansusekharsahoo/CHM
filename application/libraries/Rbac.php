@@ -483,5 +483,14 @@ class Rbac {
         }
         return '';
     }
-
+    public function get_profile_pic() {        
+        if (isset($this->_session['user_data']['profile_pic']) && $this->_session['user_data']['profile_pic']!='') {            
+            return '/uploads/employee/profile_picture/'.$this->_session['user_data']['profile_pic'];            
+        }
+        return '/images/user-icon.png';
+    }
+    public function set_profile_pic($profile_pic) {              
+        $this->_session['user_data']['profile_pic']=$profile_pic;        
+        $this->_ci->session->set_userdata('user_data', $this->_session['user_data']);
+    }
 }

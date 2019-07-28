@@ -670,6 +670,7 @@ class Manage_employees extends CI_Controller {
                 $profile_data=array(                    
                     'profile_pic'=>$data['upload_data']['file_name']
                 );
+                $this->rbac->set_profile_pic($data['upload_data']['file_name']);
                 if ($this->manage_employee->update_profile_picture($profile_data,$user_id)) {
                     echo json_encode(array('status' => 'success', 'title' => 'My Profile', 'message' => 'Profile picture successfully uploaded!'));
                 } else {
