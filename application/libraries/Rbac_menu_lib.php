@@ -151,9 +151,10 @@ class Rbac_menu_lib {
      */
     public function populate_left_menu($tree) {
 
-        $this->_selected_menu = $this->_set_selected_menu();
-        //pma($this->_selected_menu,1);
+        $this->_selected_menu = $this->_get_selected_menu();
+        //pma($this->_selected_menu);
         $menu = '';
+        //pma($tree,1);
         foreach ($tree as $tr) {
             $url = ($tr['url'] != '') ? base_url($tr['url']) : '#';
             $tree_view_open = $treeview_menu_open = $menu_select = $display = '';
@@ -206,7 +207,7 @@ class Rbac_menu_lib {
      * @author : HimansuS
      * @created:
      */
-    private function _set_selected_menu() {
+    private function _get_selected_menu() {
         $menu_ids = array();
         //pma($this->_session['user_data'],1);
         if (isset($this->_session['selected_left_menu'])) {

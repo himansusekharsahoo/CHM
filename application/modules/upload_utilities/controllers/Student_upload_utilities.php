@@ -40,7 +40,7 @@ class Student_upload_utilities extends CI_Controller {
     public function index() {
         $this->layout->navTitle = 'Student upload utility';
         $this->layout->title = 'Student upload utility';
-        if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'STUDENT_UPLOAD_UTILTIY')) {
+        if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'STUDENT_UPLOAD_UTILITY')) {
             $this->scripts_include->includePlugins(array('jq_validation'), 'js');
             $this->layout->render();
         } else {
@@ -58,7 +58,7 @@ class Student_upload_utilities extends CI_Controller {
     public function upload_file() {
         $this->layout->navTitle = 'Student upload utility';
         $this->layout->title = 'Student upload utility';
-        if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'STUDENT_UPLOAD_UTILTIY')) {
+        if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'STUDENT_UPLOAD_UTILITY')) {
 
             $this->scripts_include->includePlugins(array('datatable','chosen', 'jq_validation'), 'js');
             $this->scripts_include->includePlugins(array('datatable','chosen'), 'css');
@@ -264,7 +264,7 @@ class Student_upload_utilities extends CI_Controller {
      */
     public function get_temp_table_data_grid() {
 
-        if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'STUDENT_UPLOAD_UTILTIY')) {
+        if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'STUDENT_UPLOAD_UTILITY')) {
             if ($this->input->is_ajax_request()) {
                 $columns = "";
                 $user_id = $this->rbac->get_user_id();
@@ -314,7 +314,7 @@ class Student_upload_utilities extends CI_Controller {
      * @created:
      */
     public function delete_temp_record() {
-        if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'STUDENT_UPLOAD_UTILTIY')) {
+        if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'STUDENT_UPLOAD_UTILITY')) {
 
             if ($this->input->is_ajax_request()):
                 $row_id = $this->input->post('record_no');
@@ -352,7 +352,7 @@ class Student_upload_utilities extends CI_Controller {
      */
     public function export_grid_data() {
 
-        if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'STUDENT_UPLOAD_UTILTIY')) {
+        if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'STUDENT_UPLOAD_UTILITY')) {
             if ($this->input->is_ajax_request()):
 
                 $export_type = $this->input->post('export_type');
