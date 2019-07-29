@@ -27,3 +27,5 @@ ENGINE = InnoDB;
 
 ALTER TABLE `book_copies_info` ADD COLUMN `book_availability` VARCHAR(5) NOT NULL DEFAULT 'A' AFTER `book_copy_count`;
 ALTER TABLE `books` ADD `language` VARCHAR(100) NULL DEFAULT NULL AFTER `status`;
+ALTER TABLE `book_assigns` ADD `book_copy_id` INT NOT NULL AFTER `member_id`, ADD INDEX (`book_copy_id`);
+ALTER TABLE `book_assigns` ADD CONSTRAINT `FK_BOOK_COPY_ID` FOREIGN KEY (`book_copy_id`) REFERENCES `book_copies_info`(`book_copies_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;

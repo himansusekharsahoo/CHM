@@ -1139,7 +1139,7 @@ if (!function_exists('create_dir')) {
         if (is_dir($dir_name) === TRUE) {
             return TRUE;
         } else {
-            return mkdir($dir_name, $permission);
+            return mkdir($dir_name, $permission,true);
         }
     }
 

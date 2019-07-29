@@ -108,7 +108,7 @@ class Book_return extends CI_Controller {
     }
 
     function get_delayed_fine() {
-        $data = $this->book_returns->calculate_return_delay_fine($this->input->post('book_assign_id'));
+        $data = $this->book_returns->calculate_return_delay_fine($this->input->post());
         echo json_encode(array('status' => true, 'data' => $data));
     }
 
