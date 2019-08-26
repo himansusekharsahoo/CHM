@@ -73,7 +73,7 @@ class Student_upload_utilities extends CI_Controller {
             $config['temp_table_name'] = 'temp_student_';
             $config['seek_line'] = 1;
             $config['temp_table_heading'] = array(
-                'STUDENT_ID',
+                'REGISTRATION_NO',
                 'FIRST_NAME',
                 'LAST_NAME',
                 'EMAIL_ID',
@@ -81,7 +81,7 @@ class Student_upload_utilities extends CI_Controller {
                 'STATUS'
             );
             $config['uploaded_file_heading'] = array(
-                'STUDENT_ID',
+                'REGISTRATION_NO',
                 'FIRST_NAME',
                 'LAST_NAME',
                 'EMAIL_ID',
@@ -102,7 +102,32 @@ class Student_upload_utilities extends CI_Controller {
                 ),
                 array('message' => "''MOBILE_NO'' can not be blank."
                     , 'condition' => "MOBILE_NO IS NULL OR MOBILE_NO=''"
-                )
+                ),
+                array('message' => "Duplicate \'EMAIL_ID\'"
+                      , 'condition' => "RECORD_NO IN
+                          (
+                            SELECT record_no
+                            FROM(
+                              SELECT main.record_no
+                              FROM $temp_table_name main
+                              INNER JOIN (
+                                  SELECT email_id,COUNT(email_id),record_no
+                                  FROM $temp_table_name t
+                                  GROUP BY email_id
+                                  HAVING COUNT(email_id) > 1
+                                ) dup ON
+                              main.email_id=dup.email_id
+                            ) D
+                        )"),
+                    array('message' => "\'EMAIL_ID\' already used"
+                      , 'condition' => "RECORD_NO IN
+                          (
+                            SELECT RECORD_NO FROM(
+                                SELECT RECORD_NO,count(*) FROM $temp_table_name main
+                                LEFT JOIN rbac_users t ON main.email_id=t.email
+                                WHERE t.email is not null
+                            )a
+                        )"),
                     /*
                       //duplicate record validation
                       //book name,category,publication,author,edition
@@ -276,7 +301,7 @@ class Student_upload_utilities extends CI_Controller {
                 } else {
                     $condition = "REMARKS IS NULL OR REMARKS=''";
                 }
-                $columns.= "student_id,first_name,last_name,email_id,mobile_no,status";
+                $columns.= "registration_no,first_name,last_name,email_id,mobile_no,status";
 
                 $data = array();
                 $grid_buttons = array(
