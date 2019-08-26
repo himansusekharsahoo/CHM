@@ -1,9 +1,9 @@
 <style>
     .name{ width: 250px !important;}
-    .code{ width: 100px !important;}
+    .code{ width: 150px !important;}
     .language{ width: 100px !important;}
     .status{ width: 100px !important;}
-    .created{ width: 100px !important;}
+    .created{ width: 150px !important;}
 </style>
 <div class="row-fluid">
     <div class="col-sm-12 no_pad table-responsive">
@@ -18,7 +18,8 @@
             <div class="box-footer"></div>
         </div>
     </div>
-</div><script type="text/javascript">
+</div>
+<script type="text/javascript">
     $(function ($) {
 //delete record
 
