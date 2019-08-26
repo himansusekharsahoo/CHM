@@ -50,31 +50,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   | Examples:	my-controller/index	-> my_controller/index
   |		my-controller/my-method	-> my_controller/my_method
  */
-$route['default_controller'] = 'admin_users/sign_in';
-$route['404_override'] = '';
-$route['translate_uri_dashes'] = FALSE;
+//$route['default_controller'] = 'admin_users/sign_in';
+//$route['404_override'] = '';
+//$route['translate_uri_dashes'] = FALSE;
 
-//student user login
-$route['user-login'] = 'users/sign_in';
-$route['user-logout'] = 'users/log_out';
-$route['user-dashboard'] = 'users/dashboard';
+require_once( BASEPATH . 'database/DB' . EXT );
+$db = & DB();
+$db_routes = $db->select('slug,path')
+        ->where('status', 'active')
+        ->get('app_routes')
+        ->result_array();
 
-//student user login
-$route['employee-login'] = 'admin_users/sign_in';
-$route['employee-logout'] = 'admin_users/log_out';
-$route['employee-dashboard'] = 'admin_users/dashboard';
-
-
-//custom routing
-$route['admin-login'] = 'admin_users/sign_in';
-$route['admin-dashboard'] = 'admin_users/dashboard';
-
-require_once 'custom_routs/rbac.php';
-require_once 'custom_routs/upload_utilities.php';
-require_once 'custom_routs/book_ledgers.php';
-require_once 'custom_routs/book_assigns.php';
-require_once 'custom_routs/app_configs.php';
-require_once 'custom_routs/library_members.php';
-require_once 'custom_routs/library_users.php';
-require_once 'custom_routs/book_return.php';
-require_once 'custom_routs/books.php';
+if($db_routes){
+    foreach($db_routes as $r){
+        $route[$r['slug']] = $r['path'];
+    }
+}
