@@ -1,2 +1,9 @@
 /nbproject/private/
 /assets
+.htaccess
+/application/logs
+assets/
+/barcodes/
+/qrcodes/
+/nbproject/
+/application/config
