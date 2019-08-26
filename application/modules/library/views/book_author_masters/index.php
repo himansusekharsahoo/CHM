@@ -1,12 +1,17 @@
-<?php ?> <div class="row-fluid">
+<div class="row-fluid">
     <div class="col-sm-12 no_pad table-responsive">
-        <?php
-        $this->load->library('c_datatable');
-        $dt_data = $this->c_datatable->generate_grid($config);
-        echo $dt_data;
-        ?>
+        <div class="box">
+            <div class="box-body">
+                <?php
+                $this->load->library('c_datatable');
+                $dt_data = $this->c_datatable->generate_grid($config);
+                echo $dt_data;
+                ?>
+            </div>
+        </div>
     </div>
-</div><script type="text/javascript">
+</div>
+<script type="text/javascript">
     $(function ($) {
 //delete record
 
@@ -26,7 +31,7 @@
                         label: 'Delete',
                         action: function (dialog) {
                             $.ajax({
-                                url: '<?= base_url('delete-book-author')?>',
+                                url: '<?= base_url('delete-book-author') ?>',
                                 method: 'POST',
                                 data: data,
                                 success: function (result) {
@@ -59,7 +64,7 @@
             };
             $.ajax({
                 type: 'POST',
-                url: "<?= base_url('export-book-author')?>",
+                url: "<?= base_url('export-book-author') ?>",
                 data: param,
                 dataType: 'json'
             }).done(function (data) {
@@ -77,7 +82,7 @@
             };
             $.ajax({
                 type: 'POST',
-                url: "<?= base_url('export-book-author')?>",
+                url: "<?= base_url('export-book-author') ?>",
                 data: param,
                 dataType: 'json'
             }).done(function (data) {

@@ -61,7 +61,7 @@ class Book extends CI_Model {
     public function get_book_datatable($data = null, $export = null, $tableHeading = null, $columns = null) {
         $this->load->library('datatables');
         if (!$columns) {
-            $columns = 'book_id,name,code,language,status,created';
+            $columns = 'book_id,name,code,language,created,status';
         }
 
         /*

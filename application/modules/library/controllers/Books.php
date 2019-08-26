@@ -94,19 +94,19 @@ class Books extends CI_Controller {
                 'orderable' => 'true',
                 'visible' => 'true',
                 'searchable' => 'true'
-            ), array(
-                'db_column' => 'status',
-                'name' => 'Status',
-                'title' => 'Status',
-                'class_name' => 'status',
-                'orderable' => 'true',
-                'visible' => 'true',
-                'searchable' => 'true'
-            ), array(
+            ),  array(
                 'db_column' => 'created',
                 'name' => 'Created',
                 'title' => 'Created',
                 'class_name' => 'created',
+                'orderable' => 'true',
+                'visible' => 'true',
+                'searchable' => 'true'
+            ),array(
+                'db_column' => 'status',
+                'name' => 'Status',
+                'title' => 'Status',
+                'class_name' => 'status',
                 'orderable' => 'true',
                 'visible' => 'true',
                 'searchable' => 'true'

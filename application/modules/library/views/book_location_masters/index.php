@@ -1,12 +1,17 @@
-<?php ?> <div class="row-fluid">
+<div class="row-fluid">
     <div class="col-sm-12 no_pad table-responsive">
-        <?php
-        $this->load->library('c_datatable');
-        $dt_data = $this->c_datatable->generate_grid($config);
-        echo $dt_data;
-        ?>
+        <div class="box">
+            <div class="box-body">
+                <?php
+                $this->load->library('c_datatable');
+                $dt_data = $this->c_datatable->generate_grid($config);
+                echo $dt_data;
+                ?>
+            </div>
+        </div>
     </div>
-</div><script type="text/javascript">
+</div>
+<script type="text/javascript">
     $(function ($) {
 //delete record
 
