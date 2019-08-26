@@ -1,3 +1,6 @@
 source query_log.sql
 source upload_course_aca_batch.sql
 source upload_book_ledger.sql
+source upload_course_aca_batch.sql
+source upload_students.sql
+source upload_employees.sql

@@ -60,8 +60,8 @@ class Emp_upload_utilities extends CI_Controller {
         $this->layout->title = 'Employee upload utility';
         if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'EMPLOYEE_UPLOAD_UTILTIY')) {
 
-            $this->scripts_include->includePlugins(array('datatable','chosen', 'jq_validation'), 'js');
-            $this->scripts_include->includePlugins(array('datatable','chosen'), 'css');
+            $this->scripts_include->includePlugins(array('datatable', 'chosen', 'jq_validation'), 'js');
+            $this->scripts_include->includePlugins(array('datatable', 'chosen'), 'css');
             $config = array();
             $user_id = $this->rbac->get_user_id();
             $temp_table_name = 'temp_employee_' . $user_id;
@@ -102,7 +102,41 @@ class Emp_upload_utilities extends CI_Controller {
                 ),
                 array('message' => "''MOBILE_NO'' can not be blank."
                     , 'condition' => "MOBILE_NO IS NULL OR MOBILE_NO=''"
-                )
+                ), array('message' => "Duplicate \'EMAIL_ID\'"
+                    , 'condition' => "RECORD_NO IN
+                          (
+                            SELECT record_no
+                            FROM(
+                              SELECT main.record_no
+                              FROM $temp_table_name main
+                              INNER JOIN (
+                                  SELECT email_id,COUNT(email_id),record_no
+                                  FROM $temp_table_name t
+                                  GROUP BY email_id
+                                  HAVING COUNT(email_id) > 1
+                                ) dup ON
+                              main.email_id=dup.email_id
+                            ) D
+                        )"),
+                array('message' => "\'EMAIL_ID\' already used"
+                    , 'condition' => "RECORD_NO IN
+                          (
+                            SELECT RECORD_NO FROM(
+                                SELECT RECORD_NO,count(*) FROM $temp_table_name main
+                                LEFT JOIN rbac_users t ON main.email_id=t.email
+                                WHERE t.email is not null
+                            )a
+                        )"),
+                array('message' => "\'EMPLOYEE_ID\' already used"
+                    , 'condition' => "RECORD_NO IN
+                          (
+                            SELECT RECORD_NO FROM(
+                                SELECT RECORD_NO,count(*) FROM $temp_table_name main
+                                LEFT JOIN rbac_users t ON main.employee_id=t.login_id
+                                WHERE t.login_id is not null and main.employee_id is not null
+                                 and t.login_id!='' and user_type='employee'
+                            )a
+                        )"),
                     /*
                       //duplicate record validation
                       //book name,category,publication,author,edition
@@ -272,11 +306,11 @@ class Emp_upload_utilities extends CI_Controller {
                 $type = $this->input->post('type');
                 if ($type == 'invalid') {
                     $condition = "LENGTH(TRIM(REMARKS))>0";
-                    $columns.="remarks,";
+                    $columns .= "remarks,";
                 } else {
                     $condition = "REMARKS IS NULL OR REMARKS=''";
                 }
-                $columns.= "employee_id,first_name,last_name,email_id,mobile_no,status";
+                $columns .= "employee_id,first_name,last_name,email_id,mobile_no,status";
 
                 $data = array();
                 $grid_buttons = array(
@@ -358,7 +392,7 @@ class Emp_upload_utilities extends CI_Controller {
                 $export_type = $this->input->post('export_type');
                 $data_type = $this->input->post('data');
 
-                $columns.= "first_name,last_name,email_id,mobile_no,status";
+                $columns .= "first_name,last_name,email_id,mobile_no,status";
                 $user_id = $this->rbac->get_user_id();
                 $temp_table_name = 'temp_employee_' . $user_id;
                 if ($type == 'invalid') {

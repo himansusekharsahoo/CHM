@@ -60,8 +60,8 @@ class Student_upload_utilities extends CI_Controller {
         $this->layout->title = 'Student upload utility';
         if ($this->rbac->has_permission('UPLOAD_UTILITIES', 'STUDENT_UPLOAD_UTILITY')) {
 
-            $this->scripts_include->includePlugins(array('datatable','chosen', 'jq_validation'), 'js');
-            $this->scripts_include->includePlugins(array('datatable','chosen'), 'css');
+            $this->scripts_include->includePlugins(array('datatable', 'chosen', 'jq_validation'), 'js');
+            $this->scripts_include->includePlugins(array('datatable', 'chosen'), 'css');
             $config = array();
             $user_id = $this->rbac->get_user_id();
             $temp_table_name = 'temp_student_' . $user_id;
@@ -104,7 +104,7 @@ class Student_upload_utilities extends CI_Controller {
                     , 'condition' => "MOBILE_NO IS NULL OR MOBILE_NO=''"
                 ),
                 array('message' => "Duplicate \'EMAIL_ID\'"
-                      , 'condition' => "RECORD_NO IN
+                    , 'condition' => "RECORD_NO IN
                           (
                             SELECT record_no
                             FROM(
@@ -119,13 +119,24 @@ class Student_upload_utilities extends CI_Controller {
                               main.email_id=dup.email_id
                             ) D
                         )"),
-                    array('message' => "\'EMAIL_ID\' already used"
-                      , 'condition' => "RECORD_NO IN
+                array('message' => "\'EMAIL_ID\' already used"
+                    , 'condition' => "RECORD_NO IN
                           (
                             SELECT RECORD_NO FROM(
                                 SELECT RECORD_NO,count(*) FROM $temp_table_name main
                                 LEFT JOIN rbac_users t ON main.email_id=t.email
                                 WHERE t.email is not null
+                            )a
+                        )")
+                ,
+                array('message' => "\'REGISTRATION_NO\' already used"
+                    , 'condition' => "RECORD_NO IN
+                          (
+                            SELECT RECORD_NO FROM(
+                                SELECT RECORD_NO,count(*) FROM $temp_table_name main
+                                LEFT JOIN rbac_users t ON main.registration_no=t.login_id
+                                WHERE t.login_id is not null and main.registration_no is not null
+                                 and t.login_id!='' and user_type='student'
                             )a
                         )"),
                     /*
@@ -297,11 +308,11 @@ class Student_upload_utilities extends CI_Controller {
                 $type = $this->input->post('type');
                 if ($type == 'invalid') {
                     $condition = "LENGTH(TRIM(REMARKS))>0";
-                    $columns.="remarks,";
+                    $columns .= "remarks,";
                 } else {
                     $condition = "REMARKS IS NULL OR REMARKS=''";
                 }
-                $columns.= "registration_no,first_name,last_name,email_id,mobile_no,status";
+                $columns .= "registration_no,first_name,last_name,email_id,mobile_no,status";
 
                 $data = array();
                 $grid_buttons = array(
@@ -382,20 +393,20 @@ class Student_upload_utilities extends CI_Controller {
 
                 $export_type = $this->input->post('export_type');
                 $type = $this->input->post('data');
-                $columns="";
-                $remarks=array();
-                
-                
+                $columns = "";
+                $remarks = array();
+
+
                 $user_id = $this->rbac->get_user_id();
                 $temp_table_name = 'temp_student_' . $user_id;
                 if ($type == 'invalid') {
                     $condition = "LENGTH(TRIM(REMARKS))>0";
-                    $columns="remarks,";
-                    $remarks=array('remarks'=>'remarks');
+                    $columns = "remarks,";
+                    $remarks = array('remarks' => 'remarks');
                 } else {
                     $condition = "REMARKS IS NULL OR REMARKS=''";
                 }
-                $columns.= "record_no,student_id,first_name,last_name,email_id,mobile_no,status";
+                $columns .= "record_no,student_id,first_name,last_name,email_id,mobile_no,status";
                 $tableHeading = array(
                     'record_no' => 'record_no',
                     'student_id' => 'student_id',
@@ -403,9 +414,9 @@ class Student_upload_utilities extends CI_Controller {
                     'last_name' => 'last_name',
                     'email_id' => 'email_id',
                     'mobile_no' => 'mobile_no',
-                    'status' => 'status'                    
+                    'status' => 'status'
                 );
-                $tableHeading=  array_merge($remarks,$tableHeading);
+                $tableHeading = array_merge($remarks, $tableHeading);
                 $data = $this->Student_upload_utility->get_temp_table_data_dt($columns, $temp_table_name, null, $condition, true);
                 $head_cols = $body_col_map = array();
                 $date = array(
