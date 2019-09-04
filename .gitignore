@@ -8,3 +8,5 @@ assets/
 /nbproject/
 /application/config
 /application/logs
+/application/modules/cruds
+bower_git_links.txt

@@ -1,0 +1,14 @@
+DROP TABLE IF EXISTS `app_routes` ;
+
+CREATE TABLE IF NOT EXISTS `app_routes` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `module` VARCHAR(255),
+  `slug` TEXT NOT NULL,
+  `path` TEXT NOT NULL,
+  `status` ENUM('active', 'inactive') NULL DEFAULT 'active',
+  `created` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  `modified` DATETIME NULL,
+  `created_by` INT UNSIGNED NULL,
+  `modified_by` INT UNSIGNED NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;

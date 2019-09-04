@@ -1,0 +1,1 @@
+ALTER TABLE `student_profiles` ADD `registration_id` VARCHAR(255) NOT NULL AFTER `user_id`;
