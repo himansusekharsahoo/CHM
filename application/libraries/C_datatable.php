@@ -193,7 +193,7 @@ class C_datatable
         $this->_initiate_dt_options();
         $this->_dt_configs = array(
             'dt_id' => 'custom_table',
-            'dt_class' => 'table table-sm table-striped',
+            'dt_class' => 'table table-sm table-striped table-bordered',
             'dt_attr' => 'cellpadding="0" cellpadding="0"',
             /*
              * dt_header=>

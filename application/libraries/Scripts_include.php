@@ -63,7 +63,9 @@ class Scripts_include {
     );
     private $__appJsFiles = array(
         'rbac' => array('/js/rbac.js'),
-        'multiselect' => array('/assets/multiselect/jquery.multiselect.js'),
+        'multiselect' => array(
+            COMPONENT_PATH . 'jQuery-MultiSelect/jquery.multiselect.js'
+        ),
         'jq_validation' => array(
             COMPONENT_PATH . 'jquery-validation/dist/jquery.validate.min.js',
             COMPONENT_PATH . 'jquery-validation/dist/additional-methods.min.js',
@@ -79,19 +81,18 @@ class Scripts_include {
             COMPONENT_PATH . 'datatables-scroller/js/dataTables.scroller.js',
             COMPONENT_PATH . 'dataTables.treeGrid.js/dataTables.treeGrid.js',
         ),
-        'chosen' => array(COMPONENT_PATH.'chosen/chosen.jquery.js'),
+        'chosen' => array(COMPONENT_PATH . 'chosen/chosen.jquery.js'),
         'tree' => array('/js/tree.js'),
         'jstree' => array(COMPONENT_PATH . 'jstree/dist/jstree.min.js'),
         'promise' => array(COMPONENT_PATH . 'bluebird/js/browser/bluebird.min.js'),
-        'bs_multiselect' => array('/assets/layout/default/bootstrap/js/bootstrap-multiselect.js'),
         'js_validation' => array(COMPONENT_PATH . 'jquery-validation/jquery.validate.js'),
         'jq_typehead' => array(COMPONENT_PATH . 'jquery-typeahead/dist/jquery.typeahead.min.js'),
         'jq_multitag_select' => array(
             COMPONENT_PATH . 'jquery.treeSelector/jquery.treeSelector.js'
         ),
-        'print_element'=>array(COMPONENT_PATH.'print-elements/print_elements.js'),
-        'd3'=>array('/assets/d3/d3.min.js'),
-        'pass_meter'=>array('/js/pass_meter/js/mocha.js')
+        'print_element' => array(COMPONENT_PATH . 'print-elements/print_elements.js'),
+        'd3' => array('/assets/d3/d3.min.js'),
+        'pass_meter' => array('/js/pass_meter/js/mocha.js')
     );
     private $__cssFiles = array(
         'admin_layout' => array(
@@ -138,17 +139,19 @@ class Scripts_include {
         )
     );
     private $__appCssFiles = array(
-        'multiselect' => array('/assets/multiselect/jquery.multiselect.css'),
+        'multiselect' => array(
+            COMPONENT_PATH . 'jQuery-MultiSelect/jquery.multiselect.css'
+        ),
         'datatable' => array(
             COMPONENT_PATH . 'datatables/media/css/jquery.dataTables.min.css',
         ),
-        'chosen' => array(COMPONENT_PATH.'chosen/chosen.css'),
+        'chosen' => array(COMPONENT_PATH . 'chosen/chosen.css'),
         'jstree' => array(COMPONENT_PATH . 'jstree/dist/themes/default/style.min.css'),
         'jq_typehead' => array(COMPONENT_PATH . 'jquery-typeahead/dist/jquery.typeahead.min.css'),
         'jq_multitag_select' => array(
             COMPONENT_PATH . 'jquery.treeSelector/jquery.treeSelector.css'
         ),
-        'print_element'=>array(COMPONENT_PATH.'print-elements/print.css')
+        'print_element' => array(COMPONENT_PATH . 'print-elements/print.css')
     );
 
     function __construct() {

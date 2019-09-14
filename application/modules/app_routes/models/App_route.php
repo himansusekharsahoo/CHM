@@ -1,33 +1,33 @@
 <?php
 
 /**
- * Book Class File
- * PHP Version 7.1.1
+ * App_route Class File
+ * PHP Version 7.2.9
  * 
- * @category   Library
- * @package    Library
- * @subpackage Book
- * @class      Book
+ * @category   App_routes
+ * @package    App_routes
+ * @subpackage App_route
+ * @class      App_route
  * @desc    
  * @author     HimansuS <himansu.php@gmail.com>                
  * @license    
  * @link       
- * @since   10/28/2018
+ * @since   08/25/2019
  */
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 /**
- * Book Class
+ * App_route Class
  * 
- * @category   Library
- * @package    Library
- * @class      Book
+ * @category   App_routes
+ * @package    App_routes
+ * @class      App_route
  * @desc    
  * @author     HimansuS                  
- * @since   10/28/2018
+ * @since   08/25/2019
  */
-class Book extends CI_Model {
+class App_route extends CI_Model {
 
     /**
      * __construct Method
@@ -36,7 +36,7 @@ class Book extends CI_Model {
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   08/25/2019
      */
     public function __construct() {
         parent::__construct();
@@ -50,27 +50,27 @@ class Book extends CI_Model {
     }
 
     /**
-     * Get_book_datatable Method
+     * Get_app_route_datatable Method
      * 
      * @param   $data=null,$export=null,$tableHeading=null,$columns=null
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   08/25/2019
      */
-    public function get_book_datatable($data = null, $export = null, $tableHeading = null, $columns = null) {
+    public function get_app_route_datatable($data = null, $export = null, $tableHeading = null, $columns = null) {
         $this->load->library('datatables');
         if (!$columns) {
-            $columns = 'book_id,name,code,language,created,status';
+            $columns = 'id,module,slug,path,status';
         }
 
         /*
          */
-        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, FALSE, FALSE)->from('books t1');
+        $this->datatables->select('SQL_CALC_FOUND_ROWS ' . $columns, FALSE, FALSE)->from('app_routes t1');
 
-        $this->datatables->unset_column("book_id");
+        $this->datatables->unset_column("id");
         if (isset($data['button_set'])):
-            $this->datatables->add_column("Action", $data['button_set'], 'c_encode(book_id)', 1, 1);
+            $this->datatables->add_column("Action", $data['button_set'], 'c_encode(id)', 1, 1);
         endif;
         if ($export):
             $data = $this->datatables->generate_export($export);
@@ -80,22 +80,22 @@ class Book extends CI_Model {
     }
 
     /**
-     * Get_book Method
+     * Get_app_route Method
      * 
      * @param   $columns=null,$conditions=null,$limit=null,$offset=null
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   08/25/2019
      */
-    public function get_book($columns = null, $conditions = null, $limit = null, $offset = null) {
+    public function get_app_route($columns = null, $conditions = null, $limit = null, $offset = null) {
         if (!$columns) {
-            $columns = 'book_id,name,code,language,status,created,created_by,modified,modified_by';
+            $columns = 'id,module,slug,path,status,created,modified,created_by,modified_by';
         }
 
         /*
          */
-        $this->db->select($columns)->from('books t1');
+        $this->db->select($columns)->from('app_routes t1');
 
         if ($conditions && is_array($conditions)):
             foreach ($conditions as $col => $val):
@@ -118,15 +118,15 @@ class Book extends CI_Model {
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   08/25/2019
      */
     public function save($data) {
         if ($data):
-            $this->db->insert("books", $data);
-            $book_id_inserted_id = $this->db->insert_id();
+            $this->db->insert("app_routes", $data);
+            $id_inserted_id = $this->db->insert_id();
 
-            if ($book_id_inserted_id):
-                return $book_id_inserted_id;
+            if ($id_inserted_id):
+                return $id_inserted_id;
             endif;
             return 'No data found to store!';
         endif;
@@ -140,12 +140,12 @@ class Book extends CI_Model {
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   08/25/2019
      */
     public function update($data) {
         if ($data):
-            $this->db->where("book_id", $data['book_id']);
-            return $this->db->update('books', $data);
+            $this->db->where("id", $data['id']);
+            return $this->db->update('app_routes', $data);
         endif;
         return 'Unable to update the data, please try again later!';
     }
@@ -153,17 +153,17 @@ class Book extends CI_Model {
     /**
      * Delete Method
      * 
-     * @param   $book_id
+     * @param   $id
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   08/25/2019
      */
-    public function delete($book_id) {
-        if ($book_id):
+    public function delete($id) {
+        if ($id):
             $this->db->trans_begin();
             $result = 0;
-            $this->db->delete('books', array('book_id' => $book_id));
+            $this->db->delete('app_routes', array('id' => $id));
             if ($this->db->trans_status() === FALSE) {
                 $this->db->trans_rollback();
                 return false;
@@ -183,16 +183,16 @@ class Book extends CI_Model {
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   08/25/2019
      */
-    public function get_options($columns, $index = null, $conditions = null, $chosen_flag = false) {
+    public function get_options($columns, $index = null, $conditions = null) {
         if (!$columns) {
-            $columns = 'book_id';
+            $columns = 'id';
         }
         if (!$index) {
-            $index = 'book_id';
+            $index = 'id';
         }
-        $this->db->select("$columns,$index")->from('books t1');
+        $this->db->select("$columns,$index")->from('app_routes t1');
 
         if ($conditions && is_array($conditions)):
             foreach ($conditions as $col => $val):
@@ -203,13 +203,7 @@ class Book extends CI_Model {
         $result = $this->db->get()->result_array();
 
         $list = array();
-        if ($chosen_flag) {
-            $list[''] = '';
-        } else {
-            $list[''] = 'Select books';
-        }
-
-
+        $list[''] = 'Select app routes';
         foreach ($result as $key => $val):
             $list[$val[$index]] = $val[$columns];
         endforeach;
@@ -217,7 +211,7 @@ class Book extends CI_Model {
     }
 
     public function record_count() {
-        return $this->db->count_all('books');
+        return $this->db->count_all('app_routes');
     }
 
 }

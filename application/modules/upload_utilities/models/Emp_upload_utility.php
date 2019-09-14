@@ -111,7 +111,7 @@ class Emp_upload_utility extends CI_Model {
         $temp_table_name = 'temp_employee_' . $user_id;
 
         $this->db->trans_begin();
-        $this->db->query("call upload_employee('" . $temp_table_name . "',$user_id)");
+        $this->db->query("call upload_employees('" . $temp_table_name . "',$user_id)");
         //app_log('CUSTOM', 'APP', $this->db->trans_status());
         if ($this->db->trans_status() === FALSE) {            
             $this->db->trans_rollback();

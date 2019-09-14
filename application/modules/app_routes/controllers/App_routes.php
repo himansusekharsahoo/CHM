@@ -1,33 +1,33 @@
 <?php
 
 /**
- * Books Class File
- * PHP Version 7.1.1
+ * App_routes Class File
+ * PHP Version 7.2.9
  * 
- * @category   Library
- * @package    Library
- * @subpackage Books
- * @class      Books
+ * @category   App_routes
+ * @package    App_routes
+ * @subpackage App_routes
+ * @class      App_routes
  * @desc    
  * @author     HimansuS <himansu.php@gmail.com>                
  * @license    
  * @link       
- * @since   10/28/2018
+ * @since   08/25/2019
  */
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 /**
- * Books Class
+ * App_routes Class
  * 
- * @category   Library
- * @package    Library
- * @class      Books
+ * @category   App_routes
+ * @package    App_routes
+ * @class      App_routes
  * @desc    
  * @author     HimansuS                  
- * @since   10/28/2018
+ * @since   08/25/2019
  */
-class Books extends CI_Controller {
+class App_routes extends CI_Controller {
 
     /**
      * __construct Method
@@ -36,12 +36,12 @@ class Books extends CI_Controller {
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   08/25/2019
      */
     public function __construct() {
         parent::__construct();
 
-        $this->load->model('book');
+        $this->load->model('app_route');
         $this->load->library('pagination');
         $this->load->library('form_validation');
         $this->layout->layout = 'admin_layout';
@@ -49,8 +49,6 @@ class Books extends CI_Controller {
         $this->layout->lMmenuFlag = 1;
         $this->layout->rightControlFlag = 1;
         $this->layout->navTitleFlag = 1;
-        
-        $this->layout->title = 'Books information';
     }
 
     /**
@@ -60,81 +58,49 @@ class Books extends CI_Controller {
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   08/25/2019
      */
     public function index() {
 
-        $this->breadcrumbs->push('index', '/library/books/index');
-        $this->scripts_include->includePlugins(array('datatable', 'chosen'), 'css');
-        $this->scripts_include->includePlugins(array('datatable', 'chosen'), 'js');
-        $this->layout->navTitle = 'Books list';
-        $this->layout->title = 'Books information';
+        $this->breadcrumbs->push('index', '/app_routes/app_routes/index');
+        $this->scripts_include->includePlugins(array('datatable','chosen'), 'css');
+        $this->scripts_include->includePlugins(array('datatable','chosen'), 'js');
+        $this->layout->navTitle = 'App route list';
+        $this->layout->title = 'App route list';
         $header = array(
             array(
-                'db_column' => 'name',
-                'name' => 'Name',
-                'title' => 'Name',
-                'class_name' => 'name',
+                'db_column' => 'module',
+                'name' => 'Module',
+                'title' => 'Module',
+                'class_name' => 'dt_name',
                 'orderable' => 'true',
                 'visible' => 'true',
                 'searchable' => 'true'
             ), array(
-                'db_column' => 'code',
-                'name' => 'Code',
-                'title' => 'Code',
-                'class_name' => 'code',
+                'db_column' => 'slug',
+                'name' => 'Slug',
+                'title' => 'Slug',
+                'class_name' => 'dt_name',
                 'orderable' => 'true',
                 'visible' => 'true',
                 'searchable' => 'true'
             ), array(
-                'db_column' => 'language',
-                'name' => 'Language',
-                'title' => 'Language',
-                'class_name' => 'language',
+                'db_column' => 'path',
+                'name' => 'Path',
+                'title' => 'Path',
+                'class_name' => 'dt_name',
                 'orderable' => 'true',
                 'visible' => 'true',
                 'searchable' => 'true'
-            ),  array(
-                'db_column' => 'created',
-                'name' => 'Created',
-                'title' => 'Created',
-                'class_name' => 'created',
-                'orderable' => 'true',
-                'visible' => 'true',
-                'searchable' => 'true'
-            ),array(
+            ), array(
                 'db_column' => 'status',
                 'name' => 'Status',
                 'title' => 'Status',
-                'class_name' => 'status',
-                'orderable' => 'true',
-                'visible' => 'true',
-                'searchable' => 'true'
-            ), /*array(
-                'db_column' => 'created_by',
-                'name' => 'Created_by',
-                'title' => 'Created_by',
                 'class_name' => 'dt_name',
                 'orderable' => 'true',
                 'visible' => 'true',
                 'searchable' => 'true'
             ), array(
-                'db_column' => 'modified',
-                'name' => 'Modified',
-                'title' => 'Modified',
-                'class_name' => 'dt_name',
-                'orderable' => 'true',
-                'visible' => 'true',
-                'searchable' => 'true'
-            ), array(
-                'db_column' => 'modified_by',
-                'name' => 'Modified_by',
-                'title' => 'Modified_by',
-                'class_name' => 'dt_name',
-                'orderable' => 'true',
-                'visible' => 'true',
-                'searchable' => 'true'
-            ),*/ array(
                 'db_column' => 'Action',
                 'name' => 'Action',
                 'title' => 'Action',
@@ -148,7 +114,7 @@ class Books extends CI_Controller {
 
         $grid_buttons[] = array(
             'btn_class' => 'btn-info',
-            'btn_href' => base_url('library/books/view'),
+            'btn_href' => base_url('view-app-routes'),
             'btn_icon' => 'fa-eye',
             'btn_title' => 'view record',
             'btn_separator' => ' ',
@@ -157,7 +123,7 @@ class Books extends CI_Controller {
         );
         $grid_buttons[] = array(
             'btn_class' => 'btn-primary',
-            'btn_href' => base_url('library/books/edit'),
+            'btn_href' => base_url('edit-app-routes'),
             'btn_icon' => 'fa-pencil',
             'btn_title' => 'edit record',
             'btn_separator' => ' ',
@@ -173,13 +139,13 @@ class Books extends CI_Controller {
             'btn_separator' => '',
             'param' => array('$1'),
             'style' => '',
-            'attr' => 'data-book_id="$1"'
+            'attr' => 'data-id="$1"'
         );
         $button_set = get_link_buttons($grid_buttons);
         $data['button_set'] = $button_set;
 
         if ($this->input->is_ajax_request()) {
-            $returned_list = $this->book->get_book_datatable($data);
+            $returned_list = $this->app_route->get_app_route_datatable($data);
             echo $returned_list;
             exit();
         }
@@ -187,27 +153,27 @@ class Books extends CI_Controller {
         $dt_tool_btn = array(
             array(
                 'btn_class' => 'btn-primary',
-                'btn_href' => base_url('library/books/create'),
+                'btn_href' => base_url('create-app-routes'),
                 'btn_icon' => '',
                 'btn_title' => 'Create',
                 'btn_text' => 'Create',
                 'btn_separator' => ' '
             ),
             array(
-                'btn_class' => 'btn-warning',
+                'btn_class' => 'no_pad',
                 'btn_href' => '#',
                 'btn_icon' => '',
                 'btn_title' => 'XLS',
-                'btn_text' => '<span class="fa fa-file-excel-o"></span> Excel',
+                'btn_text' => ' <img src="' . base_url("images/excel_icon.png") . '" alt="XLS">',
                 'btn_separator' => ' ',
                 'attr' => 'id="export_table_xls"'
             ),
             array(
-                'btn_class' => 'btn-info',
+                'btn_class' => 'no_pad',
                 'btn_href' => '#',
                 'btn_icon' => '',
                 'btn_title' => 'CSV',
-                'btn_text' => '<span class="fa fa-file-text-o"></span> CSV',
+                'btn_text' => ' <img src="' . base_url("images/csv_icon_sm.gif") . '" alt="CSV">',
                 'btn_separator' => ' ',
                 'attr' => 'id="export_table_csv"'
             )
@@ -219,7 +185,7 @@ class Books extends CI_Controller {
             'dt_id' => 'raw_cert_data_dt_table',
             'dt_header' => $header,
             'dt_ajax' => array(
-                'dt_url' => base_url('library/books/index'),
+                'dt_url' => base_url('manage-app-routes'),
             ),
             'custom_lengh_change' => false,
             'dt_dom' => array(
@@ -229,7 +195,7 @@ class Books extends CI_Controller {
                 'top_buttons' => $dt_tool_btn,
                 'top_pagination' => true,
                 'buttom_dom' => true,
-                'buttom_length_change' => FALSE,
+                'buttom_length_change' => true,
                 'buttom_pagination' => true
             ),
             'options' => array(
@@ -247,14 +213,14 @@ class Books extends CI_Controller {
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   08/25/2019
      */
     public function export_grid_data() {
         if ($this->input->is_ajax_request()):
             $export_type = $this->input->post('export_type');
-            $tableHeading = array('name' => 'name', 'code' => 'code', 'language' => 'langauge', 'status' => 'status', 'created' => 'created', 'created_by' => 'created_by', 'modified' => 'modified', 'modified_by' => 'modified_by',);
-            $cols = 'name,code,language,status,created,created_by,modified,modified_by';
-            $data = $this->book->get_book_datatable(null, true, $tableHeading);
+            $tableHeading = array('module' => 'module', 'slug' => 'slug', 'path' => 'path', 'status' => 'status', 'created' => 'created', 'modified' => 'modified', 'created_by' => 'created_by', 'modified_by' => 'modified_by',);
+            $cols = 'module,slug,path,status,created,modified,created_by,modified_by';
+            $data = $this->app_route->get_app_route_datatable(null, true, $tableHeading);
             $head_cols = $body_col_map = array();
             $date = array(
                 array(
@@ -270,8 +236,8 @@ class Books extends CI_Controller {
                 $body_col_map[] = array('db_column' => $db_col);
             }
             $header = array($date, $head_cols);
-            $worksheet_name = 'books';
-            $file_name = 'books' . date('d_m_Y_H_i_s') . '.' . $export_type;
+            $worksheet_name = 'app_routes';
+            $file_name = 'app_routes' . date('d_m_Y_H_i_s') . '.' . $export_type;
             $config = array(
                 'db_data' => $data['aaData'],
                 'header_rows' => $header,
@@ -299,28 +265,28 @@ class Books extends CI_Controller {
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   08/25/2019
      */
     public function create() {
-        $this->breadcrumbs->push('create', '/library/books/create');
+        $this->breadcrumbs->push('create', '/app_routes/app_routes/create');
 
-        $this->layout->navTitle = 'Book information';
+        $this->layout->navTitle = 'App route create';
         $data = array();
         if ($this->input->post()):
             $config = array(
                 array(
-                    'field' => 'name',
-                    'label' => 'name',
+                    'field' => 'module',
+                    'label' => 'module',
                     'rules' => 'required'
                 ),
                 array(
-                    'field' => 'code',
-                    'label' => 'code',
+                    'field' => 'slug',
+                    'label' => 'slug',
                     'rules' => 'required'
                 ),
                 array(
-                    'field' => 'language',
-                    'label' => 'language',
+                    'field' => 'path',
+                    'label' => 'path',
                     'rules' => 'required'
                 ),
             );
@@ -329,11 +295,11 @@ class Books extends CI_Controller {
             if ($this->form_validation->run()):
 
                 $data['data'] = $this->input->post();
-                $result = $this->book->save($data['data']);
+                $result = $this->app_route->save($data['data']);
 
                 if ($result >= 1):
                     $this->session->set_flashdata('success', 'Record successfully saved!');
-                    redirect('/library/books');
+                    redirect(base_url('manage-app-routes'));
                 else:
                     $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
                 endif;
@@ -346,50 +312,50 @@ class Books extends CI_Controller {
     /**
      * Edit Method
      * 
-     * @param   $book_id=null
+     * @param   $id=null
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   08/25/2019
      */
-    public function edit($book_id = null) {
-        $this->breadcrumbs->push('edit', '/library/books/edit');
+    public function edit($id = null) {
+        $this->breadcrumbs->push('edit', '/app_routes/app_routes/edit');
 
-        $this->layout->navTitle = 'Book information:';
+        $this->layout->navTitle = 'App route edit';
         $data = array();
         if ($this->input->post()):
             $data['data'] = $this->input->post();
             $config = array(
                 array(
-                    'field' => 'name',
-                    'label' => 'name',
+                    'field' => 'module',
+                    'label' => 'module',
                     'rules' => 'required'
                 ),
                 array(
-                    'field' => 'code',
-                    'label' => 'code',
+                    'field' => 'slug',
+                    'label' => 'slug',
                     'rules' => 'required'
                 ),
                 array(
-                    'field' => 'language',
-                    'label' => 'language',
+                    'field' => 'path',
+                    'label' => 'path',
                     'rules' => 'required'
                 ),
             );
             $this->form_validation->set_rules($config);
 
             if ($this->form_validation->run()):
-                $result = $this->book->update($data['data']);
+                $result = $this->app_route->update($data['data']);
                 if ($result >= 1):
                     $this->session->set_flashdata('success', 'Record successfully updated!');
-                    redirect('/library/books');
+                    redirect(base_url('manage-app-routes'));
                 else:
                     $this->session->set_flashdata('error', 'Unable to store the data, please conatact site admin!');
                 endif;
             endif;
         else:
-            $book_id = c_decode($book_id);
-            $result = $this->book->get_book(null, array('book_id' => $book_id));
+            $id = c_decode($id);
+            $result = $this->app_route->get_app_route(null, array('id' => $id));
             if ($result):
                 $result = current($result);
             endif;
@@ -402,21 +368,21 @@ class Books extends CI_Controller {
     /**
      * View Method
      * 
-     * @param   $book_id
+     * @param   $id
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   08/25/2019
      */
-    public function view($book_id) {
-        $this->breadcrumbs->push('view', '/library/books/view');
+    public function view($id) {
+        $this->breadcrumbs->push('view', '/app_routes/app_routes/view');
 
         $data = array();
-        if ($book_id):
-            $book_id = c_decode($book_id);
+        if ($id):
+            $id = c_decode($id);
 
-            $this->layout->navTitle = 'Book information';
-            $result = $this->book->get_book(null, array('book_id' => $book_id), 1);
+            $this->layout->navTitle = 'App route view';
+            $result = $this->app_route->get_app_route(null, array('id' => $id), 1);
             if ($result):
                 $result = current($result);
             endif;
@@ -436,15 +402,15 @@ class Books extends CI_Controller {
      * @desc    
      * @return 
      * @author  HimansuS                  
-     * @since   10/28/2018
+     * @since   08/25/2019
      */
     public function delete() {
         if ($this->input->is_ajax_request()):
-            $book_id = $this->input->post('book_id');
-            if ($book_id):
-                $book_id = c_decode($book_id);
+            $id = $this->input->post('id');
+            if ($id):
+                $id = c_decode($id);
 
-                $result = $this->book->delete($book_id);
+                $result = $this->app_route->delete($id);
                 if ($result):
                     echo 1;
                     exit();

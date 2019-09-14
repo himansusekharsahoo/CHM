@@ -1,23 +1,18 @@
-<div class="row-fluid">
+<?php ?> <div class="row-fluid">
     <div class="col-sm-12 no_pad table-responsive">
-        <div class="box">
-            <div class="box-body">
-                <?php
-                $this->load->library('c_datatable');
-                $dt_data = $this->c_datatable->generate_grid($config);
-                echo $dt_data;
-                ?>
-            </div>
-        </div>
+        <?php
+        $this->load->library('c_datatable');
+        $dt_data = $this->c_datatable->generate_grid($config);
+        echo $dt_data;
+        ?>
     </div>
-</div>
-<script type="text/javascript">
+</div><script type="text/javascript">
     $(function ($) {
 //delete record
 
         $(document).on('click', '.delete-record', function (e) {
             e.preventDefault();
-            var data = {'blocation_id': $(this).data('blocation_id')}
+            var data = {'id': $(this).data('id')}
             var row = $(this).closest('tr');
             BootstrapDialog.show({
                 title: 'Alert',
@@ -31,7 +26,7 @@
                         label: 'Delete',
                         action: function (dialog) {
                             $.ajax({
-                                url: '<?= base_url('delete-book-location') ?>',
+                                url: '<?= base_url('delete-app-routes')?>',
                                 method: 'POST',
                                 data: data,
                                 success: function (result) {
@@ -64,7 +59,7 @@
             };
             $.ajax({
                 type: 'POST',
-                url: "<?= base_url('export-book-location') ?>",
+                url: "<?= base_url('app_routes/app_routes/export_grid_data') ?>",
                 data: param,
                 dataType: 'json'
             }).done(function (data) {
@@ -72,7 +67,7 @@
                 $('#loading').css('display', 'none');
             });
         });
-//export raw data as csv 
+        //export raw data as csv 
 
         $(document).on('click', '#export_table_csv', function (e) {
             e.preventDefault();
@@ -82,7 +77,7 @@
             };
             $.ajax({
                 type: 'POST',
-                url: "<?= base_url('export-book-location') ?>",
+                url: "<?= base_url('app_routes/app_routes/export_grid_data') ?>",
                 data: param,
                 dataType: 'json'
             }).done(function (data) {

@@ -42,8 +42,8 @@ class Student_profile extends CI_Model {
         parent::__construct();
 
         $this->load->model('student_user');
-        $this->load->model('course_aca_batch_master');
-        $this->load->model('course_semister_master');
+        //$this->load->model('course_aca_batch_master');
+        //$this->load->model('course_semister_master');
         $this->layout->layout = 'admin_layout';
         $this->layout->layoutsFolder = 'layouts/admin';
         $this->layout->lMmenuFlag = 1;

@@ -1,4 +1,3 @@
-<?php ?>
 <div class="row-fluid">
     <div class="col-sm-12 no-pad">
         <div class="col-sm-6 no-pad">
@@ -11,8 +10,8 @@
         </div>
         <div class="col-sm-6 no-pad">
             <div class="pull-right">                
-                <span><input type="submit" name="import_data" id="import_data" style="display:none;float: left;" value="Import"  class="btn btn-default pannel_button pannel_button_w90" >&nbsp;&nbsp;</span>
-                <span><a href="<?=base_url('student-upload')?>" class="btn btn-default pannel_button pannel_button_w90 ">Cancel</a></span>
+                <span><input type="submit" name="import_data" id="import_data" style="display:none;float: left;" value="Import"  class="btn btn-primary pannel_button pannel_button_w90" >&nbsp;&nbsp;</span>
+                <span><a href="<?= base_url('student-upload') ?>" class="btn btn-default pannel_button pannel_button_w90 ">Cancel</a></span>
             </div>
         </div>
     </div>
@@ -22,15 +21,15 @@
         <?php
         $this->load->library('c_datatable');
         //valid record grid
-        echo '<div class="col-sm-12 no_pad hide " id="valid_rec_grid">';
+        echo '<div class="col-sm-12 no_pad hide " id="valid_rec_grid"><div class="box"><div class="box-body">';
         $dt_data = $this->c_datatable->generate_grid($valid_table_config);
         echo $dt_data;
-        echo '</div>';
+        echo '</div></div></div>';
         //invalid record grid
-        echo '<div class="col-sm-12 no_pad" id="invalid_rec_grid">';
+        echo '<div class="col-sm-12 no_pad" id="invalid_rec_grid"><div class="box"><div class="box-body">';
         $dt_data = $this->c_datatable->generate_grid($invalid_table_config);
         echo $dt_data;
-        echo '</div>';
+        echo '</div></div></div>';
         ?>
     </div>
 </div>
@@ -43,11 +42,11 @@
             if ($(this).val() == 'valid') {
                 $('#invalid_rec_grid').removeClass('show').addClass('hide');
                 $('#valid_rec_grid').removeClass('hide').addClass('show');
-                $('#import_data').css('display','block');
+                $('#import_data').css('display', 'block');
             } else if ($(this).val() == 'invalid') {
                 $('#valid_rec_grid').removeClass('show').addClass('hide');
                 $('#invalid_rec_grid').removeClass('hide').addClass('show');
-                $('#import_data').css('display','none');
+                $('#import_data').css('display', 'none');
             }
         });
 
@@ -96,7 +95,7 @@
             $('#loading').css('display', 'none');
             $.ajax({
                 type: 'POST',
-                url: "<?= base_url('student-upload-import') ?>",                
+                url: "<?= base_url('student-upload-import') ?>",
                 dataType: 'json'
             }).done(function (data) {
 
